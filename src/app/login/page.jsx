@@ -21,9 +21,9 @@ export default function login({searchParams}) {
     const handleSubmit = ()=>{
         if(user.login){
             if(prevRoute){
-              redirect(prevRoute)
+              router.push(prevRoute)
             }else{
-                redirect("/")
+                router.push("/")
             }
         }
     }

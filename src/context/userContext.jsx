@@ -5,7 +5,7 @@ export const UserContext = createContext()
 
 
 export function UserProvider({children}){
-    const [user,setUser] = useState({login:true});
+    const [user,setUser] = useState({login:true,id:"laskdk",name:"asdasd"});
 
     return(
         <UserContext.Provider value={{user,setUser}}>

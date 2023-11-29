@@ -1,8 +1,12 @@
 'use client';
 
 import { Avatar, Dropdown, Navbar } from 'flowbite-react';
+import { UserContext } from '@/context/userContext';
+import { useContext } from 'react';
 
 export default function NavbarCustom() {
+  const {user} = useContext(UserContext)
+  const {login} = user
   return (
     <Navbar fluid rounded className='md:h-[12vh]'>
       <Navbar.Brand href="https://flowbite-react.com mt-[1vh]" >
@@ -48,7 +52,8 @@ export default function NavbarCustom() {
         </Dropdown>
         <Navbar.Link href="#" className="mt-[2vh]">About</Navbar.Link>
         <Navbar.Link href="#" className="mt-[2vh]">Services</Navbar.Link>
-        <Navbar.Link href="#" className="mt-[2vh]">Pricing</Navbar.Link>
+        {login && <Navbar.Link href="/my_order" className="mt-[2vh]">Pricing</Navbar.Link>}
+       
         <Navbar.Link href="#" className="mt-[2vh]">Contact</Navbar.Link>
         
        

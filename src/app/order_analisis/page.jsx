@@ -239,10 +239,11 @@ import { useState } from 'react'
 
 
 export default function order_analisis() {
-    const [countForm, setCountForm] = useState(0);
+    const [countForm, setCountForm] = useState(1);
     const [duplicate, setDuplicate] = useState([<CustomForm i={0} key={0}/>]);
+    // const [jenis_pengujian,setJenis_pengujian ] = useState([[]])
     const [jenis_pengujian,setJenis_pengujian ] = useState([[]])
-    // const jenis_pengujian = [new Array]
+    // const jenis_pengujian = []
 
     const [nama_sample,setNama_sample ] = useState([])
     const [jumlah_sample,setJumlah_sample] = useState([])
@@ -319,8 +320,9 @@ export default function order_analisis() {
         console.log(jenis_pengujian)
         e.preventDefault()
         setDuplicate([...duplicate,<CustomForm i={countForm} key={duplicate.length} />])
-        // jenis_pengujian.push([])
-        setJenis_pengujian([...jenis_pengujian,[]])
+        let add = jenis_pengujian
+        add.push([])
+        setJenis_pengujian([...add])
     }
 
     const handleSubmit = () => {
@@ -334,29 +336,33 @@ export default function order_analisis() {
 
                     <h2 >Jenis pengujian</h2>
                     {
+                       
                         kode.map((a, b) => {
-                    
+                         console.log(i)
                             return (
                                 <div key={b}>
                                     <input type="checkbox" id={`jenis_alat${b}${i}`} name={`jenis_alat${b}${i}`} value={a.jenis_alat} onChange={(e) => {
-
-                                        if(jenis_pengujian){
-                                            if (jenis_pengujian[i]?.includes(e.target.value)) {
-                                                let index = jenis_pengujian[i].indexOf(e.target.value);
-                                                jenis_pengujian[i].splice(index, 1)
-                                                // const jp = [...jenis_pengujian[i]]
-                                                // jp.splice(index, 1)
-
-                                                // setJenis_pengujian([...jenis_pengujian,jp])
-                                            } else {
-                                                jenis_pengujian.push([])
-                                                jenis_pengujian[i].push(e.target.value)
-
-                                                // setJenis_pengujian([...jenis_pengujian,[...copy,e.target.value]])
+                                        const {checked,value} = e.target
+                                        if(checked){
+                                            let copya = jenis_pengujian
+                                            let copya2 = copya[i]
+                                            copya2.push(value)
+                                            copya[i] = copya2
+                                            setJenis_pengujian(copya)
+                                        }else{
+                                            let copy = jenis_pengujian
+                                            let copy2 = copy[i]
+                                            if(copy2?.includes(value)){
+                                                let index = copy2.indexOf(value)
+                                                copy2.splice(index,1)
+                                                copy[i] = copy2
+                                                setJenis_pengujian([...copy])
+                                            }else{
+                                                return false
                                             }
-                                        }
 
-                                        
+                                            
+                                        }
                                     }} />
                                     <label htmlFor="vehicle1"> {a.jenis_alat}</label><br />
 
