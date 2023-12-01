@@ -3,8 +3,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { UserContext } from '@/context/userContext'
 import { useState, useContext } from 'react'
-import { usePathname } from 'next/navigation'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname} from 'next/navigation'
 
 
 export default function ButtonOrder() {
