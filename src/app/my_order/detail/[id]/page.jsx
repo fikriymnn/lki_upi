@@ -22,6 +22,7 @@ export default function detail({ params }) {
                     <p>total harga  :</p>
                     <div><p>invoice : </p></div>
                     <div><p>kuitansi : </p></div>
+                    <div><p>bukti pembayaran : </p></div>
                 </div>
                 <div>
                     {order.map((e, i) => {

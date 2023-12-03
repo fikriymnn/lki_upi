@@ -18,8 +18,8 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
                 <div>
                     <h1>jenis pengujian sample : </h1>
                     <ul>
-                        {jenis_pengujian.map((value) => {
-                            return <li>{value}</li>
+                        {jenis_pengujian.map((value,i) => {
+                            return <li key={i}>{value}</li>
                         })}
                     </ul>
                 </div>

@@ -4,9 +4,10 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
 }) {
 
     return (
-        <>
-            <div className="border-1 rounded">
-                <h1>{index}</h1>
+        <>  <h1>{index}</h1>
+            <div className="border-1 rounded grid grid-cols-2">
+                
+                
                 <div>
                     <h1>nama sample : </h1>
                     <h1>{nama_sample}</h1>
@@ -18,8 +19,8 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                 <div>
                     <h1>jenis pengujian sample : </h1>
                     <ul>
-                        {jenis_pengujian.map((value) => {
-                            return <li>{value}</li>
+                        {jenis_pengujian.map((value,i) => {
+                            return <li key={i}>{value}</li>
                         })}
                     </ul>
                 </div>
@@ -51,14 +52,15 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                     <h1>keterangan : </h1>
                     <h1>{keterangan}</h1>
                 </div>
-                <br/>
+               
+            </div>
+            <br/>
                 <div>
                     <h1>Hasil analisis : </h1>
                     <h1>{hasil_analisis}</h1>
                     <h1>masukan hasil analisis : </h1>
                     <h1>file berhasil diupdate </h1>
                 </div>
-            </div>
         </>
     )
 }
