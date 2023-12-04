@@ -11,10 +11,6 @@ export default function NavbarCustom() {
   const path = usePathname()
   const adminPath = path.split("/")
 
-  useEffect(()=>{
-    console.log(adminPath)
-    console.log(path)
-  },[])
   return (
     <Navbar fluid rounded className='md:h-[12vh]'>
       <Navbar.Brand href="https://flowbite-react.com mt-[1vh]" >

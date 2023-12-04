@@ -1,5 +1,5 @@
 'use client'
-import AdminInvoiceCard from "../../../../components/AdminInvoiceCard"
+import AdminInvoiceCard from "@/components/AdminInvoiceCard"
 import { useState } from "react"
 
 export default function Order(){
