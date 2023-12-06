@@ -4,9 +4,12 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
 }) {
 
     return (
-        <>
-            <div className="border-1 rounded">
-                <h1>{index}</h1>
+        <><div>
+        <h1>{index}</h1>
+        </div>
+            <div className="border-1 rounded grid grid-cols-2">
+                
+                
                 <div>
                     <h1>nama sample : </h1>
                     <h1>{nama_sample}</h1>
@@ -51,18 +54,12 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
                     <h1>keterangan : </h1>
                     <h1>{keterangan}</h1>
                 </div>
-                <br/>
-                <div>
+
+            </div>
+            <div>
                     <h1>Hasil analisis : </h1>
                     <h1>{hasil_analisis}</h1>
                 </div>
-
-
-
-
-                
-
-            </div>
         </>
     )
 }

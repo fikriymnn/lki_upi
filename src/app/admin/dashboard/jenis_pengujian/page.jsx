@@ -15,12 +15,13 @@ export default function JenisPengujian(){
                 <p>Kode :</p>
             <input type="text" name="kode"/>
             </div>
-            <button onClick={()=>{}}>kirim</button>
+            <button >kirim</button>
         </form>
 
         
 
         <table className='w-full text-left'>
+            <tbody>
             <tr>
                 <th>No.</th>
                 <th>Jenis Alat</th>
@@ -36,6 +37,8 @@ export default function JenisPengujian(){
                     <td><button>delete</button></td>
                 </tr>
                 })}
+            </tbody>
+            
     
         </table>
         </>
