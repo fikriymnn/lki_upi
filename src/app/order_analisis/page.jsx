@@ -2,7 +2,7 @@
 import { useState } from 'react'
 
 // export default function order_analisis() {
-   
+
 //     const [jenis_pengujian,setJenis_pengujian] = useState([]);
 //     const [nama_sample,setNama_sample] = useState("")
 //     const [jumlah_sample,setJumlah_sample] = useState(1)
@@ -73,7 +73,7 @@ import { useState } from 'react'
 
 
 
-    
+
 
 //     const handleSubmit = () => {
 
@@ -240,20 +240,20 @@ import { useState } from 'react'
 
 export default function order_analisis() {
     const [countForm, setCountForm] = useState(1);
-    const [duplicate, setDuplicate] = useState([<CustomForm i={0} key={0}/>]);
+    const [duplicate, setDuplicate] = useState([<CustomForm i={0} key={0} />]);
     // const [jenis_pengujian,setJenis_pengujian ] = useState([[]])
-    const [jenis_pengujian,setJenis_pengujian ] = useState([[]])
+    const [jenis_pengujian, setJenis_pengujian] = useState([])
     // const jenis_pengujian = []
 
-    const [nama_sample,setNama_sample ] = useState([])
-    const [jumlah_sample,setJumlah_sample] = useState([])
-    const [wujud_sample,setWujud_sample] = useState([])
-    const [pelarut,setPelarut] = useState([])
-    const [preparasi_sample,setPreparasi_sample] =useState([])
-    const [target_senyawa,setTarget_senyawa] =useState([])
-    const [metode_parameter,setMetode_parameter] = useState([])
-    const [jurnal_pendukung,setJurnal_pendukung] = useState([])
-    const [keterangan,setKeterangan] = useState([])
+    const [nama_sample, setNama_sample] = useState([])
+    const [jumlah_sample, setJumlah_sample] = useState([])
+    const [wujud_sample, setWujud_sample] = useState([])
+    const [pelarut, setPelarut] = useState([])
+    const [preparasi_sample, setPreparasi_sample] = useState([])
+    const [target_senyawa, setTarget_senyawa] = useState([])
+    const [metode_parameter, setMetode_parameter] = useState([])
+    const [jurnal_pendukung, setJurnal_pendukung] = useState([])
+    const [keterangan, setKeterangan] = useState([])
     const [verifikasi, setVerifikasi] = useState(false)
 
     const kode = [
@@ -319,10 +319,10 @@ export default function order_analisis() {
         console.log(nama_sample)
         console.log(jenis_pengujian)
         e.preventDefault()
-        setDuplicate([...duplicate,<CustomForm i={countForm} key={duplicate.length} />])
-        let add = jenis_pengujian
-        add.push([])
-        setJenis_pengujian([...add])
+        setDuplicate([...duplicate, <CustomForm i={countForm} key={duplicate.length} />])
+        // let add = jenis_pengujian
+        // add.push([])
+        // setJenis_pengujian([...add])
     }
 
     const handleSubmit = () => {
@@ -336,12 +336,18 @@ export default function order_analisis() {
 
                     <h2 >Jenis pengujian</h2>
                     {
-                       
+
                         kode.map((a, b) => {
-                         console.log(i)
+                            
                             return (
                                 <div key={b}>
-                                    <input type="checkbox" id={`jenis_alat${b}${i}`} name={`jenis_alat${b}${i}`} value={a.jenis_alat} onChange={(e) => {
+                                    <input type="radio" id={`preparasi_sample${i}${b}`} onChange={(e) => {
+                                        e.preventDefault()
+                                jenis_pengujian[i] = e.target.value
+                                    }} value={a.jenis_alat} />
+                                    
+                                    <label htmlFor={`preparasi_sample${i}${b}`}>{a.jenis_alat}</label>
+                                    {/* <input type="checkbox" id={`jenis_alat${b}${i}`} name={`jenis_alat${b}${i}`} value={a.jenis_alat} onChange={(e) => {
                                         const {checked,value} = e.target
                                         if(checked){
                                             let copya = jenis_pengujian
@@ -363,8 +369,8 @@ export default function order_analisis() {
 
                                             
                                         }
-                                    }} />
-                                    <label htmlFor="vehicle1"> {a.jenis_alat}</label><br />
+                                    }} /> */}
+                                    
 
                                 </div>
 
@@ -380,21 +386,21 @@ export default function order_analisis() {
                 <div>e
                     <h2 >Nama sample</h2>
                     <input name="nama_sample" required type="text" onChange={(e) => {
-                        setNama_sample([...nama_sample,e.target.value])
+                        setNama_sample([...nama_sample, e.target.value])
 
                     }} />
                 </div>
                 <div>
                     <h2 >Jumlah sample</h2>
                     <input name="jumlah_sample" required type="number" onChange={(e) => {
-                        setJumlah_sample([...jumlah_sample,e.target.value])
+                        setJumlah_sample([...jumlah_sample, e.target.value])
                     }} />
                 </div>
                 <div>
                     <p>Wujud sample</p>
                     <label htmlFor="wujud_sample1">Padat</label>
                     <input type="radio" id="wujud_sample1" name="wujud_sample" onChange={(e) => {
-                         setWujud_sample([...wujud_sample,e.target.value])
+                        setWujud_sample([...wujud_sample, e.target.value])
                     }} value="padat" />
                     <br />
                     <label htmlFor="wujud_sample2">Cair</label>
@@ -470,7 +476,7 @@ export default function order_analisis() {
     return (
         <>
             <div>
-                <button onClick={() =>{ console.log(jenis_pengujian); console.log(nama_sample)}}>asd</button>
+                <button onClick={() => { console.log(jenis_pengujian); console.log(nama_sample) }}>asd</button>
                 <h1>Order analisis</h1>
                 <form onSubmit={handleSubmit}>
                     {duplicate}
