@@ -38,7 +38,7 @@ export default function register({searchParams}) {
                 <h1>Login </h1>
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <label htmlFor="nama"></label>
+                        <label htmlFor="nama">Nama lengkap</label>
                         <input name="nama" type="text" required onChange={handleChange} />
                     </div>
                     <div>
@@ -52,7 +52,7 @@ export default function register({searchParams}) {
                     </div>
                     {
                       userForm.jenisInstansi=="perorangan"?"":<div><div>
-                      <label htmlFor="namaInstansi">Nama perusahaan/jurusan pendidikan</label>
+                      <label htmlFor="namaInstansi">{userForm.jenisInstansi=="perusahaan"?"Nama perusahaan":"Nama instansi pendidikan dan jurusan"}</label>
                       <input name="namaInstansi" required type="text" onChange={handleChange} />
                   </div><div>
                       <label htmlFor="jabatan">Jabatan</label>
