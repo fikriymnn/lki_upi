@@ -331,7 +331,7 @@ export default function order_analisis() {
 
     function CustomForm({ i }) {
         return (
-            <>
+            <div className="m-10">
                 <div>
 
                     <h2 >Jenis pengujian</h2>
@@ -383,7 +383,7 @@ export default function order_analisis() {
 
 
                 </div>
-                <div>e
+                <div>
                     <h2 >Nama sample</h2>
                     <input name="nama_sample" required type="text" onChange={(e) => {
                         setNama_sample([...nama_sample, e.target.value])
@@ -469,15 +469,16 @@ export default function order_analisis() {
                     }} />
                 </div>
 
-            </>
+            </div>
         )
     }
 
     return (
         <>
             <div>
-                <button onClick={() => { console.log(jenis_pengujian); console.log(nama_sample) }}>asd</button>
+                {/* <button onClick={() => { console.log(jenis_pengujian); console.log(nama_sample) }}>asd</button> */}
                 <h1>Order analisis</h1>
+                <br/>
                 <form onSubmit={handleSubmit}>
                     {duplicate}
                     <div>
@@ -485,11 +486,14 @@ export default function order_analisis() {
                         <h2 htmlFor="verifikasi">Saya telah memahami proses pengujian yang akan dilakukan dan memahami syarat dan ketentuan yang telah dijelaskan oleh staff/pengelola laboratorium
                         </h2><br />
                     </div>
-
-                    <button type="submit">Kirim</button>
-
+                    <br/>
+                    <button onClick={increment} className='bg-blue-200'>Tambah order</button>   
+                    <br/>
+                    <br/>   
+                    <button type="submit"  className='bg-blue-200'>Kirim</button>
+                  
                 </form>
-                <button onClick={increment}>+</button>
+                
             </div>
         </>
     )

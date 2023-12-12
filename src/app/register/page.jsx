@@ -25,6 +25,7 @@ export default function register({searchParams}) {
     const handleSubmit = ()=>{
         if(user.login){
             if(prevRoute){
+                setUser({...user,login:true})
                 router.push(prevRoute)
             }else{
                 router.push("/")
@@ -35,7 +36,7 @@ export default function register({searchParams}) {
     return (
         <>
             <div>
-                <h1>Login </h1>
+                <h1>register </h1>
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="nama">Nama lengkap</label>

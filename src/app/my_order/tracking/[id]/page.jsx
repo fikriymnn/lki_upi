@@ -2,7 +2,7 @@ import { useState } from "react"
 
 export default function tracking({ params }) {
     const { id } = params
-    const [invoice, setInvoice] = useState({ status: "" })
+    const [invoice, setInvoice] = useState({ status: "sample diterima admin" })
     return (
         <>
             <div>

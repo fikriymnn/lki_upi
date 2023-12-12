@@ -9,7 +9,7 @@ export default function DetailOrder() {
     return (
         <>
             <p>Order</p>
-            {edit ? <button onClick={()=>setEdit(a => !a)}>konfirmasi</button> : <button onClick={()=>setEdit(a => !a)}>edit</button>}
+            {edit ? <button onClick={()=>setEdit(a => !a)} className="bg-blue-200">konfirmasi</button> : <button onClick={()=>setEdit(a => !a)} className="bg-blue-200">edit</button>}
 
             <div>
                 {edit ? <div><p>status : <select>

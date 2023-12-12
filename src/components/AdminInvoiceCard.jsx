@@ -6,7 +6,7 @@ export default function AdminInvoiceCard({list_sample,invoice,tanggal,index}) {
         <>
             <div>
 
-                <div className='w-full h-56 bg-slate-100 border-1 flex'>
+                <div className='w-full h-24 bg-slate-100 border-1 flex'>
                     <span className='px-10 py-3'>{index}</span>
                     <span className='px-10 py-3'>{invoice}</span>
                     <span className='px-10 py-3'>{tanggal}</span>

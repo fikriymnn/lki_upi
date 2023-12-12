@@ -9,7 +9,7 @@ export default function layout({children}){
     const {login} = user
     return(
         <>
-        {login?children:router.push("/login")}
+        {login?children:()=>{router.push("/login")}}
         </>
         
     )

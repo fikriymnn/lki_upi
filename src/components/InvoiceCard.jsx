@@ -6,9 +6,10 @@ export default function InvoiceCard({list_sample,invoice,tanggal,index}) {
 
     return (
         <>
-            <div>
+            
 
-                <div className='w-full h-56 bg-slate-100 border-1 flex'>
+                <div >
+                <a href="/my_order/123" className='w-full h-24 bg-slate-100 border-1 flex'>
                     <span className='px-10 py-3'>{index}</span>
                     <span className='px-10 py-3'>{invoice}</span>
                     <span className='px-10 py-3'>{tanggal}</span>
@@ -20,10 +21,11 @@ export default function InvoiceCard({list_sample,invoice,tanggal,index}) {
                     <span>
                         <Link href={`/my_order/detail/${invoice}`} className="bg-blue-200">detail order</Link>
                     </span>
+                </a>
                 </div>
 
 
-            </div>
+           
         </>
     )
 }

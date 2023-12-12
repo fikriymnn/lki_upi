@@ -3,7 +3,7 @@
 import { Avatar, Dropdown, Navbar } from 'flowbite-react';
 import { UserContext } from '@/context/userContext';
 import { useContext, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname ,useRouter} from 'next/navigation';
 
 export default function NavbarCustom() {
   const {user} = useContext(UserContext)
@@ -13,7 +13,7 @@ export default function NavbarCustom() {
 
   return (
     <Navbar fluid rounded className='md:h-[12vh]'>
-      <Navbar.Brand href="https://flowbite-react.com mt-[1vh]" >
+      <Navbar.Brand href="/" >
         <img src="https://flowbite.com/docs/images/logo.svg" className="mt-[1vh] mr-3 h-6 sm:h-9" alt="Flowbite React Logo" />
         <span className="mt-[1vh] self-center whitespace-nowrap text-xl font-semibold dark:text-white ">LKI UPI</span>
       </Navbar.Brand>
@@ -26,8 +26,7 @@ export default function NavbarCustom() {
         </Navbar.Link>:<Navbar.Link href="/" className="mt-[2vh]">
           Home
         </Navbar.Link>}
-        
-        <Dropdown
+        {adminPath[2]=="dashboard"? "":  <Dropdown
           arrowIcon={false}
           inline
           className=''
@@ -37,6 +36,8 @@ export default function NavbarCustom() {
           </Navbar.Link>
           }
         >
+
+
           
             <div className='bg-white md:w-[100vh] w-10vh  top-1   md:h-full grid md:grid-cols-3 grid-cols-1 justify-items-center'>
             <Navbar.Link href="/analisis" className=""><div  className="flex">
@@ -52,13 +53,13 @@ export default function NavbarCustom() {
               <h1 className='m-auto px-5'>Pelatihan</h1>
               </div></Navbar.Link>
             </div>
-        </Dropdown>
+        </Dropdown>}
+       
         {adminPath[2]=="dashboard"? <Navbar.Link href="/admin/dashboard/order" className="mt-[2vh]">Order</Navbar.Link>: <Navbar.Link href="/about" className="mt-[2vh]">About</Navbar.Link>}
         {adminPath[2]=="dashboard"? <Navbar.Link href="/admin/dashboard/jenis_pengujian" className="mt-[2vh]">Jenis pengujian</Navbar.Link>: <Navbar.Link href="/contant" className="mt-[2vh]">Contact</Navbar.Link>}
         {adminPath[2]=="dashboard"? <Navbar.Link href="/admin/dashboard/report" className="mt-[2vh]">Report</Navbar.Link>: ""}
-        {login && <Navbar.Link href="/my_order" className="mt-[2vh]">My order</Navbar.Link>}
-       
-        {/* <Navbar.Link href="#" className="mt-[2vh]">Contact</Navbar.Link> */}
+        {login && adminPath[2]=="dashboard"?"":<Navbar.Link href="/my_order" className="mt-[2vh]">My order</Navbar.Link>}  
+        {!login?<Navbar.Link href={`/login?prevRoute=${path}`} className="mt-[2vh]">Login</Navbar.Link>:""}
         
        
       </Navbar.Collapse>

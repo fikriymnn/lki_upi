@@ -1,3 +1,4 @@
+"use client"
 import InvoiceCard from "@/components/InvoiceCard"
 export default function My_order(){
     return(
