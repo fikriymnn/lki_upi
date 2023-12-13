@@ -4,20 +4,21 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
 }) {
 
     return (
-        <>  <h1>{index}</h1>
+        <>  <h1 className="bg-red-600 rounded p-2 text-white">{index}</h1>
+        <br/>
             <div className="border-1 rounded grid grid-cols-2">
                 
                 
                 <div>
-                    <h1>nama sample : </h1>
+                    <h1 className="text-lg font-semibold text-grey-600">nama sample : </h1>
                     <h1>{nama_sample}</h1>
                 </div>
                 <div>
-                    <h1>jumlah sample : </h1>
+                    <h1 className="text-lg font-semibold text-grey-600">jumlah sample : </h1>
                     <h1>{jumlah_sample}</h1>
                 </div>
                 <div>
-                    <h1>jenis pengujian sample : </h1>
+                    <h1 className="text-lg font-semibold text-grey-600">jenis pengujian sample : </h1>
                     <ul>
                         {jenis_pengujian.map((value,i) => {
                             return <li key={i}>{value}</li>
@@ -25,39 +26,39 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                     </ul>
                 </div>
                 <div>
-                    <h1>wujud sample : </h1>
+                    <h1 className="text-lg font-semibold text-grey-600">wujud sample : </h1>
                     <h1>{wujud_sample}</h1>
                 </div>
                 <div>
-                    <h1>pelarut : </h1>
+                    <h1 className="text-lg font-semibold text-grey-600">pelarut : </h1>
                     <h1>{pelarut}</h1>
                 </div>
                 <div>
-                    <h1>preparasi sample : </h1>
+                    <h1 className="text-lg font-semibold text-grey-600">preparasi sample : </h1>
                     <h1>{preparasi_sample}</h1>
                 </div>
                 <div>
-                    <h1>target senyawa : </h1>
+                    <h1 className="text-lg font-semibold text-grey-600">target senyawa : </h1>
                     <h1>{target_senyawa}</h1>
                 </div>
                 <div>
-                    <h1>metode parameter : </h1>
+                    <h1 className="text-lg font-semibold text-grey-600">metode parameter : </h1>
                     <h1>{metode_parameter}</h1>
                 </div>
                 <div>
-                    <h1>jurnal_pendukung : </h1>
+                    <h1 className="text-lg font-semibold text-grey-600">jurnal_pendukung : </h1>
                     <h1>{jurnal_pendukung}</h1>
                 </div>
                 <div>
-                    <h1>keterangan : </h1>
+                    <h1 className="text-lg font-semibold text-grey-600">keterangan : </h1>
                     <h1>{keterangan}</h1>
                 </div>
                
             </div>
             <br/>
                 <div>
-                    <h1>Hasil analisis : </h1>
-                    <h1>{hasil_analisis}</h1>
+                    <h1 className="text-lg font-semibold text-grey-600">Hasil analisis : </h1>
+                    <h1><input name="file" type="file"/></h1>
                     <h1>masukan hasil analisis : </h1>
                     <h1>file berhasil diupdate </h1>
                 </div>

@@ -3,11 +3,11 @@ import AdminInvoiceCard from "@/components/AdminInvoiceCard"
 import { useState } from "react"
 import { Table } from 'flowbite-react';
 
-export default function Order(){
+export default function History_order(){
     const [invoice,setInvoice] = useState([{list_sample:["asa","bbd"],invoice:"12asndaj23",tanggal:"17 agustus",index:1}])
     return (
         <>
-        <h1 className='text-center text-2xl font-bold'>Order</h1>
+        <h1 className='text-center text-2xl font-bold'>History Order</h1>
         <br/>
         <br/>
         <div className="mx-20">
@@ -39,13 +39,9 @@ export default function Order(){
             </Table.Cell>
             <Table.Cell>
               <a href="/admin/dashboard/order/123" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
-               edit
+               detail
               </a>
-              <br/>
-              <br/>
-              <a href="/my_order/tracking/12312" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
-               progress
-              </a>
+              
             </Table.Cell>
           </Table.Row>
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -59,12 +55,7 @@ export default function Order(){
 
             <Table.Cell>
               <a href="/admin/dashboard/order/123" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
-               edit
-              </a>
-              <br/>
-              <br/>
-              <a href="/my_order/tracking/12312" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
-               progress
+               detail
               </a>
             </Table.Cell>
           </Table.Row>
@@ -85,4 +76,3 @@ export default function Order(){
         </>
     )
 }
-

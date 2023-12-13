@@ -33,10 +33,14 @@ export default function register({searchParams}) {
         }
     }
 
+    
+
     return (
         <>
             <div>
-                <h1>register </h1>
+            <h1 className="text-center text-2xl font-bold">Register </h1>
+                <br/>
+                <br/>
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="nama">Nama lengkap</label>
@@ -73,7 +77,7 @@ export default function register({searchParams}) {
                       <label htmlFor="noTelp">No telepon</label>
                       <input name="noTelp" required type="text" onChange={handleChange} />
                   </div>
-                  <button type="submit">Login</button>
+                  <button type="submit">submit</button>
                 </form>
                 <a href={`/login?prevRoute=${prevRoute}`}>Login</a>
             </div>

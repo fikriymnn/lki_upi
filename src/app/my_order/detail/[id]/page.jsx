@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react"
 import OrderCard from "@/components/OrderCard"
+import { Button } from 'flowbite-react';
+
 
 export default function detail({ params }) {
     const { id } = params
@@ -15,16 +17,18 @@ export default function detail({ params }) {
     return (
         <>
             <div>
-                <p>detail</p>
+            <h1 className="text-2xl font-bold text-center">Detail Order</h1>
+            <br/>
+            <br/>
 
-                <div>
-                    <p>status :</p>
-                    <p>total harga  :</p>
-                    <div><p>invoice : </p></div>
-                    <div><p>kuitansi : </p></div>
-                    <div><p>bukti pembayaran : </p></div>
+                <div className="mx-20">
+                    <p className="text-lg ">status : menunggu form dikonfirmasi</p>
+                    <p className="text-lg ">total harga  : Rp.300000</p>
+                    <div className="flex my-1"><p className="text-lg ">invoice : </p><Button className="ml-5 "  color="blue" size={5}>download invoice</Button></div>
+                    <div  className="flex my-1"><p className="text-lg ">kuitansi : </p><Button className="ml-5" color="blue" size={5}>download kuitansi</Button></div>
+                    <div className="flex"><p className="text-lg ">bukti pembayaran : </p> <input className="ml-5" type="file" name="file"/></div>
                 </div>
-                <div>
+                <div className="mx-20">
                     {order.map((e, i) => {
                         return <OrderCard  jenis_pengujian={e.jenis_pengujian} nama_sample={e.nama_sample} jumlah_sample={e.jumlah_sample} index={++i} wujud_sample={e.wujud_sample} pelarut={e.pelarut} preparasi_sample={e.preparasi_sample} target_senyawa={e.target_senyawa} metode_parameter={e.metode_parameter} jurnal_pendukung={e.jurnal_pendukung} keterangan={e.keterangan} hasil_analisis={e.hasil_analisis}/>
                     })}

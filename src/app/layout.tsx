@@ -22,7 +22,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <UserProvider>
         <NavbarCustom/>
+        <div className='pt-[12vh]'>
         {children}
+        </div>
+       
         <FooterCustom/>
         </UserProvider>
         </body>

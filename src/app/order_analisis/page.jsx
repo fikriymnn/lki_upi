@@ -331,10 +331,14 @@ export default function order_analisis() {
 
     function CustomForm({ i }) {
         return (
-            <div className="m-10">
+            <>
+            <div className=" border-2 rounded-lg mx-20">
+            <p className='text-xl font-semibold text-xl text-white bg-red-600 rounded-lg p-3'>{++i}</p>
+                <div className='px-10 py-5'>
+                
                 <div>
 
-                    <h2 >Jenis pengujian</h2>
+                    <h2 className="text-lg font-semibold">Jenis pengujian</h2>
                     {
 
                         kode.map((a, b) => {
@@ -384,60 +388,69 @@ export default function order_analisis() {
 
                 </div>
                 <div>
-                    <h2 >Nama sample</h2>
+                    <h2 className="text-lg font-semibold" >Nama sample</h2>
                     <input name="nama_sample" required type="text" onChange={(e) => {
                         setNama_sample([...nama_sample, e.target.value])
 
                     }} />
                 </div>
                 <div>
-                    <h2 >Jumlah sample</h2>
+                    <h2 className="text-lg font-semibold" >Jumlah sample</h2>
                     <input name="jumlah_sample" required type="number" onChange={(e) => {
                         setJumlah_sample([...jumlah_sample, e.target.value])
                     }} />
                 </div>
                 <div>
-                    <p>Wujud sample</p>
-                    <label htmlFor="wujud_sample1">Padat</label>
+                    <p className="text-lg font-semibold">Wujud sample</p>
+                    
                     <input type="radio" id="wujud_sample1" name="wujud_sample" onChange={(e) => {
                         setWujud_sample([...wujud_sample, e.target.value])
                     }} value="padat" />
+                    <label htmlFor="wujud_sample1">Padat</label>
                     <br />
-                    <label htmlFor="wujud_sample2">Cair</label>
+                    
                     <input type="radio" id="wujud_sample2" name="wujud_sample" onChange={(e) => {
                         e.preventDefault()
                         wujud_sample[i] = e.target.value
                     }} value="cair" />
+                    <label htmlFor="wujud_sample2">Cair</label>
                     <br />
-                    <label htmlFor="wujud_sample3">Gas</label>
+                    
                     <input type="radio" id="wujud_sample3" name="wujud_sample" onChange={(e) => {
                         e.preventDefault()
                         wujud_sample[i] = e.target.value
                     }} value="gas" />
+                    <label htmlFor="wujud_sample3">Gas</label>
 
                 </div>
                 <div>
-                    <h2 >Pelarut</h2>
+                    <h2 className="text-lg font-semibold" >Pelarut</h2>
                     <input name="pelarut" required type="text" onChange={(e) => {
                         e.preventDefault()
                         pelarut[i] = e.target.value
                     }} />
                 </div>
                 <div>
-                    <p>Wujud sample</p>
+                    <p className="text-lg font-semibold">Wujud sample</p>
+                    <div className='flex'>
                     <input type="radio" name="preparasi_sample" onChange={(e) => {
                         e.preventDefault()
                         preparasi_sample[i] = e.target.value
                     }} value={true} />
-                    <h2 htmlFor="preparasi_sample">Ya (esterifikasi/destruksi)</h2><br />
+                    <h2 className="" htmlFor="preparasi_sample">Ya (esterifikasi/destruksi)</h2>
+                    </div>
+                    <br />
+                    <div className='flex'>
                     <input type="radio" name="preparasi_sample" onChange={(e) => {
                         e.preventDefault()
                         preparasi_sample[i] = e.target.value
                     }} value={false} />
-                    <h2 htmlFor="preparasi_sample">Tidak</h2><br />
+                    <h2 className="" htmlFor="preparasi_sample">Tidak</h2>
+                    </div>
+                    <br />
                 </div>
                 <div>
-                    <h2>Target senyawa/logam yang di cari
+                    <h2 className="text-lg font-semibold">Target senyawa/logam yang di cari
                     </h2>
                     <input name="target_senyawa" required type="text" onChange={(e) => {
                         e.preventDefault()
@@ -445,7 +458,7 @@ export default function order_analisis() {
                     }} />
                 </div>
                 <div>
-                    <h2 >Metode Parameter (Suhu/flow/panjang gelombang/fasa gerak, gas, dsb)
+                    <h2 className="text-lg font-semibold" >Metode Parameter (Suhu/flow/panjang gelombang/fasa gerak, gas, dsb)
                     </h2>
                     <input name="metode_parameter" required type="text" onChange={(e) => {
                         e.preventDefault()
@@ -453,7 +466,7 @@ export default function order_analisis() {
                     }} />
                 </div>
                 <div>
-                    <h2 >Jurnal pendukung
+                    <h2 className="text-lg font-semibold" >Jurnal pendukung
                     </h2>
                     <input name="jurnal_pendukung" type="file" onChange={(e) => {
                         e.preventDefault()
@@ -461,15 +474,16 @@ export default function order_analisis() {
                     }} />
                 </div>
                 <div>
-                    <h2 >Keterangan
+                    <h2 className="text-lg font-semibold" >Keterangan
                     </h2>
                     <input name="keterangan" type="text" onChange={(e) => {
                         e.preventDefault()
                         keterangan[i] = e.target.value
                     }} />
                 </div>
-
+                </div>
             </div>
+            </>
         )
     }
 
@@ -477,22 +491,28 @@ export default function order_analisis() {
         <>
             <div>
                 {/* <button onClick={() => { console.log(jenis_pengujian); console.log(nama_sample) }}>asd</button> */}
-                <h1>Order analisis</h1>
+                <h1 className='text-center text-2xl font-bold'>Order analisis</h1>
                 <br/>
                 <form onSubmit={handleSubmit}>
                     {duplicate}
-                    <div>
+                    <br/>
+                    <div className='flex mx-20'>
                         <input type="radio" id="verifikasi" name="verifikasi" value={true} required onClick={(e) => setVerifikasi(e.target.value)} />
                         <h2 htmlFor="verifikasi">Saya telah memahami proses pengujian yang akan dilakukan dan memahami syarat dan ketentuan yang telah dijelaskan oleh staff/pengelola laboratorium
                         </h2><br />
+                        
                     </div>
                     <br/>
-                    <button onClick={increment} className='bg-blue-200'>Tambah order</button>   
-                    <br/>
-                    <br/>   
-                    <button type="submit"  className='bg-blue-200'>Kirim</button>
+                    
                   
                 </form>
+                <div className='grid grid-cols-1 justify-items-center'>
+                <button onClick={increment} className='bg-blue-800 p-3 text-white rounded-lg'>Tambah order</button>   
+                    <br/>
+                    <br/>   
+                    <button type="submit"  className='bg-blue-800 p-3 text-white rounded-lg'>Kirim</button>
+                </div>
+                
                 
             </div>
         </>

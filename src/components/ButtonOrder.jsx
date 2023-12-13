@@ -25,7 +25,7 @@ export default function ButtonOrder() {
         <>
             <div className='cursor-pointer'>
 
-                <div className='w-40 h-full bg-blue-200' onClick={() => pesanLayanan()}>
+                <div className='w-40 h-full bg-blue-200 rounded-lg' onClick={() => pesanLayanan()}>
                     <h1 className='px-10 py-3'>Pesan Layanan</h1>
                 </div>
 
