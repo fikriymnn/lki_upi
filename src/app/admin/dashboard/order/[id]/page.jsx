@@ -8,9 +8,10 @@ export default function DetailOrder() {
     const [order, setOrder] = useState([{ jenis_pengujian: ["acap", "bubut"], nama_sample: "batu obsidian", jumlah_sample: 3, wujud_sample: "cair", pelarut: "asam", preparasi_sample: "panas", target_senyawa: "zat besi", metode_parameter: "mudah", jurnal_pendukung: "wwwe", keterangan: "sasdasdasd", hasil_analisis: "asdasdas" }])
     return (
         <>
-            <h1 className="text-2xl font-bold text-center">Edit Order</h1>
-            <br/>
-            <br/>
+             <p className='text-center text-4xl font-bold text-gray-800 mt-7'>EDIT ORDER</p>
+                      <div className='flex justify-center'>
+            <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center'/>
+        </div>
            
 
             <div className="mx-20">

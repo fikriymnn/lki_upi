@@ -7,9 +7,10 @@ export default function Order(){
     const [invoice,setInvoice] = useState([{list_sample:["asa","bbd"],invoice:"12asndaj23",tanggal:"17 agustus",index:1}])
     return (
         <>
-        <h1 className='text-center text-2xl font-bold'>Order</h1>
-        <br/>
-        <br/>
+         <p className='text-center text-4xl font-bold text-gray-800 mt-7'>ORDER</p>
+                      <div className='flex justify-center'>
+            <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center'/>
+        </div>
         <div className="mx-20">
         <Table>
         <Table.Head>
@@ -38,12 +39,12 @@ export default function Order(){
              
             </Table.Cell>
             <Table.Cell>
-              <a href="/admin/dashboard/order/123" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
+              <a href="/admin/dashboard/order/123" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                edit
               </a>
               <br/>
               <br/>
-              <a href="/my_order/tracking/12312" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
+              <a href="/my_order/tracking/12312" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                progress
               </a>
             </Table.Cell>
@@ -58,12 +59,12 @@ export default function Order(){
             <Table.Cell> RP.400000</Table.Cell>
 
             <Table.Cell>
-              <a href="/admin/dashboard/order/123" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
+              <a href="/admin/dashboard/order/123" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                edit
               </a>
               <br/>
               <br/>
-              <a href="/my_order/tracking/12312" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
+              <a href="/my_order/tracking/12312" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                progress
               </a>
             </Table.Cell>

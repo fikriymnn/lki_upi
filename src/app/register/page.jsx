@@ -38,9 +38,10 @@ export default function register({searchParams}) {
     return (
         <>
             <div>
-            <h1 className="text-center text-2xl font-bold">Register </h1>
-                <br/>
-                <br/>
+            <p className='text-center text-4xl font-bold text-gray-800 mt-7'>REGISTER</p>
+                      <div className='flex justify-center'>
+            <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center'/>
+        </div>
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="nama">Nama lengkap</label>

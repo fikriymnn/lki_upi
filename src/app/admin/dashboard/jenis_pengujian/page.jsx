@@ -61,9 +61,10 @@ export default function JenisPengujian(){
     const [jenisPengujian,setJenisPengujian] = useState([{jenis_alat:"Frezer",kode:"AACH"},{jenis_alat:"Pemanas",kode:"AAGD"}])
     return(
         <>
-        <h1 className='text-2xl font-bold text-center'>Jenis pengujian</h1>
-<br/>
-<br/>
+        <p className='text-center text-4xl font-bold text-gray-800 mt-7'>JENIS PENGUJIAN</p>
+                      <div className='flex justify-center'>
+            <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center'/>
+        </div>
         <form className="flex max-w-md flex-col gap-4 m-auto border-2 rounded-lg p-8">
         <h1 className='text-md text-center font-semibold'>Tambah data</h1>
         

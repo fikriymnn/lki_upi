@@ -6,9 +6,10 @@ export default function My_order(){
     return(
         <>
         <div>
-        <h1 className="text-2xl font-bold text-center">My Order</h1>
-            <br/>
-            <br/>
+        <p className='text-center text-4xl font-bold text-gray-800 mt-7'>MY ORDER</p>
+                      <div className='flex justify-center'>
+            <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center'/>
+        </div>
             <div className=" px-20">
       <Table>
         <Table.Head>
@@ -32,17 +33,17 @@ export default function My_order(){
             <Table.Cell>GCFID</Table.Cell>
             <Table.Cell>FID/12/12/2023</Table.Cell>
             <Table.Cell>
-              <a href="/my_order/detail/12312" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
+              
                 RP.300000
-              </a>
+             
             </Table.Cell>
             <Table.Cell>
-              <a href="/my_order/detail/12312" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
+              <a href="/my_order/detail/12312" className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                detail
               </a>
               <br/>
               <br/>
-              <a href="/my_order/tracking/12312" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
+              <a href="/my_order/tracking/12312" className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                progress
               </a>
             </Table.Cell>
@@ -57,12 +58,12 @@ export default function My_order(){
             <Table.Cell> RP.400000</Table.Cell>
 
             <Table.Cell>
-              <a href="/my_order/detail/12312" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
+              <a href="/my_order/detail/12312" className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                detail
               </a>
               <br/>
               <br/>
-              <a href="/my_order/tracking/12312" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
+              <a href="/my_order/tracking/12312" className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                progress
               </a>
             </Table.Cell>

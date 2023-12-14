@@ -4,10 +4,10 @@ import { Button } from 'flowbite-react';
 export default function Report() {
     return (
         <>
-            <p className='text-2xl text-center font-bold'>Report</p>
-       
-      <br/>
-      <br/>
+             <p className='text-center text-4xl font-bold text-gray-800 mt-7'>REPORT</p>
+                      <div className='flex justify-center'>
+            <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center'/>
+        </div>
    
             <Button color="blue" size={5} className='ml-10'>download laporan excel</Button>
             <br/>

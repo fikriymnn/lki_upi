@@ -7,9 +7,10 @@ export default function History_order(){
     const [invoice,setInvoice] = useState([{list_sample:["asa","bbd"],invoice:"12asndaj23",tanggal:"17 agustus",index:1}])
     return (
         <>
-        <h1 className='text-center text-2xl font-bold'>History Order</h1>
-        <br/>
-        <br/>
+         <p className='text-center text-4xl font-bold text-gray-800 mt-7'>HISTORY ORDER</p>
+                      <div className='flex justify-center'>
+            <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center'/>
+        </div>
         <div className="mx-20">
         <Table>
         <Table.Head>
