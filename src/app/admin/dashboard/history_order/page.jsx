@@ -21,9 +21,9 @@ export default function History_order(){
           <Table.HeadCell>
            Harga
           </Table.HeadCell>
-          <Table.HeadCell>
+          {/* <Table.HeadCell>
            Action
-          </Table.HeadCell>
+          </Table.HeadCell> */}
         </Table.Head>
         <Table.Body className="divide-y">
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -38,12 +38,12 @@ export default function History_order(){
                 RP.300000
              
             </Table.Cell>
-            <Table.Cell>
+            {/* <Table.Cell>
               <a href="/admin/dashboard/order/123" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
                detail
               </a>
               
-            </Table.Cell>
+            </Table.Cell> */}
           </Table.Row>
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
@@ -54,11 +54,11 @@ export default function History_order(){
             <Table.Cell>MS/12/12/2023</Table.Cell>
             <Table.Cell> RP.400000</Table.Cell>
 
-            <Table.Cell>
+            {/* <Table.Cell>
               <a href="/admin/dashboard/order/123" className="font-medium text-white bg-blue-400 py-1 px-2 hover:underline dark:text-cyan-500">
                detail
               </a>
-            </Table.Cell>
+            </Table.Cell> */}
           </Table.Row>
         </Table.Body>
       </Table>

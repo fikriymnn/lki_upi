@@ -14,7 +14,7 @@ export default function FooterCustom() {
               href="/"
               src="/logo.svg"
               alt="Flowbite Logo"
-              name="Flowbite"
+              name="LKI UPI"
             />
           </div>
           <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6">

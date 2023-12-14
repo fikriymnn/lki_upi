@@ -9,7 +9,7 @@ export default function Report() {
             <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center'/>
         </div>
    
-            <Button color="blue" size={5} className='ml-10'>download laporan excel</Button>
+            <Button color="failure" size={5} className='ml-10'>download report excel</Button>
             <br/>
         <div className='px-10'>
         <Table>

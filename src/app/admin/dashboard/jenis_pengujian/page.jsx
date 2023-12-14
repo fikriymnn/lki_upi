@@ -66,7 +66,7 @@ export default function JenisPengujian(){
             <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center'/>
         </div>
         <form className="flex max-w-md flex-col gap-4 m-auto border-2 rounded-lg p-8">
-        <h1 className='text-md text-center font-semibold'>Tambah data</h1>
+        <h1 className='text-md text-center font-bold'>Tambah data</h1>
         
       <div>
         <div className="mb-2 block">
@@ -80,19 +80,21 @@ export default function JenisPengujian(){
         </div>
         <TextInput id="password1" type="text" placeholder="kode" required />
       </div>
-      <Button type="submit">Submit</Button>
+      <Button type="submit" color='failure'>Tambah</Button>
     </form>
 
         
 <br/>
 <br/>
 <br/>
-<div className="px-20 pb-10">
+<div className="px-40 pb-10">
         <Table>
         <Table.Head>
           <Table.HeadCell>No</Table.HeadCell>
           <Table.HeadCell>Jenis alat</Table.HeadCell>
           <Table.HeadCell>Kode</Table.HeadCell>
+          <Table.HeadCell>Action</Table.HeadCell>
+
         
         </Table.Head>
         <Table.Body className="divide-y">
@@ -102,6 +104,9 @@ export default function JenisPengujian(){
             </Table.Cell>
             <Table.Cell>GCFID</Table.Cell>
             <Table.Cell>FID</Table.Cell>
+            <Table.Cell><a href="/admin/dashboard/jenis_pengujian" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+               Delete
+              </a></Table.Cell>
           </Table.Row>
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
@@ -109,6 +114,9 @@ export default function JenisPengujian(){
             </Table.Cell>
             <Table.Cell>GCMS</Table.Cell>
             <Table.Cell>MS</Table.Cell>
+            <Table.Cell><a href="/admin/dashboard/jenis_pengujian" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+               Delete
+              </a></Table.Cell>
           </Table.Row>
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
@@ -116,6 +124,9 @@ export default function JenisPengujian(){
             </Table.Cell>
             <Table.Cell>FTIR</Table.Cell>
             <Table.Cell>IR</Table.Cell>
+            <Table.Cell><a href="/admin/dashboard/jenis_pengujian" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+               Delete
+              </a></Table.Cell>
           </Table.Row>
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
@@ -123,6 +134,10 @@ export default function JenisPengujian(){
             </Table.Cell>
             <Table.Cell>HPLC</Table.Cell>
             <Table.Cell>HP</Table.Cell>
+            <Table.Cell><a href="/admin/dashboard/jenis_pengujian" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+               Delete
+              </a></Table.Cell>
+            
           </Table.Row>
           
         </Table.Body>

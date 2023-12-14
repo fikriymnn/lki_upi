@@ -37,34 +37,38 @@ export default function NavbarCustom() {
         </Navbar.Link> : <Navbar.Link href="/" className="mt-[2vh] font-semibold">
           Home
         </Navbar.Link>}
-        {adminPath[2] == "dashboard" ? "" : <Dropdown
-          arrowIcon={false}
-          inline
-          className=''
-          label={
-            <Navbar.Link className='mt-[2vh] font-semibold'>
-              Layanan
-            </Navbar.Link>
-          }
-        >
+        {adminPath[2] == "dashboard" ? "" : <Navbar.Link href="/analisis" className="mt-[2vh] font-semibold">
+          Layanan
+        </Navbar.Link>
+        // <Dropdown
+        //   arrowIcon={false}
+        //   inline
+        //   className=''
+        //   label={
+        //     <Navbar.Link className='mt-[2vh] font-semibold'>
+        //       Layanan
+        //     </Navbar.Link>
+        //   }
+        // >
 
 
 
-          <div className='bg-white md:w-[100vh] w-10vh  top-1   md:h-full grid md:grid-cols-3 grid-cols-1 justify-items-center'>
-            <Navbar.Link href="/analisis" className=""><div className="flex">
-              {/* <img src="/logo.svg" className=''/> */}
-              <h1 className='m-auto px-5 text-lg font-semibold'>Analisis</h1>
-            </div></Navbar.Link>
-            <Navbar.Link href="#" className="text-lg"><div className="flex">
-              {/* <img src="/logo.svg"/> */}
-              <h1 className='m-auto px-5 font-semibold'>Sertifikasi</h1>
-            </div></Navbar.Link>
-            <Navbar.Link href="#" className="text-lg"><div className="flex">
-              {/* <img src="/logo.svg"/> */}
-              <h1 className='m-auto px-5 font-semibold'>Pelatihan</h1>
-            </div></Navbar.Link>
-          </div>
-        </Dropdown>}
+        //   <div className='bg-white md:w-[100vh] w-10vh  top-1   md:h-full grid md:grid-cols-3 grid-cols-1 justify-items-center'>
+        //     <Navbar.Link href="/analisis" className=""><div className="flex">
+        //       {/* <img src="/logo.svg" className=''/> */}
+        //       <h1 className='m-auto px-5 text-lg font-semibold'>Analisis</h1>
+        //     </div></Navbar.Link>
+        //     <Navbar.Link href="#" className="text-lg"><div className="flex">
+        //       {/* <img src="/logo.svg"/> */}
+        //       <h1 className='m-auto px-5 font-semibold'>Sertifikasi</h1>
+        //     </div></Navbar.Link>
+        //     <Navbar.Link href="#" className="text-lg"><div className="flex">
+        //       {/* <img src="/logo.svg"/> */}
+        //       <h1 className='m-auto px-5 font-semibold'>Pelatihan</h1>
+        //     </div></Navbar.Link>
+        //   </div>
+        // </Dropdown>
+        }
 
         {adminPath[2] == "dashboard" ? <Navbar.Link href="/admin/dashboard/order" className="mt-[2vh] font-semibold">Order</Navbar.Link> : <Navbar.Link href="/about" className="mt-[2vh] font-semibold">About</Navbar.Link>}
         {adminPath[2] == "dashboard" ? <Navbar.Link href="/admin/dashboard/jenis_pengujian" className="mt-[2vh] font-semibold">Jenis pengujian</Navbar.Link> : <Navbar.Link href="/contact" className="mt-[2vh] font-semibold">Contact</Navbar.Link>}
