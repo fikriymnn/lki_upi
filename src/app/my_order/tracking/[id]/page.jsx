@@ -32,6 +32,11 @@ export default function tracking({ params }) {
 
 
                         {invoice.status == "menunggu pembayaran" ? <div><p className="text-blue-600 text-xl">selesai dikerjakan oleh operator</p></div> : <div className="flex"><p className="mx-10 w-28 text-center text-xl">-</p><p className="text-gray-400 text-xl">selesai dikerjakan oleh operator </p></div>}
+                        {invoice.status == "sample dikerjakan operator" ? <div><p className="text-blue-600 text-xl">Menunggu verifikasi</p></div> : <div className="flex"><p className="mx-10 w-28 text-center text-xs"></p><p className="text-gray-400 text-xl">Menunggu verifikasi</p></div>}
+
+                        
+
+                        {invoice.status == "menunggu pembayaran" ? <div><p className="text-blue-600 text-xl">selesai verifikasi</p></div> : <div className="flex"><p className="mx-10 w-28 text-center text-xl">-</p><p className="text-gray-400 text-xl">selesai verifikasi </p></div>}
                         {invoice.status == "menunggu pembayaran" ? <div><p className="">menunggu pembayaran</p></div> : <div className="flex"><p className="mx-10 w-28 text-center text-xs"></p><p className="text-gray-400 text-xl">menunggu pembayaran</p></div>}
 
 
