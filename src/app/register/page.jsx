@@ -9,9 +9,8 @@ export default function register({searchParams}) {
 
     const [userForm, setUserForm] = useState({
         nama: "",
-        jenisInstansi: "perorangan",
-        namaInstansi: "",
-        jabatan: "",
+        jenisInstitusi: "perorangan",
+        namaInstitusi: "",
         email: "",
         password: "",
         noTelp: "",
@@ -58,11 +57,8 @@ export default function register({searchParams}) {
                     </div>
                     {
                       userForm.jenisInstansi=="perorangan"?"":<div><div>
-                      <label htmlFor="namaInstansi">{userForm.jenisInstansi=="perusahaan"?"Nama perusahaan":"Nama instansi pendidikan dan jurusan"}</label>
+                      <label htmlFor="namaInstansi">{userForm.jenisInstitusi=="perusahaan"?"Nama perusahaan":"Nama institusi pendidikan dan Program Studi (*contoh UPI/KIMIA"}</label>
                       <input name="namaInstansi" required type="text" onChange={handleChange} />
-                  </div><div>
-                      <label htmlFor="jabatan">Jabatan</label>
-                      <input name="jabatan" required type="text" onChange={handleChange} />
                   </div>
                    </div>
                     }
