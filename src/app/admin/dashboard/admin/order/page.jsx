@@ -39,7 +39,7 @@ export default function Order(){
              
             </Table.Cell>
             <Table.Cell>
-              <a href="/admin/dashboard/order/123" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+              <a href="/admin/dashboard/admin/order/123" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                edit
               </a>
               <br/>
@@ -59,7 +59,7 @@ export default function Order(){
             <Table.Cell> RP.400000</Table.Cell>
 
             <Table.Cell>
-              <a href="/admin/dashboard/order/123" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+              <a href="/admin/dashboard/admin/order/123" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                edit
               </a>
               <br/>
