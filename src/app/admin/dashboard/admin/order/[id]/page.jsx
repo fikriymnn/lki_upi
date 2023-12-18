@@ -4,7 +4,7 @@ import { useState } from "react"
 
 export default function DetailOrder() {
     const [edit, setEdit] = useState(false)
-    const [invoice, setInvoice] = useState({ status: "", harga: "", invoice: "", kuitansi: "", bukti_pembayaran: "" })
+    const [invoice, setInvoice] = useState({ status: "", harga: "", invoice: "", kuitansi: "", bukti_pembayaran: "" ,estimasi_harga:""})
     const [order, setOrder] = useState([{ jenis_pengujian: ["acap", "bubut"], nama_sample: "batu obsidian", jumlah_sample: 3, wujud_sample: "cair", pelarut: "asam", preparasi_sample: "panas", target_senyawa: "zat besi", metode_parameter: "mudah", jurnal_pendukung: "wwwe", keterangan: "sasdasdasd", hasil_analisis: "asdasdas" }])
     return (
         <>
@@ -25,7 +25,6 @@ export default function DetailOrder() {
                 </select></p>
                     <p className="text-lg ">total harga  : <input type="text" name="harga" /></p></div> : <div><p className="text-lg ">status : menunggu form dikonfirmasi{invoice.status}</p>
                     <p className="text-lg ">total harga  : {invoice.harga} Rp.700000</p></div>}
-
                 <div className="flex"> <p className="text-lg ">estimasi harga  : {invoice.estimasi_harga} Rp.700000</p></div>
                 <div className="flex"><p className="text-lg ">invoice : {invoice.invoice}(tergenerate otomatis)</p> </div>
                 <div className="flex"><p className="text-lg ">kuitansi : {invoice.kuitansi}(tergenerate otomatis)</p></div>
