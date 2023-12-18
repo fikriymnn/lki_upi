@@ -1,12 +1,20 @@
 "use client"
 import { useRouter } from "next/navigation"
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
+import { useState } from "react";
 
 export default function admin(){
+    const [role,setRole] = useState("admin")
     const router = useRouter()
 
     const onSubmit = (e)=>{
-        router.push('/admin/dashboard')
+
+        if(role=="admin"){
+            router.push('/admin/dashboard/admin')
+        } else {
+            router.push('/admin/dashboard/operator')
+        }
+       
     }
     return(
         <>

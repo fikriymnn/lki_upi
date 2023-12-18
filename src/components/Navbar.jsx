@@ -7,6 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 
 export default function NavbarCustom() {
   const [login, setLogin] = useState(true)
+  const [role, setRole] = useState("admin")
   const path = usePathname()
   const adminPath = path.split("/")
 
@@ -32,14 +33,12 @@ export default function NavbarCustom() {
 
       <Navbar.Toggle />
       <Navbar.Collapse className='md:mr-20'>
-        {adminPath[2] == "dashboard" ? <Navbar.Link href="/admin/dashboard" className="mt-[2vh] font-semibold">
+        {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard" className="mt-[2vh] font-semibold">
           Content
-        </Navbar.Link> : <Navbar.Link href="/" className="mt-[2vh] font-semibold">
-          Home
-        </Navbar.Link>}
-        {adminPath[2] == "dashboard" ? "" : <Navbar.Link href="/analisis" className="mt-[2vh] font-semibold">
+        </Navbar.Link> : ''}
+        {adminPath[2] !== "dashboard" ? <Navbar.Link href="/analisis" className="mt-[2vh] font-semibold">
           Layanan
-        </Navbar.Link>
+        </Navbar.Link>:""
         // <Dropdown
         //   arrowIcon={false}
         //   inline
@@ -70,15 +69,18 @@ export default function NavbarCustom() {
         // </Dropdown>
         }
 
-        {adminPath[2] == "dashboard" ? <Navbar.Link href="/admin/dashboard/order" className="mt-[2vh] font-semibold">Order</Navbar.Link> : <Navbar.Link href="/about" className="mt-[2vh] font-semibold">About</Navbar.Link>}
-        {adminPath[2] == "dashboard" ? <Navbar.Link href="/admin/dashboard/jenis_pengujian" className="mt-[2vh] font-semibold">Jenis pengujian</Navbar.Link> : <Navbar.Link href="/contact" className="mt-[2vh] font-semibold">Contact</Navbar.Link>}
-        {adminPath[2] == "dashboard" ? <Navbar.Link href="/admin/dashboard/report" className="mt-[2vh] font-semibold">Report</Navbar.Link> : ""}
-        {adminPath[2] == "dashboard" ? <Navbar.Link href="/admin/dashboard/history_order" className="mt-[2vh] font-semibold">History order</Navbar.Link> : ""}
-        {!login?"":adminPath[2] == "dashboard" ? "" : <Navbar.Link href="/my_order" className="mt-[2vh] font-semibold">My order</Navbar.Link>}
-        {!login ? <Navbar.Link href={`/login?prevRoute=${path}`} className="mt-[2vh] font-semibold">Login</Navbar.Link> : ""}
-        {adminPath[2] == "dashboard" ? "" : <Navbar.Link href={`/login?prevRoute=${path}`} className="mt-[2vh] font-semibold">Login</Navbar.Link>
-}
-        
+        {adminPath[2] == "dashboard" && role == "admin"? <Navbar.Link href="/admin/dashboard/admin/order" className="mt-[2vh] font-semibold"> Order </Navbar.Link> : <Navbar.Link href="/admin/dashboard/operator/order_operator" className="mt-[2vh] font-semibold">Order Operator</Navbar.Link>}
+
+        {adminPath[2] !== "dashboard"?<Navbar.Link href="/about" className="mt-[2vh] font-semibold">About</Navbar.Link>:""}
+
+        {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard/admin/jenis_pengujian" className="mt-[2vh] font-semibold">Jenis pengujian</Navbar.Link> : ""}
+
+        {adminPath[2] !== "dashboard"?<Navbar.Link href="/contact" className="mt-[2vh] font-semibold">Contact</Navbar.Link>:""}
+
+        {adminPath[2] == "dashboard" && role == "admin"? <Navbar.Link href="/admin/dashboard/admin/report" className="mt-[2vh] font-semibold">Report</Navbar.Link> : ""}
+
+        {login?adminPath[2] !== "dashboard"?<Navbar.Link href="/my_order" className="mt-[2vh] font-semibold">My order</Navbar.Link>:"":<Navbar.Link href={`/login?prevRoute=${path}`} className="mt-[2vh] font-semibold">Login</Navbar.Link> }
+
 
       </Navbar.Collapse>
     </Navbar>
