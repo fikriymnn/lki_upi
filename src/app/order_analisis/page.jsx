@@ -242,7 +242,7 @@ export default function order_analisis() {
     const [countForm, setCountForm] = useState(1);
     const [duplicate, setDuplicate] = useState([<CustomForm i={0} key={0} />]);
     // const [jenis_pengujian,setJenis_pengujian ] = useState([[]])
-    const [jenis_pengujian, setJenis_pengujian] = useState([])
+    const [jenis_pengujian, setJenis_pengujian] = useState([[]])
     // const jenis_pengujian = []
 
     const [nama_sample, setNama_sample] = useState([])
@@ -320,9 +320,9 @@ export default function order_analisis() {
         console.log(jenis_pengujian)
         e.preventDefault()
         setDuplicate([...duplicate, <CustomForm i={countForm} key={duplicate.length} />])
-        // let add = jenis_pengujian
-        // add.push([])
-        // setJenis_pengujian([...add])
+        let add = jenis_pengujian
+        add.push([])
+        setJenis_pengujian([...add])
     }
 
     const handleSubmit = () => {
@@ -345,13 +345,13 @@ export default function order_analisis() {
                             
                             return (
                                 <div key={b}>
-                                    <input type="radio" id={`preparasi_sample${i}${b}`} onChange={(e) => {
+                                    {/* <input type="radio" id={`preparasi_sample${i}${b}`} onChange={(e) => {
                                         e.preventDefault()
                                 jenis_pengujian[i] = e.target.value
                                     }} value={a.jenis_alat} />
                                     
-                                    <label htmlFor={`preparasi_sample${i}${b}`}>{a.jenis_alat}</label>
-                                    {/* <input type="checkbox" id={`jenis_alat${b}${i}`} name={`jenis_alat${b}${i}`} value={a.jenis_alat} onChange={(e) => {
+                                    <label htmlFor={`preparasi_sample${i}${b}`}>{a.jenis_alat}</label> */}
+                                    <input type="checkbox" id={`jenis_alat${b}${i}`} name={`jenis_alat${b}${i}`} value={a.jenis_alat} onChange={(e) => {
                                         const {checked,value} = e.target
                                         if(checked){
                                             let copya = jenis_pengujian
@@ -373,7 +373,7 @@ export default function order_analisis() {
 
                                             
                                         }
-                                    }} /> */}
+                                    }} />
                                     
 
                                 </div>
