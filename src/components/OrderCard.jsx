@@ -1,4 +1,4 @@
-"client"
+"use client"
 import Link from "next/link";
 import { Button } from 'flowbite-react';
 export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_sample, target_senyawa, metode_parameter, jurnal_pendukung, keterangan,hasil_analisis
