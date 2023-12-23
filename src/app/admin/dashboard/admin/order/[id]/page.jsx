@@ -14,16 +14,10 @@ export default function DetailOrder() {
             </div>
             <div className="mx-20">
                 {edit ? <button onClick={() => setEdit(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Konfirmasi</button> : <button onClick={() => setEdit(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Edit</button>}
-                {edit ? <div><p className="text-lg ">status : <select>
-                    <option value="menunggu form dikonfirmasi">menunggu form dikonfirmasi</option>
-                    <option value="form dikonfirmasi">form dikonfirmasi</option>
-                    <option value="sample diterima admin">sample diterima admin</option>
-                    <option value="sample dikerjakan operator">sample dikerjakan operator</option>
-                    <option value="menunggu pembayaran">menunggu pembayaran</option>
-                    <option value="pembayaran selesai">pembayaran selesai</option>
-                    <option value="selesai">selesai</option>
-                </select></p>
-                    <p className="text-lg ">total harga  : <input type="text" name="harga" /></p></div> : <div><p className="text-lg ">status : menunggu form dikonfirmasi{invoice.status}</p>
+                <div><p className="text-lg ">status : menunggu form dikonfirmasi{invoice.status}</p></div>
+                
+                {edit ? <div>
+                    <p className="text-lg ">total harga  : <input type="text" name="harga" /></p></div> : <div>
                     <p className="text-lg ">total harga  : {invoice.harga} Rp.700000</p></div>}
                 <div className="flex"> <p className="text-lg ">estimasi harga  : {invoice.estimasi_harga} Rp.700000</p></div>
                 <div className="flex"><p className="text-lg ">invoice : {invoice.invoice}(tergenerate otomatis)</p> </div>

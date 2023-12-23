@@ -44,7 +44,7 @@ export default function Order(){
               </a>
               <br/>
               <br/>
-              <a href="/my_order/tracking/12312" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+              <a href="/admin/dashboard/admin/order/tracking/123" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                progress
               </a>
             </Table.Cell>
@@ -64,7 +64,7 @@ export default function Order(){
               </a>
               <br/>
               <br/>
-              <a href="/my_order/tracking/12312" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+              <a href="/admin/dashboard/admin/order/tracking/123" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                progress
               </a>
             </Table.Cell>
