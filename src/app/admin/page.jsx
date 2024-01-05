@@ -1,21 +1,64 @@
 "use client"
 import { useRouter } from "next/navigation"
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import axios from "axios";
 
 export default function admin(){
-    const [role,setRole] = useState("admin")
+    const [userForm, setUserForm] = useState({
+        email: "",
+        password: ""
+    })
     const router = useRouter()
 
-    const onSubmit = (e)=>{
-
-        if(role=="admin"){
-            router.push('/admin/dashboard/admin')
-        } else {
-            router.push('/admin/dashboard/operator')
+    useEffect(()=>{
+        async function user(){
+            try{
+                const data = await axios.get("http://localhost:5000/api/user",{
+                    withCredentials: true
+                })
+                console.log(data)
+                if (data.data.success) {
+                    router.replace("/admin/dashboard")
+                }
+            }catch(err){
+               console.log(err.message)
+            }
+                    
         }
-       
+        user()
+    },[])
+
+    const handleChange = (e) => {
+        const { name, value } = e.target
+        setUserForm(prev => ({ ...prev, [name]: value }))
+        console.log(userForm)
     }
+
+    const onSubmit = (e)=>{
+        e.preventDefault()
+        const get_user = async ()=>{
+            try{
+                const data = await axios.post("http://localhost:5000/api/login",userForm,{withCredentials:true})
+                console.log(data)
+                if(data.data.success==true){
+                    window.location.replace("/admin/dashboard")
+                }else{
+                    alert(data.message)
+                }
+            }catch(err){
+                alert(err.message)
+            }
+            
+        }
+        get_user()
+    }
+
+    // if(role=="admin"){
+    //     router.push('/admin/dashboard/admin')
+    // } else {
+    //     router.push('/admin/dashboard/operator')
+    // }
     return(
         <>
         <div className="">
@@ -23,21 +66,21 @@ export default function admin(){
                       <div className='flex justify-center'>
             <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center'/>
         </div>
-                <form className="flex max-w-md flex-col gap-4 m-auto ">
+                <form className="flex max-w-md flex-col gap-4 m-auto " onSubmit={onSubmit}>
                     <div >
                         <div className="mb-2 block ">
-                            <Label htmlFor="email1" value="Your email" />
+                            <Label htmlFor="email" value="Your email" />
                         </div>
-                        <TextInput id="email1" type="text" placeholder="email" required />
+                        <TextInput id="email" type="text" placeholder="email" name="email" required onChange={handleChange}/>
                     </div>
                     <div>
                         <div className="mb-2 block ">
                             <Label htmlFor="password" value="Your password" />
                         </div>
-                        <TextInput id="password" type="password" required placeholder="password" />
+                        <TextInput id="password" type="password" name="password" required placeholder="password" onChange={handleChange}/>
                     </div>
                    
-                    <Button onClick={onSubmit} color="failure">Submit</Button>
+                    <Button type="submit" color="failure">Submit</Button>
                     <br />
                 <br />
                

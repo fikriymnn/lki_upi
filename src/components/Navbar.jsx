@@ -4,24 +4,45 @@ import { Avatar, Dropdown, Navbar } from 'flowbite-react';
 import { UserContext } from '@/context/userContext';
 import { useContext, useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import axios from 'axios';
+import Router from 'next/router';
 
 export default function NavbarCustom() {
-  const [login, setLogin] = useState(true)
-  const [role, setRole] = useState("admin")
+  const [login, setLogin] = useState(false)
+  const [role, setRole] = useState("")
   const path = usePathname()
+  const router = useRouter()
   const adminPath = path.split("/")
 
-  // useEffect(()=>{
-  //   const user = async () => {
-  //     const data = await fetch("http://localhost:5000/api/user")
-  //     if (data.success == true) {
-  //       setLogin(true)
-  //     }else{
-  //       console.log('false')
-  //     }
-  //   }
-  //   user()
-  // },[])
+  useEffect(()=>{
+    const user = async () => {
+      try{
+        const data = await axios("http://localhost:5000/api/user",{ withCredentials: true })
+        console.log(data)
+        if (data.data.success == true) {
+          console.log(data)
+          setLogin(true)
+          setRole(data.data.role)
+        }else{
+          console.log('false')
+        }
+      }catch(err){
+        console.log(err.message)
+      }
+      
+    }
+    user()
+  },[])
+
+  const handleLogout = async ()=>{
+    try{
+      await axios.delete("http://localhost:5000/api/logout",{ withCredentials: true })
+      window.location.replace('/')
+    }catch(err){
+      alert(err.message)
+    }
+    
+  }
 
   return (
     <Navbar fluid rounded className='md:h-[12vh] fixed w-full z-50'>
@@ -83,6 +104,8 @@ export default function NavbarCustom() {
         {adminPath[2] == "dashboard" && role == "admin"? <Navbar.Link href="/admin/dashboard/admin/report" className="mt-[2vh] font-semibold">Report</Navbar.Link> : ""}
 
         {login?adminPath[2] !== "dashboard"?<Navbar.Link href="/my_order" className="mt-[2vh] font-semibold">My order</Navbar.Link>:"":<Navbar.Link href={`/login?prevRoute=${path}`} className="mt-[2vh] font-semibold">Login</Navbar.Link> }
+        {login&&adminPath[2] !== "dashboard"?<Navbar.Link onClick={handleLogout} className="mt-[2vh] font-semibold">Logout</Navbar.Link>:""}
+        {login&&adminPath[2] !== "dashboard"?<Navbar.Link href="/profile" className="mt-[2vh] font-semibold">Profile</Navbar.Link>:""}
 
 
       </Navbar.Collapse>

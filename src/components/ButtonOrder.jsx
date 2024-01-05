@@ -14,7 +14,6 @@ export default function ButtonOrder() {
     function pesanLayanan() {
         if (!user.login) {
             router.push(`/login?prevRoute=${prevRoute}`)
-
         } else {
             router.push(`/order_analisis`)
         }
@@ -24,12 +23,9 @@ export default function ButtonOrder() {
     return (
         <>
             <div className='cursor-pointer'>
-
                 <div className='w-40 h-full bg-red-700 rounded-lg' onClick={() => pesanLayanan()}>
                     <h1 className='px-5 py-3 font-semibold text-white'>Pesan Layanan</h1>
                 </div>
-
-
             </div>
         </>
     )

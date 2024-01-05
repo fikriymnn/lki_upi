@@ -3,19 +3,41 @@ import { useState, useContext, useEffect } from "react"
 import { UserContext } from "@/context/userContext"
 import { useRouter } from 'next/navigation'
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
+import axios from "axios";
+import Router from "next/router";
 
 export default function login({ searchParams }) {
     const router = useRouter()
+    
     const { prevRoute } = searchParams
-    // const [email,setEmail] = useState('')
-    // const [password,setPassword] = useState('')
-    const [login,setLogin] = useState(false)
-
-
     const [userForm, setUserForm] = useState({
         email: "",
         password: ""
     })
+
+    useEffect(()=>{
+        async function user(){
+            try{
+                const data = await axios.get("http://localhost:5000/api/user",{
+                    withCredentials: true
+                })
+               
+                if (data.data.success) {
+                    if (prevRoute) {
+            
+                        router.replace(prevRoute)
+                    }else{
+                        
+                        router.replace("/")
+                    }
+                }  
+            }catch(err){
+               console.log(err.message)
+            }
+                    
+        }
+        user()
+    },[])
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -25,35 +47,24 @@ export default function login({ searchParams }) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        // const get_user = async ()=>{
-        //     const data = await fetch("http://localhost:5000/api/login", {
-        //         Method: 'POST',
-        //         Headers: {
-        //           Accept: 'application.json',
-        //           'Content-Type': 'application/json'
-        //         },
-        //         Body: {email:userForm.email,password:userForm.password},
-        //         Cache: 'default'
-        //       })
-
-        //     if(data.success==true){
-        //         setLogin(true)
-        //     }
-        // }
-        // get_user()
-
-        // setTimeout(() => {
-        //     if (login) {
-                if (prevRoute) {
-                    router.push(prevRoute)
-                } else {
-
-                    router.push("/")
+        const get_user = async ()=>{
+            try{
+                const data = await axios.post("http://localhost:5000/api/login",userForm,{withCredentials:true})
+                if(data.data.success==true){
+                    if (prevRoute) {
+                        window.location.replace(prevRoute)
+                       
+                    } else {
+                        window.location.replace("/")
+                       
+                    }
                 }
-            // }
-          
-        // }, 2000)
-
+            }catch(err){
+                alert(err.message)
+            }
+            
+        }
+        get_user()
     }
 
   
@@ -70,13 +81,13 @@ export default function login({ searchParams }) {
                         <div className="mb-2 block">
                             <Label htmlFor="email1" value="Your email" />
                         </div>
-                        <TextInput id="email1" type="text" placeholder="email" required  onChange={handleChange}/>
+                        <TextInput id="email1" type="text" name="email" placeholder="email" required  onChange={handleChange}/>
                     </div>
                     <div>
                         <div className="mb-2 block">
                             <Label htmlFor="password" value="Your password" />
                         </div>
-                        <TextInput id="password" type="password" required placeholder="password"  onChange={handleChange}/>
+                        <TextInput id="password" type="password" name="password" required placeholder="password"  onChange={handleChange}/>
                     </div>
                    
                     <Button type="submit" color="failure">Submit</Button>
