@@ -4,7 +4,6 @@ import axios from "axios"
 import { useRouter } from "next/navigation"
 
 export default function layout({children}){
-    const [role,setRole] = useState("")
    const router= useRouter()
 useEffect(()=>{
         async function user(){
@@ -12,12 +11,12 @@ useEffect(()=>{
                 const data = await axios.get("http://localhost:5000/api/user",{
                     withCredentials: true
                 })
-                setRole(data.data.data.role)
-                if(data.data.data.role!=="pj"){
+                if(data.data.success=="user"){
                     router.replace("/")
                 }                
             }catch(err){
-                router.replace("/")
+                // router.replace("/")
+                return false
             }  
         }
         user()
@@ -25,7 +24,7 @@ useEffect(()=>{
 
     return (
         <>
-        {role=="pj"?children:<div className="h-screen"><p className="m-auto text-center">Loading</p></div>}
+        {children}
         </>
     )
 }

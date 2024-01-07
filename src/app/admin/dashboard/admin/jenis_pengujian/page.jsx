@@ -1,6 +1,9 @@
 'use client'
 import {useState} from 'react'
 import { Table, Button, Checkbox, Label, TextInput } from 'flowbite-react';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const kode = [
     {
@@ -59,6 +62,26 @@ const kode = [
 ]
 export default function JenisPengujian(){
     const [jenisPengujian,setJenisPengujian] = useState([{jenis_alat:"Frezer",kode:"AACH"},{jenis_alat:"Pemanas",kode:"AAGD"}])
+    // const router = useRouter()
+
+  //   useEffect(()=>{
+  //     async function user(){
+  //         try{
+  //             const data = await axios.get("http://localhost:5000/api/user",{
+  //                 withCredentials: true
+  //             })
+  //             // setRole(data.data.data.role)
+  //                 if(data.data.data.role!=="admin"){
+  //                     router.replace("/")
+  //                 }
+                  
+  //         }catch(err){
+  //             console.log(err.message)
+  //         }
+                  
+  //     }
+  //     user()
+  // },[])
     return(
         <>
         <p className='text-center text-4xl font-bold text-gray-800 mt-7'>JENIS PENGUJIAN</p>
