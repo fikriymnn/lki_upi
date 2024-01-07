@@ -29,7 +29,7 @@ useEffect(()=>{
     return (
         
         <>
-        {role=="operator"?children:router.replace("/")}
+        {role=="pj"?children:router.replace("/")}
         </>
     )
 }

@@ -4,7 +4,7 @@ import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
 
-export default function Dashboard() {
+export default function Adminn() {
   const [value, setValue] = useState('');
   const [carousel, setCarousel] = useState(["efrfwef","asdfsdf","sdfae"]);
   const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);

@@ -5,29 +5,12 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 
 export default function admin(){
+    const [role,setRole] = useState('')
     const [userForm, setUserForm] = useState({
         email: "",
         password: ""
     })
     const router = useRouter()
-
-    useEffect(()=>{
-        async function user(){
-            try{
-                const data = await axios.get("http://localhost:5000/api/user",{
-                    withCredentials: true
-                })
-                console.log(data)
-                if (data.data.success) {
-                    router.replace("/admin/dashboard")
-                }
-            }catch(err){
-               console.log(err.message)
-            }
-                    
-        }
-        user()
-    },[])
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -35,14 +18,47 @@ export default function admin(){
         console.log(userForm)
     }
 
+    useEffect(()=>{
+
+        async function getUser(){
+            try{
+                const data = await axios.get("http://localhost:5000/api/user",{
+                    withCredentials: true
+                })
+
+                if (data.data.success==true) {
+                   
+                    if(data.data.data.role=="admin"||data.data.data.role=="operator"||data.data.data.role=="pj"){
+                        router.replace("/")
+                    }
+                }else{
+                   router.replace("/")
+                }  
+            }catch(err){
+    
+            }
+        }
+       getUser()
+       
+    },[])
+
     const onSubmit = (e)=>{
         e.preventDefault()
         const get_user = async ()=>{
             try{
                 const data = await axios.post("http://localhost:5000/api/login",userForm,{withCredentials:true})
                 console.log(data)
+                setRole(data.data.data.role)
                 if(data.data.success==true){
-                    window.location.replace("/admin/dashboard")
+                   
+                    console.log(role)
+                    if (data.data.data.role=="admin") {
+                        window.location.replace('/admin/dashboard/admin')
+                    } else if(data.data.data.role=="operator") {
+                        window.location.replace('/admin/dashboard/operator')
+                    }else if(data.data.data.role=="pj") {
+                        window.location.replace('/admin/dashboard/pj')
+                    }
                 }else{
                     alert(data.message)
                 }
