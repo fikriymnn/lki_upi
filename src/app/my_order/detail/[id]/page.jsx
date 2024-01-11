@@ -3,16 +3,36 @@
 import { useEffect, useState } from "react"
 import OrderCard from "@/components/OrderCard"
 import { Button } from 'flowbite-react';
+import axios from 'axios'
 
 
-export default function detail({ params }) {
+export default function detail({ params,searchParams }) {
     const { id } = params
+    const {_id} = searchParams
     const [order, setOrder] = useState([{jenis_pengujian:["acap","bubut"], nama_sample:"batu obsidian", jumlah_sample:3, wujud_sample:"cair", pelarut:"asam", preparasi_sample:"panas", target_senyawa:"zat besi", metode_parameter:"mudah", jurnal_pendukung:"wwwe", keterangan:"sasdasdasd",hasil_analisis:"asdasdas"}])
+    const [invoice,setInvoice]=useState({})
 
-    // useEffect(async ()=>{
-    //     const data = [{nama_sample:"rujak"},{nama_sample:"sambel"}];         
-    //     setOrder(data)
-    // },[])
+    useEffect(()=>{
+        async function getInvoice(){
+            try{
+              const dataUser = await axios.get("http://localhost:5000/api/user",{withCredentials:true})
+              console.log(dataUser)
+              if(dataUser.data.success){
+                console.log(dataUser)
+                const data = await axios.get(`http://localhost:5000/api/invoice/${_id}`,{withCredentials:true})
+                const dataOrder = await axios.get(`http://localhost:5000/api/order?invoice=${id}&skip=0&limit20`,{withCredentials:true})
+                console.log(data)
+                if(data.data.success){
+                  setInvoice(data.data.data)
+                  setOrder(dataOrder.data.data)
+                }
+              }
+            }catch(err){
+              console.log(err.message)
+            }
+           }
+           getInvoice()
+    },[])
 
     return (
         <>

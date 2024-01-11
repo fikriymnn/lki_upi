@@ -4,20 +4,47 @@ import { redirect } from 'next/navigation'
 import { UserContext } from '@/context/userContext'
 import { useState, useContext } from 'react'
 import { useRouter, usePathname} from 'next/navigation'
+import axios from 'axios'
 
 
 export default function ButtonOrder() {
     const router = useRouter()
     const prevRoute = usePathname()
-    const { user } = useContext(UserContext)
 
-    function pesanLayanan() {
-        if (!user.login) {
-            router.push(`/login?prevRoute=${prevRoute}`)
-        } else {
-            router.push(`/order_analisis`)
-        }
-    }
+
+    // useEffect(()=>{
+    //     const user = async () => {
+    //       try{
+    //         const data = await axios("http://localhost:5000/api/user",{ withCredentials: true })
+    //         console.log(data)
+    //         if (data.data.success == true) {
+    //             setRole(data.data.data.role)
+    //             if(data.data.data.role=="user"){
+    //               setLogin(true)
+    //             }
+    //         }
+    //       }catch(err){
+    //        return false
+    //       }
+    //     }
+    //     user()
+    //   },[])
+
+    async function pesanLayanan() {
+        try{
+            const data = await axios("http://localhost:5000/api/user",{ withCredentials: true })
+            console.log(data)
+            if (data.data.success == true) {
+                if(data.data.data.role=="user"){
+                    router.push(`/order_analisis`)
+                }
+            }else{
+                router.push(`/login?prevRoute=${prevRoute}`)
+            }
+          }catch(err){
+               router.push(`/login?prevRoute=${prevRoute}`)
+          }
+    }  
 
 
     return (
