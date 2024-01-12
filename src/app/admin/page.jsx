@@ -5,7 +5,7 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 
 export default function admin(){
-    const [role,setRole] = useState('')
+    // const [role,setRole] = useState('')
     const [userForm, setUserForm] = useState({
         email: "",
         password: ""
@@ -48,15 +48,13 @@ export default function admin(){
             try{
                 const data = await axios.post("http://localhost:5000/api/login",userForm,{withCredentials:true})
                 console.log(data)
-                setRole(data.data.data.role)
                 if(data.data.success==true){
-                   
-                    console.log(role)
-                    if (data.data.data.role=="admin") {
+                    const dataUser = await axios.get("http://localhost:5000/api/user",{withCredentials:true})
+                    if (dataUser.data.data.role=="admin") {
                         window.location.replace('/admin/dashboard/admin')
-                    } else if(data.data.data.role=="operator") {
+                    } else if(dataUser.data.data.role=="operator") {
                         window.location.replace('/admin/dashboard/operator')
-                    }else if(data.data.data.role=="pj") {
+                    }else if(dataUser.data.data.role=="pj") {
                         window.location.replace('/admin/dashboard/pj')
                     }
                 }else{

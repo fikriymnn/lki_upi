@@ -1,89 +1,92 @@
 'use client'
 import AdminInvoiceCard from "@/components/AdminInvoiceCard"
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import { Table } from 'flowbite-react';
+import axios from "axios"
 
-export default function Order(){
-    const [invoice,setInvoice] = useState([{list_sample:["asa","bbd"],invoice:"12asndaj23",tanggal:"17 agustus",index:1}])
-    return (
-        <>
-         <p className='text-center text-4xl font-bold text-gray-800 mt-7'>ORDER</p>
-                      <div className='flex justify-center'>
-            <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center'/>
-        </div>
-        <div className="mx-20">
-        <Table>
-        <Table.Head>
-          <Table.HeadCell>No</Table.HeadCell>
-          <Table.HeadCell>Tanggal</Table.HeadCell>
-          <Table.HeadCell>Sample</Table.HeadCell>
-          <Table.HeadCell>Invoice</Table.HeadCell>
-          <Table.HeadCell>
-           Harga
-          </Table.HeadCell>
-          <Table.HeadCell>
-           Action
-          </Table.HeadCell>
-        </Table.Head>
-        <Table.Body className="divide-y">
-          <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              {'1'}
-            </Table.Cell>
-            <Table.Cell>19 Desember 2023</Table.Cell>
-            <Table.Cell>GCFID</Table.Cell>
-            <Table.Cell>FID/12/12/2023</Table.Cell>
-            <Table.Cell>
-              
-                RP.300000
-             
-            </Table.Cell>
-            <Table.Cell>
-              <a href="/admin/dashboard/admin/order/123" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
-               edit
-              </a>
-              <br/>
-              <br/>
-              <a href="/admin/dashboard/admin/order/tracking/123" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
-               progress
-              </a>
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              {'2'}
-            </Table.Cell>
-            <Table.Cell>25 Desember 2023</Table.Cell>
-            <Table.Cell>GCMS</Table.Cell>
-            <Table.Cell>MS/12/12/2023</Table.Cell>
-            <Table.Cell> RP.400000</Table.Cell>
+export default function Order() {
 
-            <Table.Cell>
-              <a href="/admin/dashboard/admin/order/123" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
-               edit
-              </a>
-              <br/>
-              <br/>
-              <a href="/admin/dashboard/admin/order/tracking/123" className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
-               progress
-              </a>
-            </Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      </Table>
+  const [invoice, setInvoice] = useState([])
+
+  useEffect(() => {
+    async function getInvoice() {
+      try {
+        const dataUser = await axios.get("http://localhost:5000/api/user", { withCredentials: true })
+        console.log(dataUser)
+        if (dataUser.data.success) {
+          console.log(dataUser)
+          const data = await axios.get(`http://localhost:5000/api/invoice?id_user=${dataUser.data.data._id}&skip=0&limit=10`, { withCredentials: true })
+          console.log(data)
+          if (data.data.success) {
+            setInvoice(data.data.data)
+          }
+        }
+      } catch (err) {
+        console.log(err.message)
+      }
+    }
+    getInvoice()
+  }, [])
+  return (
+    <>
+      <p className='text-center text-4xl font-bold text-gray-800 mt-7'>ORDER</p>
+      <div className='flex justify-center'>
+        <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
       </div>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-         {/* {
-            invoice.map((e,i)=>{
-                return <AdminInvoiceCard list_sample={e.list_sample} invoice={e.invoice} tanggal={e.tanggal} index={++i} key={i}/>
+      <div className="mx-20">
+        <Table>
+          <Table.Head>
+            <Table.HeadCell>No</Table.HeadCell>
+            <Table.HeadCell>Tanggal</Table.HeadCell>
+            <Table.HeadCell>Invoice</Table.HeadCell>
+            <Table.HeadCell>
+              Harga
+            </Table.HeadCell>
+            <Table.HeadCell>
+              Keterangan
+            </Table.HeadCell>
+            <Table.HeadCell>
+              Status
+            </Table.HeadCell>
+          </Table.Head>
+          <Table.Body className="divide-y">
 
-            })
-         } */}
-        </>
-    )
+            {
+              invoice.map((v, i) => {
+                return (
+                  <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                      {i+1}
+                    </Table.Cell>
+                    <Table.Cell>{v.date.getMonth()}</Table.Cell>
+                    <Table.Cell>{v.no_invoice}</Table.Cell>
+                    <Table.Cell>{v.harga}</Table.Cell>
+                    <Table.Cell>
+                      <a href={`/admin/dashboard/admin/order/${v._id}?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+                        keterangan
+                      </a>
+                    </Table.Cell>
+                    <Table.Cell>
+                    <p>{v.status}</p>
+                    <br/>
+                      <a href={`/admin/dashboard/admin/order/tracking/${v._id}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+                        keterangan
+                      </a>
+                    </Table.Cell>
+                  </Table.Row>
+                )
+              })
+            }
+
+          </Table.Body>
+        </Table>
+      </div>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+    </>
+  )
 }
 

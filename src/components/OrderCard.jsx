@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link";
 import { Button } from 'flowbite-react';
-export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_sample, target_senyawa, metode_parameter, jurnal_pendukung, keterangan,hasil_analisis
+export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi,hasil_analisis,foto_sample,kode_pengujian
 }) {
 
     return (
@@ -24,11 +24,11 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">jenis pengujian sample : </h1>
-                    <ul>
-                        {jenis_pengujian.map((value,i) => {
-                            return <li key={i}>{value}</li>
-                        })}
-                    </ul>
+                    <h1>{jenis_pengujian}</h1>
+                </div>
+                <div>
+                    <h1 className="text-lg font-semibold text-grey-600">kode pengujian sample : </h1>
+                    <h1>{kode_pengujian}</h1>
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">wujud sample : </h1>
@@ -39,8 +39,8 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
                     <h1>{pelarut}</h1>
                 </div>
                 <div>
-                    <h1 className="text-lg font-semibold text-grey-600">preparasi sample : </h1>
-                    <h1>{preparasi_sample}</h1>
+                    <h1 className="text-lg font-semibold text-grey-600">preparasi khusus : </h1>
+                    <h1>{preparasi_khusus}</h1>
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">target senyawa : </h1>
@@ -51,15 +51,20 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
                     <h1>{metode_parameter}</h1>
                 </div>
                 <div>
-                    <h1 className="text-lg font-semibold text-grey-600">jurnal_pendukung : </h1>
-                    <h1>{jurnal_pendukung}</h1>
-                </div>
-                <div>
-                    <h1 className="text-lg font-semibold text-grey-600">keterangan : </h1>
-                    <h1>{keterangan}</h1>
+                    <h1 className="text-lg font-semibold text-grey-600">deskripsi : </h1>
+                    <h1>{deskripsi}</h1>
                 </div>
 
             </div>
+            <div>
+                    <h1 className="text-lg font-semibold text-grey-600">foto sample : </h1>
+                    <h1>{foto_sample}</h1>
+                </div>
+            <div>
+                    <h1 className="text-lg font-semibold text-grey-600">jurnal pendukung : </h1>
+                    <h1>{jurnal_pendukung}</h1>
+                </div>
+           
             <div>
                     <h1 className="text-lg font-semibold text-grey-600">Hasil analisis : </h1>
                     <h1><Button color="failure" size={5}>download</Button></h1>

@@ -64,14 +64,14 @@ export default function My_order(){
                       {value.total_harga!==0?value.total_harga:"-"}   
                   </Table.Cell>
                   <Table.Cell>
-                    <a href={`/my_order/detail/${value.no_invoice}?_id=${value._id}`} className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+                    <a href={`/my_order/detail/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                      detail
                     </a>
                   </Table.Cell>
                   <Table.Cell>
                     <p>{value.status}</p>
                     <br/>
-                    <a href={`/my_order/tracking/${value.no_invoice}?_id=${value._id}`} className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+                    <a href={`/my_order/tracking/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                      detail
                     </a>
                   </Table.Cell>
