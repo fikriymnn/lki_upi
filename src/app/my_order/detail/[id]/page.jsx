@@ -51,7 +51,7 @@ export default function detail({ params,searchParams }) {
                 </div>
                 <div className="mx-20">
                     {order.map((e, i) => {
-                        return <OrderCard  jenis_pengujian={e.jenis_pengujian} nama_sample={e.nama_sample} kode_pengujian={e.kode_pengujian} jumlah_sample={e.jumlah_sample} index={i+1} wujud_sample={e.wujud_sample} pelarut={e.pelarut} preparasi_khusus={e.preparasi_khusus} target_senyawa={e.target_senyawa} metode_parameter={e.metode_parameter} jurnal_pendukung={e.jurnal_pendukung} deskripsi={e.deskripsi} hasil_analisis={e.hasil_analisis} foto_sample={e.foto_sample}/>
+                        return <OrderCard status={invoice.status} jenis_pengujian={e.jenis_pengujian} nama_sample={e.nama_sample} kode_pengujian={e.kode_pengujian} jumlah_sample={e.jumlah_sample} index={i+1} wujud_sample={e.wujud_sample} pelarut={e.pelarut} preparasi_khusus={e.preparasi_khusus} target_senyawa={e.target_senyawa} metode_parameter={e.metode_parameter} jurnal_pendukung={e.jurnal_pendukung} deskripsi={e.deskripsi} hasil_analisis={e.hasil_analisis} foto_sample={e.foto_sample}/>
                     })}
                 </div>
             </div>

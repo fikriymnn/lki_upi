@@ -58,7 +58,7 @@ export default function My_order(){
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {i+1}
                   </Table.Cell>
-                  <Table.Cell>{`${value.date}`}</Table.Cell>
+                  <Table.Cell>{`${value.date_format}`}</Table.Cell>
                   <Table.Cell>{value.no_invoice}</Table.Cell>
                   <Table.Cell>    
                       {value.total_harga!==0?value.total_harga:"-"}   

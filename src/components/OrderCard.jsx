@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link";
 import { Button } from 'flowbite-react';
-export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi,hasil_analisis,foto_sample,kode_pengujian
+export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi,hasil_analisis,foto_sample,kode_pengujian,status
 }) {
 
     return (
@@ -58,16 +58,16 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
             </div>
             <div>
                     <h1 className="text-lg font-semibold text-grey-600">foto sample : </h1>
-                    <h1>{foto_sample}</h1>
+                    <img src={foto_sample}/>
                 </div>
             <div>
                     <h1 className="text-lg font-semibold text-grey-600">jurnal pendukung : </h1>
-                    <h1>{jurnal_pendukung}</h1>
+                    <Button color="failure" size={5}>download</Button>
                 </div>
            
             <div>
                     <h1 className="text-lg font-semibold text-grey-600">Hasil analisis : </h1>
-                    <h1><Button color="failure" size={5}>download</Button></h1>
+                    {status=="selesai"?<h1><Button color="failure" size={5}>download</Button></h1>:<p>-</p>}
                 </div>
         </>
     )

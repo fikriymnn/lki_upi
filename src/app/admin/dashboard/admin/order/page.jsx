@@ -11,16 +11,10 @@ export default function Order() {
   useEffect(() => {
     async function getInvoice() {
       try {
-        const dataUser = await axios.get("http://localhost:5000/api/user", { withCredentials: true })
-        console.log(dataUser)
-        if (dataUser.data.success) {
-          console.log(dataUser)
-          const data = await axios.get(`http://localhost:5000/api/invoice?id_user=${dataUser.data.data._id}&skip=0&limit=10`, { withCredentials: true })
-          console.log(data)
+          const data = await axios.get(`http://localhost:5000/api/invoice`, { withCredentials: true })
           if (data.data.success) {
             setInvoice(data.data.data)
           }
-        }
       } catch (err) {
         console.log(err.message)
       }
@@ -58,7 +52,7 @@ export default function Order() {
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                       {i+1}
                     </Table.Cell>
-                    <Table.Cell>{v.date.getMonth()}</Table.Cell>
+                    <Table.Cell>{v.date}</Table.Cell>
                     <Table.Cell>{v.no_invoice}</Table.Cell>
                     <Table.Cell>{v.harga}</Table.Cell>
                     <Table.Cell>

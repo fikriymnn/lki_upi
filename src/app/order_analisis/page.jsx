@@ -7,8 +7,7 @@ export default function order_analisis() {
     const [duplicate, setDuplicate] = useState([<CustomForm i={0} key={0} />]);
     const [arr, setArr] = useState([])
     const [jenis_pengujian, setJenis_pengujian] = useState([[]])
-    // const jenis_pengujian = []
-
+    const [kode_pengujian, setKode_pengujian] = useState([[]])
     const [nama_sample, setNama_sample] = useState([])
     const [jumlah_sample, setJumlah_sample] = useState([])
     const [wujud_sample, setWujud_sample] = useState([])
@@ -96,6 +95,7 @@ export default function order_analisis() {
             for(let i = 0;i<nama_sample.length;i++){
                 let obj = {}
                 obj.jenis_pengujian = jenis_pengujian[i]
+                obj.kode_pengujian = kode_pengujian[i]
                 obj.nama_sample = nama_sample[i]
                 obj.jumlah_sample = jumlah_sample[i]
                 obj.wujud_sample = wujud_sample[i]
@@ -109,9 +109,7 @@ export default function order_analisis() {
                 let arr2 = arr
                 arr2.push(obj)
                 setArr(arr2)
-                console.log(obj)
             }
-            console.log(arr)
             if(arr.length==duplicate.length){
                 const data = await axios.post("http://localhost:5000/api/order",arr,{
                     withCredentials:true
@@ -146,18 +144,32 @@ export default function order_analisis() {
                                                     let cccc = jenis_pengujian
 
                                                     let copya2 = cccc[i]
-                                                    copya2.push(value)
+                                                    copya2.push(value.jenis_pengujian)
                                                     cccc[i] = copya2
                                                     setJenis_pengujian(cccc)
+
+                                                    let cccc2 = kode_pengujian
+                                                    let copya22 = cccc[i]
+                                                    copya22.push(value.kode_pengujian)
+                                                    cccc2[i] = copya2
+                                                    setKode_pengujian(cccc2)
 
                                                 } else {
                                                     let copy = jenis_pengujian
                                                     let copy2 = copy[i]
+
+                                                    let copy3 = kode_pengujian
+                                                    let copy4 = copy3[i]
                                                     if (copy2?.includes(value)) {
                                                         let index = copy2.indexOf(value)
                                                         copy2.splice(index, 1)
                                                         copy[i] = copy2
                                                         setJenis_pengujian([...copy])
+
+                                                        let index2 = copy4.indexOf(value)
+                                                        copy4.splice(index2, 1)
+                                                        copy3[i] = copy4
+                                                        setKode_pengujian([...copy3])
 
                                                     } else {
                                                         return false

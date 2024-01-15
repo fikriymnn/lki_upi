@@ -1,14 +1,47 @@
+"use client"
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import axios from "axios"
+import { Button } from 'flowbite-react';
 
-export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_sample, target_senyawa, metode_parameter, jurnal_pendukung, keterangan,hasil_analisis
+export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, keterangan, hasil_analisis, foto_sample, id
 }) {
+    const [add, setAdd] = useState(false)
+    const [file, setFile] = useState('')
+    
+    const handleConfirm = async (e) => {
+        e.preventDefault()
+        try {
+            if(!file){
+                alert('no file uploaded')
+                setAdd(a => !a)
+            }else{
+                const data = await axios.put(`http://localhost:5000/api/order/${id}`,file,{withCredentials:true})
+                console.log(data)
+                if(data.data.success){
+                    setAdd(a => !a)
+                    alert("upload successfully!")
+                }
+            }
+        } catch (err) {
+            alert(err.message)
+        }
+    }
+
+    // const download_foto = async ()=>{
+        
+    // }
+    // const download_jurnal_pendukung = async ()=>{
+        
+    // }
+    // const download_hasil_analisis = async ()=>{
+        
+    // }
 
     return (
         <>  <h1 className="bg-red-600 rounded p-2 text-white">{index}</h1>
-        <br/>
+            <br />
             <div className="border-1 rounded grid grid-cols-2">
-                
-                
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">nama sample : </h1>
                     <h1>{nama_sample}</h1>
@@ -19,11 +52,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">jenis pengujian sample : </h1>
-                    <ul>
-                        {jenis_pengujian.map((value,i) => {
-                            return <li key={i}>{value}</li>
-                        })}
-                    </ul>
+                    <h1>{jenis_pengujian}</h1>
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">wujud sample : </h1>
@@ -35,7 +64,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">preparasi sample : </h1>
-                    <h1>{preparasi_sample}</h1>
+                    <h1>{preparasi_khusus}</h1>
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">target senyawa : </h1>
@@ -53,15 +82,30 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                     <h1 className="text-lg font-semibold text-grey-600">keterangan : </h1>
                     <h1>{keterangan}</h1>
                 </div>
-               
+
             </div>
-            <br/>
+            <br />
+            <div>
+
                 <div>
-                    <h1 className="text-lg font-semibold text-grey-600">Hasil analisis : </h1>
-                    <h1><input name="file" type="file"/></h1>
-                    <h1>masukan hasil analisis : </h1>
-                    <h1>file berhasil diupdate </h1>
+                    <h1 className="text-lg font-semibold text-grey-600">foto sample : </h1>
+                    <img src={foto_sample} />
                 </div>
+                <div>
+                    <h1 className="text-lg font-semibold text-grey-600">jurnal pendukung : </h1>
+                    {jurnal_pendukung ? <Button color="failure" size={5}>download</Button> : <p>-</p>}
+                </div>
+
+                <div>
+                    <div className="flex">
+                    <h1 className="text-lg font-semibold text-grey-600">Hasil analisis : </h1>
+                    {add ? <div className="flex"><button onClick={handleConfirm} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Kirim</button><button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">upload file hasil analisis</button>}
+                    </div>
+                    
+                    {add ? <input type="file" name="file" onChange={(e)=>{setFile(e.target.files)}} /> : <Button color="failure" size={5}>download</Button>}
+                </div>
+
+            </div>
         </>
     )
 }
