@@ -106,6 +106,7 @@ export default function order_analisis() {
                 obj.jurnal_pendukung = jurnal_pendukung[i]
                 obj.deskripsi_sample = deskripsi_sample[i]
                 obj.foto_sample = foto_sample[i]
+                obj.hasil_analisis = {}
                 let arr2 = arr
                 arr2.push(obj)
                 setArr(arr2)

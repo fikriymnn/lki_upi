@@ -3,11 +3,12 @@ import AdminOrderCard from "@/components/AdminOrderCard"
 import { useState,useEffect } from "react"
 import axios from "axios"
 
+
 export default function detailOrderAdmin({params,searchParams}) {
     const {id} = params
     const {no_invoice} = searchParams
     const [order, setOrder] = useState([])
-    const [invoice,setInvoice]= useState({})
+    const [invoice,setInvoice]= useState({id_user: {}})
 
     useEffect(()=>{
         async function getnvoice(){
@@ -18,9 +19,9 @@ export default function detailOrderAdmin({params,searchParams}) {
                 console.log(data.data.data)
                 if(data.data.success){
                     setInvoice(data.data.data)
-                    console.log(invoice)
+                    console.log(dataOrder)
                     setOrder(dataOrder.data.data)
-                    console.log(invoice)
+                    console.log(order)
                   }
                  
             }catch(err){
@@ -37,14 +38,14 @@ export default function detailOrderAdmin({params,searchParams}) {
                 <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
             </div>
             <div className="mx-20">
-            <div className="flex"><p className="text-lg ">Nama lengkap : {invoice?.id_user.nama_lengkap}</p> </div>
-            <div className="flex"><p className="text-lg ">Nama lengkap : {invoice?.id_user.email}</p> </div>
-            <div className="flex"><p className="text-lg ">No whatsapp : {invoice?.id_user.no_whatsapp}</p> </div>
-            <div className="flex"><p className="text-lg ">No telepon : {invoice?.id_user.no_telp}</p> </div>
-            <div className="flex"><p className="text-lg ">Nama Institusi : {invoice?.id_user.nama_institusi}</p> </div>
-            {invoice?.id_user.jenis_institusi=="pendidikan"?<>
-            <div className="flex"><p className="text-lg ">Fakultas : {invoice?.id_user.fakultas}</p> </div>
-            <div className="flex"><p className="text-lg ">Program studi : {invoice?.id_user.program_studi}</p> </div>
+            <div className="flex"><p className="text-lg ">Nama lengkap : {invoice.id_user?.nama_lengkap}</p> </div>
+            <div className="flex"><p className="text-lg ">Nama lengkap : {invoice.id_user?.email}</p> </div>
+            <div className="flex"><p className="text-lg ">No whatsapp : {invoice.id_user?.no_whatsapp}</p> </div>
+            <div className="flex"><p className="text-lg ">No telepon : {invoice.id_user?.no_telp}</p> </div>
+            <div className="flex"><p className="text-lg ">Nama Institusi : {invoice.id_user?.nama_institusi}</p> </div>
+            {invoice.id_user?.jenis_institusi=="pendidikan"?<>
+            <div className="flex"><p className="text-lg ">Fakultas : {invoice.id_user?.fakultas}</p> </div>
+            <div className="flex"><p className="text-lg ">Program studi : {invoice.id_user?.program_studi}</p> </div>
             </>:""}
             
                 <div className="flex"><p className="text-lg ">invoice : {invoice.invoice}(tergenerate otomatis)</p> </div>
@@ -55,7 +56,7 @@ export default function detailOrderAdmin({params,searchParams}) {
             <div className="mx-20">
                 {
                     order.map((e, i) => {
-                        return <AdminOrderCard id={e._id} jenis_pengujian={e.jenis_pengujian} kode_pengujian={e.kode_pengujian} nama_sample={e.nama_sample} jumlah_sample={e.jumlah_sample} index={++i} wujud_sample={e.wujud_sample} pelarut={e.pelarut} preparasi_khusus={e.preparasi_khusus} target_senyawa={e.target_senyawa} metode_parameter={e.metode_parameter} jurnal_pendukung={e.jurnal_pendukung} foto_sample={e.foto_sample} deskripsi={e.deskripsi} hasil_analisis={e.hasil_analisis} key={i} />
+                        return( <AdminOrderCard id={e._id} jenis_pengujian={e.jenis_pengujian} kode_pengujian={e.kode_pengujian} nama_sample={e.nama_sample} jumlah_sample={e.jumlah_sample} index={i+1} wujud_sample={e.wujud_sample} pelarut={e.pelarut} preparasi_khusus={e.preparasi_khusus} target_senyawa={e.target_senyawa} metode_parameter={e.metode_parameter} jurnal_pendukung={e.jurnal_pendukung} foto_sample={e.foto_sample} deskripsi={e.deskripsi} hasil_analisis={e.hasil_analisis} key={i} />)
 
                     })
                 }

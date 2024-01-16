@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import axios from "axios"
+import month_bahasa from "@/utils/month_bahasa"
 
 
 export default function Tracking_admin({ params }) {
@@ -9,8 +10,7 @@ export default function Tracking_admin({ params }) {
     const [form, setForm] = useState({
         estimasi_harga: 0,
         total_harga: 0,
-        status: "",
-        date: ""
+        status: ""
     })
     const [invoice, setInvoice] = useState({})
     // const [invoice, setInvoice] = useState({ status: "menunggu verifikasi" })
@@ -24,38 +24,52 @@ export default function Tracking_admin({ params }) {
     const handleConfirm = async (e) => {
         e.preventDefault()
         setEdit(a => !a)
-        const obj = {status: form.status,estimasi_harga:form.estimasi_harga,total_harga:form.total_harga}
+        let obj = {status: form.status,estimasi_harga:form.estimasi_harga,total_harga:form.total_harga}
         try{
-            switch (form.status) {
-                case "menunggu form dikonfirmasi":
-                      obj.s1_date = form.date 
-                    break;
-                case "form dikonfirmasi":
-                      obj.s2_date = form.date  
-                    break;
-                case "sample diterima admin":
-                    obj.s3_date = form.date
-                    break;
-                case "sample dikerjakan operator":
-                    obj.s4_date = form.date
-                    break;
-                case "menunggu verifikasi":
-                    obj.s5_date = form.date
-                    break;
-                case "menunggu pembayaran":
-                    obj.s6_date = form.date
-                    break;
-                case "menunggu konfirmasi pembayaran":
-                    obj.s7_date = form.date
-                    break;
-                case "selesai":
-                    obj.s8_date = form.date
-                    break;
-    
+            console.log(form)
+            function timeNow() {
+                var d = new Date(),
+                  h = (d.getHours()<10?'0':'') + d.getHours(),
+                  m = (d.getMinutes()<10?'0':'') + d.getMinutes();
+               return h + ':' + m;
+              }
+            
+            const date_format = `${timeNow()} ${new Date().getDate()} ${month_bahasa(new Date().getMonth())} ${new Date().getFullYear()}`
+            function selection(){
+                switch (form.status) {
+                    case "menunggu form dikonfirmasi":
+                          obj.s1_date = date_format
+                          return true 
+                    case "form dikonfirmasi":
+                          obj.s2_date = date_format  
+                        return true;
+                    case "sample diterima admin":
+                        obj.s3_date = date_format
+                        return true;
+                    case "sample dikerjakan operator":
+                        obj.s4_date = date_format
+                        return true;
+                    case "menunggu verifikasi":
+                        obj.s5_date = date_format
+                        return true;
+                    case "menunggu pembayaran":
+                        obj.s6_date = date_format
+                        return true;
+                    case "menunggu konfirmasi pembayaran":
+                        obj.s7_date = date_format
+                        return true;
+                    case "selesai":
+                        obj.s8_date = date_format
+                        return true;
+                }
             }
-            const data = await axios.put(`http://localhost:5000/api/invoice/${id}`,obj,{withCredentials:true})
-            alert("update successfully")
-            console.log(data)
+            if(selection()==true){
+                const data = await axios.put(`http://localhost:5000/api/invoice/${id}`,obj,{withCredentials:true})
+                alert("update successfully")
+                if(data.data.success){
+                    window.location.reload()
+                }
+            }        
         }catch(err){
             alert(err.message)
         }
@@ -92,28 +106,24 @@ export default function Tracking_admin({ params }) {
 
                         <br />
                         <br />
-                        <div className="mx-10">
-                            {edit ? <button onClick={handleConfirm } className="bg-blue-400 text-white px-2 py-1 rounded-lg">Konfirmasi</button> : <button onClick={() => setEdit(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Edit</button>}
-                            {edit ? <div><p className="text-lg ">Status : <select name="status" onChange={(e) => {
-                                const { value } = e.target
-                                setForm(a => ({ ...a, status: value.status, date: value.date }))
-                            }}>
-                                <option value={{ status: "menunggu form dikonfirmasi", date: new Date() }}>menunggu form dikonfirmasi</option>
-                                <option value={{ status: "form dikonfirmasi", date: new Date() }}>form dikonfirmasi</option>
-                                <option value={{ status: "sample diterima admin", date: new Date() }}>sample diterima admin</option>
-                                <option value={{ status: "sample dikerjakan operator", date: new Date() }}>sample dikerjakan operator</option>
-                                <option value={{ status: "menunggu verifikasi", date: new Date() }}>menunggu verifikasi</option>
-                                <option value={{ status: "menunggu pembayaran", date: new Date() }}>menunggu pembayaran</option>
-                                <option value={{ status: "menunggu konfirmasi pembayaran", date: new Date() }}>pembayaran konfirmasi pembayaran</option>
-                                <option value={{ status: "selesai", date: new Date() }}>selesai</option></select></p></div> : <div>
-                                <p className="text-lg ">Status  : {invoice.status} </p></div>}
+                        <div className="mx-10">  {edit ? <div className="flex"><button onClick={handleConfirm } className="bg-blue-400 text-white px-2 py-1 rounded-lg">Konfirmasi</button><button onClick={() => setEdit(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setEdit(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Edit</button>}
+                            {edit ? <div><p className="text-lg ">Status : <select name="status" onChange={(e) =>setForm((a)=>({...a,[e.target.name]:e.target.value}))} value={form.status}>
+                                <option value="menunggu form dikonfirmasi">menunggu form dikonfirmasi</option>
+                                <option value="form dikonfirmasi">form dikonfirmasi</option>
+                                <option value= "sample diterima admin">sample diterima admin</option>
+                                <option value="sample dikerjakan operator">sample dikerjakan operator</option>
+                                <option value="menunggu verifikasi">menunggu verifikasi</option>
+                                <option value= "menunggu pembayaran">menunggu pembayaran</option>
+                                <option value="menunggu konfirmasi pembayaran">menunggu konfirmasi pembayaran</option>
+                                <option value="selesai">selesai</option></select></p></div> : <div>
+                                <p className="text-lg ">Status  : {form.status} </p></div>}
                             {edit ? <div>
-                                <p className="text-lg ">Estimasi harga  : <input type="text" name="estimasi_harga" onChange={handleChange} /></p></div> : <div>
-                                <p className="text-lg ">estimasi harga  : Rp.{invoice.estimasi_harga}</p></div>}
+                                <p className="text-lg ">Estimasi harga  : <input type="number" name="estimasi_harga" onChange={handleChange} value={form.estimasi_harga}/></p></div> : <div>
+                                <p className="text-lg ">estimasi harga  : Rp.{form.estimasi_harga}</p></div>}
 
                             {edit ? <div>
-                                <p className="text-lg ">Total harga  : <input type="text" name="total_harga" /></p></div> : <div>
-                                <p className="text-lg ">total harga  : Rp.{invoice.total_harga}</p></div>}
+                                <p className="text-lg ">Total harga  : <input type="number" name="total_harga" onChange={handleChange} value={form.total_harga}/></p></div> : <div>
+                                <p className="text-lg ">total harga  : Rp.{form.total_harga}</p></div>}
                         </div>
                         <br />
                         <br />
@@ -143,7 +153,7 @@ export default function Tracking_admin({ params }) {
 
 
                         {invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className="flex items-center"><p className="mx-10 w-28 text-center text-xs">{invoice.s7_date}</p><p className="text-blue-600 text-xl">pembayaran selesai</p></div> : <div className="flex items-center"><p className="mx-10 w-28 text-center text-xl">-</p><p className="text-gray-400 text-xl">pembayaran selesai</p></div>}
-                        {invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div><p className="">menunggu pembayaran dikonfirmasi</p></div> : <div className="flex items-center"><p className="mx-10 w-28 text-center text-xs"></p><p className="text-gray-400 text-xl">menunggu pembayaran dikonfirmasi</p></div>}
+                        {invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className="flex items-center"><p className="mx-10 w-28 text-center text-xs"></p><p className="text-blue-600 text-xl">Menunggu pembayaran dikonfirmasi</p></div> : <div className="flex items-center"><p className="mx-10 w-28 text-center text-xs"></p><p className="text-gray-400 text-xl">Menunggu pembayaran dikonfirmasi</p></div>}
 
 
                         {invoice.status == "selesai" ? <div className="flex items-center"><p className="mx-10 w-28 text-center text-xs">{invoice.s8_date}</p><p className="text-blue-600 text-xl">selesai</p></div> : <div className="flex items-center"><p className="mx-10 w-28 text-center text-xl">-</p><p className="text-gray-400 text-xl">selesai</p></div>}

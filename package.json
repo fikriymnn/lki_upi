@@ -12,6 +12,7 @@
     "axios": "^1.6.4",
     "flowbite": "^2.0.0",
     "flowbite-react": "^0.6.4",
+    "imagefrombuffer": "^1.0.12",
     "next": "13.5.6",
     "node-html-parser": "^6.1.11",
     "react": "^18",

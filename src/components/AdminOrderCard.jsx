@@ -3,11 +3,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios"
 import { Button } from 'flowbite-react';
+import { imagefrombuffer } from "imagefrombuffer";
 
-export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, keterangan, hasil_analisis, foto_sample, id
+export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id,kode_pengujian
 }) {
     const [add, setAdd] = useState(false)
-    const [file, setFile] = useState('')
+    const [file, setFile] = useState([])
     
     const handleConfirm = async (e) => {
         e.preventDefault()
@@ -16,17 +17,23 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                 alert('no file uploaded')
                 setAdd(a => !a)
             }else{
-                const data = await axios.put(`http://localhost:5000/api/order/${id}`,file,{withCredentials:true})
+                const data = await axios.put(`http://localhost:5000/api/order/${id}`,{hasil_analisis:file},{withCredentials:true})
                 console.log(data)
                 if(data.data.success){
                     setAdd(a => !a)
                     alert("upload successfully!")
+                    window.location.reload()
                 }
             }
         } catch (err) {
             alert(err.message)
         }
     }
+
+    useEffect(()=>{
+        console.log(foto_sample)
+       setFile(hasil_analisis)
+    },[])
 
     // const download_foto = async ()=>{
         
@@ -42,6 +49,10 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
         <>  <h1 className="bg-red-600 rounded p-2 text-white">{index}</h1>
             <br />
             <div className="border-1 rounded grid grid-cols-2">
+            <div>
+                    <h1 className="text-lg font-semibold text-grey-600">nama sample : </h1>
+                    <h1>{kode_pengujian}</h1>
+                </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">nama sample : </h1>
                     <h1>{nama_sample}</h1>
@@ -76,11 +87,11 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">jurnal_pendukung : </h1>
-                    <h1>{jurnal_pendukung}</h1>
+                    {/* <h1>{jurnal_pendukung}</h1> */}
                 </div>
                 <div>
-                    <h1 className="text-lg font-semibold text-grey-600">keterangan : </h1>
-                    <h1>{keterangan}</h1>
+                    <h1 className="text-lg font-semibold text-grey-600">deskripsi : </h1>
+                    <h1>{deskripsi}</h1>
                 </div>
 
             </div>
@@ -89,7 +100,10 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
 
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">foto sample : </h1>
-                    <img src={foto_sample} />
+                    <img src={imagefrombuffer({
+          type: foto_sample.type, // example image/jpeg 
+          data: foto_sample.data, // array buffer data 
+        })} alt=""/>
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">jurnal pendukung : </h1>
@@ -102,7 +116,8 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                     {add ? <div className="flex"><button onClick={handleConfirm} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Kirim</button><button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">upload file hasil analisis</button>}
                     </div>
                     
-                    {add ? <input type="file" name="file" onChange={(e)=>{setFile(e.target.files)}} /> : <Button color="failure" size={5}>download</Button>}
+                    {add ? <input type="file" name="file" onChange={(e)=>{setFile(e.target.files)
+                         console.log(e.target.files)}}  /> : (hasil_analisis?<Button color="failure" size={5}>download</Button>:<p>-</p>)}
                 </div>
 
             </div>
