@@ -30,23 +30,11 @@ export default function order_analisis() {
             kode_pengujian: "MS"
         },
         {
-            jenis_pengujian: "NMR Proton 1D",
+            jenis_pengujian: "NMR",
             kode_pengujian: "NMR"
         },
         {
-            jenis_pengujian: "NMR Carbon 1D",
-            kode_pengujian: "NMR"
-        },
-        {
-            jenis_pengujian: "NMR 2D",
-            kode_pengujian: "NMR"
-        },
-        {
-            jenis_pengujian: "AAS Flame",
-            kode_pengujian: "AS"
-        },
-        {
-            jenis_pengujian: "AAS Furnace",
+            jenis_pengujian: "AAS",
             kode_pengujian: "AS"
         },
         {
@@ -87,6 +75,9 @@ export default function order_analisis() {
         let add = jenis_pengujian
         add.push([])
         setJenis_pengujian([...add])
+        let add2 = kode_pengujian
+        add2.push([])
+        setKode_pengujian([...add])
     }
 
     const handleSubmit = async (e) => {
@@ -107,13 +98,15 @@ export default function order_analisis() {
                 obj.deskripsi_sample = deskripsi_sample[i]
                 obj.foto_sample = foto_sample[i]
                 obj.hasil_analisis = {}
-                let arr2 = arr
-                arr2.push(obj)
-                setArr(arr2)
+                console.log(obj)
+                arr[i] = obj
             }
+            console.log(arr)
             if(arr.length==duplicate.length){
+                console.log("post data")
                 const data = await axios.post("http://localhost:5000/api/order",arr,{
-                    withCredentials:true
+                    withCredentials:true,
+                   
                 })
                 console.log(data)
                 if(data.data.success==true){
@@ -138,28 +131,30 @@ export default function order_analisis() {
                                 kode.map((a, b) => {
                                     return (
                                         <div key={b}>
-                                            <input type="checkbox" id={`jenis_pengujian${b}${i}`} name={`jenis_pengujian`} value={{jenis_pengujian:a.jenis_pengujian,kode_pengujian:a.kode_pengujian}} onChange={(e) => {
+                                            <input type="checkbox" id={`jenis_pengujian${b}${i}`} name={`jenis_pengujian`} value={a.jenis_pengujian} onChange={(e) => {
                                                 const { checked, value } = e.target
+                                                console.log(kode_pengujian)
 
                                                 if (checked) {
-                                                    let cccc = jenis_pengujian
+                                                    
+                                                    let cccc = [...jenis_pengujian]
 
                                                     let copya2 = cccc[i]
-                                                    copya2.push(value.jenis_pengujian)
+                                                    copya2.push(value)
                                                     cccc[i] = copya2
                                                     setJenis_pengujian(cccc)
 
-                                                    let cccc2 = kode_pengujian
-                                                    let copya22 = cccc[i]
-                                                    copya22.push(value.kode_pengujian)
-                                                    cccc2[i] = copya2
+                                                    let cccc2 = [...kode_pengujian]
+                                                    let copya22 = cccc2[i]
+                                                    copya22.push(a.kode_pengujian)
+                                                    cccc2[i] = copya22
                                                     setKode_pengujian(cccc2)
 
                                                 } else {
-                                                    let copy = jenis_pengujian
+                                                    let copy = [...jenis_pengujian]
                                                     let copy2 = copy[i]
 
-                                                    let copy3 = kode_pengujian
+                                                    let copy3 = [...kode_pengujian]
                                                     let copy4 = copy3[i]
                                                     if (copy2?.includes(value)) {
                                                         let index = copy2.indexOf(value)
@@ -167,11 +162,10 @@ export default function order_analisis() {
                                                         copy[i] = copy2
                                                         setJenis_pengujian([...copy])
 
-                                                        let index2 = copy4.indexOf(value)
+                                                        let index2 = copy4.indexOf(a.kode_pengujian)
                                                         copy4.splice(index2, 1)
                                                         copy3[i] = copy4
                                                         setKode_pengujian([...copy3])
-
                                                     } else {
                                                         return false
                                                     }
@@ -271,9 +265,8 @@ export default function order_analisis() {
                             <h2 className="text-lg font-semibold" >Foto sample
                             </h2>
                             <input name="foto_sample" type="file" onChange={(e) => {
-
                                 e.preventDefault()
-                                foto_sample[i] = e.target.value
+                                foto_sample[i] = e.target.files[0]
                             }} />
                         </div>
                         <div>
@@ -282,7 +275,7 @@ export default function order_analisis() {
                             <input name="jurnal_pendukung" type="file" onChange={(e) => {
 
                                 e.preventDefault()
-                                jurnal_pendukung[i] = e.target.value
+                                jurnal_pendukung[i] = e.target.files[0]
                             }} />
                         </div>
                         <div>

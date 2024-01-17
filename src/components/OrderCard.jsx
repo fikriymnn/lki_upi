@@ -40,7 +40,7 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">preparasi khusus : </h1>
-                    <h1>{preparasi_khusus}</h1>
+                    <h1>{preparasi_khusus?"ya":"tidal"}</h1>
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">target senyawa : </h1>
@@ -58,11 +58,13 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
             </div>
             <div>
                     <h1 className="text-lg font-semibold text-grey-600">foto sample : </h1>
-                    <img src={foto_sample}/>
+                    {foto_sample?<div className="w-28 h-10 bg-gray-200 border-2"><p className="m-auto">Image</p></div>:<p>-</p>}
+                   
                 </div>
             <div>
                     <h1 className="text-lg font-semibold text-grey-600">jurnal pendukung : </h1>
-                    <Button color="failure" size={5}>download</Button>
+                    {jurnal_pendukung? <Button color="failure" size={5}>download</Button>:<p>-</p>}
+                   
                 </div>
            
             <div>

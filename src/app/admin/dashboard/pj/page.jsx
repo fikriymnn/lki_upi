@@ -2,13 +2,13 @@
 import { Table } from 'flowbite-react';
 import { useState,useEffect } from "react"
 import axios from "axios"
-export default function Order_Operator(){
+export default function Order_Pj(){
   const [invoice, setInvoice] = useState([])
 
   useEffect(() => {
     async function getInvoice() {
       try {
-          const data = await axios.get(`http://localhost:5000/api/invoice?status=sample dikerjakan operator&skip=0&limit=20`, { withCredentials: true })
+          const data = await axios.get(`http://localhost:5000/api/invoice?status=menunggu verifikasi&skip=0&limit=20`, { withCredentials: true })
           if (data.data.success) {
             setInvoice(data.data.data)
           }
@@ -20,7 +20,7 @@ export default function Order_Operator(){
   }, [])
     return(
       <>
-      <p className='text-center text-4xl font-bold text-gray-800 mt-7'>OPERATOR ORDER</p>
+      <p className='text-center text-4xl font-bold text-gray-800 mt-7'>PENANGGUNG JAWAB ORDER</p>
       <div className='flex justify-center'>
         <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
       </div>

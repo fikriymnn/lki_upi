@@ -61,7 +61,8 @@ export default function NavbarCustom() {
 
         {adminPath[2] == "dashboard" && role == "admin"? <Navbar.Link href="/admin/dashboard/admin/order" className="mt-[2vh] font-semibold"> Order </Navbar.Link> : ""}
 
-        {adminPath[2] == "dashboard" && role == "operator"? <Navbar.Link href="/admin/dashboard/operator/order_operator" className="mt-[2vh] font-semibold">Order Operator</Navbar.Link> : ""}
+        {adminPath[2] == "dashboard" && role == "operator"? <Navbar.Link href="/admin/dashboard/operator" className="mt-[2vh] font-semibold">Order Operator</Navbar.Link> : ""}
+        {adminPath[2] == "dashboard" && role == "pj"? <Navbar.Link href="/admin/dashboard/pj" className="mt-[2vh] font-semibold">Order Penanggung Jawab</Navbar.Link> : ""}
 
         {adminPath[2] !== "dashboard"?<Navbar.Link href="/about" className="mt-[2vh] font-semibold">About</Navbar.Link>:""}
 

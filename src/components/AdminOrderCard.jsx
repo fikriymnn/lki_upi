@@ -74,8 +74,8 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                     <h1>{pelarut}</h1>
                 </div>
                 <div>
-                    <h1 className="text-lg font-semibold text-grey-600">preparasi sample : </h1>
-                    <h1>{preparasi_khusus}</h1>
+                    <h1 className="text-lg font-semibold text-grey-600">preparasi khusus : </h1>
+                    <h1>{preparasi_khusus?"ya":"tidal"}</h1>
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">target senyawa : </h1>
@@ -84,10 +84,6 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">metode parameter : </h1>
                     <h1>{metode_parameter}</h1>
-                </div>
-                <div>
-                    <h1 className="text-lg font-semibold text-grey-600">jurnal_pendukung : </h1>
-                    {/* <h1>{jurnal_pendukung}</h1> */}
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">deskripsi : </h1>
@@ -100,10 +96,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
 
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">foto sample : </h1>
-                    <img src={imagefrombuffer({
-          type: foto_sample.type, // example image/jpeg 
-          data: foto_sample.data, // array buffer data 
-        })} alt=""/>
+                    {foto_sample?<div className="w-28 h-10 bg-gray-200 border-2"><p className="m-auto">Image</p></div>:<p>-</p>}
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">jurnal pendukung : </h1>
@@ -116,8 +109,8 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                     {add ? <div className="flex"><button onClick={handleConfirm} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Kirim</button><button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">upload file hasil analisis</button>}
                     </div>
                     
-                    {add ? <input type="file" name="file" onChange={(e)=>{setFile(e.target.files)
-                         console.log(e.target.files)}}  /> : (hasil_analisis?<Button color="failure" size={5}>download</Button>:<p>-</p>)}
+                    {add ? <input type="file" name="file" onChange={(e)=>{setFile("hasil analisis")
+                         console.log(e.target.files[0])}}  /> : (hasil_analisis?<Button color="failure" size={5}>download</Button>:<p>-</p>)}
                 </div>
 
             </div>
