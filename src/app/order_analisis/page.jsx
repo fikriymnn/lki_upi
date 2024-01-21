@@ -198,24 +198,24 @@ export default function order_analisis() {
                         <div>
                             <p className="text-lg font-semibold">Wujud sample</p>
 
-                            <input type="radio" id="wujud_sample1" name="wujud_sample" onChange={(e) => {
+                            <input type="radio" id={`wujud_sample1${i}`} name={`wujud_sample${i}`} onChange={(e) => {
                                 wujud_sample[i] = e.target.value
                             }} value="padat" />
-                            <label htmlFor="wujud_sample1">Padat</label>
+                            <label htmlFor={`wujud_sample1${i}`}>Padat</label>
                             <br />
 
-                            <input type="radio" id="wujud_sample2" name="wujud_sample" onChange={(e) => {
+                            <input type="radio" id={`wujud_sample2${i}`} name={`wujud_sample${i}`} onChange={(e) => {
                                 e.preventDefault()
                                 wujud_sample[i] = e.target.value
                             }} value="cair" />
-                            <label htmlFor="wujud_sample2">Cair</label>
+                            <label htmlFor={`wujud_sample2${i}`}>Cair</label>
                             <br />
 
-                            <input type="radio" id="wujud_sample3" name="wujud_sample" onChange={(e) => {
+                            <input type="radio" id={`wujud_sample3${i}`} name={`wujud_sample${i}`} onChange={(e) => {
                                 e.preventDefault()
                                 wujud_sample[i] = e.target.value
                             }} value="gas" />
-                            <label htmlFor="wujud_sample3">Gas</label>
+                            <label htmlFor={`wujud_sample3${i}`}>Gas</label>
 
                         </div>
                         <div>
@@ -228,15 +228,15 @@ export default function order_analisis() {
                         <div>
                             <p className="text-lg font-semibold">Preparasi khusus</p>
                             <div className='flex'>
-                                <input type="radio" name="preparasi_khusus" onChange={(e) => {
+                                <input type="radio" name={`preparasi_khusus${i}`} onChange={(e) => {
                                     e.preventDefault()
                                     preparasi_khusus[i] = e.target.value
                                 }} value={true} />
-                                <h2 className="" htmlFor="preparasi_khusus">Ya (esterifikasi/destruksi)</h2>
+                                <h2 className="" htmlFor={`preparasi_khusus${i}`}>Ya (esterifikasi/destruksi)</h2>
                             </div>
                             <br />
                             <div className='flex'>
-                                <input type="radio" name="preparasi_khusus" onChange={(e) => {
+                                <input type="radio" name={`preparasi_khusus${i}`} onChange={(e) => {
                                     e.preventDefault()
                                     preparasi_khusus[i] = e.target.value
                                 }} value={false} />
@@ -266,7 +266,7 @@ export default function order_analisis() {
                             </h2>
                             <input name="foto_sample" type="file" onChange={(e) => {
                                 e.preventDefault()
-                                foto_sample[i] = e.target.files[0]
+                                foto_sample[i] = "file"
                             }} />
                         </div>
                         <div>
@@ -275,7 +275,7 @@ export default function order_analisis() {
                             <input name="jurnal_pendukung" type="file" onChange={(e) => {
 
                                 e.preventDefault()
-                                jurnal_pendukung[i] = e.target.files[0]
+                                jurnal_pendukung[i] = "file"
                             }} />
                         </div>
                         <div>
@@ -305,13 +305,13 @@ export default function order_analisis() {
                     {duplicate}
                     <br />
                     <div className='flex mx-20'>
-                        <input type="radio" id="verifikasi" name="verifikasi" value={true} required onClick={(e) => setVerifikasi(e.target.value)} />
+                        <input type="radio" id="verifikasi" name="verifikasi" required onChange={(e) => setVerifikasi(true)} />
                         <h2 htmlFor="verifikasi">Saya telah memahami proses pengujian yang akan dilakukan dan memahami syarat dan ketentuan yang telah dijelaskan oleh staff/pengelola laboratorium
                         </h2><br />
 
                     </div>
                     <br />
-                    <button type="submit" className='bg-blue-800 p-3 text-white rounded-lg'>Kirim</button>
+                    <button type="submit" className='bg-blue-800 p-3 text-white rounded-lg m-auto'>Kirim</button>
 
                 </form>
                 <div className='grid grid-cols-1 justify-items-center'>

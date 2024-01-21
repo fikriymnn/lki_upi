@@ -19,27 +19,7 @@ export default function admin(){
     }
 
     useEffect(()=>{
-
-        async function getUser(){
-            try{
-                const data = await axios.get("http://localhost:5000/api/user",{
-                    withCredentials: true
-                })
-
-                if (data.data.success==true) {
-                   
-                    if(data.data.data.role=="admin"||data.data.data.role=="operator"||data.data.data.role=="pj"){
-                        router.replace("/")
-                    }
-                }else{
-                   router.replace("/")
-                }  
-            }catch(err){
-    
-            }
-        }
-       getUser()
-       
+        
     },[])
 
     const onSubmit = (e)=>{

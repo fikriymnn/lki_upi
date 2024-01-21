@@ -17,7 +17,7 @@ useEffect(()=>{
                     router.replace("/")
                 }                
             }catch(err){
-                router.replace("/")
+                alert(err.message)
             }  
         }
         user()

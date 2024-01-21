@@ -58,6 +58,7 @@ export default function Tracking_admin({ params }) {
             if(selection()==true){
                 const data = await axios.put(`http://localhost:5000/api/invoice/${id}`,obj,{withCredentials:true})
                 alert("update successfully")
+
                 if(data.data.success){
                     window.location.reload()
                 }
@@ -76,7 +77,8 @@ export default function Tracking_admin({ params }) {
                 if (data.data.success) {
                     const obj = data.data.data
                     setInvoice(obj)
-                    setForm({ estimasi_harga: obj.estimasi_harga, total_harga: obj.total_harga, status: obj.status })
+                    setForm({status: obj.status })
+        
                 }
             } catch (err) {
                 console.log(err.message)
@@ -100,6 +102,7 @@ export default function Tracking_admin({ params }) {
                         <br />
                         <div className="mx-10">  {edit ? <div className="flex"><button onClick={handleConfirm } className="bg-blue-400 text-white px-2 py-1 rounded-lg">Konfirmasi</button><button onClick={() => setEdit(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setEdit(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Edit</button>}
                             {edit ? <div><p className="text-lg ">Status : <select name="status" onChange={(e) =>setForm((a)=>({...a,[e.target.name]:e.target.value}))} value={form.status}>
+                            <option value="" selected>Sample dikerjakan operator</option>  
                                 <option value="menunggu verifikasi">menunggu verifikasi</option></select></p></div> : <div>
                                 <p className="text-lg ">Status  : {form.status} </p></div>}
                         </div>

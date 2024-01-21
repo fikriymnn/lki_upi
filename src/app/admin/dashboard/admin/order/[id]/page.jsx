@@ -11,6 +11,47 @@ export default function detailOrderAdmin({ params, searchParams }) {
     const [order, setOrder] = useState([])
     const [invoice, setInvoice] = useState({ id_user: {} })
 
+    const downloadInvoice = async (e)=>{
+        try{
+ 
+            const response = await axios.get(`http://localhost:5000/api/generate_invoice?no_invoice=${no_invoice}`,{withCredentials:true,responseType: 'blob'});
+      
+            // Create a blob from the response data
+            const blob = new Blob([response.data], { type: 'application/octet-stream' });
+      
+            // Create a link element and click it to trigger the download
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'downloaded_file.txt';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }catch(err){
+          alert(err.message)
+        }
+      }
+
+      const downloadFotoSample = async () => {
+        try {
+          const response = await axios.get('http://localhost:5000/download', {
+            responseType: 'arraybuffer', // Important for receiving binary data
+          });
+    
+          // Create a blob from the response data
+          const blob = new Blob([response.data], { type: 'application/octet-stream' });
+    
+          // Create a link element and click it to trigger the download
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = 'downloaded_file.txt';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } catch (error) {
+          console.error('Error downloading file:', error);
+        }
+      };
+
     useEffect(() => {
         async function getnvoice() {
             try {
@@ -53,7 +94,7 @@ export default function detailOrderAdmin({ params, searchParams }) {
                 <br />
                 <div className="flex"><p className="text-lg ">no invoice : </p> <p>{invoice.no_invoice}</p></div>
                 <div className="flex"><p className="text-lg ">status : </p> <p>{invoice.status}</p></div>
-                <div className="flex"><p className="text-lg ">invoice : </p> {invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5}>download invoice</Button> : <p>-</p>}</div>
+                <div className="flex"><p className="text-lg ">invoice : </p> {invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5}  onClick={downloadInvoice}>download invoice</Button> : <p>-</p>}</div>
                 <div className="flex"><p className="text-lg ">kuitansi : </p>{invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5}>download kuitansi</Button> : <p>-</p>}</div>
                 <div className="flex"><p className="text-lg ">bukti pembayaran : </p>{invoice.bukti_pembayaran ? <Button className="ml-5 " color="blue" size={5}>download bukti pembayaran</Button> : <p>-</p>}</div>
             </div>

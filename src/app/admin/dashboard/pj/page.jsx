@@ -20,7 +20,7 @@ export default function Order_Pj(){
   }, [])
     return(
       <>
-      <p className='text-center text-4xl font-bold text-gray-800 mt-7'>PENANGGUNG JAWAB ORDER</p>
+      <p className='text-center text-4xl font-bold text-gray-800 mt-7'>PENANGGUNG JAWAB</p>
       <div className='flex justify-center'>
         <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
       </div>
@@ -30,9 +30,6 @@ export default function Order_Pj(){
             <Table.HeadCell>No</Table.HeadCell>
             <Table.HeadCell>Tanggal</Table.HeadCell>
             <Table.HeadCell>Invoice</Table.HeadCell>
-            <Table.HeadCell>
-              Harga
-            </Table.HeadCell>
             <Table.HeadCell>
               status
             </Table.HeadCell>
@@ -51,12 +48,11 @@ export default function Order_Pj(){
                     </Table.Cell>
                     <Table.Cell>{v.date}</Table.Cell>
                     <Table.Cell>{v.no_invoice}</Table.Cell>
-                    <Table.Cell>{v.harga}</Table.Cell>
                     <Table.Cell>
                     <p>{v.status}</p>
                     </Table.Cell>
                     <Table.Cell>
-                      <a href={`/admin/dashboard/admin/order/tracking/${v._id}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+                      <a href={`/admin/dashboard/pj/${v._id}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                         keterangan
                       </a>
                     </Table.Cell>

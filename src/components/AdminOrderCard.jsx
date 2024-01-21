@@ -50,7 +50,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
             <br />
             <div className="border-1 rounded grid grid-cols-2">
             <div>
-                    <h1 className="text-lg font-semibold text-grey-600">nama sample : </h1>
+                    <h1 className="text-lg font-semibold text-grey-600">kode pengujian : </h1>
                     <h1>{kode_pengujian}</h1>
                 </div>
                 <div>

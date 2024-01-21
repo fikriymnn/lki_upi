@@ -59,6 +59,7 @@ export default function Tracking_admin({ params }) {
                         obj.s7_date = date_format
                         return true;
                     case "selesai":
+                        obj.success= true
                         obj.s8_date = date_format
                         return true;
                 }
@@ -118,8 +119,10 @@ export default function Tracking_admin({ params }) {
                                 <option value="selesai">selesai</option></select></p></div> : <div>
                                 <p className="text-lg ">Status  : {form.status} </p></div>}
                             {edit ? <div>
-                                <p className="text-lg ">Estimasi harga  : <input type="number" name="estimasi_harga" onChange={handleChange} value={form.estimasi_harga}/></p></div> : <div>
-                                <p className="text-lg ">estimasi harga  : Rp.{form.estimasi_harga}</p></div>}
+                                {/* <p className="text-lg ">Estimasi harga  : <input type="number" name="estimasi_harga" onChange={handleChange} value={form.estimasi_harga}/></p> */}
+                                </div> : <div>
+                                {/* <p className="text-lg ">estimasi harga  : Rp.{form.estimasi_harga}</p> */}
+                                </div>}
 
                             {edit ? <div>
                                 <p className="text-lg ">Total harga  : <input type="number" name="total_harga" onChange={handleChange} value={form.total_harga}/></p></div> : <div>
@@ -141,7 +144,6 @@ export default function Tracking_admin({ params }) {
 
                         {invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className="flex items-center"><p className="mx-10 w-28 text-center text-xs">{invoice.s4_date}</p><p className="text-blue-600 text-xl">sample diterima oleh operator</p></div> : <div className="flex items-center"><p className="mx-10 w-28 text-center text-xl">-</p><p className="text-gray-400 text-xl">sample diterima oleh operator </p></div>}
                         {invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className="flex items-center"><p className="mx-10 w-28 text-center text-xs"></p><p className="text-blue-600 text-xl">sedang dikerjakan oleh operator</p></div> : <div className="flex items-center"><p className="mx-10 w-28 text-center text-xs"></p><p className="text-gray-400 text-xl">Sedang dikerjakan oleh operator</p></div>}
-
 
 
                         {invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className="flex items-center"><p className="mx-10 w-28 text-center text-xs">{invoice.s5_date}</p><p className="text-blue-600 text-xl">selesai dikerjakan oleh operator</p></div> : <div className="flex items-center"><p className="mx-10 w-28 text-center text-xl">-</p><p className="text-gray-400 text-xl">selesai dikerjakan oleh operator </p></div>}

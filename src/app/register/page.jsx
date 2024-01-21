@@ -3,6 +3,7 @@ import { useState, useContext, useEffect } from "react"
 import { UserContext } from "@/context/userContext"
 import { useRouter } from 'next/navigation'
 import axios from 'axios';
+import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
 
 export default function register({ searchParams }) {
     const { prevRoute } = searchParams
@@ -83,14 +84,19 @@ export default function register({ searchParams }) {
                 <div className='flex justify-center'>
                     <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
                 </div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit}  className="flex max-w-md flex-col gap-4 m-auto">
                     <div>
-                        <label htmlFor="nama_lengkap">Nama lengkap</label>
-                        <input name="nama_lengkap" type="text" required onChange={handleChange} />
+                       <div className="mb-2 block">
+                            <Label htmlFor="nama_lengkap" value="Nama lengkap" />
+                        </div>
+                        <TextInput name="nama_lengkap"  type="text" required onChange={handleChange} />
                     </div>
                     <div>
-                        <label htmlFor="jenis_institusi">Jenis instansi</label>
+                    <div className="mb-2 block">
+                            <Label htmlFor="jenis_institusi" value="Jenis institusi" />
+                        </div>
                         <select name="jenis_institusi" placeholder="Pilih jenis institusi" required onChange={handleChange}>
+                        <option value="" selected disabled hidden>Pilih jenis institusi</option>
                             <option value="Perguruan Tinggi">Perguruan Tinggi</option>
                             <option value="Perusahaan">Perusahaan</option>
                         </select>
@@ -98,20 +104,28 @@ export default function register({ searchParams }) {
                     {
                         userForm.jenis_institusi ? <div><div>
                             {userForm.jenis_institusi == "Perusahaan" ? <div>
-                                <label htmlFor="nama_institusi">Nama perusahaan</label>
-                                <input name="nama_institusi" placeholder="Masukan nama perusahaan" required type="text" onChange={handleChange} />
+                            <div className="mb-2 block">
+                            <Label htmlFor="nama_institusi" value="Nama perusahaan" />
+                            </div>
+                                <TextInput name="nama_institusi" placeholder="Masukan nama perusahaan" required type="text" onChange={handleChange} />
                             </div> : <>
                                 <div>
-                                    <label htmlFor="nama_institusi">Nama perguruan tinggi</label>
-                                    <input name="nama_institusi" placeholder="Masukan nama perguruan tinggi" required type="text" onChange={handleChange} />
+                                <div className="mb-2 block">
+                                <Label htmlFor="nama_institusi" value="Nama perguruan tinggi" />
+                               </div>
+                                    <TextInput name="nama_institusi" placeholder="Masukan nama perguruan tinggi" required type="text" onChange={handleChange} />
                                 </div>
                                 <div>
-                                    <label htmlFor="fakultas">Fakultas</label>
-                                    <input name="fakultas" placeholder="Masukan nama fakultas" required type="text" onChange={handleChange} />
+                                <div className="mb-2 block">
+                                <Label htmlFor="fakultas" value="Nama fakultas" />
+                               </div>
+                                    <TextInput name="fakultas" placeholder="Masukan nama fakultas" required type="text" onChange={handleChange} />
                                 </div>
                                 <div>
-                                    <label htmlFor="program_studi">Program studi</label>
-                                    <input name="program_studi" placeholder="Masukan nama program studi" required type="text" onChange={handleChange} />
+                                <div className="mb-2 block">
+                                <Label htmlFor="program_studi" value="Nama program studi" />
+                               </div>
+                                    <TextInput name="program_studi" placeholder="Masukan nama program studi" required type="text" onChange={handleChange} />
                                 </div>
                             </>
                             }
@@ -119,26 +133,35 @@ export default function register({ searchParams }) {
                         </div> : ""
                     }
                     <div>  
-                        <label htmlFor="no_telp">No telepon</label>
-                        <input name="no_telp" required type="number" onChange={handleChange} />
+                    <div className="mb-2 block">
+                                <Label htmlFor="no_telp" value="No telepon" />
+                               </div>
+                        <TextInput name="no_telp" required type="number" onChange={handleChange} />
                     </div>
                     <div>  
-                        <label htmlFor="no_whatsapp">No whatsapp</label>
-                        <input name="no_whatsapp" required type="number" onChange={handleChange} />
+                            <div className="mb-2 block">
+                                <Label htmlFor="no_whatsapp" value="No whatsapp" />
+                               </div>
+                        <TextInput name="no_whatsapp" required type="number" onChange={handleChange} />
                     </div>
                     <div>
-                        <label htmlFor="email">Email</label>
-                        <input name="email" required type="text" onChange={handleChange} />
+                          <div className="mb-2 block">
+                                <Label htmlFor="email" value="email" />
+                               </div>
+                        <TextInput name="email" required type="text" onChange={handleChange} />
                     </div>
                     <div>
-                        <label htmlFor="password">Password</label>
-                        <input name="password" required type="password" onChange={handleChange} />
+                    <div className="mb-2 block">
+                                <Label htmlFor="password" value="password" />
+                               </div>
+                        <TextInput name="password" required type="password" onChange={handleChange} />
                     </div>
-                    
-                    <button type="submit">submit</button>
+                    <Button type="submit" color="failure">Submit</Button>
+                    <br />
+                    <a href={`/login?prevRoute=${prevRoute}`} className="text-center text-red-600 m-auto" >Login</a>
+           
                 </form>
-                <a href={`/login?prevRoute=${prevRoute}`}>Login</a>
-            </div>
+                </div> 
         </>
     )
 }
