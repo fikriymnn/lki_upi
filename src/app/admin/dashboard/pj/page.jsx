@@ -34,6 +34,9 @@ export default function Order_Pj(){
               status
             </Table.HeadCell>
             <Table.HeadCell>
+              detail
+            </Table.HeadCell>
+            <Table.HeadCell>
               konfirmasi
             </Table.HeadCell>
           </Table.Head>
@@ -50,6 +53,11 @@ export default function Order_Pj(){
                     <Table.Cell>{v.no_invoice}</Table.Cell>
                     <Table.Cell>
                     <p>{v.status}</p>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <a href={`/admin/dashboard/pj/detail${v._id}?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+                        keterangan
+                      </a>
                     </Table.Cell>
                     <Table.Cell>
                       <a href={`/admin/dashboard/pj/${v._id}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">

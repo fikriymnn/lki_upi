@@ -9,6 +9,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
 }) {
     const [add, setAdd] = useState(false)
     const [file, setFile] = useState([])
+    const [foto, setFoto] = useState([])
     
     const handleConfirm = async (e) => {
         e.preventDefault()
@@ -17,7 +18,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                 alert('no file uploaded')
                 setAdd(a => !a)
             }else{
-                const data = await axios.put(`http://localhost:5000/api/order/${id}`,{hasil_analisis:file},{withCredentials:true})
+                const data = await axios.post(`http://localhost:5000/api/hasil_analisis/${id}`,{hasil_analisis:file},{withCredentials:true})
                 console.log(data)
                 if(data.data.success){
                     setAdd(a => !a)
@@ -30,10 +31,68 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
         }
     }
 
+    const handleDownloadHA = async ()=>{
+        try{
+            try {
+                const response = await axios.get('http://localhost:5000/api/download_jurnal_pendukung', {
+                  responseType: 'arraybuffer', // Important for receiving binary data
+                });
+
+                const blob = new Blob([response.data], { type: 'application/octet-stream' });
+          
+                // Create a link element and click it to trigger the download
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              } catch (error) {
+                console.error('Error downloading file:', error);
+              }   
+        }catch(err){
+            alert(err.message)
+        }
+    }
+
+    const handleDownloadJP = async ()=>{
+        try{
+            try {
+                const response = await axios.get('http://localhost:5000/api/download_jurnal_pendukung', {
+                  responseType: 'arraybuffer', // Important for receiving binary data
+                });
+
+                const blob = new Blob([response.data], { type: 'application/octet-stream' });
+          
+                // Create a link element and click it to trigger the download
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              } catch (error) {
+                console.error('Error downloading file:', error);
+              }   
+        }catch(err){
+            alert(err.message)
+        }
+    }
+
     useEffect(()=>{
-        console.log(foto_sample)
-       setFile(hasil_analisis)
+        async function getData(){          
+                  const buffer = Buffer.from(foto_sample.data);
+                  const base64Image = buffer.toString('base64');
+                  const contentType = foto_sample.contentType
+                  const src = `data:${contentType};base64,${base64Image}`;
+                 setFoto(src);
+                 setFile(hasil_analisis)
+        }
+        
+      getData()
     },[])
+
+    
 
     // const download_foto = async ()=>{
         
@@ -96,7 +155,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
 
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">foto sample : </h1>
-                    {foto_sample?<div className="w-28 h-10 bg-gray-200 border-2"><p className="m-auto">Image</p></div>:<p>-</p>}
+                    {foto_sample?<img src={foto} alt="foto sample" className="w-96 h-48"/>:<p>-</p>}
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">jurnal pendukung : </h1>
