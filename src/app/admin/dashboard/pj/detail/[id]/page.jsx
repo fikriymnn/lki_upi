@@ -11,24 +11,6 @@ export default function detailOrderPj({ params, searchParams }) {
     const [order, setOrder] = useState([])
     const [invoice, setInvoice] = useState({ id_user: {} })
 
-    const downloadInvoice = async (e)=>{
-        try{
-          
-           const data = await axios.get(`http://localhost:5000/api/generate_invoice?no_invoice=${no_invoice}`,{withCredentials:true})
-        //    const href = window.URL.createObjectURL(data);
-        //    const link = document.createElement('a');
-        //    link.href = href;
-        //    link.setAttribute('download', 'config.json'); //or any other extension
-        //    document.body.appendChild(link);
-        //    link.click();
-        //    document.body.removeChild(link);
-        //    alert('success')
-  
-          
-        }catch(err){
-          alert(err.message)
-        }
-      }
 
     useEffect(() => {
         async function getnvoice() {
@@ -53,7 +35,7 @@ export default function detailOrderPj({ params, searchParams }) {
 
     return (
         <>
-            <p className='text-center text-4xl font-bold text-gray-800 mt-7'>EDIT ORDER</p>
+            <p className='text-center text-4xl font-bold text-gray-800 mt-7'>Detail</p>
             <div className='flex justify-center'>
                 <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
             </div>

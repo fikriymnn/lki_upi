@@ -35,23 +35,65 @@ export default function detail({ params,searchParams }) {
       }
     }
 
-    const downloadInvoice =async () => {
-        //Wrapping the code with an async function, just for the sake of example.
-      
-        // const downloader = new Downloader({
-        //   url: `http://localhost:5000/api/generate_invoice?no_invoice=${no_invoice}`, //If the file name already exists, a new file with the name 200MB1.zip is created.
-        //   directory: "./downloads", //This folder will be created, if it doesn't exist.   
-        // });
-        // try {
-        //   await downloader.download(); //Downloader.download() resolves with some useful properties.
-      
-        //   console.log("All done");
-        // } catch (error) {
-        //   //IMPORTANT: Handle a possible error. An error is thrown in case of network errors, or status codes of 400 and above.
-        //   //Note that if the maxAttempts is set to higher than 1, the error is thrown only if all attempts fail.
-        //   console.log("Download failed", error);
-        // }
-      };
+    const downloadInvoice = async (e)=>{
+      try{
+
+          const response = await axios.get(`http://localhost:5000/api/generate_invoice?no_invoice=${no_invoice}`,{withCredentials:true,responseType: 'blob'});
+          console.log(response.data)
+    
+          // Create a blob from the response data
+          const blob = new Blob([response.data], { type: 'application/octet-stream' });
+    
+          // Create a link element and click it to trigger the download
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = `${invoice?.id_user?.nama_lengkap.replace(" ", "_")}_${new Date().getDate()}-${new Date().getMonth()+1}-${new Date().getFullYear()}_invoice.docx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+      }catch(err){
+        alert(err.message)
+      }
+    }
+
+    const downloadKuitansi = async (e)=>{
+      try{
+
+          const response = await axios.get(`http://localhost:5000/api/generate_kuitansi?no_invoice=${no_invoice}`,{withCredentials:true,responseType: 'blob'});
+          console.log(response.data)
+    
+          // Create a blob from the response data
+          const blob = new Blob([response.data], { type: 'application/octet-stream' });
+    
+          // Create a link element and click it to trigger the download
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = `${invoice?.id_user?.nama_lengkap.replace(" ", "_")}_${new Date().getDate()}-${new Date().getMonth()+1}-${new Date().getFullYear()}_kuitansi.xlsx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+      }catch(err){
+        alert(err.message)
+      }
+    }
+
+    const downloadBuktiTransfer = async () => {
+      try {
+          const response = await axios.get(`http://localhost:5000/api/download_bukti_pembayaran/${id}`,{withCredentials:true,responseType: 'arraybuffer',withCredentials:true});
+        // Create a blob from the response data
+        const blob = new Blob([response.data], { type: 'application/octet-stream' });
+  
+        // Create a link element and click it to trigger the download
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = invoice?.bukti_pembayaran?.originalName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (error) {
+        console.error('Error downloading file:', error);
+      }
+    };
     
     useEffect(()=>{
         async function getInvoice(){
@@ -86,9 +128,10 @@ export default function detail({ params,searchParams }) {
                     <p className="text-lg ">status : {invoice?.status}</p>
                     {invoice?.status=="form dikonfirmasi"?<p>*kirim sample ke alamat yang tertera \n (Jl.lorem ipsum dolor)</p>:""}
                     <p className="text-lg ">total harga  : Rp.{invoice?.total_harga}</p>
-                    <div className="flex my-1"><p className="text-lg ">invoice : </p>{invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ?<Button className="ml-5 "  color="blue" size={5} onClick={(e)=>downloadInvoice}>download invoice</Button>:<p className="ml-5">-</p>}</div>
-                    <div  className="flex my-1"><p className="text-lg ">kuitansi : </p>{invoice?.status==invoice?.status=="menunggu pembayaran" || invoice?.status=="menunggu konfirmasi pembayaran"||invoice?.status=="selesai"?<Button className="ml-5" color="blue" size={5}>download kuitansi</Button>:<p className="ml-5">-</p>}</div>
-                    <div className="flex"><p className="text-lg ">bukti pembayaran : </p> {invoice?.status=="menunggu pembayaran" || invoice?.status=="menunggu konfirmasi pembayaran"||invoice?.status=="selesai"?<div className="flex"><input className="ml-5" type="file" name="file" onChange={(a)=>setBuktiPembayaran("file")}/><Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button></div>:<p className="ml-5">-</p>} </div>
+                    <div className="flex my-1"><p className="text-lg ">invoice : </p>{invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ?<Button className="ml-5 "  color="blue" size={5} onClick={downloadInvoice}>download invoice</Button>:<p className="ml-5">-</p>}</div>
+                    <div  className="flex my-1"><p className="text-lg ">kuitansi : </p>{invoice?.status==invoice?.status=="menunggu pembayaran" || invoice?.status=="menunggu konfirmasi pembayaran"||invoice?.status=="selesai"?<Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button>:<p className="ml-5">-</p>}</div>
+                    <div className="flex"><p className="text-lg ">bukti pembayaran : </p> {invoice?.status=="menunggu pembayaran" || invoice?.status=="menunggu konfirmasi pembayaran"||invoice?.status=="selesai"?<div className="flex"><input className="ml-5" type="file" name="file" onChange={(e)=>setBuktiPembayaran(e.target.files[0])}/><Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button></div>:<p className="ml-5">-</p>}{invoice?.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button>:""} </div>
+                    
                 </div>
                 <div className="mx-20">
                     {order.map((e, i) => {

@@ -55,7 +55,7 @@ export default function detailOrderAdmin({ params, searchParams }) {
 
       const downloadBuktiTransfer = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/bukti_pembayaran/${id}`,{withCredentials:true,responseType: 'arraybuffer'});
+            const response = await axios.get(`http://localhost:5000/api/download_bukti_pembayaran/${id}`,{withCredentials:true,responseType: 'arraybuffer',withCredentials:true});
           // Create a blob from the response data
           const blob = new Blob([response.data], { type: 'application/octet-stream' });
     

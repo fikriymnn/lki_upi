@@ -11,25 +11,6 @@ export default function detailOrderOperator({ params, searchParams }) {
     const [order, setOrder] = useState([])
     const [invoice, setInvoice] = useState({ id_user: {} })
 
-    const downloadInvoice = async (e)=>{
-        try{
-          
-           const data = await axios.get(`http://localhost:5000/api/generate_invoice?no_invoice=${no_invoice}`,{withCredentials:true})
-        //    const href = window.URL.createObjectURL(data);
-        //    const link = document.createElement('a');
-        //    link.href = href;
-        //    link.setAttribute('download', 'config.json'); //or any other extension
-        //    document.body.appendChild(link);
-        //    link.click();
-        //    document.body.removeChild(link);
-        //    alert('success')
-  
-          
-        }catch(err){
-          alert(err.message)
-        }
-      }
-
     useEffect(() => {
         async function getnvoice() {
             try {

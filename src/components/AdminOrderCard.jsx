@@ -8,8 +8,8 @@ import { imagefrombuffer } from "imagefrombuffer";
 export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id,kode_pengujian
 }) {
     const [add, setAdd] = useState(false)
-    const [file, setFile] = useState([])
-    const [foto, setFoto] = useState([])
+    const [file, setFile] = useState(null)
+    const [foto, setFoto] = useState('')
     
     const handleConfirm = async (e) => {
         e.preventDefault()
@@ -18,13 +18,13 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                 alert('no file uploaded')
                 setAdd(a => !a)
             }else{
-                const data = await axios.post(`http://localhost:5000/api/hasil_analisis/${id}`,{hasil_analisis:file},{withCredentials:true})
-                console.log(data)
-                if(data.data.success){
+                const data = await axios.post(`http://localhost:5000/api/hasil_analisis/${id}`,{hasil_analisis:file},{withCredentials:true,headers: {"Content-Type": 'multipart/form-data'}})
+          
+               
                     setAdd(a => !a)
                     alert("upload successfully!")
                     window.location.reload()
-                }
+                
             }
         } catch (err) {
             alert(err.message)
@@ -34,16 +34,18 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
     const handleDownloadHA = async ()=>{
         try{
             try {
-                const response = await axios.get('http://localhost:5000/api/download_jurnal_pendukung', {
-                  responseType: 'arraybuffer', // Important for receiving binary data
+                const response = await axios.get(`http://localhost:5000/api/download_hasil_analisis/${id}`, {
+                  responseType: 'arraybuffer',withCredentials:true // Important for receiving binary data
                 });
 
                 const blob = new Blob([response.data], { type: 'application/octet-stream' });
           
                 // Create a link element and click it to trigger the download
+                const str = response.headers["Content-Type"]
+                const type = str?.split("/")
                 const link = document.createElement('a');
                 link.href = window.URL.createObjectURL(blob);
-                link.download = fileName;
+                link.download = hasil_analisis?.originalName;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -58,16 +60,17 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
     const handleDownloadJP = async ()=>{
         try{
             try {
-                const response = await axios.get('http://localhost:5000/api/download_jurnal_pendukung', {
-                  responseType: 'arraybuffer', // Important for receiving binary data
+                const response = await axios.get(`http://localhost:5000/api/download_jurnal_pendukung/${id}`, {
+                  responseType: 'arraybuffer',withCredentials:true  // Important for receiving binary data
                 });
 
                 const blob = new Blob([response.data], { type: 'application/octet-stream' });
           
                 // Create a link element and click it to trigger the download
+        
                 const link = document.createElement('a');
                 link.href = window.URL.createObjectURL(blob);
-                link.download = fileName;
+                link.download = jenis_pengujian?.originalName;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -80,17 +83,19 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
     }
 
     useEffect(()=>{
-        async function getData(){          
+        async function getData(){   
+              if(foto_sample.data) {      
                   const buffer = Buffer.from(foto_sample.data);
                   const base64Image = buffer.toString('base64');
                   const contentType = foto_sample.contentType
                   const src = `data:${contentType};base64,${base64Image}`;
                  setFoto(src);
                  setFile(hasil_analisis)
+              }
         }
         
       getData()
-    },[])
+    },[foto_sample.data])
 
     
 
@@ -159,7 +164,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">jurnal pendukung : </h1>
-                    {jurnal_pendukung ? <Button color="failure" size={5}>download</Button> : <p>-</p>}
+                    {jurnal_pendukung ? <Button color="failure" size={5} onClick={handleDownloadJP}>download</Button> : <p>-</p>}
                 </div>
 
                 <div>
@@ -168,8 +173,8 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                     {add ? <div className="flex"><button onClick={handleConfirm} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Kirim</button><button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">upload file hasil analisis</button>}
                     </div>
                     
-                    {add ? <input type="file" name="file" onChange={(e)=>{setFile("hasil analisis")
-                         console.log(e.target.files[0])}}  /> : (hasil_analisis?<Button color="failure" size={5}>download</Button>:<p>-</p>)}
+                    {add ? <input type="file" name="file" onChange={(e)=>{setFile(e.target.files[0])
+                         console.log(e.target.files[0])}}  /> : (hasil_analisis?<Button color="failure" size={5} onClick={handleDownloadHA}>download</Button>:<p>-</p>)}
                 </div>
 
             </div>
