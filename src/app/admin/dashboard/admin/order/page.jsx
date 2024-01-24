@@ -3,24 +3,29 @@ import AdminInvoiceCard from "@/components/AdminInvoiceCard"
 import { useState,useEffect } from "react"
 import { Table } from 'flowbite-react';
 import axios from "axios"
+import ReactPaginate from 'react-paginate';
 
 export default function Order() {
 
   const [invoice, setInvoice] = useState([])
+  const [page,setPage] = useState(0)
+  const [length,setLength] = useState(0)
 
   useEffect(() => {
     async function getInvoice() {
       try {
-          const data = await axios.get(`http://localhost:5000/api/invoice`, { withCredentials: true })
+          const data = await axios.get(`http://localhost:5000/api/invoice?success=false&skip=${page*15}&limit=15`, { withCredentials: true })
+          console.log(data.data)
           if (data.data.success) {
             setInvoice(data.data.data)
+            setLength(data.data.length_total)
           }
       } catch (err) {
         console.log(err.message)
       }
     }
     getInvoice()
-  }, [])
+  }, [page])
   return (
     <>
       <p className='text-center text-4xl font-bold text-gray-800 mt-7'>ORDER</p>
@@ -76,6 +81,15 @@ export default function Order() {
         </Table>
       </div>
       <br />
+      <ReactPaginate
+        breakLabel="..."
+        nextLabel="next >"
+        onPageChange={(e)=>{setPage(e.selected);console.log(e.selected)}}
+        pageRangeDisplayed={5}
+        pageCount={parseInt(Math.ceil(length/15).toFixed())}
+        previousLabel="< previous"
+        renderOnZeroPageCount={null}
+      />
       <br />
       <br />
       <br />
