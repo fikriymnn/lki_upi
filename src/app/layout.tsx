@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import NavbarCustom from '@/components/Navbar'
 import FooterCustom from '@/components/FooterCustom'
-import {UserProvider} from '@/context/userContext'
+import { UserProvider } from '@/context/userContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,14 +21,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <UserProvider>
-        <NavbarCustom/>
-        <div className='pt-[12vh]'>
-        {children}
-        </div>
-       
-        <FooterCustom/>
+          <NavbarCustom />
+          <div className='md:pt-[12vh] lg:pt-[12vh] pt-[9vh]'>
+            {children}
+          </div>
+
+          <FooterCustom />
         </UserProvider>
-        </body>
+      </body>
     </html>
   )
 }
