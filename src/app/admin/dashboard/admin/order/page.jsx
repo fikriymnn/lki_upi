@@ -59,7 +59,7 @@ export default function Order() {
                     </Table.Cell>
                     <Table.Cell>{v.date}</Table.Cell>
                     <Table.Cell>{v.no_invoice}</Table.Cell>
-                    <Table.Cell>{v.harga}</Table.Cell>
+                    <Table.Cell>{v.total_harga}</Table.Cell>
                     <Table.Cell>
                       <a href={`/admin/dashboard/admin/order/${v._id}?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                         keterangan
@@ -81,15 +81,21 @@ export default function Order() {
         </Table>
       </div>
       <br />
+      <div className="flex justify-center" >
       <ReactPaginate
+      className="m-auto text-red-600"
         breakLabel="..."
-        nextLabel="next >"
+        nextLabel={<p className="inline mb-2 px-3 py-1 text-white bg-red-600">{"next >"}</p>}
         onPageChange={(e)=>{setPage(e.selected);console.log(e.selected)}}
-        pageRangeDisplayed={5}
+        pageRangeDisplayed={3}
         pageCount={parseInt(Math.ceil(length/15).toFixed())}
-        previousLabel="< previous"
+        previousLabel={
+          <p className="inline  px-3 py-1 mt-2 text-white bg-red-600">{"< prev"}</p>
+   }
         renderOnZeroPageCount={null}
       />
+      </div>
+      
       <br />
       <br />
       <br />
