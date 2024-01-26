@@ -143,7 +143,7 @@ export default function Report() {
                 
               })}
             </select></div>
-            <div className='flex items-center ml-3'>Bulan : <select className='ml-3' name="bulan" id="bulan" onChange={(e) => setYear(e.target.value)}>
+            <div className='flex items-center ml-3'>Bulan : <select className='ml-3' name="bulan" id="bulan" onChange={(e) => setMonth(e.target.value)}>
               <option value="" defaultChecked>all</option>
               {monthOption.map((v, i) => {
                   return <option value={i} key={i} defaultValue>{v}</option>               
