@@ -1,5 +1,6 @@
 "use client"
 import Link from "next/link";
+import { useState,useEffect } from "react";
 import { Button } from 'flowbite-react';
 export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi,hasil_analisis,foto_sample,kode_pengujian,status
 }) {
@@ -62,10 +63,10 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
 
     useEffect(()=>{
         async function getData(){   
-              if(foto_sample.data) {      
-                  const buffer = Buffer.from(foto_sample.data);
+              if(foto_sample?.data) {      
+                  const buffer = Buffer.from(foto_sample?.data);
                   const base64Image = buffer.toString('base64');
-                  const contentType = foto_sample.contentType
+                  const contentType = foto_sample?.contentType
                   const src = `data:${contentType};base64,${base64Image}`;
                  setFoto(src);
                  setFile(hasil_analisis)
@@ -73,7 +74,7 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
         }
         
       getData()
-    },[foto_sample.data])
+    },[foto_sample?.data])
 
     return (
         <><div>

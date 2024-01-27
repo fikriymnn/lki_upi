@@ -4,19 +4,54 @@ import { useState,useEffect } from "react"
 import axios from "axios"
 import ReactPaginate from 'react-paginate';
 
+const monthOption = [
+  
+  "Januari",
+
+  "Februari",
+
+  "Maret",
+
+  "April",
+
+  "Mei",
+
+  "Juni",
+
+  "Juli",
+
+  "Agustus",
+
+  "September",
+
+  "Oktober",
+
+  "November",
+
+  "desember"
+]
+
 export default function Order_Pj(){
   const [invoice, setInvoice] = useState([])
-  const [jenis_pengujian, setJenis_pengujian] = useState('')
   const [year, setYear] = useState(0)
   const [month,setMonth] = useState(0)
   const [page,setPage] = useState(0)
+  const [length,setLength] = useState(0)
+  const [yearOption, setYearOption] = useState([])
 
   useEffect(() => {
+    let arr=[]
+    const yearMax = (new Date().getFullYear() - 2023)
+    for (let i = 0; i < yearMax; i++) {
+      arr.push(2024 + i)
+      setYearOption(arr)
+    }
     async function getInvoice() {
       try {
           const data = await axios.get(`http://localhost:5000/api/invoice?status=menunggu verifikasi&skip=${page}&limit=15${jenis_pengujian?`&jenis_pengujian=${jenis_pengujian}`:''}${year?`&year=${year}`:''}${month?`&month=${month}`:''}`, { withCredentials: true })
           if (data.data.success) {
             setInvoice(data.data.data)
+            setLength(data.data.length_total)
           }
       } catch (err) {
         console.log(err.message)
@@ -26,7 +61,7 @@ export default function Order_Pj(){
   }, [])
     return(
       <>
-      <p className='text-center text-4xl font-bold text-gray-800 mt-7'>PENANGGUNG JAWAB</p>
+      <p className='text-center text-4xl font-bold text-gray-800 mt-7'>Order</p>
       <div className='flex justify-center'>
         <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
       </div>
@@ -35,19 +70,12 @@ export default function Order_Pj(){
               <option value="" defaultChecked>all</option>
               {yearOption.map((v, i) => {
                   return <option value={v} key={i}>{v}</option>
-                
               })}
             </select></div>
             <div className='flex items-center ml-3'>Bulan : <select className='ml-3' name="bulan" id="bulan" onChange={(e) => setMonth(e.target.value)}>
               <option value="" defaultChecked>all</option>
               {monthOption.map((v, i) => {
                   return <option value={i} key={i} defaultValue>{v}</option>               
-              })}
-            </select></div>
-            <div className='flex items-center ml-3'>Jenis Pengujian : <select className='ml-3' name="jenis_pengujian" id="jp" onChange={(e) => setJenis_pengujian(e.target.value)}>
-              <option value="" defaultChecked>all</option>
-              {kode.map((v, i) => {
-                return <option value={v.jenis_pengujian} key={i} >{v.jenis_pengujian}</option>
               })}
             </select></div>
           </div>
@@ -57,6 +85,7 @@ export default function Order_Pj(){
             <Table.HeadCell>No</Table.HeadCell>
             <Table.HeadCell>Tanggal</Table.HeadCell>
             <Table.HeadCell>Invoice</Table.HeadCell>
+            <Table.HeadCell>Nama</Table.HeadCell>
             <Table.HeadCell>
               status
             </Table.HeadCell>
@@ -77,6 +106,7 @@ export default function Order_Pj(){
                       {i+1}
                     </Table.Cell>
                     <Table.Cell>{v.date_format}</Table.Cell>
+                    <Table.Cell>{v?.id_user?.nama_lengkap}</Table.Cell>
                     <Table.Cell>{v.no_invoice}</Table.Cell>
                     <Table.Cell>
                     <p>{v.status}</p>
@@ -109,7 +139,7 @@ export default function Order_Pj(){
         pageCount={parseInt(Math.ceil(length/15).toFixed())}
         previousLabel={
           <p className="inline  px-3 py-1 mt-2 text-white bg-red-600">{"< prev"}</p>
-   }
+      }
         renderOnZeroPageCount={null}
       />
       <br />

@@ -97,7 +97,6 @@ export default function order_analisis() {
                 obj.jurnal_pendukung = jurnal_pendukung[i]
                 obj.deskripsi_sample = deskripsi_sample[i]
                 obj.foto_sample = foto_sample[i]
-                obj.hasil_analisis = {}
                 console.log(obj)
                 arr[i] = obj
             }
@@ -105,7 +104,7 @@ export default function order_analisis() {
             if(arr.length==duplicate.length){
                 console.log("post data")
                 const data = await axios.post("http://localhost:5000/api/order",arr,{
-                    withCredentials:true,
+                    withCredentials:true
                    
                 })
                 console.log(data)
@@ -266,7 +265,23 @@ export default function order_analisis() {
                             </h2>
                             <input name="foto_sample" type="file" onChange={(e) => {
                                 e.preventDefault()
-                                foto_sample[i] = "file"
+                               
+                                if (e.target?.files[0]) {
+                                    const reader = new FileReader();
+                                
+                                    reader.onload = function (a) {
+                                      // 'e.target.result' berisi isi file dalam bentuk buffer
+                                      const fileBuffer = a.target.result;
+                                      foto_sample[i] = Buffer.from(fileBuffer).buffer
+                                      console.log({
+                                        data:fileBuffer.toString(),
+                                        contentType: e.target?.files[0].type,
+                                        originalName: e.target?.files[0].name
+                                    });
+                                    };
+                                
+                                    reader.readAsArrayBuffer(e.target?.files[0]);
+                                }
                             }} />
                         </div>
                         <div>
@@ -275,7 +290,25 @@ export default function order_analisis() {
                             <input name="jurnal_pendukung" type="file" onChange={(e) => {
 
                                 e.preventDefault()
-                                jurnal_pendukung[i] = "file"
+                                
+                                if (e.target?.files[0]) {
+                                    const reader = new FileReader();
+                                
+                                    reader.onload = function (a) {
+                                      // 'e.target.result' berisi isi file dalam bentuk buffer
+                                      const fileBuffer = a.target.result;
+                                      jurnal_pendukung[i] =Buffer.from(fileBuffer).buffer
+                                    
+                                      console.log({
+                                        data:fileBuffer,
+                                        contentType: e.target?.files[0].type,
+                                        originalName: e.target?.files[0].name
+                                    });
+                                    };
+                                
+                                    reader.readAsArrayBuffer(e.target?.files[0]);
+                                }
+                                
                             }} />
                         </div>
                         <div>
@@ -284,7 +317,7 @@ export default function order_analisis() {
                             <input name="deskripsi_sample" type="text" onChange={(e) => {
 
                                 e.preventDefault()
-                                deskripsi_sample[i] = e.target.value
+                                deskripsi_sample[i] = "e.target.value"
                             }} />
                         </div>
                     </div>

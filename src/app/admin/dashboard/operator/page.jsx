@@ -78,20 +78,29 @@ const monthOption = [
 
 export default function Order_Operator(){
   const [invoice, setInvoice] = useState([])
-  const [jenis_pengujian, setJenis_pengujian] = useState('')
   const [year, setYear] = useState(0)
   const [month,setMonth] = useState(0)
   const [page,setPage] = useState(0)
+  const [length,setLength] = useState(0)
+  const [yearOption, setYearOption] = useState([])
+
 
   useEffect(() => {
+    let arr=[]
+    const yearMax = (new Date().getFullYear() - 2023)
+    for (let i = 0; i < yearMax; i++) {
+      arr.push(2024 + i)
+      setYearOption(arr)
+    }
     async function getInvoice() {
       try {
           const data = await axios.get(`http://localhost:5000/api/invoice?status=sample dikerjakan operator${jenis_pengujian?`&jenis_pengujian=${jenis_pengujian}`:''}${year?`&year=${year}`:''}${month?`&month=${month}`:''}&skip=${page*15}&limit=15`, { withCredentials: true })
           if (data.data.success) {
             setInvoice(data.data.data)
+            setLength(data.data.length_total)
           }
       } catch (err) {
-        console.log(err.message)
+        alert(err.message)
       }
     }
     getInvoice()
@@ -116,12 +125,6 @@ export default function Order_Operator(){
                   return <option value={i} key={i} defaultValue>{v}</option>               
               })}
             </select></div>
-            <div className='flex items-center ml-3'>Jenis Pengujian : <select className='ml-3' name="jenis_pengujian" id="jp" onChange={(e) => setJenis_pengujian(e.target.value)}>
-              <option value="" defaultChecked>all</option>
-              {kode.map((v, i) => {
-                return <option value={v.jenis_pengujian} key={i} >{v.jenis_pengujian}</option>
-              })}
-            </select></div>
           </div>
       <div className="mx-20">
         <Table>
@@ -129,6 +132,7 @@ export default function Order_Operator(){
             <Table.HeadCell>No</Table.HeadCell>
             <Table.HeadCell>Tanggal</Table.HeadCell>
             <Table.HeadCell>Invoice</Table.HeadCell>
+            <Table.HeadCell>Nama</Table.HeadCell>
             <Table.HeadCell>
               status
             </Table.HeadCell>
@@ -149,7 +153,9 @@ export default function Order_Operator(){
                       {i+1}
                     </Table.Cell>
                     <Table.Cell>{v.date_format}</Table.Cell>
+              
                     <Table.Cell>{v.no_invoice}</Table.Cell>
+                    <Table.Cell>{v?.id_user?.nama_lengkap}</Table.Cell>
                     <Table.Cell>
                     <p>{v.status}</p>
                     </Table.Cell>
