@@ -5,10 +5,10 @@ import { Button } from 'flowbite-react';
 
 function CardPenguji() {
     return (
-        <div className='p-4 border border-black flex flex-col justify-center items-center gap-10 rounded-3xl'>
+        <div className='md:p-4 p-2 border border-black flex flex-col justify-center items-center gap-10 rounded-3xl'>
             <h1 className='font-bold text-2xl'>GC-FID</h1>
-            <Image src={"/images/barang.png"} width={0} height={0} sizes='100vw' alt='' className='w-[274.89px] h-[220px]' />
-            <div className='px-5'>
+            <Image src={"/images/barang.png"} width={0} height={0} sizes='100vw' alt='' className='md:w-[274.89px] md:h-[220px] w-[200px] h-[150px]' />
+            <div className='md:px-5 '>
 
                 <Button color='failure' href='/analisis' className='grad font-bold py-1 rounded-full '>
                     Selengkapnya
