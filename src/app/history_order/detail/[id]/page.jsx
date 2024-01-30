@@ -7,7 +7,7 @@ import axios from 'axios'
 import month_bahasa from '@/utils/month_bahasa'
 
 
-export default function detail({ params,searchParams }) {
+export default function hdetail({ params,searchParams }) {
     const { id } = params
     const {no_invoice} = searchParams
     const [order, setOrder] = useState([])
@@ -19,20 +19,6 @@ export default function detail({ params,searchParams }) {
         h = (d.getHours()<10?'0':'') + d.getHours(),
         m = (d.getMinutes()<10?'0':'') + d.getMinutes();
      return h + ':' + m;
-    }
-
-    const handleBukti = async (e)=>{
-      e.preventDefault()
-      try{
-        const data = await axios.put(`http://localhost:5000/api/invoice/${id}`,{bukti_pembayaran:buktiPembayaran,status:'menunggu konfirmasi pembayaran',s7_date:`${timeNow()} ${new Date().getDate()} ${month_bahasa(new Date().getMonth())} ${new Date().getFullYear()}`},{withCredentials:true})
-        if(data.data.success){
-          alert('sukses dikirim')
-          window.location.reload()
-        }
-      
-      }catch(err){
-        alert(err.message)
-      }
     }
 
     const downloadInvoice = async (e)=>{
@@ -101,7 +87,7 @@ export default function detail({ params,searchParams }) {
   
            
                 const data = await axios.get(`http://localhost:5000/api/invoice/${id}`,{withCredentials:true})
-                const dataOrder = await axios.get(`http://localhost:5000/api/order?no_invoice=${no_invoice}&skip=0&limit=20`,{withCredentials:true})
+                const dataOrder = await axios.get(`http://localhost:5000/api/order?success=true&no_invoice=${no_invoice}&skip=0&limit=100`,{withCredentials:true})
                 console.log(data)
                 if(data.data.success){
                   setInvoice(data.data.data)
@@ -128,9 +114,9 @@ export default function detail({ params,searchParams }) {
                     <p className="text-lg ">status : {invoice?.status}</p>
                     {invoice?.status=="form dikonfirmasi"?<p>*kirim sample ke alamat yang tertera \n (Jl.lorem ipsum dolor)</p>:""}
                     <p className="text-lg ">total harga  : Rp.{invoice?.total_harga}</p>
-                    <div className="flex my-1"><p className="text-lg ">invoice : </p>{invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ?<Button className="ml-5 "  color="blue" size={5} onClick={downloadInvoice}>download invoice</Button>:<p className="ml-5">-</p>}</div>
-                    <div  className="flex my-1"><p className="text-lg ">kuitansi : </p>{invoice?.status==invoice?.status=="menunggu pembayaran" || invoice?.status=="menunggu konfirmasi pembayaran"||invoice?.status=="selesai"?<Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button>:<p className="ml-5">-</p>}</div>
-                    <div className="flex"><p className="text-lg ">bukti pembayaran : </p> {invoice?.status=="menunggu pembayaran" || invoice?.status=="menunggu konfirmasi pembayaran"||invoice?.status=="selesai"?<div className="flex"><input className="ml-5" type="file" name="file" onChange={(e)=>setBuktiPembayaran(e.target.files[0])}/><Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button></div>:<p className="ml-5">-</p>}{invoice?.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button>:""} </div>
+                    <div className="flex my-1"><p className="text-lg ">invoice : </p>{invoice.status=="selesai"?<Button className="ml-5 "  color="blue" size={5} onClick={downloadInvoice}>download invoice</Button>:<p className="ml-5">-</p>}</div>
+                    <div  className="flex my-1"><p className="text-lg ">kuitansi : </p>{invoice?.status=="selesai"?<Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button>:<p className="ml-5">-</p>}</div>
+                    <div className="flex"><p className="text-lg ">bukti pembayaran : </p> {invoice?.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button>:""} </div>
                     
                 </div>
                 <div className="mx-20">

@@ -1,10 +1,13 @@
 "use client"
 import axios from 'axios';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { v4 as uuidv4 } from 'uuid';
+
 
 export default function order_analisis() {
+    const uid = uuidv4()
     const [countForm, setCountForm] = useState(1);
-    const [duplicate, setDuplicate] = useState([<CustomForm i={0} key={0} />]);
+    const [duplicate, setDuplicate] = useState([<CustomForm i={0} key={0} uuid={uid}/>]);
     const [arr, setArr] = useState([])
     const [jenis_pengujian, setJenis_pengujian] = useState([[]])
     const [kode_pengujian, setKode_pengujian] = useState([[]])
@@ -18,8 +21,10 @@ export default function order_analisis() {
     const [jurnal_pendukung, setJurnal_pendukung] = useState([])
     const [deskripsi_sample, setDeskripsi_sample] = useState([])
     const [foto_sample, setFoto_sample] = useState([])
+    const [uuid, setUuid] = useState([uid])
     const [verifikasi, setVerifikasi] = useState(false)
 
+    
     const kode = [
         {
             jenis_pengujian: "GCFID",
@@ -71,19 +76,33 @@ export default function order_analisis() {
         console.log(nama_sample)
         console.log(jenis_pengujian)
         e.preventDefault()
-        setDuplicate([...duplicate, <CustomForm i={countForm} key={duplicate.length} />])
-        let add = jenis_pengujian
+        setDuplicate([...duplicate, <CustomForm i={countForm} key={duplicate.length}/>])
+        let add = [...jenis_pengujian]
         add.push([])
         setJenis_pengujian([...add])
-        let add2 = kode_pengujian
+        let add2 = [...kode_pengujian]
         add2.push([])
-        setKode_pengujian([...add])
+        setKode_pengujian([...add2])
+        let add3 = [...foto_sample]
+        add3.push("")
+        setFoto_sample([...add3])
+        let add4 = [...jurnal_pendukung]
+        add4.push("")
+        setJurnal_pendukung([...add4])
+        console.log(jurnal_pendukung)
+        let add5 = uuid
+        const uid = uuidv4()
+        add5.push(uid)
+        setUuid([...add5])
+        console.log(uuid)
+
+        
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         try{
-            for(let i = 0;i<nama_sample.length;i++){
+            for(let i = 0;i<jenis_pengujian.length;i++){
                 let obj = {}
                 obj.jenis_pengujian = jenis_pengujian[i]
                 obj.kode_pengujian = kode_pengujian[i]
@@ -93,11 +112,9 @@ export default function order_analisis() {
                 obj.pelarut = pelarut[i]
                 obj.preparasi_khusus = preparasi_khusus[i]
                 obj.target_senyawa = target_senyawa[i]
-                obj.metode_parameter = metode_parameter[i]
-                obj.jurnal_pendukung = jurnal_pendukung[i]
+                obj.metode_parameter = metode_parameter[i]      
                 obj.deskripsi_sample = deskripsi_sample[i]
-                obj.foto_sample = foto_sample[i]
-                obj.hasil_analisis = {}
+                obj.uuid = uuid[i]
                 console.log(obj)
                 arr[i] = obj
             }
@@ -105,13 +122,43 @@ export default function order_analisis() {
             if(arr.length==duplicate.length){
                 console.log("post data")
                 const data = await axios.post("http://localhost:5000/api/order",arr,{
-                    withCredentials:true,
+                    withCredentials:true
                    
                 })
                 console.log(data)
-                if(data.data.success==true){
-                    alert("success")
+                if(data.data.success){
+                    var v;
+                    for(v=0;v<=uuid.length;v++){
+                       for(let a=0;a<jurnal_pendukung.length;a++){
+                            if(uuid[v]==jurnal_pendukung[a].uid){
+                                async function cek(){
+                                  await axios.post(`http://localhost:5000/api/jurnal_pendukung?uuid=${uuid[v]}`,{jurnal_pendukung:jurnal_pendukung[a].file},{
+                                        withCredentials:true,
+                                        headers: {"Content-Type": 'multipart/form-data'}
+                                    })
+                                }
+                                cek()
+
+                            }
+                        }
+                        for(let b = 0;b<foto_sample.length;b++){
+                            if(uuid[v]==foto_sample[b].uid){
+                                async function cek2(){
+                                
+                                   await axios.post(`http://localhost:5000/api/foto_sample?uuid=${uuid[v]}`,{foto_sample:foto_sample[b].file},{
+                                        withCredentials:true,
+                                        headers: {"Content-Type": 'multipart/form-data'}
+                                    })
+                                }
+                                cek2()
+                            }
+                        }
+                       if(v==uuid.length){
+                        alert('success')
+                       }
+                    }
                 }
+                
             }
         }catch(err){
             alert(err.message)
@@ -123,7 +170,7 @@ export default function order_analisis() {
         return (
             <>
                 <div className=" border-2 rounded-lg mx-20">
-                    <p className='text-xl font-semibold text-xl text-white bg-red-600 rounded-lg p-3'>{i + 1}</p>
+                    {/* <p className='text-xl font-semibold text-xl text-white bg-red-600 rounded-lg p-3'>{i + 1}</p> */}
                     <div className='px-10 py-5'>
                         <div>
                             <h2 className="text-lg font-semibold">Jenis pengujian</h2>
@@ -266,7 +313,9 @@ export default function order_analisis() {
                             </h2>
                             <input name="foto_sample" type="file" onChange={(e) => {
                                 e.preventDefault()
-                                foto_sample[i] = "file"
+                               
+                                foto_sample[i] = {file:e.target.files[0],uid:uuid[i]}
+                                
                             }} />
                         </div>
                         <div>
@@ -275,7 +324,9 @@ export default function order_analisis() {
                             <input name="jurnal_pendukung" type="file" onChange={(e) => {
 
                                 e.preventDefault()
-                                jurnal_pendukung[i] = "file"
+                                
+                                jurnal_pendukung[i] = {file:e.target.files[0],uid:uuid[i]}
+                                
                             }} />
                         </div>
                         <div>
@@ -285,7 +336,7 @@ export default function order_analisis() {
 
                                 e.preventDefault()
                                 deskripsi_sample[i] = e.target.value
-                            }} />
+                            }}/>
                         </div>
                     </div>
                 </div>
@@ -314,12 +365,12 @@ export default function order_analisis() {
                     <button type="submit" className='bg-blue-800 p-3 text-white rounded-lg m-auto'>Kirim</button>
 
                 </form>
-                <div className='grid grid-cols-1 justify-items-center'>
+                {/* <div className='grid grid-cols-1 justify-items-center'>
                     <button onClick={increment} className='bg-blue-800 p-3 text-white rounded-lg'>Tambah order</button>
                     <br />
                     <br />
                    
-                </div>
+                </div> */}
 
 
             </div>
