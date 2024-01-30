@@ -1,6 +1,7 @@
 import Image from "next/image";
 import CarouselCustom from "@/components/CarouselCustom";
 import LayananCard from "@/components/LayananCard";
+import ButtonOrder from "@/components/ButtonOrder";
 
 export default function Home() {
   return (
@@ -25,10 +26,8 @@ export default function Home() {
             <LayananCard title={"Sertifikasi"} selengkapnya={"Segera Hadir"} desc={"Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."} />
             <LayananCard title={"Pelatihan"} selengkapnya={"Segera Hadir"} desc={"Here are the biggest enterprise technology acquisitions of 2021 so "} />
           </div>
-          <div className="flex justify-center mt-[86px]">
-            <div className="px-20 py-4 bg-slate-900 text-white grad rounded-xl font-bold text-lg">
-              Pesan Sekarang
-            </div>
+          <div>
+            <ButtonOrder />
           </div>
         </div>
       </div>

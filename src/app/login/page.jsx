@@ -6,7 +6,7 @@ import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
 import axios from "axios";
 import Router from "next/router";
 import Image from "next/image";
-import ReCAPTCHA from "react-google-recaptcha";
+
 
 export default function login({ searchParams }) {
     const router = useRouter()
