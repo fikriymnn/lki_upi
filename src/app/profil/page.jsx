@@ -21,6 +21,7 @@ export default function Profile() {
             alert(err.message)
         }
     }
+    user()
     }
 
     useEffect(() => {
