@@ -52,14 +52,21 @@ export default function login({ searchParams }) {
         const get_user = async () => {
             try {
                 const data = await axios.post("http://localhost:5000/api/login", userForm, { withCredentials: true })
+                console.log(data)
                 if (data.data.success == true) {
-                    if (prevRoute) {
-                        window.location.replace(prevRoute)
-
-                    } else {
-                        window.location.replace("/")
-
-                    }
+              
+                        
+                        alert(data.data.message)
+                  
+                        if (prevRoute) {
+                            window.location.replace(prevRoute)
+    
+                        } else {
+                            window.location.replace("/")
+    
+                        }
+                    
+                
                 }
             } catch (err) {
                 alert(err.message)

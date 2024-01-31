@@ -57,8 +57,12 @@ export default function register({ searchParams }) {
                 const data = await axios.post("http://localhost:5000/api/register", userForm, {
                     withCredentials: true
                 })
+                if(data.data.status==400){
+                    alert(data.data.message)
+                }
 
                 if (data.data.success == true) {
+                
                     if (prevRoute) {
                         window.location.replace(prevRoute)
 
@@ -66,9 +70,10 @@ export default function register({ searchParams }) {
                         window.location.replace("/")
 
                     }
+                
                 }
             } catch (err) {
-                console.log(err.message)
+                alert(err.message)
             }
 
         }
