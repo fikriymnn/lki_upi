@@ -51,7 +51,7 @@ export default function Order() {
     }
     async function getInvoice() {
       try {
-          const data = await axios.get(`http://localhost:5000/api/invoice?success=false&skip=${page}&limit=15${jenis_pengujian?`&jenis_pengujian=${jenis_pengujian}`:''}${year?`&year=${year}`:''}${month?`&month=${month}`:''}`, { withCredentials: true })
+          const data = await axios.get(`http://localhost:5000/api/invoice?success=false&skip=${page}&limit=15${year?`&year=${year}`:''}${month?`&month=${month}`:''}`, { withCredentials: true })
           console.log(data.data)
           if (data.data.success) {
             setInvoice(data.data.data)

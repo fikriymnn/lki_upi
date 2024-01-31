@@ -4,7 +4,7 @@ import { Button, Card } from 'flowbite-react';
 
 export default function LayananCard({ title, selengkapnya, desc }) {
   return (
-    <Card className="p-2 rounded-xl border-black">
+    <Card className="p-2 rounded-xl border-black ">
       <h5 className="text-2xl font-bold tracking-tight text-gray-700 dark:text-white text-center">
         {title}
       </h5>

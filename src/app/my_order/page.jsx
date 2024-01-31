@@ -89,18 +89,21 @@ export default function My_order(){
       </Table>
     </div>
     <br/>
+    <div className="flex items-center justify-center text-center">
     <ReactPaginate
       className="m-auto text-red-600"
         breakLabel="..."
-        nextLabel={<p className="inline mb-2 px-3 py-1 text-white bg-red-600">{"next >"}</p>}
+        nextLabel={<p className="inline mb-2 px-3 py-1 text-white bg-red-600 rounded-lg">{"next >"}</p>}
         onPageChange={(e)=>{setPage(e.selected);console.log(e.selected)}}
         pageRangeDisplayed={3}
         pageCount={parseInt(Math.ceil(length/15).toFixed())}
         previousLabel={
-          <p className="inline  px-3 py-1 mt-2 text-white bg-red-600">{"< prev"}</p>
+          <p className="inline  px-3 py-1 mt-2 text-white bg-red-600 rounded-lg">{"< prev"}</p>
       }
         renderOnZeroPageCount={null}
       />
+    </div>
+   
             <br/>
             <br/>
             <br/>

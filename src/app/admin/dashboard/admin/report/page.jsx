@@ -104,7 +104,7 @@ export default function Report() {
       try {
         
         console.log('S')
-        const data = await axios.get(`http://localhost:5000/api/order?skip=${page * 100}&limit=100${month ? `&month=${month}` : ""}${year ? `&year=${year}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`, { withCredentials: true })
+        const data = await axios.get(`http://localhost:5000/api/order?report=true&skip=${page * 100}&limit=100${month ? `&month=${month}` : ""}${year ? `&year=${year}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`, { withCredentials: true })
         // const dataReport = await axios.get(`http://localhost:5000/api/order?${month?`&month=${month}`:""}${year?`&year=${year}`:""}${jenis_pengujian?`&jenis_pengujian=${jenis_pengujian}`:""}`, { withCredentials: true })
         if (data.data.success) {
           setOrder(data.data.data)
