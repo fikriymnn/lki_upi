@@ -42,6 +42,7 @@ export default function detailOrderOperator({ params, searchParams }) {
             
                 <div className="flex"><p className="text-lg ">no invoice : </p> <p>{invoice.no_invoice}</p></div>
                 <div className="flex"><p className="text-lg ">status : </p> <p>{invoice.status}</p></div>
+                <div className="flex"><p className="text-lg ">estimasi selesai : </p> <p>{invoice.estimasi_date?invoice.estimasi_date:""}</p></div>
             </div>
             <br />
             <div className="mx-20">

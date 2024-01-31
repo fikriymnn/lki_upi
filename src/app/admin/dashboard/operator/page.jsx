@@ -94,7 +94,7 @@ export default function Order_Operator(){
     }
     async function getInvoice() {
       try {
-          const data = await axios.get(`http://localhost:5000/api/invoice?status=sample dikerjakan operator${jenis_pengujian?`&jenis_pengujian=${jenis_pengujian}`:''}${year?`&year=${year}`:''}${month?`&month=${month}`:''}&skip=${page*15}&limit=15`, { withCredentials: true })
+          const data = await axios.get(`http://localhost:5000/api/invoice?status=sample dikerjakan operator${year?`&year=${year}`:''}${month?`&month=${month}`:''}&skip=${page*15}&limit=15`, { withCredentials: true })
           if (data.data.success) {
             setInvoice(data.data.data)
             setLength(data.data.length_total)
@@ -182,7 +182,7 @@ export default function Order_Operator(){
       className="m-auto text-red-600"
         breakLabel="..."
         nextLabel={<p className="inline mb-2 px-3 py-1 text-white bg-red-600">{"next >"}</p>}
-        onPageChange={(e)=>{setPage(e.selected);console.log(e.selected)}}
+        onPageChange={(e)=>{setPage(e.selected-1);console.log(e.selected)}}
         pageRangeDisplayed={3}
         pageCount={parseInt(Math.ceil(length/15).toFixed())}
         previousLabel={

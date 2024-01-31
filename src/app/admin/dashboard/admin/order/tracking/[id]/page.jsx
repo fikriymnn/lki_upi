@@ -8,7 +8,7 @@ export default function Tracking_admin({ params }) {
     const [edit, setEdit] = useState(false)
     const { id } = params
     const [form, setForm] = useState({
-        estimasi_harga: 0,
+        estimasi_date: '',
         total_harga: 0,
         status: ""
     })
@@ -24,7 +24,7 @@ export default function Tracking_admin({ params }) {
     const handleConfirm = async (e) => {
         e.preventDefault()
         setEdit(a => !a)
-        let obj = {status: form.status,estimasi_harga:form.estimasi_harga,total_harga:form.total_harga}
+        let obj = {status: form.status,estimasi_date:form.estimasi_date,total_harga:form.total_harga}
         try{
             console.log(form)
             function timeNow() {
@@ -41,7 +41,8 @@ export default function Tracking_admin({ params }) {
                           obj.s1_date = date_format
                           return true 
                     case "form dikonfirmasi":
-                          obj.s2_date = date_format  
+                          obj.s2_date = date_format
+                          
                         return true;
                     case "sample diterima admin":
                         obj.s3_date = date_format
@@ -85,7 +86,7 @@ export default function Tracking_admin({ params }) {
                 if (data.data.success) {
                     const obj = data.data.data
                     setInvoice(obj)
-                    setForm({ estimasi_harga: obj.estimasi_harga, total_harga: obj.total_harga, status: obj.status })
+                    setForm({ estimasi_date: obj.estimasi_date, total_harga: obj.total_harga, status: obj.status })
                 }
             } catch (err) {
                 console.log(err.message)
@@ -118,15 +119,14 @@ export default function Tracking_admin({ params }) {
                                 <option value="menunggu konfirmasi pembayaran">menunggu konfirmasi pembayaran</option>
                                 <option value="selesai">selesai</option></select></p></div> : <div>
                                 <p className="text-lg ">Status  : {form.status} </p></div>}
-                            {edit ? <div>
-                                {/* <p className="text-lg ">Estimasi harga  : <input type="number" name="estimasi_harga" onChange={handleChange} value={form.estimasi_harga}/></p> */}
-                                </div> : <div>
-                                {/* <p className="text-lg ">estimasi harga  : Rp.{form.estimasi_harga}</p> */}
-                                </div>}
+                        
 
                             {edit ? <div>
                                 <p className="text-lg ">Total harga  : <input type="number" name="total_harga" onChange={handleChange} value={form.total_harga}/></p></div> : <div>
                                 <p className="text-lg ">total harga  : Rp.{form.total_harga}</p></div>}
+                            {edit ? <div>
+                                <p className="text-lg ">Tanggal estimasi selesai  : <input type="text" name="estimasi_date" onChange={handleChange} value={form.total_harga}/></p></div> : <div>
+                                <p className="text-lg ">Tanggal estimasi selesai  : Rp.{form.estimasi_date}</p></div>}
                         </div>
                         <br />
                         <br />

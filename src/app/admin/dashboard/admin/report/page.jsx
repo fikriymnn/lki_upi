@@ -104,7 +104,7 @@ export default function Report() {
       try {
         
         console.log('S')
-        const data = await axios.get(`http://localhost:5000/api/order?report=true&skip=${page * 100}&limit=100${month ? `&month=${month}` : ""}${year ? `&year=${year}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`, { withCredentials: true })
+        const data = await axios.get(`http://localhost:5000/api/order?report=true&skip=${page * 50}&limit=50${month ? `&month=${month}` : ""}${year ? `&year=${year}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`, { withCredentials: true })
         // const dataReport = await axios.get(`http://localhost:5000/api/order?${month?`&month=${month}`:""}${year?`&year=${year}`:""}${jenis_pengujian?`&jenis_pengujian=${jenis_pengujian}`:""}`, { withCredentials: true })
         if (data.data.success) {
           setOrder(data.data.data)
@@ -221,7 +221,7 @@ export default function Report() {
           className="m-auto text-red-600"
           breakLabel="..."
           nextLabel={<p className="inline mb-2 px-3 py-1 text-white bg-red-600 rounded">{"next >"}</p>}
-          onPageChange={(e) => { setPage(e.selected); console.log(e.selected) }}
+          onPageChange={(e) => { setPage(e.selected-1); console.log(e.selected) }}
           pageRangeDisplayed={3}
           pageCount={parseInt(Math.ceil(length / 15).toFixed())}
           previousLabel={

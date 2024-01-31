@@ -53,7 +53,7 @@ export default function History_order(){
           console.log(dataUser)
           if(dataUser.data.success){
             console.log(dataUser)
-            const data = await axios.get(`http://localhost:5000/api/invoice?success=true&id_user=${dataUser.data.data._id}&skip=${page}&limit=15${year?`&year=${year}`:''}${month?`&month=${month}`:''}`,{withCredentials:true})
+            const data = await axios.get(`http://localhost:5000/api/invoice?success=true&id_user=${dataUser.data.data._id}&skip=${page*15}&limit=15${year?`&year=${year}`:''}${month?`&month=${month}`:''}`,{withCredentials:true})
             console.log(data)
             if(data.data.success){
               setInvoice(data.data.data)
@@ -134,7 +134,7 @@ export default function History_order(){
       className="m-auto text-red-600"
         breakLabel="..."
         nextLabel={<p className="inline mb-2 px-3 py-1 text-white bg-red-600">{"next >"}</p>}
-        onPageChange={(e)=>{setPage(e.selected);console.log(e.selected)}}
+        onPageChange={(e)=>{setPage(e.selected-1);console.log(e.selected)}}
         pageRangeDisplayed={3}
         pageCount={parseInt(Math.ceil(length/15).toFixed())}
         previousLabel={

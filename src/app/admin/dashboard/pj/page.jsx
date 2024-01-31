@@ -48,7 +48,7 @@ export default function Order_Pj(){
     }
     async function getInvoice() {
       try {
-          const data = await axios.get(`http://localhost:5000/api/invoice?status=menunggu verifikasi&skip=${page}&limit=15${jenis_pengujian?`&jenis_pengujian=${jenis_pengujian}`:''}${year?`&year=${year}`:''}${month?`&month=${month}`:''}`, { withCredentials: true })
+          const data = await axios.get(`http://localhost:5000/api/invoice?status=menunggu verifikasi&skip=${page*15}&limit=15${year?`&year=${year}`:''}${month?`&month=${month}`:''}`, { withCredentials: true })
           if (data.data.success) {
             setInvoice(data.data.data)
             setLength(data.data.length_total)
@@ -134,7 +134,7 @@ export default function Order_Pj(){
       className="m-auto text-red-600"
         breakLabel="..."
         nextLabel={<p className="inline mb-2 px-3 py-1 text-white bg-red-600">{"next >"}</p>}
-        onPageChange={(e)=>{setPage(e.selected);console.log(e.selected)}}
+        onPageChange={(e)=>{setPage(e.selected-1);console.log(e.selected)}}
         pageRangeDisplayed={3}
         pageCount={parseInt(Math.ceil(length/15).toFixed())}
         previousLabel={

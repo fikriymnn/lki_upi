@@ -78,6 +78,8 @@ export default function NavbarCustom() {
 
         {login&&adminPath[2] !== "dashboard"?<Navbar.Link href="/my_order" className="mt-[2vh] font-semibold">Order saya</Navbar.Link>:""}
 
+        {login&&adminPath[2] !== "dashboard"?<Navbar.Link href="/history_order" className="mt-[2vh] font-semibold">History order </Navbar.Link>:""}
+
         {login&&adminPath[2] !== "dashboard"?<Navbar.Link href="/profile" className="mt-[2vh] font-semibold">Profile</Navbar.Link>:""}
 
         {login&&adminPath[2] !== "dashboard"?<Navbar.Link onClick={handleLogout} className="mt-[2vh] font-semibold">Logout</Navbar.Link>:""}
