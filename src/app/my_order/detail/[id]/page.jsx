@@ -105,8 +105,11 @@ export default function detail({ params,searchParams }) {
                 console.log(data)
                 if(data.data.success){
                   setInvoice(data.data.data)
+                  
+              
+                }
+                if(dataOrder.data.success){
                   setOrder(dataOrder.data.data)
-                  console.log(dataOrder.data.data)
                 }
               
             }catch(err){
@@ -115,6 +118,8 @@ export default function detail({ params,searchParams }) {
            }
            getInvoice()
     },[])
+
+    
 
     return (
         <>
@@ -125,14 +130,20 @@ export default function detail({ params,searchParams }) {
         </div>
 
                 <div className="mx-20">
-                    <div className="flex"><p className="text-xl font-bold">status : </p><p className="ml-3 font-semibold text-gray-800 text-lg">{invoice?.status}</p></div>
+                  <div className="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1">
+                    <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8"><p className="text-2xl font-semibold">status : </p><p className="ml-3 font-semibold text-gray-800 text-lg">{invoice?.status}</p>
                     {invoice?.status=="form dikonfirmasi"?<p>*kirim sample ke alamat yang tertera \n (Jl.lorem ipsum dolor)</p>:""}
-                    <p className="text-lg ">total harga  : Rp.{invoice?.total_harga}</p>
+                    </div>
+                    
+
+                    <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8"><p className="text-2xl font-semibold">total harga  : </p><p className="ml-3 font-semibold text-gray-800 text-lg">Rp.{invoice?.total_harga}</p></div>
+
                     <div className="flex"><p className="text-lg ">estimasi selesai : </p> <p>{invoice.estimasi_date?invoice.estimasi_date:""}</p></div>
                     <div className="flex my-1"><p className="text-lg ">invoice : </p>{invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ?<Button className="ml-5 "  color="blue" size={5} onClick={downloadInvoice}>download invoice</Button>:<p className="ml-5">-</p>}</div>
                     <div  className="flex my-1"><p className="text-lg ">kuitansi : </p>{invoice?.status==invoice?.status=="menunggu pembayaran" || invoice?.status=="menunggu konfirmasi pembayaran"||invoice?.status=="selesai"?<Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button>:<p className="ml-5">-</p>}</div>
                     <div className="flex"><p className="text-lg ">bukti pembayaran : </p> {invoice?.status=="menunggu pembayaran" || invoice?.status=="menunggu konfirmasi pembayaran"||invoice?.status=="selesai"?<div className="flex"><input className="ml-5" type="file" name="file" onChange={(e)=>setBuktiPembayaran(e.target.files[0])}/><Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button></div>:<p className="ml-5">-</p>}{invoice?.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button>:""} </div>
                     
+                </div>
                 </div>
                 <div className="mx-20">
                     {order.map((e, i) => {

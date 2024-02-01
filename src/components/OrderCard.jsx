@@ -62,13 +62,12 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
     }
 
     useEffect(()=>{
-        console.log(foto_sample)
-        console.log(jurnal_pendukung)
+    
         async function getData(){   
-            if(foto_sample.data) {      
+            if(foto_sample?.data) {      
             
-                const base64Image = foto_sample.data.toString('base64');
-                const contentType = foto_sample.contentType
+                const base64Image = foto_sample?.data.toString('base64');
+                const contentType = foto_sample?.contentType
                 const src = `data:${contentType};base64,${base64Image}`;
                setFoto(src);
            
@@ -76,7 +75,7 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
       }
       
     getData()
-    },[foto_sample.data])
+    },[foto_sample?.data])
 
     return (
         <><div>
