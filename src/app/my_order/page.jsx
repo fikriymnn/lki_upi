@@ -17,7 +17,7 @@ export default function My_order(){
           console.log(dataUser)
           if(dataUser.data.success){
             console.log(dataUser)
-            const data = await axios.get(`http://localhost:5000/api/invoice?id_user=${dataUser.data.data._id}&skip=${page}&limit=15`,{withCredentials:true})
+            const data = await axios.get(`http://localhost:5000/api/invoice?id_user=${dataUser.data.data._id}&skip=${page*15}&limit=15&success=false`,{withCredentials:true})
             console.log(data)
             if(data.data.success){
               setInvoice(data.data.data)
@@ -33,25 +33,25 @@ export default function My_order(){
     return(
         <>
         <div>
-        <p className='text-center text-4xl font-bold text-gray-800 mt-7'>MY ORDER</p>
+        <p className='text-center md:text-3xl text-xl text-lg font-bold text-gray-800 mt-7'>MY ORDER</p>
                       <div className='flex justify-center'>
-            <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center'/>
+            <hr className='text-red-700 bg-red-600 md:h-2 h-1 md:mb-8 sm:mb-4 mb-2 md:mt-5 sm:mt-3 mt-2 md:w-56 sm:w-32 w-16 text-center'/>
         </div>
      
-          
-            <div className=" px-20">
-      <Table>
+          <div className="m-auto md:w-full sm:w-full w-64">
+            <div className=" overflow-scroll w-full">
+      <Table className="">
         <Table.Head>
-          <Table.HeadCell>No</Table.HeadCell>
-          <Table.HeadCell>Tanggal</Table.HeadCell>
-          <Table.HeadCell>No Invoice</Table.HeadCell>
-          <Table.HeadCell>
+          <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs ">No</Table.HeadCell>
+          <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">Tanggal</Table.HeadCell>
+          <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">No Invoice</Table.HeadCell>
+          <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
            Harga
           </Table.HeadCell>
-          <Table.HeadCell>
+          <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
            Keterangan
           </Table.HeadCell>
-          <Table.HeadCell>
+          <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
            Status
           </Table.HeadCell>
         </Table.Head>
@@ -61,21 +61,21 @@ export default function My_order(){
                 return(
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white text-center">
                     {i+1}
                   </Table.Cell>
-                  <Table.Cell>{`${value.date_format}`}</Table.Cell>
-                  <Table.Cell>{value.no_invoice}</Table.Cell>
-                  <Table.Cell>    
+                  <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{`${value.date_format}`}</Table.Cell>
+                  <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{value.no_invoice}</Table.Cell>
+                  <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">    
                       {value.total_harga!==0?value.total_harga:"-"}   
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
                     <a href={`/my_order/detail/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                      detail
                     </a>
                   </Table.Cell>
-                  <Table.Cell>
-                    <p>{value.status}</p>
+                  <Table.Cell className="text-center">
+                    <p className="text-center">{value.status}</p>
                     <br/>
                     <a href={`/my_order/tracking/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                      detail
@@ -88,19 +88,23 @@ export default function My_order(){
         </Table.Body>
       </Table>
     </div>
+    </div>
     <br/>
+    <div className="flex items-center justify-center text-center">
     <ReactPaginate
       className="m-auto text-red-600"
         breakLabel="..."
-        nextLabel={<p className="inline mb-2 px-3 py-1 text-white bg-red-600">{"next >"}</p>}
-        onPageChange={(e)=>{setPage(e.selected);console.log(e.selected)}}
+        nextLabel={<p className="inline mb-2 px-3 py-1 text-white bg-red-600 rounded-lg">{"next >"}</p>}
+        onPageChange={(e)=>{setPage(e.selected-1);console.log(e.selected)}}
         pageRangeDisplayed={3}
         pageCount={parseInt(Math.ceil(length/15).toFixed())}
         previousLabel={
-          <p className="inline  px-3 py-1 mt-2 text-white bg-red-600">{"< prev"}</p>
+          <p className="inline  px-3 py-1 mt-2 text-white bg-red-600 rounded-lg">{"< prev"}</p>
       }
         renderOnZeroPageCount={null}
       />
+    </div>
+   
             <br/>
             <br/>
             <br/>

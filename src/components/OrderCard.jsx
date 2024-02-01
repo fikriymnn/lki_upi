@@ -2,7 +2,8 @@
 import Link from "next/link";
 import { useState,useEffect } from "react";
 import { Button } from 'flowbite-react';
-export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi,hasil_analisis,foto_sample,kode_pengujian,status
+import axios from "axios";
+export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, hasil_analisis,id,deskripsi,foto_sample,kode_pengujian,status
 }) {
 
     const [foto, setFoto] = useState('')
@@ -19,11 +20,10 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
                 const blob = new Blob([response.data], { type: 'application/octet-stream' });
           
                 // Create a link element and click it to trigger the download
-                const str = response.headers["Content-Type"]
-                const type = str?.split("/")
+              
                 const link = document.createElement('a');
                 link.href = window.URL.createObjectURL(blob);
-                link.download = hasil_analisis?.originalName;
+                link.download = hasil_analisis.originalName;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -41,15 +41,15 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
                 const response = await axios.get(`http://localhost:5000/api/download_jurnal_pendukung/${id}`, {
                   responseType: 'arraybuffer',withCredentials:true  // Important for receiving binary data
                 });
+                
 
                 const blob = new Blob([response.data], { type: 'application/octet-stream' });
           
                 // Create a link element and click it to trigger the download
-                const str = response.headers["Content-Type"]
-                const type = str.split("/")
+              
                 const link = document.createElement('a');
                 link.href = window.URL.createObjectURL(blob);
-                link.download = jenis_pengujian?.originalName;
+                link.download = jurnal_pendukung.originalName;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -62,18 +62,19 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
     }
 
     useEffect(()=>{
+    
         async function getData(){   
-              if(foto_sample?.data) {      
-                  const buffer = Buffer.from(foto_sample?.data);
-                  const base64Image = buffer.toString('base64');
-                  const contentType = foto_sample?.contentType
-                  const src = `data:${contentType};base64,${base64Image}`;
-                 setFoto(src);
-                 setFile(hasil_analisis)
-              }
-        }
-        
-      getData()
+            if(foto_sample?.data) {      
+            
+                const base64Image = foto_sample?.data.toString('base64');
+                const contentType = foto_sample?.contentType
+                const src = `data:${contentType};base64,${base64Image}`;
+               setFoto(src);
+           
+            }
+      }
+      
+    getData()
     },[foto_sample?.data])
 
     return (

@@ -53,6 +53,8 @@ export default function analisis() {
 
 
                     <br />
+                  
+                    <ButtonOrder/>
                     <br />
                     <div className='my-10'>
 
@@ -68,7 +70,7 @@ export default function analisis() {
                             width={0}
                             height={0}
                             sizes='100vw'
-                            className='w-[800px] h-full'
+                            className='w-[600px] md:h-[900px] h-full'
                         />
                     </div>
                     <div className='my-10 '>

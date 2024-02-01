@@ -19,12 +19,12 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                 setAdd(a => !a)
             }else{
                 const data = await axios.post(`http://localhost:5000/api/hasil_analisis/${id}`,{hasil_analisis:file},{withCredentials:true,headers: {"Content-Type": 'multipart/form-data'}})
-          
+          if(data.data.success){
                
                     setAdd(a => !a)
                     alert("upload successfully!")
                     window.location.reload()
-                
+          }  
             }
         } catch (err) {
             alert(err.message)
@@ -41,8 +41,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                 const blob = new Blob([response.data], { type: 'application/octet-stream' });
           
                 // Create a link element and click it to trigger the download
-                const str = response.headers["Content-Type"]
-                const type = str?.split("/")
+            
                 const link = document.createElement('a');
                 link.href = window.URL.createObjectURL(blob);
                 link.download = hasil_analisis?.originalName;
@@ -70,7 +69,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
         
                 const link = document.createElement('a');
                 link.href = window.URL.createObjectURL(blob);
-                link.download = jenis_pengujian?.originalName;
+                link.download = jurnal_pendukung?.originalName;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -85,8 +84,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
     useEffect(()=>{
         async function getData(){   
               if(foto_sample.data) {      
-                  const buffer = Buffer.from(foto_sample.data);
-                  const base64Image = buffer.toString('base64');
+                  const base64Image = foto_sample.data.toString('base64');
                   const contentType = foto_sample.contentType
                   const src = `data:${contentType};base64,${base64Image}`;
                  setFoto(src);

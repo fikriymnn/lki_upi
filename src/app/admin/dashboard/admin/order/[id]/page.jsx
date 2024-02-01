@@ -113,6 +113,7 @@ export default function detailOrderAdmin({ params, searchParams }) {
                 <br />
                 <div className="flex"><p className="text-lg ">no invoice : </p> <p>{invoice.no_invoice}</p></div>
                 <div className="flex"><p className="text-lg ">status : </p> <p>{invoice.status}</p></div>
+                <div className="flex"><p className="text-lg ">estimasi selesai : </p> <p>{invoice.estimasi_date?invoice.estimasi_date:""}</p></div>
                 <div className="flex"><p className="text-lg ">invoice : </p> {invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Button className="ml-5 mb-3" color="blue" size={5}  onClick={downloadInvoice}>download invoice</Button> : <p>-</p>}</div>
                 <div className="flex"><p className="text-lg ">kuitansi : </p>{invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Button className="ml-5 mb-3" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button> : <p>-</p>}</div>
                 <div className="flex"><p className="text-lg ">bukti pembayaran : </p>{invoice.bukti_pembayaran ? <Button className="ml-5 " color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button> : <p>-</p>}</div>

@@ -1,13 +1,11 @@
 'use client'
 import React, { useState,useMemo } from 'react';
-import 'react-quill/dist/quill.snow.css';
-import dynamic from "next/dynamic";
+
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
 
 export default function Adminn() {
   const [value, setValue] = useState('');
   const [carousel, setCarousel] = useState(["efrfwef","asdfsdf","sdfae"]);
-  const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
 
   return(
     <div className='h-full'>
@@ -38,12 +36,16 @@ export default function Adminn() {
         </div>
         <br/>
         <br/>
+        {/* card alat */}
+        <div>
+
+        </div>
       
         <div className=" px-20 rounded-lg">
         <br/>
         <h2 className='text-center text-xl font-semibold'>Write page</h2>
         <br/>
-      <ReactQuill className='h-48' theme="snow" value={value} onChange={setValue} />
+
         </div>
         <br/>
         <br/>
