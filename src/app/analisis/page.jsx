@@ -1,9 +1,12 @@
-
+'use client'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import ButtonOrder from '@/components/ButtonOrder'
 import Image from 'next/image'
 import CardPenguji from '@/components/CardPenguji';
+import { useEffect, useState } from 'react';
+import axios from 'axios'
+import barang from './barang'
 
 export default function analisis() {
 
@@ -38,9 +41,14 @@ export default function analisis() {
                         <hr className='grad h-2 mb-8 mt-5 w-56 text-center' />
                     </div>
                     <div className='grid md:grid-cols-3 grid-cols-1 md:gap-10 gap-3'>
-                        <CardPenguji />
-                        <CardPenguji />
-                        <CardPenguji />
+
+                        {barang.map((data, i) => (
+                            <>
+
+                                <CardPenguji id={i} nama={data.nama} />
+                            </>
+                        ))}
+
                     </div>
 
 
