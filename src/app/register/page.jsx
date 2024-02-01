@@ -117,7 +117,7 @@ export default function register({ searchParams }) {
                                 <div className="mb-2 block">
                                     <Label htmlFor="no_telp" value="No telepon" />
                                 </div>
-                                <input className="input-style-lki" name="no_telp" required type="number" onChange={handleChange} placeholder="Masukkan no Telepon" />
+                                <input className="input-style-lki" name="no_telp" required type="text" onChange={handleChange} placeholder="Masukkan no Telepon" />
                             </div>
                             <div>
                                 <div className="mb-2 block">
@@ -167,7 +167,7 @@ export default function register({ searchParams }) {
                                 <div className="mb-2 block">
                                     <Label htmlFor="no_whatsapp" value="No whatsapp" />
                                 </div>
-                                <input className="input-style-lki" name="no_whatsapp" placeholder="Masukkan No WhatsApp" required type="number" onChange={handleChange} />
+                                <input className="input-style-lki" name="no_whatsapp" placeholder="Masukkan No WhatsApp" required type="text" onChange={handleChange} />
                             </div>
                             <div>
                                 <div className="mb-2 block">

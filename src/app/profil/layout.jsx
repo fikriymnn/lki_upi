@@ -11,12 +11,12 @@ useEffect(()=>{
                 const data = await axios.get("http://localhost:5000/api/user",{
                     withCredentials: true
                 })
-                if(data.data.success=="user"){
+                if(data.data.success==false){
                     router.replace("/")
                 }                
             }catch(err){
-                // router.replace("/")
-                return false
+                router.replace("/")
+                
             }  
         }
         user()

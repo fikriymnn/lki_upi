@@ -109,7 +109,7 @@ export default function login({ searchParams }) {
                                 <input
                                     id="email1" name="email" required
                                     onChange={handleChange}
-                                    type="email"
+                                    type="text"
                                     placeholder="Masukan email di sini"
                                     className="input-style-lki"
                                 />

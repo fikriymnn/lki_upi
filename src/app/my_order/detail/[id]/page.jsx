@@ -125,7 +125,7 @@ export default function detail({ params,searchParams }) {
         </div>
 
                 <div className="mx-20">
-                    <p className="text-lg ">status : {invoice?.status}</p>
+                    <div className="flex"><p className="text-xl font-bold">status : </p><p className="ml-3 font-semibold text-gray-800 text-lg">{invoice?.status}</p></div>
                     {invoice?.status=="form dikonfirmasi"?<p>*kirim sample ke alamat yang tertera \n (Jl.lorem ipsum dolor)</p>:""}
                     <p className="text-lg ">total harga  : Rp.{invoice?.total_harga}</p>
                     <div className="flex"><p className="text-lg ">estimasi selesai : </p> <p>{invoice.estimasi_date?invoice.estimasi_date:""}</p></div>
