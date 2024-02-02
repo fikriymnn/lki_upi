@@ -131,17 +131,20 @@ export default function detail({ params,searchParams }) {
 
                 <div className="mx-20">
                   <div className="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1">
-                    <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8"><p className="text-2xl font-semibold">status : </p><p className="ml-3 font-semibold text-gray-800 text-lg">{invoice?.status}</p>
+                    <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8"><p className="md:text-2xl sm:text-xl text-lg font-semibold">status : </p><p className="ml-3 font-semibold text-gray-800 md:text-base sm:text-sm text-xs">{invoice?.status}</p>
                     {invoice?.status=="form dikonfirmasi"?<p>*kirim sample ke alamat yang tertera \n (Jl.lorem ipsum dolor)</p>:""}
                     </div>
                     
 
-                    <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8"><p className="text-2xl font-semibold">total harga  : </p><p className="ml-3 font-semibold text-gray-800 text-lg">Rp.{invoice?.total_harga}</p></div>
+                    <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8"><p className="md:text-2xl sm:text-xl text-lg font-semibold">total harga  : </p><p className="ml-3 font-semibold text-gray-800 md:text-base sm:text-sm text-xs">Rp.{invoice?.total_harga}</p></div>
 
-                    <div className="flex"><p className="text-lg ">estimasi selesai : </p> <p>{invoice.estimasi_date?invoice.estimasi_date:""}</p></div>
-                    <div className="flex my-1"><p className="text-lg ">invoice : </p>{invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ?<Button className="ml-5 "  color="blue" size={5} onClick={downloadInvoice}>download invoice</Button>:<p className="ml-5">-</p>}</div>
-                    <div  className="flex my-1"><p className="text-lg ">kuitansi : </p>{invoice?.status==invoice?.status=="menunggu pembayaran" || invoice?.status=="menunggu konfirmasi pembayaran"||invoice?.status=="selesai"?<Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button>:<p className="ml-5">-</p>}</div>
-                    <div className="flex"><p className="text-lg ">bukti pembayaran : </p> {invoice?.status=="menunggu pembayaran" || invoice?.status=="menunggu konfirmasi pembayaran"||invoice?.status=="selesai"?<div className="flex"><input className="ml-5" type="file" name="file" onChange={(e)=>setBuktiPembayaran(e.target.files[0])}/><Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button></div>:<p className="ml-5">-</p>}{invoice?.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button>:""} </div>
+                    <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8"><p className="md:text-2xl sm:text-xl text-lg font-semibold ">estimasi selesai : </p> <p className="ml-3 font-semibold text-gray-800 md:text-base sm:text-sm text-xs">{invoice.estimasi_date?invoice.estimasi_date:""}</p></div>
+
+                    <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8"><p className="md:text-2xl sm:text-xl text-lg font-semibold">invoice : </p>{invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ?<Button className="ml-5 "  color="blue" size={5} onClick={downloadInvoice}>download invoice</Button>:<p className="ml-3 font-semibold text-gray-800 md:text-base sm:text-sm text-xs">-</p>}</div>
+
+                    <div  className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8"><p className="md:text-2xl sm:text-xl text-lg font-semibold ">kuitansi : </p>{invoice?.status==invoice?.status=="menunggu pembayaran" || invoice?.status=="menunggu konfirmasi pembayaran"||invoice?.status=="selesai"?<Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button>:<p className="ml-5">-</p>}</div>
+
+                    <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8"><p className="md:text-2xl sm:text-xl text-lg font-semibold  ">bukti pembayaran : </p> {invoice?.status=="menunggu pembayaran" || invoice?.status=="menunggu konfirmasi pembayaran"||invoice?.status=="selesai"?<div className="flex"><input className="ml-5" type="file" name="file" onChange={(e)=>setBuktiPembayaran(e.target.files[0])}/><Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button></div>:<p className="ml-5">-</p>}{invoice?.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button>:""} </div>
                     
                 </div>
                 </div>
