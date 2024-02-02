@@ -66,41 +66,41 @@ export default function Profile() {
                     {
                         edit ? <div className="">
 
-                            <div>
+                            <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                 <p>Nama lengkap</p>
                                 <input className="input-style-lki" type="text" name="nama_lengkap"  onChange={handleChange} defaultValue={user?.nama_lengkap} />
                             </div>
-                            <div>
+                            <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                 <p>Email</p>
                                 <input className="input-style-lki" type="text" name="email" onChange={handleChange} defaultValue={user?.email} />
                             </div>
-                            <div>
+                            <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                 <p>No whatsapp</p>
                                 <input className="input-style-lki" type="text" name="no_whatsapp" onChange={handleChange} defaultValue={user?.no_whatsapp} />
                             </div>
-                            <div>
+                            <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                 <p>No telepon</p>
                                 <input className="input-style-lki" type="text" name="no_telepon" onChange={handleChange} defaultValue={user?.no_telp} />
                             </div>
-                            <div>
+                            <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                 <p>Jenis institusi</p>
                                 <input className="input-style-lki" type="text" name="jenis_institusi" readOnly defaultValue={user?.jenis_institusi} />
                             </div>
                             {
                                 user.jenis_institusi == "Pendidikan" ? <>
-                                    <div>
+                                    <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                         <p>Nama institusi</p>
                                         <input className="input-style-lki" type="text" name="nama_institusi" onChange={handleChange} defaultValue={user?.jenis_institusi} />
                                     </div>
-                                    <div>
+                                    <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                         <p>Fakultas</p>
                                         <input className="input-style-lki" type="text" name="fakultas" onChange={handleChange} defaultValue={user?.falkultas} />
                                     </div>
-                                    <div>
+                                    <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                         <p>Program studi</p>
                                         <input className="input-style-lki" type="text" name="program_studi" onChange={handleChange} defaultValue={user?.program_studi} />
                                     </div>
-                                </> : <div>
+                                </> : <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                     <p>Nama institusi</p>
                                     <input className="input-style-lki" type="text" name="nama_institusi" onChange={handleChange} defaultValue={user?.jenis_institusi} />
                                 </div>
@@ -108,43 +108,43 @@ export default function Profile() {
 
                         </div> :
                             <>
-                                <div>
+                                <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                     <p>Nama lengkap</p>
-                                    <input className="input-style-lki" type="text" name="nama_lengkap" readOnly defaultValue={user?.nama_lengkap} />
+                                    <p>{user?.nama_lengkap}</p>
                                 </div>
-                                <div>
+                                <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                     <p>Email</p>
-                                    <input className="input-style-lki" type="text" name="email" readOnly defaultValue={user?.email} />
+                                   <p>{user?.email}</p>
                                 </div>
-                                <div>
+                                <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                     <p>No whatsapp</p>
-                                    <input className="input-style-lki" type="text" name="no_whatsapp" readOnly defaultValue={user?.no_whatsapp} />
+                                    <p>{user?.no_whatsapp}</p>
                                 </div>
-                                <div>
+                                <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                     <p>No telepon</p>
-                                    <input className="input-style-lki" type="text" name="no_telepon" readOnly defaultValue={user?.no_telp} />
+                                    <p>{user?.no_telp}</p>
                                 </div>
-                                <div>
+                                <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                     <p>Jenis institusi</p>
-                                    <input className="input-style-lki" type="text" name="no_telepon" readOnly defaultValue={user?.jenis_institusi} />
+                                    <p>{user?.jenis_institusi}</p>
                                 </div>
                                 {
                                     user.jenis_institusi == "Pendidikan" ? <>
-                                        <div>
+                                        <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                             <p>Nama institusi</p>
-                                            <input className="input-style-lki" type="text" name="no_telepon" readOnly defaultValue={user?.jenis_institusi} />
+                                            <p>{user?.jenis_institusi}</p>
                                         </div>
-                                        <div>
+                                        <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                             <p>Fakultas</p>
-                                            <input className="input-style-lki" type="text" name="fakultas" readOnly defaultValue={user?.falkultas} />
+                                            <p>{user?.falkultas}</p>
                                         </div>
-                                        <div>
+                                        <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                             <p>Program studi</p>
-                                            <input className="input-style-lki" type="text" name="program_studi" readOnly defaultValue={user?.program_studi} />
+                                            <p>{user?.program_studi}</p>
                                         </div>
-                                    </> : <div>
+                                    </> : <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8">
                                         <p>Nama institusi</p>
-                                        <input className="input-style-lki" type="text" name="no_telepon" readOnly defaultValue={user?.jenis_institusi} />
+                                        <p>{user?.jenis_institusi}</p>
                                     </div>
                                 }
 
