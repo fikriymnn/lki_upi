@@ -132,7 +132,7 @@ export default function order_analisis() {
                         for (let a = 0; a < jurnal_pendukung.length; a++) {
                             if (uuid[v] == jurnal_pendukung[a].uid) {
                                 async function cek() {
-                                    await axios.post(`http://localhost:5000/api/jurnal_pendukung?uuid=${uuid[v]}`, { jurnal_pendukung: jurnal_pendukung[a].file }, {
+                                    await axios.post(`http://localhost:5000/api/jurnal_pendukung/${uuid[v]}`, { jurnal_pendukung: jurnal_pendukung[a].file }, {
                                         withCredentials: true,
                                         headers: { "Content-Type": 'multipart/form-data' }
                                     })
@@ -145,7 +145,7 @@ export default function order_analisis() {
                             if (uuid[v] == foto_sample[b].uid) {
                                 async function cek2() {
 
-                                    await axios.post(`http://localhost:5000/api/foto_sample?uuid=${uuid[v]}`, { foto_sample: foto_sample[b].file }, {
+                                    await axios.post(`http://localhost:5000/api/foto_sample/${uuid[v]}`, { foto_sample: foto_sample[b].file }, {
                                         withCredentials: true,
                                         headers: { "Content-Type": 'multipart/form-data' }
                                     })

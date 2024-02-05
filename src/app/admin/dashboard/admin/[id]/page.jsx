@@ -8,16 +8,21 @@ import dynamic from "next/dynamic";
 
 export default function detailCardAdmin(){
    const [cardData,setCardData] = useState({})
+   const [foto,setFoto] = useState({})
    const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
 
 
    useEffect(()=>{
        async function getData(){
-           const data = await axios.get(`http://localhost:5000/api/layanan/${id}`,{
+           const data = await axios.get(`http://localhost:5000/api/content/${id}`,{
             withCredentials: true
             })
            if(data.data.success){
             setCardData(data.data.data)
+            const base64Image = cardData.foto.data.toString('base64');
+            const contentType =  cardData.foto.contentType
+            const src = `data:${contentType};base64,${base64Image}`;
+            setFoto(src)
            }
        }
        getData()
@@ -25,8 +30,9 @@ export default function detailCardAdmin(){
 
    const handleConfirm = ()=>{
      async function getData(){
-        const data = await axios.put(`http://localhost:5000/api/layanan/${id}`,cardData,{
-         withCredentials: true
+        const data = await axios.put(`http://localhost:5000/api/content/${id}`,cardData,{
+         withCredentials: true,
+         headers:  {"Content-Type": 'multipart/form-data'}
          })
      }
      getData()
@@ -45,12 +51,12 @@ export default function detailCardAdmin(){
         <div>
             <form>
           <div>
-            <Image src={cardData.image}/>
-            <input type="file" name="image" onChange={(e)=>setCardData(a=>({...a,image:e.target.files[0]}))}/>
+            <Image src={foto}/>
+            <input type="file" name="image" onChange={(e)=>setCardData(a=>({...a,foto:e.target.files[0]}))}/>
           </div>
           <div>
           <p>judul</p>
-          <input type="text" name="title" onChange={handleChange}/>
+          <input type="text" name="title" value={title} onChange={handleChange}/>
           </div>
           <div>
           <p>sub judul</p>

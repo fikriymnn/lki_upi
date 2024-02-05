@@ -5,7 +5,7 @@ import axios from "axios"
 import { Button } from 'flowbite-react';
 import { imagefrombuffer } from "imagefrombuffer";
 
-export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id,kode_pengujian
+export default function AdminOrderCard({uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id,kode_pengujian
 }) {
     const [add, setAdd] = useState(false)
     const [file, setFile] = useState(null)
@@ -18,7 +18,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
                 alert('no file uploaded')
                 setAdd(a => !a)
             }else{
-                const data = await axios.post(`http://localhost:5000/api/hasil_analisis/${id}`,{hasil_analisis:file},{withCredentials:true,headers: {"Content-Type": 'multipart/form-data'}})
+                const data = await axios.post(`http://localhost:5000/api/hasil_analisis/${uuid}`,{hasil_analisis:file},{withCredentials:true,headers: {"Content-Type": 'multipart/form-data'}})
           if(data.data.success){
                
                     setAdd(a => !a)
@@ -34,7 +34,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
     const handleDownloadHA = async ()=>{
         try{
             try {
-                const response = await axios.get(`http://localhost:5000/api/download_hasil_analisis/${id}`, {
+                const response = await axios.get(`http://localhost:5000/api/download_hasil_analisis/${uuid}`, {
                   responseType: 'arraybuffer',withCredentials:true // Important for receiving binary data
                 });
 
@@ -59,7 +59,7 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
     const handleDownloadJP = async ()=>{
         try{
             try {
-                const response = await axios.get(`http://localhost:5000/api/download_jurnal_pendukung/${id}`, {
+                const response = await axios.get(`http://localhost:5000/api/download_jurnal_pendukung/${uuid}`, {
                   responseType: 'arraybuffer',withCredentials:true  // Important for receiving binary data
                 });
 
@@ -82,17 +82,20 @@ export default function AdminOrderCard({ jenis_pengujian, nama_sample, jumlah_sa
     }
 
     useEffect(()=>{
-        async function getData(){   
-              if(foto_sample.data) {      
-                  const base64Image = foto_sample.data.toString('base64');
-                  const contentType = foto_sample.contentType
+        if(foto_sample.data) {      
+           async function getData(){   
+             
+                const data = await axios.get(`http://localhost:5000/api/foto_sample/${uuid}`)
+                const base64Image = data?.data?.foto_sample?.data.toString('base64');
+                  const contentType = data?.data?.foto_sample?.contentType
                   const src = `data:${contentType};base64,${base64Image}`;
                  setFoto(src);
                  setFile(hasil_analisis)
-              }
-        }
+            }
         
-      getData()
+        
+           getData()
+        }
     },[foto_sample.data])
 
     

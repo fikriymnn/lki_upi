@@ -15,7 +15,7 @@ useEffect(()=>{
                     router.replace("/")
                 }                
             }catch(err){
-                router.replace("/")
+             
                 return false
             }  
         }
