@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from 'flowbite-react';
 import axios from "axios";
 
-export default function OrderCard({uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, hasil_analisis, id, deskripsi, foto_sample, kode_pengujian, status
+export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, hasil_analisis, id, deskripsi, foto_sample, kode_pengujian, status
 
 }) {
 
@@ -14,57 +14,53 @@ export default function OrderCard({uuid, jenis_pengujian, nama_sample, jumlah_sa
 
     const handleDownloadHA = async () => {
         try {
-         
 
-                const response = await axios.get(`http://localhost:5000/api/download_hasil_analisis/${uuid}`, {
 
-                    responseType: 'arraybuffer', withCredentials: true // Important for receiving binary data
-                });
+            const response = await axios.get(`http://localhost:5000/api/download_hasil_analisis/${uuid}`, {
 
-                const blob = new Blob([response.data], { type: 'application/octet-stream' });
+                responseType: 'arraybuffer', withCredentials: true // Important for receiving binary data
+            });
 
-                // Create a link element and click it to trigger the download
+            const blob = new Blob([response.data], { type: 'application/octet-stream' });
 
-                const link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = hasil_analisis.originalName;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } catch (error) {
-                console.error('Error downloading file:', error);
-            }
-        } catch (err) {
-            alert(err.message)
+            // Create a link element and click it to trigger the download
+
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = hasil_analisis.originalName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error('Error downloading file:', error);
         }
+
     }
 
     const handleDownloadJP = async () => {
         try {
-        
-
-                const response = await axios.get(`http://localhost:5000/api/download_jurnal_pendukung/${uuid}`, {
-
-                    responseType: 'arraybuffer', withCredentials: true  // Important for receiving binary data
-                });
 
 
-                const blob = new Blob([response.data], { type: 'application/octet-stream' });
+            const response = await axios.get(`http://localhost:5000/api/download_jurnal_pendukung/${uuid}`, {
 
-                // Create a link element and click it to trigger the download
+                responseType: 'arraybuffer', withCredentials: true  // Important for receiving binary data
+            });
 
-                const link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = jurnal_pendukung.originalName;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } catch (error) {
-                console.error('Error downloading file:', error);
-            }
-        } catch (err) {
-            alert(err.message)
+
+            const blob = new Blob([response.data], { type: 'application/octet-stream' });
+
+            // Create a link element and click it to trigger the download
+
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = jurnal_pendukung.originalName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error('Error downloading file:', error);
         }
+
     }
 
     useEffect(() => {
@@ -115,7 +111,7 @@ export default function OrderCard({uuid, jenis_pengujian, nama_sample, jumlah_sa
 
                     <h1 className="input-style-lki">{pelarut}</h1>
 
-        
+
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">preparasi khusus : </h1>
