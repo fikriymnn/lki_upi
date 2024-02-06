@@ -82,6 +82,7 @@ const monthOption = [
 export default function Report() {
   const [order, setOrder] = useState([])
   const tableRef = useRef(null);
+  const [loading,setLoading] = useState(true);
   const [page, setPage] = useState(0)
   const [length, setLength] = useState(0)
   const [yearOption, setYearOption] = useState([])
@@ -94,6 +95,7 @@ export default function Report() {
  
 
   useEffect(() => {
+   
     let arr=[]
     const yearMax = (new Date().getFullYear() - 2023)
     for (let i = 0; i < yearMax; i++) {
@@ -104,11 +106,17 @@ export default function Report() {
       try {
         
         console.log('S')
+   
+        setLoading(true)
         const data = await axios.get(`http://localhost:5000/api/order?report=true&skip=${page * 50}&limit=50${month ? `&month=${month}` : ""}${year ? `&year=${year}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`, { withCredentials: true })
         // const dataReport = await axios.get(`http://localhost:5000/api/order?${month?`&month=${month}`:""}${year?`&year=${year}`:""}${jenis_pengujian?`&jenis_pengujian=${jenis_pengujian}`:""}`, { withCredentials: true })
+       console.log(data.data)
         if (data.data.success) {
           setOrder(data.data.data)
           setLength(data.data.length_total)
+          setLoading(false)
+          console.log(Math.ceil(length / 50))
+          console.log(parseInt(Math.ceil(length / 50).toFixed()))
 
         }
       } catch (err) {
@@ -135,21 +143,21 @@ export default function Report() {
                 >
           <Button color="failure" size={5} className='ml-10'>download report excel</Button>
           </DownloadTableExcel>
-          <div className='flex justify-center'>
-            <div className='flex items-center'>Tahun : <select className='ml-3' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
+          <div className='md:flex md:justify-center sm:justify-center justify-items-center  sm:flex grid grid-cols-1 mt-2 ml-2'>
+            <div className='grid grid-cols-2 mt-2 md:w-56 sm:w-40 w-48 items-center bg-red-600 rounded-lg '><p className='md:text-lg sm:text-base text-sm font-semibold text-white p-2'>Tahun : </p> <select className='p-2 ml-3 w-20 h-10' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
               <option value="" defaultChecked>all</option>
               {yearOption.map((v, i) => {
                   return <option value={v} key={i}>{v}</option>
                 
               })}
             </select></div>
-            <div className='flex items-center ml-3'>Bulan : <select className='ml-3' name="bulan" id="bulan" onChange={(e) => setMonth(e.target.value)}>
+            <div className='grid grid-cols-2 mt-2 md:w-56 sm:w-40 w-48 items-center bg-red-600 rounded-lg md:ml-3 sm:ml-3 '><p className='md:text-lg sm:text-base text-sm font-semibold text-white p-2'>Bulan : </p><select className='p-2 ml-3' name="bulan" id="bulan" onChange={(e) => setMonth(e.target.value)}>
               <option value="" defaultChecked>all</option>
               {monthOption.map((v, i) => {
                   return <option value={i} key={i} defaultValue>{v}</option>               
               })}
             </select></div>
-            <div className='flex items-center ml-3'>Jenis Pengujian : <select className='ml-3' name="jenis_pengujian" id="jp" onChange={(e) => setJenis_pengujian(e.target.value)}>
+            <div className='grid grid-cols-2 mt-2 md:w-56 sm:w-40 w-48 items-center bg-red-600 rounded-lg md:ml-3 sm:ml-3'><p className='md:text-lg sm:text-base text-sm font-semibold text-white p-2'>Jenis Pengujian : </p> <select className='p-2 ml-3' name="jenis_pengujian" id="jp" onChange={(e) => setJenis_pengujian(e.target.value)}>
               <option value="" defaultChecked>all</option>
               {kode.map((v, i) => {
                 return <option value={v.jenis_pengujian} key={i} >{v.jenis_pengujian}</option>
@@ -182,7 +190,7 @@ export default function Report() {
                   <th className='px-10 text-sm'>Target Senyawa</th>
                   <th className='px-10 text-sm'>Metode Parameter</th>
                 </tr>
-                {order.map((a, i) => {
+                {loading?<p className='text-center mt-10'>loading</p>:order.map((a, i) => {
                   return (
                     <tr key={i}>
                       <td className='text-center text-xs'>{i + 1}</td>
@@ -216,16 +224,18 @@ export default function Report() {
         </div>
       </div>
       <br />
+      <p className=' text-center mb-2 text-red-600'>page : {page+1}</p>
       <div className='m-auto flex items-center'>
+
         <ReactPaginate
-          className="m-auto text-red-600"
+          className="m-auto text-red-600 flex md:w-56 sm:w-40 w-40 justify-evenly"
           breakLabel="..."
-          nextLabel={<p className="inline mb-2 px-3 py-1 text-white bg-red-600 rounded">{"next >"}</p>}
-          onPageChange={(e) => { setPage(e.selected-1); console.log(e.selected) }}
+          nextLabel={<p className="inline md:px-3 md:py-1 md:mb-2 px-1 py-1 mb-1 md:text-lg sm:text-base text-xs text-white bg-red-600 rounded">{"next >"}</p>}
+          onPageChange={(e) => { setPage(e.selected); console.log(e.selected) }}
           pageRangeDisplayed={3}
-          pageCount={parseInt(Math.ceil(length / 15).toFixed())}
+          pageCount={parseInt(Math.ceil(length / 50).toFixed())}
           previousLabel={
-            <p className="inline  px-3 py-1 mt-2 text-white bg-red-600 rounded">{"< prev"}</p>
+            <p className="inline md:px-3 md:py-1 md:mt-2 px-1 py-1 mt-1 text-white md:text-lg sm:text-base text-xs bg-red-600 rounded">{"< prev"}</p>
           }
           renderOnZeroPageCount={null}
         />

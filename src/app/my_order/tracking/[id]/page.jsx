@@ -29,6 +29,7 @@ export default function tracking({ params }) {
     return (
         <>
             <div className="m-auto">
+
                 <p className='text-center text-4xl font-bold text-gray-800 mt-7'>PROGRESS</p>
                 <div className='flex justify-center'>
                     <hr className='grad rounded-md h-2 mb-8 mt-5 w-56 text-center' />
@@ -53,8 +54,10 @@ export default function tracking({ params }) {
                         {invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">sample sedang dikirim ke operator</p><p className="mx-10 w-28 text-center text-xs">{invoice.s3_date}</p></div> : <div className=""><p className="text-gray-400 text-xl">Sedang dikirim ke operator </p></div>}
 
 
+
                         {invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">sample diterima oleh operator</p></div> : <div className=""><p className="text-gray-400 text-xl">sample diterima oleh operator </p></div>}
                         {invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">sedang dikerjakan oleh operator</p><p className="mx-10 w-28 text-center text-xs">{invoice.s4_date}</p></div> : <div className=""><p className="text-gray-400 text-xl">Sedang dikerjakan oleh operator</p></div>}
+
 
 
                         {invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">selesai dikerjakan oleh operator</p></div> : <div className=""><p className="text-gray-400 text-xl">selesai dikerjakan oleh operator </p></div>}
@@ -72,6 +75,7 @@ export default function tracking({ params }) {
                         {invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">selesai</p><p className="mx-10 w-28 text-center text-xs">{invoice.s8_date}</p></div> : <div className=""><p className="text-gray-400 text-xl">selesai</p></div>}
                         <br />
                         <br />
+
                     </div>
                 </div>
             </div>

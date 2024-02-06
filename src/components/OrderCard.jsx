@@ -3,7 +3,9 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from 'flowbite-react';
 import axios from "axios";
-export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, hasil_analisis, id, deskripsi, foto_sample, kode_pengujian, status
+
+export default function OrderCard({uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, hasil_analisis, id, deskripsi, foto_sample, kode_pengujian, status
+
 }) {
 
     const [foto, setFoto] = useState('')
@@ -12,8 +14,10 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
 
     const handleDownloadHA = async () => {
         try {
-            try {
-                const response = await axios.get(`http://localhost:5000/api/download_hasil_analisis/${id}`, {
+         
+
+                const response = await axios.get(`http://localhost:5000/api/download_hasil_analisis/${uuid}`, {
+
                     responseType: 'arraybuffer', withCredentials: true // Important for receiving binary data
                 });
 
@@ -37,8 +41,10 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
 
     const handleDownloadJP = async () => {
         try {
-            try {
-                const response = await axios.get(`http://localhost:5000/api/download_jurnal_pendukung/${id}`, {
+        
+
+                const response = await axios.get(`http://localhost:5000/api/download_jurnal_pendukung/${uuid}`, {
+
                     responseType: 'arraybuffer', withCredentials: true  // Important for receiving binary data
                 });
 
@@ -62,30 +68,27 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
     }
 
     useEffect(() => {
-
-        async function getData() {
-            if (foto_sample?.data) {
-
-                const base64Image = foto_sample?.data.toString('base64');
-                const contentType = foto_sample?.contentType
+        if (foto_sample) {
+            async function getData() {
+                const data = await axios.get(`http://localhost:5000/api/foto_sample/${uuid}`)
+                const base64Image = data?.data?.foto_sample?.data.toString('base64');
+                const contentType = data?.data?.foto_sample?.contentType
                 const src = `data:${contentType};base64,${base64Image}`;
                 setFoto(src);
-
             }
-        }
 
-        getData()
-    }, [foto_sample?.data])
+            getData()
+        }
+    }, [foto_sample])
 
     return (
         <><div>
-        </div>
             <br />
-            <h1 className="grad rounded p-2 text-white">{index}</h1>
-            <div className="border-2 p-5 rounded md:grid grid-cols-2 gap-5 mb-10">
+            <h1 className="bg-red-600 rounded p-2 text-white">{index}</h1>
+            <br />
+        </div>
 
-
-
+            <div className="border-1 rounded grid grid-cols-2">
 
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">nama sample : </h1>
@@ -109,7 +112,15 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">pelarut : </h1>
+
                     <h1 className="input-style-lki">{pelarut}</h1>
+
+        
+                </div>
+                <div>
+                    <h1 className="text-lg font-semibold text-grey-600">preparasi khusus : </h1>
+                    <h1>{preparasi_khusus ? "ya" : "tidak"}</h1>
+
                 </div>
                 <div>
                     <h1 className="text-lg font-semibold text-grey-600">target senyawa : </h1>
@@ -129,6 +140,7 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
                     <h1 className="input-style-lki-box ">{deskripsi}</h1>
                 </div>
                 <div className="mt-2">
+
 
                     <div className="w-full">
 
@@ -161,6 +173,7 @@ export default function OrderCard({ jenis_pengujian, nama_sample, jumlah_sample,
                         </div>
                     </div>
                 </div>
+
 
             </div>
         </>

@@ -130,18 +130,22 @@ export default function History_order(){
       </Table>
     </div>
     <br/>
-    <ReactPaginate
-      className="m-auto text-red-600"
-        breakLabel="..."
-        nextLabel={<p className="inline mb-2 px-3 py-1 text-white bg-red-600">{"next >"}</p>}
-        onPageChange={(e)=>{setPage(e.selected-1);console.log(e.selected)}}
-        pageRangeDisplayed={3}
-        pageCount={parseInt(Math.ceil(length/15).toFixed())}
-        previousLabel={
-          <p className="inline  px-3 py-1 mt-2 text-white bg-red-600">{"< prev"}</p>
-      }
-        renderOnZeroPageCount={null}
-      />
+    <p className=' text-center mb-2 text-red-600'>page : {page+1}</p>
+      <div className='m-auto flex items-center'>
+
+        <ReactPaginate
+          className="m-auto text-red-600 flex md:w-56 sm:w-40 w-40 justify-evenly"
+          breakLabel="..."
+          nextLabel={<p className="inline md:px-3 md:py-1 md:mb-2 px-1 py-1 mb-1 md:text-lg sm:text-base text-xs text-white bg-red-600 rounded">{"next >"}</p>}
+          onPageChange={(e) => { setPage(e.selected); console.log(e.selected) }}
+          pageRangeDisplayed={3}
+          pageCount={parseInt(Math.ceil(length / 15).toFixed())}
+          previousLabel={
+            <p className="inline md:px-3 md:py-1 md:mt-2 px-1 py-1 mt-1 text-white md:text-lg sm:text-base text-xs bg-red-600 rounded">{"< prev"}</p>
+          }
+          renderOnZeroPageCount={null}
+        />
+       </div> 
             <br/>
             <br/>
             <br/>

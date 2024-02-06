@@ -52,7 +52,7 @@ export default function NavbarCustom() {
       <Navbar.Toggle />
       <Navbar.Collapse className='md:mr-20'>
         {/* ADMIN */}
-        {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard" className="mt-[2vh] font-semibold">
+        {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard/admin" className="mt-[2vh] font-semibold">
           Content
         </Navbar.Link> : ''}
 

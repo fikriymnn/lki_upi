@@ -50,13 +50,13 @@ export default function login({ searchParams }) {
     const handleSubmit = (e) => {
         e.preventDefault()
         const get_user = async () => {
-            try {
+            
                 const data = await axios.post("http://localhost:5000/api/login", userForm, { withCredentials: true })
                 console.log(data)
                 if (data.data.success == true) {
               
                         
-                        alert(data.data.message)
+                        alert("login sukses")
                   
                         if (prevRoute) {
                             window.location.replace(prevRoute)
@@ -67,10 +67,10 @@ export default function login({ searchParams }) {
                         }
                     
                 
+                }else{
+                    alert(data.data.message)
                 }
-            } catch (err) {
-                alert(err.message)
-            }
+            
 
         }
         get_user()
@@ -124,6 +124,7 @@ export default function login({ searchParams }) {
                                     id="password" required
                                     onChange={handleChange}
                                     type="password"
+                                    name="password"
                                     placeholder="Masukan Password di sini"
                                     className="input-style-lki"
                                 />
