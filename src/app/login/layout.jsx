@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 
+
 export default function layout({children}){
    const router= useRouter()
 useEffect(()=>{
@@ -22,9 +23,10 @@ useEffect(()=>{
         user()
     },[])
 
+
     return (
         <>
-        {children}
+            {children}
         </>
     )
 }

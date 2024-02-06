@@ -171,6 +171,7 @@ export default function order_analisis() {
             <>
                 <div className=" border-2 rounded-lg md:mx-20 mx-5">
                     {/* <p className='text-xl font-semibold text-xl text-white bg-red-600 rounded-lg p-3'>{i + 1}</p> */}
+                    <div className='w-full h-10 grad rounded-[5px]'></div>
                     <div className='px-10 py-5 flex flex-col gap-3'>
                         <div>
                             <h2 className="text-lg font-semibold">Jenis pengujian</h2>
@@ -351,7 +352,8 @@ export default function order_analisis() {
         <>
             <div>
                 {/* <button onClick={() => { console.log(jenis_pengujian); console.log(nama_sample) }}>asd</button> */}
-                <p className='text-center text-4xl font-bold text-gray-800 mt-7'>ORDER ANALISIS</p>
+                <p className='text-center text-4xl font-bold text-gray-800 mt-7'>Layanan Analisis
+                    Laboratorium Kimia Instrumen &#40;LKI&#41; UPI</p>
                 <div className='flex justify-center'>
                     <hr className='grad h-2 mb-8 mt-5 w-56 text-center' />
                 </div>
