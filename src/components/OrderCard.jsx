@@ -27,7 +27,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
 
             const link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
-            link.download = hasil_analisis.originalName;
+            link.download = hasil_analisis
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -45,15 +45,14 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
 
                 responseType: 'arraybuffer', withCredentials: true  // Important for receiving binary data
             });
-
-
+            
             const blob = new Blob([response.data], { type: 'application/octet-stream' });
 
             // Create a link element and click it to trigger the download
 
             const link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
-            link.download = jurnal_pendukung.originalName;
+            link.download = jurnal_pendukung;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -66,11 +65,11 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
     useEffect(() => {
         if (foto_sample) {
             async function getData() {
-                const data = await axios.get(`http://localhost:5000/api/foto_sample/${uuid}`)
-                const base64Image = data?.data?.foto_sample?.data.toString('base64');
-                const contentType = data?.data?.foto_sample?.contentType
-                const src = `data:${contentType};base64,${base64Image}`;
-                setFoto(src);
+                const data = await axios.get(`http://localhost:5000/api/download_foto_sample/${uuid}`)
+                    const base64Image = data?.data?.foto_sample?.data.toString('base64');
+                    const contentType = data?.data?.foto_sample?.contentType
+                    const src = `data:${contentType};base64,${base64Image}`;
+                    setFoto(src);
             }
 
             getData()

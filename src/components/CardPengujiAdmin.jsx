@@ -4,11 +4,11 @@ import React from 'react'
 import { Button } from 'flowbite-react';
 
 
-function CardPengujiAdmin({ id, title }) {
+function CardPengujiAdmin({ id, title,src }) {
     return (
         <div className='md:p-4 p-2 border border-black flex flex-col justify-center items-center gap-10 rounded-3xl'>
             <h1 className='font-bold text-2xl'>{title}</h1>
-            <Image src={"/images/barang.png"} width={0} height={0} sizes='100vw' alt='' className='md:w-[274.89px] md:h-[220px] w-[200px] h-[150px]' />
+            <Image src={src} width={0} height={0} sizes='100vw' alt='' className='md:w-[274.89px] md:h-[220px] w-[200px] h-[150px]' />
             <div className='md:px-5 '>
 
                 <Button color='failure' href={`/admin/dashboard/admin/${id}`} className='grad font-bold py-1 rounded-full '>

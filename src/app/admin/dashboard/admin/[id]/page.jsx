@@ -9,7 +9,8 @@ import dynamic from "next/dynamic";
 export default function detailCardAdmin({searchParams}){
   const {id} = searchParams
    const [cardData,setCardData] = useState({})
-   const [foto,setFoto] = useState({})
+   const [foto,setFoto] = useState("")
+   const [contoh_hasil,setContoh_hasil] = useState("")
    const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
 
 
@@ -24,17 +25,35 @@ export default function detailCardAdmin({searchParams}){
             const contentType =  cardData.foto.contentType
             const src = `data:${contentType};base64,${base64Image}`;
             setFoto(src)
+            const base64Image2 = cardData.contoh_hasil.data.toString('base64');
+            const contentType2 =  cardData.contoh_hasil.contentType
+            const src2 = `data:${contentType2};base64,${base64Image2}`;
+            setContoh_hasil(src2)
            }
        }
        getData()
-   },[])
+   },[foto,contoh_hasil])
 
-   const handleConfirm = ()=>{
+   const handleConfirm = (e)=>{
+    e.preventDefault()
      async function getData(){
-        const data = await axios.put(`http://localhost:5000/api/content/${id}`,cardData,{
+      try{
+         await axios.put(`http://localhost:5000/api/content/${id}`,cardData,{
          withCredentials: true,
          headers:  {"Content-Type": 'multipart/form-data'}
          })
+         await axios.put(`http://localhost:5000/api/content_foto/${id}`,{foto:foto},{
+         withCredentials: true,
+         headers:  {"Content-Type": 'multipart/form-data'}
+         })
+         await axios.put(`http://localhost:5000/api/content_contoh_hasil/${id}`,{contoh_hasil:contoh_hasil},{
+         withCredentials: true,
+         headers:  {"Content-Type": 'multipart/form-data'}
+         })
+         alert('update success')
+        }catch(err){
+          alert(err.message)
+        }
      }
      getData()
    }
@@ -50,10 +69,10 @@ export default function detailCardAdmin({searchParams}){
     return(
         <>
         <div>
-            <form>
+            <form onSubmit={handleConfirm}>
           <div>
             <Image src={foto}/>
-            <input type="file" name="image" onChange={(e)=>setCardData(a=>({...a,foto:e.target.files[0]}))}/>
+            <input type="file" name="foto" onChange={(e)=>setFoto(e.target.files[0])}/>
           </div>
           <div>
           <p>judul</p>
@@ -67,6 +86,11 @@ export default function detailCardAdmin({searchParams}){
           <p>deskripsi</p>
           <ReactQuill className='h-48' theme="snow" value={cardData.deskripsi} onChange={(e)=>setCardData(a=>({...a,deskripsi:e.target.value}))} />
           </div>
+          <div>
+            <Image src={contoh_hasil}/>
+            <input type="file" name="contoh_hasil" onChange={(e)=>setContoh_hasil(e.target.files[0])}/>
+          </div>
+          <button className="border-2" type="submit">submit edit</button>
           </form>
           
         </div>  
