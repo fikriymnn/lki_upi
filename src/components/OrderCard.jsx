@@ -137,10 +137,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
                             <h1 className="text-lg font-semibold text-grey-600">metode parameter : </h1>
                             <h1 className="input-style-lki">{metode_parameter}</h1>
                         </div>
-                        <div>
-                            <h1 className="text-lg font-semibold text-grey-600">preparasi khusus : </h1>
-                            <h1 className="input-style-lki-box">{preparasi_khusus ? "ya" : "tidal"}</h1>
-                        </div>
+
 
                         <div className="mt-2">
 
