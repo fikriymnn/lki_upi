@@ -90,21 +90,21 @@ export default function NavbarCustom() {
             {login && adminPath[2] !== "dashboard" ? <Navbar.Link href="/my_order" className="mt-[2vh] font-bold text-white">Order saya</Navbar.Link> : ""}
 
             {login && adminPath[2] !== "dashboard" ? <Navbar.Link href="/history_order" className="mt-[2vh] font-bold text-white">History order </Navbar.Link> : ""}
+            {login && adminPath[2] !== "dashboard" ? <Navbar.Link href="/profil" className="mt-[2vh] font-bold  text-white">Profile</Navbar.Link> : ""}
 
-            <div className=''>
+            {login && adminPath[2] !== "dashboard" ? <Navbar.Link onClick={handleLogout} className="mt-[2vh] font-bold text-white ">Logout</Navbar.Link> : ""}
+
+            {/* <div className=''>
 
               <button onClick={toggleNav} className='md:px-0 px-2'><Image src={"/images/profil.svg"} alt="" width={0} height={0} sizes='100vw' className='w-[50px] h-[50px] ' /></button>
               {comp == 0 ? (
                 <>
                   <div className='md:absolute md:bg-[#CDCCCC]  px-5 py-2 z-50'>
-                    {login && adminPath[2] !== "dashboard" ? <Navbar.Link href="/profil" className="mt-[2vh] font-bold md:text-black text-white">Profile</Navbar.Link> : ""}
-
-                    {login && adminPath[2] !== "dashboard" ? <Navbar.Link onClick={handleLogout} className="mt-[2vh] font-bold text-white md:text-black">Logout</Navbar.Link> : ""}
-
+                   
                   </div>
                 </>
               ) : ("")}
-            </div>
+            </div> */}
 
 
 
