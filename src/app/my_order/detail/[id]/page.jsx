@@ -80,55 +80,55 @@ export default function detail({ params, searchParams }) {
 
 
 
-    const downloadBuktiTransfer = async () => {
+  const downloadBuktiTransfer = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/download_bukti_pembayaran/${id}`, { withCredentials: true, responseType: 'arraybuffer', withCredentials: true });
+      // Create a blob from the response data
+      const blob = new Blob([response.data], { type: 'application/octet-stream' });
+
+      // Create a link element and click it to trigger the download
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = invoice?.bukti_pembayaran?.originalName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
+  };
+
+  useEffect(() => {
+    async function getInvoice() {
       try {
-          const response = await axios.get(`http://localhost:5000/api/download_bukti_pembayaran/${id}`,{withCredentials:true,responseType: 'arraybuffer',withCredentials:true});
-        // Create a blob from the response data
-        const blob = new Blob([response.data], { type: 'application/octet-stream' });
-  
-        // Create a link element and click it to trigger the download
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = invoice?.bukti_pembayaran?.originalName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (error) {
-        console.error('Error downloading file:', error);
+
+
+        const data = await axios.get(`http://localhost:5000/api/invoice/${id}`, { withCredentials: true })
+        const dataOrder = await axios.get(`http://localhost:5000/api/order?no_invoice=${no_invoice}&skip=0&limit=20`, { withCredentials: true })
+
+
+        console.log(data)
+        if (data.data.success) {
+          setInvoice(data.data.data)
+
+
+        }
+        if (dataOrder.data.success) {
+          setOrder(dataOrder.data.data)
+        }
+
+      } catch (err) {
+        console.log(err.message)
       }
-    };
-    
-    useEffect(()=>{
-        async function getInvoice(){
-            try{
-  
-           
-                const data = await axios.get(`http://localhost:5000/api/invoice/${id}`,{withCredentials:true})
-                const dataOrder = await axios.get(`http://localhost:5000/api/order?no_invoice=${no_invoice}&skip=0&limit=20`,{withCredentials:true})
-                
-                
-                console.log(data)
-                if(data.data.success){
-                  setInvoice(data.data.data)
-                  
-              
-                }
-                if(dataOrder.data.success){
-                  setOrder(dataOrder.data.data)
-                }
-              
-            }catch(err){
-              console.log(err.message)
-            }
-           }
-           getInvoice()
-    },[])
+    }
+    getInvoice()
+  }, [])
 
-    
 
-    return (
-        <>
-          <div>
+
+  return (
+    <>
+      <div>
         <p className='text-center text-4xl font-bold text-gray-800 mt-7'>DETAIL</p>
         <div className='flex justify-center'>
           <hr className='grad h-2 mb-8 mt-5 w-56 text-center' />
@@ -153,17 +153,17 @@ export default function detail({ params, searchParams }) {
 
 
 
-                    <div className="grid grid-cols-2 md:w-10/12 border-2 rounded-lg p-2 border-b-8"><p className="md:text-2xl sm:text-xl text-lg font-semibold  ">bukti pembayaran : </p> {invoice?.status=="menunggu pembayaran" || invoice?.status=="menunggu konfirmasi pembayaran"||invoice?.status=="selesai"?<div className="flex"><input className="ml-5" type="file" name="file" onChange={(e)=>setBuktiPembayaran(e.target.files[0])}/><Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button></div>:<p className="ml-5">-</p>}{invoice?.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button>:""} </div>
-                    
-                </div>
-                </div>
-                <div className="mx-20">
-                    {order.map((e, i) => {
-                        return <OrderCard uuid={e.uuid} id={e._id} status={invoice?.status} jenis_pengujian={e.jenis_pengujian} nama_sample={e.nama_sample} kode_pengujian={e.kode_pengujian} jumlah_sample={e.jumlah_sample} index={i+1} wujud_sample={e.wujud_sample} pelarut={e.pelarut} preparasi_khusus={e.preparasi_khusus} target_senyawa={e.target_senyawa} metode_parameter={e.metode_parameter} jurnal_pendukung={e.jurnal_pendukung} deskripsi={e.deskripsi_sample} hasil_analisis={e.hasil_analisis} foto_sample={e.foto_sample}/>
-                    })}
-                </div>
-            </div>
-        </>
-    )
+            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">bukti pembayaran : </p> {invoice?.status == "menunggu pembayaran" || invoice?.status == "menunggu konfirmasi pembayaran" || invoice?.status == "selesai" ? <div className="flex"><input className="ml-5" type="file" name="file" onChange={(e) => setBuktiPembayaran(e.target.files[0])} /><Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button></div> : <p className="ml-5">-</p>}{invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button> : ""} </div>
+
+          </div>
+        </div>
+        <div className="md:mx-20 mx-5">
+          {order.map((e, i) => {
+            return <OrderCard uuid={e.uuid} id={e._id} status={invoice?.status} jenis_pengujian={e.jenis_pengujian} nama_sample={e.nama_sample} kode_pengujian={e.kode_pengujian} jumlah_sample={e.jumlah_sample} index={i + 1} wujud_sample={e.wujud_sample} pelarut={e.pelarut} preparasi_khusus={e.preparasi_khusus} target_senyawa={e.target_senyawa} metode_parameter={e.metode_parameter} jurnal_pendukung={e.jurnal_pendukung} deskripsi={e.deskripsi_sample} hasil_analisis={e.hasil_analisis} foto_sample={e.foto_sample} />
+          })}
+        </div>
+      </div>
+    </>
+  )
 
 }
