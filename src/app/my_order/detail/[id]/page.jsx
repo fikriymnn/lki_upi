@@ -77,56 +77,6 @@ export default function detail({ params, searchParams }) {
     }
   }
 
-  const downloadBuktiTransfer = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/api/download_bukti_pembayaran/${id}`, { withCredentials: true, responseType: 'arraybuffer', withCredentials: true });
-      // Create a blob from the response data
-      const blob = new Blob([response.data], { type: 'application/octet-stream' });
-
-      // Create a link element and click it to trigger the download
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = invoice?.bukti_pembayaran?.originalName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error('Error downloading file:', error);
-    }
-  };
-
-  useEffect(() => {
-    async function getInvoice() {
-      try {
-
-
-        const data = await axios.get(`http://localhost:5000/api/invoice/${id}`, { withCredentials: true })
-        const dataOrder = await axios.get(`http://localhost:5000/api/order?no_invoice=${no_invoice}&skip=0&limit=20`, { withCredentials: true })
-        console.log(data)
-        if (data.data.success) {
-          setInvoice(data.data.data)
-
-
-
-    const handleBukti = async (e)=>{
-      e.preventDefault()
-      try{
-        const data = await axios.post(`http://localhost:5000/api/bukti_pembayaran/${id}`,{bukti_pembayaran:buktiPembayaran})
-        if(data.data=="success"){
-          alert('sukses dikirim')
-          window.location.reload()
-
-        }
-        if (dataOrder.data.success) {
-          setOrder(dataOrder.data.data)
-        }
-
-      } catch (err) {
-        console.log(err.message)
-      }
-    }
-    getInvoice()
-  }, [])
 
 
 

@@ -6,7 +6,8 @@ import Image from "next/image"
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
 
-export default function detailCardAdmin(){
+export default function detailCardAdmin({searchParams}){
+  const {id} = searchParams
    const [cardData,setCardData] = useState({})
    const [foto,setFoto] = useState({})
    const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
