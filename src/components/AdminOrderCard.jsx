@@ -85,9 +85,9 @@ export default function AdminOrderCard({ uuid, jenis_pengujian, nama_sample, jum
         if (foto_sample) {
             async function getData() {
 
-                const data = await axios.get(`http://localhost:5000/api/foto_sample/${uuid}`)
-                const base64Image = data?.data?.foto_sample?.data.toString('base64');
-                const contentType = data?.data?.foto_sample?.contentType
+                const data = await axios.get(`http://localhost:5000/api/download_foto_sample/${uuid}`)
+                const base64Image = data?.data?.data.toString('base64');
+                const contentType = foto_sample
                 const src = `data:${contentType};base64,${base64Image}`;
                 setFoto(src);
                 setFile(hasil_analisis)

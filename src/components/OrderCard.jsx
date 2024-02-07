@@ -45,7 +45,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
 
                 responseType: 'arraybuffer', withCredentials: true  // Important for receiving binary data
             });
-            
+
             const blob = new Blob([response.data], { type: 'application/octet-stream' });
 
             // Create a link element and click it to trigger the download
@@ -65,11 +65,19 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
     useEffect(() => {
         if (foto_sample) {
             async function getData() {
-                
-                    const base64Image = foto_sample?.data.toString('base64');
-                    const contentType = foto_sample?.contentType
+                const response = await axios.get(`http://localhost:5000/api/download_foto_sample/${uuid}`, {
+
+         withCredentials: true  // Important for receiving binary data
+                });
+                console.log(response.data)
+                if (response) {
+                    const buffer = Buffer.from(response.data?.data);
+                    const base64Image = buffer.toString('base64');
+                    const contentType = foto_sample;
                     const src = `data:${contentType};base64,${base64Image}`;
                     setFoto(src);
+                }
+
             }
 
             getData()
