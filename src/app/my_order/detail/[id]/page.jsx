@@ -24,7 +24,7 @@ export default function detail({ params, searchParams }) {
   const handleBukti = async (e) => {
     e.preventDefault()
     try {
-      const data = await axios.put(`http://localhost:5000/api/invoice/${id}`, { bukti_pembayaran: buktiPembayaran, status: 'menunggu konfirmasi pembayaran', s7_date: `${timeNow()} ${new Date().getDate()} ${month_bahasa(new Date().getMonth())} ${new Date().getFullYear()}` }, { withCredentials: true })
+      const data = await axios.put(`http://localhost:5000/api/invoice/${id}`, {bukti_pembayaran: buktiPembayaran}, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' }  })
       if (data.data.success) {
         alert('sukses dikirim')
         window.location.reload()
@@ -159,6 +159,7 @@ export default function detail({ params, searchParams }) {
         </div>
         <div className="md:mx-20 mx-5">
           {order.map((e, i) => {
+           
             return <OrderCard uuid={e.uuid} id={e._id} status={invoice?.status} jenis_pengujian={e.jenis_pengujian} nama_sample={e.nama_sample} kode_pengujian={e.kode_pengujian} jumlah_sample={e.jumlah_sample} index={i + 1} wujud_sample={e.wujud_sample} pelarut={e.pelarut} preparasi_khusus={e.preparasi_khusus} target_senyawa={e.target_senyawa} metode_parameter={e.metode_parameter} jurnal_pendukung={e.jurnal_pendukung} deskripsi={e.deskripsi_sample} hasil_analisis={e.hasil_analisis} foto_sample={e.foto_sample} />
           })}
         </div>

@@ -44,7 +44,7 @@ export default function AdminOrderCard({ uuid, jenis_pengujian, nama_sample, jum
 
                 const link = document.createElement('a');
                 link.href = window.URL.createObjectURL(blob);
-                link.download = hasil_analisis?.originalName;
+                link.download = hasil_analisis;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -69,7 +69,7 @@ export default function AdminOrderCard({ uuid, jenis_pengujian, nama_sample, jum
 
                 const link = document.createElement('a');
                 link.href = window.URL.createObjectURL(blob);
-                link.download = jurnal_pendukung?.originalName;
+                link.download = jurnal_pendukung;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -82,7 +82,7 @@ export default function AdminOrderCard({ uuid, jenis_pengujian, nama_sample, jum
     }
 
     useEffect(() => {
-        if (foto_sample.data) {
+        if (foto_sample) {
             async function getData() {
 
                 const data = await axios.get(`http://localhost:5000/api/foto_sample/${uuid}`)
@@ -96,7 +96,7 @@ export default function AdminOrderCard({ uuid, jenis_pengujian, nama_sample, jum
 
             getData()
         }
-    }, [foto_sample.data])
+    }, [foto_sample])
 
 
 
@@ -204,7 +204,7 @@ export default function AdminOrderCard({ uuid, jenis_pengujian, nama_sample, jum
 
                                         {add ? <input type="file" name="file" onChange={(e) => {
                                             setFile(e.target.files[0])
-                                            console.log(e.target.files[0])
+                                          
                                         }} /> : (hasil_analisis ? <Button color="failure" size={5} onClick={handleDownloadHA}>download</Button> : <p className="input-style-lki">-</p>)}
                                     </div>
                                 </div>

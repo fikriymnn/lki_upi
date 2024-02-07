@@ -126,7 +126,8 @@ export default function Order_Operator() {
           })}
         </select></div>
       </div>
-      <div className="mx-20">
+      <div className="m-auto md:w-full sm:w-full w-11/12">
+          <div className=" overflow-scroll w-full">
         <Table>
           <Table.Head>
             <Table.HeadCell>No</Table.HeadCell>
@@ -176,6 +177,7 @@ export default function Order_Operator() {
 
           </Table.Body>
         </Table>
+        </div>
       </div>
       <br />
       <p className=' text-center mb-2 text-red-600'>page : {page + 1}</p>

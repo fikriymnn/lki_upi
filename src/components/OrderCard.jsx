@@ -65,9 +65,9 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
     useEffect(() => {
         if (foto_sample) {
             async function getData() {
-                const data = await axios.get(`http://localhost:5000/api/download_foto_sample/${uuid}`)
-                    const base64Image = data?.data?.foto_sample?.data.toString('base64');
-                    const contentType = data?.data?.foto_sample?.contentType
+                
+                    const base64Image = foto_sample?.data.toString('base64');
+                    const contentType = foto_sample?.contentType
                     const src = `data:${contentType};base64,${base64Image}`;
                     setFoto(src);
             }

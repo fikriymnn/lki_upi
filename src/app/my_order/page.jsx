@@ -38,7 +38,7 @@ export default function My_order() {
           <hr className='text-red-700 grad md:h-2 h-1 md:mb-8 sm:mb-4 mb-2 md:mt-5 sm:mt-3 mt-2 md:w-56 sm:w-32 w-16 text-center' />
         </div>
 
-        <div className="m-auto md:w-full sm:w-full w-64">
+        <div className="m-auto md:w-full sm:w-full w-11/12">
           <div className=" overflow-scroll w-full">
             <Table className="">
               <Table.Head>
