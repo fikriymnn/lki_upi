@@ -144,28 +144,30 @@ export default function Report() {
           <Button color="failure" size={5} className='ml-10'>download report excel</Button>
           </DownloadTableExcel>
           <div className='md:flex md:justify-center sm:justify-center justify-items-center  sm:flex grid grid-cols-1 mt-2 ml-2'>
-            <div className='grid grid-cols-2 mt-2 md:w-56 sm:w-40 w-48 items-center bg-red-600 rounded-lg '><p className='md:text-lg sm:text-base text-sm font-semibold text-white p-2'>Tahun : </p> <select className='p-2 ml-3 w-20 h-10' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
-              <option value="" defaultChecked>all</option>
+            <div className='grid grid-cols-2 mt-2 md:w-56 sm:w-40 w-48 items-center bg-red-600 rounded-lg '>
+              <p className='md:text-lg sm:text-base text-sm font-semibold text-white p-2'>Tahun : </p> <select className='p-2 ml-3 w-20 h-10' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
+              <option value="" className='input-style-lki' defaultChecked>all</option>
               {yearOption.map((v, i) => {
                   return <option value={v} key={i}>{v}</option>
                 
               })}
             </select></div>
-            <div className='grid grid-cols-2 mt-2 md:w-56 sm:w-40 w-48 items-center bg-red-600 rounded-lg md:ml-3 sm:ml-3 '><p className='md:text-lg sm:text-base text-sm font-semibold text-white p-2'>Bulan : </p><select className='p-2 ml-3' name="bulan" id="bulan" onChange={(e) => setMonth(e.target.value)}>
-              <option value="" defaultChecked>all</option>
+            <div className='grid grid-cols-2 mt-2 md:w-56 sm:w-40 w-48 items-center bg-red-600 rounded-lg md:ml-3 sm:ml-3 '>
+              <p className='md:text-lg sm:text-base text-sm font-semibold text-white p-2'>Bulan : </p><select className='p-2 ml-3' name="bulan" id="bulan" onChange={(e) => setMonth(e.target.value)}>
+              <option value="" className='input-style-lki' defaultChecked>all</option>
               {monthOption.map((v, i) => {
                   return <option value={i} key={i} defaultValue>{v}</option>               
               })}
             </select></div>
             <div className='grid grid-cols-2 mt-2 md:w-56 sm:w-40 w-48 items-center bg-red-600 rounded-lg md:ml-3 sm:ml-3'><p className='md:text-lg sm:text-base text-sm font-semibold text-white p-2'>Jenis Pengujian : </p> <select className='p-2 ml-3' name="jenis_pengujian" id="jp" onChange={(e) => setJenis_pengujian(e.target.value)}>
-              <option value="" defaultChecked>all</option>
+              <option value="" className='input-style-lki' defaultChecked>all</option>
               {kode.map((v, i) => {
                 return <option value={v.jenis_pengujian} key={i} >{v.jenis_pengujian}</option>
               })}
             </select></div>
           </div>
           <br/>
-          <div className='w-full overflow-scroll h-96'>
+          <div className='w-full overflow-scroll md:h-96 h-56' >
             <table ref={tableRef} className='m-auto table-auto'>
               <tbody>
                 <tr>
@@ -189,6 +191,9 @@ export default function Report() {
                   <th className='px-10 text-sm'>Preparasi Khusus</th>
                   <th className='px-10 text-sm'>Target Senyawa</th>
                   <th className='px-10 text-sm'>Metode Parameter</th>
+                  <th className='px-10 text-sm'>Sample dikembalikan</th>
+                  <th className='px-10 text-sm'>Deskripsi</th>
+                  <th className='px-10 text-sm'>Riwayat pengujian</th>
                 </tr>
                 {loading?<p className='text-center mt-10'>loading</p>:order.map((a, i) => {
                   return (
@@ -213,6 +218,9 @@ export default function Report() {
                       <td className='text-center text-xs'>{a.preparasi_khusus ? "ya" : "tidak"}</td>
                       <td className='text-center text-xs'>{a.target_senyawa}</td>
                       <td className='text-center text-xs'>{a.metode_parameter}</td>
+                      <td className='text-center text-xs'>{a.sample_dikembalikan}</td>
+                      <td className='text-center text-xs'>{a.deskripsi}</td>
+                      <td className='text-center text-xs'>{a.riwayat_pengujian}</td>
 
                     </tr>)
                 })}

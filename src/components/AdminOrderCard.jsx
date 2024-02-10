@@ -5,7 +5,7 @@ import axios from "axios"
 import { Button } from 'flowbite-react';
 import { imagefrombuffer } from "imagefrombuffer";
 
-export default function AdminOrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id, kode_pengujian
+export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id, kode_pengujian
 }) {
     const [add, setAdd] = useState(false)
     const [file, setFile] = useState(null)
@@ -84,17 +84,18 @@ export default function AdminOrderCard({ uuid, jenis_pengujian, nama_sample, jum
     useEffect(() => {
         if (foto_sample) {
             async function getData() {
-
                 const data = await axios.get(`http://localhost:5000/api/download_foto_sample/${uuid}`)
-                const base64Image = data?.data?.data.toString('base64');
+                const buffer = Buffer.from(data?.data?.data);
+                const base64Image = buffer.toString('base64');
                 const contentType = foto_sample
                 const src = `data:${contentType};base64,${base64Image}`;
                 setFoto(src);
-                setFile(hasil_analisis)
+               
             }
-
-
             getData()
+        }
+        if(hasil_analisis){
+            setFile(hasil_analisis)
         }
     }, [foto_sample])
 
@@ -144,9 +145,9 @@ export default function AdminOrderCard({ uuid, jenis_pengujian, nama_sample, jum
                         </div>
                     </div>
                     <div className="flex flex-col gap-5 mt-5">
-                        <div>
-                            <h1 className="text-lg font-semibold text-grey-600">deskripsi : </h1>
-                            <h1 className="input-style-lki-box ">{deskripsi}</h1>
+                         <div>
+                            <h1 className="text-lg font-semibold text-grey-600">sample_dikembalikan : </h1>
+                            <h1 className="input-style-lki-box ">{sample_dikembalikan}</h1>
                         </div>
                         <div>
                             <h1 className="text-lg font-semibold text-grey-600">jenis pengujian sample : </h1>
@@ -169,6 +170,14 @@ export default function AdminOrderCard({ uuid, jenis_pengujian, nama_sample, jum
                         <div>
                             <h1 className="text-lg font-semibold text-grey-600">metode parameter : </h1>
                             <h1 className="input-style-lki">{metode_parameter}</h1>
+                        </div>
+                        <div>
+                            <h1 className="text-lg font-semibold text-grey-600">deskripsi : </h1>
+                            <h1 className="input-style-lki-box ">{deskripsi}</h1>
+                        </div>
+                        <div>
+                            <h1 className="text-lg font-semibold text-grey-600">riwayat pengujian : </h1>
+                            <h1 className="input-style-lki-box ">{riwayat_pengujian}</h1>
                         </div>
 
 

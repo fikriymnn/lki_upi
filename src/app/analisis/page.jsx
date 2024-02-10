@@ -9,6 +9,23 @@ import axios from 'axios'
 import barang from './barang'
 
 export default function analisis() {
+    const [data, setData] = useState([])
+
+
+    useEffect(()=>{
+       async function getData(){
+        try{
+            const data = await axios.get(`http://localhost:5000/api/content?resize=true`, { withCredentials: true })
+            if(data.data.success){
+                setData(data.data.data)
+            }
+            
+        }catch(err){
+            alert(err.message)
+        }
+       }
+       getData()
+    },[])
 
 
     return (
@@ -42,10 +59,9 @@ export default function analisis() {
                     </div>
                     <div className='grid md:grid-cols-3 grid-cols-1 md:gap-10 gap-3'>
 
-                        {barang.map((data, i) => (
+                        {data.map((v, i) => (
                             <>
-
-                                <CardPenguji id={i} nama={data.nama} />
+                                <CardPenguji key={i} id={v._id} nama={v.title} foto={`data:${v.foto.contentType};base64,${v.foto.data.toString('base64')}`}/>
                             </>
                         ))}
 

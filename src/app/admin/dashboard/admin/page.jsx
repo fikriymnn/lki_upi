@@ -1,15 +1,20 @@
 'use client'
-import React, { useState, useMemo } from 'react';
-
+import React, { useState, useMemo,useEffect } from 'react';
+import 'react-quill/dist/quill.snow.css';
+import dynamic from "next/dynamic";
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
 import CardPengujiAdmin from '../../../../components/CardPengujiAdmin';
+import axios from 'axios';
 
 export default function Adminn() {
   const [tambah, setTambah] = useState({
-    sub_title:"",title:"",deskripsi:"",foto:{},contoh_hasil:{}
+    title:"",foto:{},contoh_hasil:{}
   });
-  const [layananCard, setLayananCard] = useState('');
+  const [sub_title, setSub_title] = useState('');
+  const [deskripsi, setDeskripsi] = useState('');
+  const [layananCard, setLayananCard] = useState([]);
   const [carousel, setCarousel] = useState(["efrfwef", "asdfsdf", "sdfae"]);
+  const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
 
   const handleChange = (e) => {
     e.preventDefault()
@@ -22,12 +27,19 @@ export default function Adminn() {
     e.preventDefault()
      async function getData(){
       try{
-         const data = await axios.post(`http://localhost:5000/api/content`,tambah,{
+         const data = await axios.post(`http://localhost:5000/api/content`,{
+          title:tambah.title,
+          sub_title:sub_title,
+          deskripsi:deskripsi,
+          foto:tambah.foto,
+          contoh_hasil:tambah.contoh_hasil        
+         },{
          withCredentials: true,
          headers:  {"Content-Type": 'multipart/form-data'}
          })
          if(data.data=='success'){
           alert('success')
+          window.location.reload()
          }
        
         }catch(err){
@@ -94,23 +106,23 @@ export default function Adminn() {
             <div>
               <form onSubmit={handleConfirm}>
                 <div>
-                  <Image src={foto} />
+                
                   <input type="file" name="foto" onChange={(e) => setTambah((a)=>({...a,foto:e.target.files[0]}))} />
                 </div>
                 <div>
                   <p>judul</p>
-                  <input type="text" name="title"  onChange={handleChange} />
+                  <input type="text" name="title" onChange={handleChange} />
                 </div>
-                <div>
+                <div className='mb-10'>
                   <p>sub judul</p>
-                  <ReactQuill className='h-48' theme="snow"  onChange={(e) => setCardData(a => ({ ...a, sub_title: e.target.value }))} />
+                  <ReactQuill className='h-48' theme="snow" value={sub_title}  onChange={setSub_title} />
                 </div>
-                <div>
+                <div className='mb-10'>
                   <p>deskripsi</p>
-                  <ReactQuill className='h-48' theme="snow" onChange={(e) => setCardData(a => ({ ...a, deskripsi: e.target.value }))} />
+                  <ReactQuill className='h-48' theme="snow" value={deskripsi} onChange={setDeskripsi} />
                 </div>
                 <div>
-                  <Image src={contoh_hasil} />
+                 
                   <input type="file" name="contoh_hasil" onChange={(e) => setTambah((a)=>({...a,contoh_hasil:e.target.files[0]}))} />
                 </div>
                 <button className="border-2" type="submit">submit edit</button>
@@ -125,10 +137,10 @@ export default function Adminn() {
                 return (
                   <CardPengujiAdmin key={i} id={e._id} title={e.title} src={`data:${e.foto.contentType};base64,${e.foto.data.toString('base64')}`} />
                 )
-              })
+              }
+              )
             }
           </div>
-
         </div>
         <br />
 

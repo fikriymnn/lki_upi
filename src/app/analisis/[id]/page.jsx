@@ -1,16 +1,18 @@
 'use client'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import barang from '../barang'
 
 
 
 function Page({ params }) {
+    const [data,setData] = useState([])
+    const {id} = params
 
-    const router = useRouter();
-
-
+   useEffect(()=>{
+      
+   },[])
 
     return (
         <main>

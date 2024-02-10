@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <UserProvider>
           <NavbarCustom />
-          <div className='md:pt-[10vh] lg:pt-[10vh] pt-[9vh]'>
+          <div className='md:pt-[13vh] lg:pt-[13vh] pt-[11vh]'>
             {children}
           </div>
 

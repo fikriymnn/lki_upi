@@ -88,7 +88,7 @@ export default function History_order(){
               })}
             </select></div>
           </div>
-          <div className="m-auto md:w-full sm:w-full w-11/12">
+          <div className="m-auto w-11/12">
           <div className=" overflow-scroll w-full">
       <Table>
         <Table.Head>

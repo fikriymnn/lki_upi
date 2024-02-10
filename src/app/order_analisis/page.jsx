@@ -17,9 +17,11 @@ export default function order_analisis() {
     const [pelarut, setPelarut] = useState([])
     const [preparasi_khusus, setPreparasi_khusus] = useState([])
     const [target_senyawa, setTarget_senyawa] = useState([])
+    const [sample_dikembalikan, setSample_dikembalikan] = useState([])
     const [metode_parameter, setMetode_parameter] = useState([])
     const [jurnal_pendukung, setJurnal_pendukung] = useState([])
     const [deskripsi_sample, setDeskripsi_sample] = useState([])
+    const [riwayat_pengujian, setRiwayat_pengujian] = useState([])
     const [foto_sample, setFoto_sample] = useState([])
     const [uuid, setUuid] = useState([uid])
     const [verifikasi, setVerifikasi] = useState(false)
@@ -114,6 +116,8 @@ export default function order_analisis() {
                 obj.target_senyawa = target_senyawa[i]
                 obj.metode_parameter = metode_parameter[i]
                 obj.deskripsi_sample = deskripsi_sample[i]
+                obj.riwayat_pengujian = riwayat_pengujian[i]
+                obj.sample_dikembalikan = sample_dikembalikan[i]
                 obj.uuid = uuid[i]
                 console.log(obj)
                 arr[i] = obj
@@ -295,19 +299,32 @@ export default function order_analisis() {
                         <div>
                             <h2 className="text-lg font-semibold">Target senyawa/logam yang di cari
                             </h2>
-                            <input className='input-style-lki' name="target_senyawa" required type="text" onChange={(e) => {
+                            <input placeholder='Tuliskan tujuan pengamatan yang ingin diperoleh, misal analisis logam natrium (Na) untuk AAS ' className='input-style-lki' name="target_senyawa" required type="text" onChange={(e) => {
                                 e.preventDefault()
                                 target_senyawa[i] = e.target.value
                             }} />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold" >Metode Parameter (Suhu/flow/panjang gelombang/fasa gerak, gas, dsb)
+                            <h2 className="text-lg font-semibold" >Metode Parameter 
                             </h2>
-                            <input className='input-style-lki' name="metode_parameter" required type="text" onChange={(e) => {
+                            <input className='input-style-lki' placeholder='Tuliskan metode parameter yang ingin digunakan (suhu/flow/panjang gelombang/fasa gerak, gas, dsb.)' name="metode_parameter" required type="text" onChange={(e) => {
                                 e.preventDefault()
                                 metode_parameter[i] = e.target.value
 
                             }} />
+                        </div>
+                        <div>
+                            <h2 className="text-lg font-semibold" >APAKAH SAMPEL AKAN DIAMBIL SETELAH PENGUJIAN?
+                            </h2>
+                            <select name="sample_dikembalikan" id="sample_dikembalikan" className='input-style-lki' onChange={(e)=>{
+                                e.preventDefault()
+                                sample_dikembalikan[i] = e.target.value
+                            }}>
+                                <option value="" selected>Pilih</option>
+                                <option value="ya">Ya</option>
+                                <option value="tidak">Tidak</option>
+                                
+                            </select>
                         </div>
                         <div className='grid md:grid-cols-2 grid-cols-1 gap-10'>
 
@@ -340,6 +357,15 @@ export default function order_analisis() {
 
                                 e.preventDefault()
                                 deskripsi_sample[i] = e.target.value
+                            }} />
+                        </div>
+                        <div>
+                            <h2 className="text-lg font-semibold" >Riwayat pengujian sample
+                            </h2>
+                            <textarea placeholder='Deskripsikan mengenai riwayat pengujian sampel: apakah pernah diuji di tempat lain dan bagaimana hasilnya' className='input-style-lki-box' name="riwayat_pengujian" type="text" onChange={(e) => {
+
+                                e.preventDefault()
+                                riwayat_pengujian[i] = e.target.value
                             }} />
                         </div>
                     </div>
