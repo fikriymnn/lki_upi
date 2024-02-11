@@ -72,7 +72,7 @@ export default function hdetail({ params,searchParams }) {
         // Create a link element and click it to trigger the download
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
-        link.download = invoice?.bukti_pembayaran?.originalName;
+        link.download = invoice?.bukti_pembayaran;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

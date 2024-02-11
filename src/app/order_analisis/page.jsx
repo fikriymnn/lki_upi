@@ -316,9 +316,10 @@ export default function order_analisis() {
                         <div>
                             <h2 className="text-lg font-semibold" >APAKAH SAMPEL AKAN DIAMBIL SETELAH PENGUJIAN?
                             </h2>
-                            <select name="sample_dikembalikan" id="sample_dikembalikan" className='input-style-lki' onChange={(e)=>{
+                            <select required name="sample_dikembalikan" id="sample_dikembalikan" className='input-style-lki' onChange={(e)=>{
                                 e.preventDefault()
                                 sample_dikembalikan[i] = e.target.value
+                                console.log(sample_dikembalikan)
                             }}>
                                 <option value="" selected>Pilih</option>
                                 <option value="ya">Ya</option>

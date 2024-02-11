@@ -113,7 +113,7 @@ export default function Order_Pj(){
                     <p>{v.status}</p>
                     </Table.Cell>
                     <Table.Cell>
-                      <a href={`/admin/dashboard/pj/detail${v._id}?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+                      <a href={`/admin/dashboard/pj/detail/${v._id}?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                         keterangan
                       </a>
                     </Table.Cell>

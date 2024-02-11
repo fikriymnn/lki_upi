@@ -219,7 +219,7 @@ export default function Report() {
                       <td className='text-center text-xs'>{a.target_senyawa}</td>
                       <td className='text-center text-xs'>{a.metode_parameter}</td>
                       <td className='text-center text-xs'>{a.sample_dikembalikan}</td>
-                      <td className='text-center text-xs'>{a.deskripsi}</td>
+                      <td className='text-center text-xs'>{a.deskripsi_sample}</td>
                       <td className='text-center text-xs'>{a.riwayat_pengujian}</td>
 
                     </tr>)

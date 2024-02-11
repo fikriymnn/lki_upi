@@ -63,6 +63,10 @@ export default function Tracking_admin({ params }) {
                         obj.success= true
                         obj.s8_date = date_format
                         return true;
+                    case "order dibatalkan":
+                            obj.success= true
+                            obj.s8_date = date_format
+                            return true;
                 }
             }
             if(selection()==true){
@@ -110,13 +114,13 @@ export default function Tracking_admin({ params }) {
                         <br />
                         <div className="mx-10">  {edit ? <div className="flex"><button onClick={handleConfirm } className="bg-blue-400 text-white px-2 py-1 rounded-lg">Konfirmasi</button><button onClick={() => setEdit(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setEdit(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Edit</button>}
                             {edit ? <div><p className="text-lg ">Status : <select name="status" onChange={(e) =>setForm((a)=>({...a,[e.target.name]:e.target.value}))} value={form.status}>
-                                <option value="menunggu form dikonfirmasi">menunggu form dikonfirmasi</option>
+                                
+                            <option value="order dibatalkan">batalkan order</option>
                                 <option value="form dikonfirmasi">form dikonfirmasi</option>
                                 <option value= "sample diterima admin">sample diterima admin</option>
                                 <option value="sample dikerjakan operator">sample dikerjakan operator</option>
                                 <option value="menunggu verifikasi">menunggu verifikasi</option>
                                 <option value= "menunggu pembayaran">menunggu pembayaran</option>
-                                <option value="menunggu konfirmasi pembayaran">menunggu konfirmasi pembayaran</option>
                                 <option value="selesai">selesai</option></select></p></div> : <div>
                                 <p className="text-lg ">Status  : {form.status} </p></div>}
                         
@@ -185,13 +189,13 @@ export default function Tracking_admin({ params }) {
                             {invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Image alt="" width={0} height={0} sizes="100vw" className="w-[87.5px] h-[133.7px]" src={'/tracking/on/on7.png'} /> : <Image alt="" width={0} height={0} sizes="100vw" className="w-[87.5px] h-[133.7px]" src={'/tracking/off/off7.png'} />}
                             <div>
                                 {invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">pembayaran selesai</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">pembayaran selesai</p></div>}
-                                {invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div><p className="">menunggu pembayaran dikonfirmasi</p><p className="mx-10  text-center text-xs">{invoice.s7_date}</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">menunggu pembayaran dikonfirmasi</p></div>}
+                                {invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">menunggu pembayaran dikonfirmasi</p><p className="mx-10  text-center text-xs">{invoice.s7_date}</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">menunggu pembayaran dikonfirmasi</p></div>}
                             </div>
                         </div>
                         <div className="flex gap-5 w-62 mx-5  ">
                             {invoice.status == "selesai" ? <Image alt="" width={0} height={0} sizes="100vw" className="w-[87.5px] h-[87.5px]" src={'/tracking/on/on8.png'} /> : <Image alt="" width={0} height={0} sizes="100vw" className="w-[87.5px] h-[87.5px]" src={'/tracking/off/off8.png'} />}
                             <div>
-                                {invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">selesai</p><p className="mx-10  text-center text-xs">{invoice.s8_date}</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">selesai</p></div>}
+                                {invoice.status == "selesai"|| invoice.status == "order dibatalkan" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">selesai</p><p className="mx-10  text-center text-xs">{invoice.s8_date}</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">selesai</p></div>}
                             </div>
                         </div>
 

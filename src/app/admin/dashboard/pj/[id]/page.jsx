@@ -94,7 +94,7 @@ export default function Tracking_Pj({ params }) {
                 <div className="m-auto">
 
 
-                    <div className="m-auto mx-40 border-2 rounded-lg">
+                    <div className="m-auto w-10/12 border-2 rounded-lg">
 
                         <br />
                         <br />
@@ -162,7 +162,7 @@ export default function Tracking_Pj({ params }) {
                             {invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Image alt="" width={0} height={0} sizes="100vw" className="w-[87.5px] h-[133.7px]" src={'/tracking/on/on7.png'} /> : <Image alt="" width={0} height={0} sizes="100vw" className="w-[87.5px] h-[133.7px]" src={'/tracking/off/off7.png'} />}
                             <div>
                                 {invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">pembayaran selesai</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">pembayaran selesai</p></div>}
-                                {invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div><p className="">menunggu pembayaran dikonfirmasi</p><p className="mx-10  text-center text-xs">{invoice.s7_date}</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">menunggu pembayaran dikonfirmasi</p></div>}
+                                {invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">menunggu pembayaran dikonfirmasi</p><p className="mx-10  text-center text-xs">{invoice.s7_date}</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">menunggu pembayaran dikonfirmasi</p></div>}
                             </div>
                         </div>
                         <div className="flex gap-5 w-62 mx-5  ">

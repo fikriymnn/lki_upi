@@ -24,8 +24,8 @@ export default function detail({ params, searchParams }) {
   const handleBukti = async (e) => {
     e.preventDefault()
     try {
-      const data = await axios.put(`http://localhost:5000/api/invoice/${id}`, {bukti_pembayaran: buktiPembayaran}, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' }  })
-      if (data.data.success) {
+      const data = await axios.post(`http://localhost:5000/api/bukti_pembayaran/${id}`, {bukti_pembayaran: buktiPembayaran}, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' }  })
+      if (data.data=='success') {
         alert('sukses dikirim')
         window.location.reload()
       }
@@ -89,7 +89,7 @@ export default function detail({ params, searchParams }) {
       // Create a link element and click it to trigger the download
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      link.download = invoice?.bukti_pembayaran?.originalName;
+      link.download = invoice?.bukti_pembayaran
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -152,11 +152,11 @@ export default function detail({ params, searchParams }) {
             <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold">invoice : </p>{invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download invoice</Button> : <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">-</p>}</div>
 
 
-            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">kuitansi : </p>{invoice?.status == invoice?.status == "menunggu pembayaran" || invoice?.status == "menunggu konfirmasi pembayaran" || invoice?.status == "selesai" ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button> : <p className="ml-5">-</p>}</div>
+            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">kuitansi : </p>{ invoice?.status == "selesai" ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button> : <p className="ml-5">-</p>}</div>
 
 
 
-            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">bukti pembayaran : </p> {invoice?.status == "menunggu pembayaran" || invoice?.status == "menunggu konfirmasi pembayaran" || invoice?.status == "selesai" ? <div className="flex"><input className="ml-5" type="file" name="file" onChange={(e) => setBuktiPembayaran(e.target.files[0])} /><Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button></div> : <p className="ml-5">-</p>}{invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button> : ""} </div>
+            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">bukti pembayaran : </p> {invoice?.status == "menunggu pembayaran" || invoice?.status == "menunggu konfirmasi pembayaran" || invoice?.status == "selesai" ? invoice.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button> :<div className="flex"><input className="ml-5" type="file" name="bukti_pembayaran" onChange={(e) => setBuktiPembayaran(e.target.files[0])} /><Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button></div> : <p className="ml-5">-</p>} </div>
 
           </div>
         </div>
