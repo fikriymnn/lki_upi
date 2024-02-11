@@ -101,7 +101,7 @@ export default function detailOrderAdmin({ params, searchParams }) {
             <div className="md:mx-20 mx-5">
                 <div className=" grid md:grid-cols-2 gap-5">
                     <div className="flex input-style-lki"><p className="text-lg ">Nama lengkap : {invoice.id_user?.nama_lengkap}</p> </div>
-                    <div className="flex input-style-lki"><p className="text-lg ">Nama lengkap : {invoice.id_user?.email}</p> </div>
+                    <div className="flex input-style-lki"><p className="text-lg ">Email : {invoice.id_user?.email}</p> </div>
                     <div className="flex input-style-lki"><p className="text-lg ">No whatsapp : {invoice.id_user?.no_whatsapp}</p> </div>
                     <div className="flex input-style-lki"><p className="text-lg ">No telepon : {invoice.id_user?.no_telp}</p> </div>
                     <div className="flex input-style-lki"><p className="text-lg ">Nama Institusi : {invoice.id_user?.nama_institusi}</p> </div>
@@ -114,12 +114,17 @@ export default function detailOrderAdmin({ params, searchParams }) {
 
                 </div>
                 <br />
-                <div className="flex "><p className="text-lg ">no invoice : </p> <p>{invoice.no_invoice}</p></div>
-                <div className="flex "><p className="text-lg ">status : </p> <p>{invoice.status}</p></div>
-                <div className="flex "><p className="text-lg ">estimasi selesai : </p> <p>{invoice.estimasi_date ? invoice.estimasi_date : ""}</p></div>
-                <div className="flex "><p className="text-lg ">invoice : </p> {invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Button className="ml-5 mb-3" color="blue" size={5} onClick={downloadInvoice}>download invoice</Button> : <p>-</p>}</div>
-                <div className="flex "><p className="text-lg ">kuitansi : </p>{invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Button className="ml-5 mb-3" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button> : <p>-</p>}</div>
-                <div className="flex "><p className="text-lg ">bukti pembayaran : </p>{invoice.bukti_pembayaran ? <Button className="ml-5 " color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button> : <p>-</p>}</div>
+                <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">Estimasi selesai : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.estimasi_date ? invoice.estimasi_date : ""}</p></div>
+                <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">No invoice : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.no_invoice ? invoice.no_invoice : ""}</p></div>
+
+                <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">Status : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.status ? invoice.status : ""}</p></div>
+                <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">Total harga : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.total_harga ? invoice.total_harga : ""}</p></div>
+
+                <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold">invoice : </p>{invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download invoice</Button> : <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">-</p>}</div>
+
+                <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">kuitansi : </p>{invoice?.status == invoice?.status == "menunggu pembayaran" || invoice?.status == "menunggu konfirmasi pembayaran" || invoice?.status == "selesai" ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button> : <p className="ml-5">-</p>}</div>
+
+                <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">bukti pembayaran : </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button> : ""} </div>
             </div>
             <br />
             <div className="md:mx-20 mx-5">

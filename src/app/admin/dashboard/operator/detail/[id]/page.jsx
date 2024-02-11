@@ -40,9 +40,9 @@ export default function detailOrderOperator({ params, searchParams }) {
             </div>
             <div className="mx-20">
             
-                <div className="flex"><p className="text-lg ">no invoice : </p> <p>{invoice.no_invoice}</p></div>
-                <div className="flex"><p className="text-lg ">status : </p> <p>{invoice.status}</p></div>
-                <div className="flex"><p className="text-lg ">estimasi selesai : </p> <p>{invoice.estimasi_date?invoice.estimasi_date:""}</p></div>
+            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">No Invoice : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.no_invoice ? invoice.no_invoice : ""}</p></div>
+            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">Status : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.status ? invoice.status : ""}</p></div>
+            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">Estimasi selesai : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.estimasi_date ? invoice.estimasi_date : ""}</p></div>
             </div>
             <br />
             <div className="mx-20">

@@ -110,7 +110,7 @@ export default function Order() {
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                       {i+1}
                     </Table.Cell>
-                    <Table.Cell>{v.date}</Table.Cell>
+                    <Table.Cell>{v.date_format}</Table.Cell>
                     <Table.Cell>{v.no_invoice}</Table.Cell>
                     <Table.Cell>{v?.id_user?.nama_lengkap}</Table.Cell>
                     <Table.Cell>{v.total_harga}</Table.Cell>

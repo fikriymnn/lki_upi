@@ -137,13 +137,16 @@ export default function detail({ params, searchParams }) {
 
         <div className="md:mx-20 mx-5">
           <div className="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2">
-            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2  "><p className="md:text-xl sm:text-xl text-lg font-semibold">status : </p><p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto">{invoice?.status}</p>
+            <div className="">
+              <div className="border-2 rounded-lg p-2 border-b-2 grid grid-cols-2  "><p className="md:text-xl sm:text-xl text-lg font-semibold">status : </p><p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto">{invoice?.status}</p>
+            </div>
               {invoice?.status == "form dikonfirmasi" ? <p >*kirim sample ke alamat yang tertera \n (Jl.lorem ipsum dolor)</p> : ""}
             </div>
 
-
+            <div >
             <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold">total harga  : </p><p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">Rp.{invoice?.total_harga}</p></div>
-
+            {invoice?.status == "form dikonfirmasi" ? <p ></p> : ""}
+            </div>
             <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">estimasi selesai : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.estimasi_date ? invoice.estimasi_date : ""}</p></div>
 
             <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold">invoice : </p>{invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download invoice</Button> : <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">-</p>}</div>

@@ -8,7 +8,7 @@ import { imagefrombuffer } from "imagefrombuffer";
 export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id, kode_pengujian
 }) {
     const [add, setAdd] = useState(false)
-    const [file, setFile] = useState(null)
+    const [file, setFile] = useState('')
     const [foto, setFoto] = useState('')
 
     const handleConfirm = async (e) => {
@@ -18,8 +18,8 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                 alert('no file uploaded')
                 setAdd(a => !a)
             } else {
-                const data = await axios.post(`http://localhost:5000/api/hasil_analisis/${uuid}`, { hasil_analisis: file }, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' } })
-                if (data.data.success) {
+                const data = await axios.post(`http://localhost:5000/api/hasil_analisis/${id}`, { hasil_analisis: file }, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' } })
+                if (data.data=='success') {
 
                     setAdd(a => !a)
                     alert("upload successfully!")
@@ -34,7 +34,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
     const handleDownloadHA = async () => {
         try {
             try {
-                const response = await axios.get(`http://localhost:5000/api/download_hasil_analisis/${uuid}`, {
+                const response = await axios.get(`http://localhost:5000/api/download_hasil_analisis/${id}`, {
                     responseType: 'arraybuffer', withCredentials: true // Important for receiving binary data
                 });
 
@@ -211,7 +211,8 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                                             {add ? <div className="flex"><button onClick={handleConfirm} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Kirim</button><button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">upload file hasil analisis</button>}
                                         </div>
 
-                                        {add ? <input type="file" name="file" onChange={(e) => {
+                                        {add ? <input type="file" name="hasil_analisis" onChange={(e) => {
+                                            e.preventDefault()
                                             setFile(e.target.files[0])
                                           
                                         }} /> : (hasil_analisis ? <Button color="failure" size={5} onClick={handleDownloadHA}>download</Button> : <p className="input-style-lki">-</p>)}

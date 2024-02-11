@@ -16,7 +16,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
         try {
 
 
-            const response = await axios.get(`http://localhost:5000/api/download_hasil_analisis/${uuid}`, {
+            const response = await axios.get(`http://localhost:5000/api/download_hasil_analisis/${id}`, {
 
                 responseType: 'arraybuffer', withCredentials: true // Important for receiving binary data
             });
