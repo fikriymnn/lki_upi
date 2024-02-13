@@ -143,9 +143,9 @@ export default function Report() {
           >
             <Button color="failure" size={5} className='ml-10 p-2  grad'>download report excel</Button>
           </DownloadTableExcel>
-          <div className='md:flex md:justify-center sm:justify-center md:justify-items-center  sm:flex grid grid-cols-1 mt-2 ml-2 md:w-full sm:w-full w-72'>
-            <div className='flex p-1 mt-2  md:items-center grad rounded-lg '>
-              <p className='md:text-lg sm:text-base text-sm font-semibold text-white p-2'>Tahun : </p> <select className='p-2 ml-3 w-20 h-10' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
+          <div className='flex mt-10 md:justify-center sm:justify-center md:justify-items-center  sm:flex flex-wrap  ml-2 md:w-full sm:w-full gap-1 justify-center'>
+            <div className='flex p-1 mt-2  justify-between grad rounded-lg '>
+              <p className='md:text-lg sm:text-base text-xs font-semibold text-white p-2'>Tahun : </p> <select className='p-2 ml-3 w-20 h-10' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
                 <option value="" className='input-style-lki' defaultChecked>all</option>
                 {yearOption.map((v, i) => {
                   return <option value={v} key={i}>{v}</option>
@@ -153,14 +153,14 @@ export default function Report() {
                 })}
               </select></div>
 
-            <div className='flex mt-2 p-1  md:items-center grad rounded-lg md:ml-3 sm:ml-3 '>
-              <p className='md:text-lg sm:text-base text-sm font-semibold text-white p-2'>Bulan : </p><select className='p-2 ml-3' name="bulan" id="bulan" onChange={(e) => setMonth(e.target.value)}>
+            <div className=' flex mt-2 p-1  justify-between grad rounded-lg md:ml-3 sm:ml-3 '>
+              <p className='md:text-lg sm:text-base text-xs font-semibold text-white p-2'>Bulan : </p><select className='p-2 ml-3' name="bulan" id="bulan" onChange={(e) => setMonth(e.target.value)}>
                 <option value="" className='input-style-lki' defaultChecked>all</option>
                 {monthOption.map((v, i) => {
                   return <option value={i} key={i} defaultValue>{v}</option>
                 })}
               </select></div>
-            <div className='flex p-1 mt-2  md:items-center grad rounded-lg md:ml-3 sm:ml-3'><p className='md:text-lg sm:text-base text-sm font-semibold text-white p-2'>Jenis Pengujian : </p> <select className='p-2 ml-3' name="jenis_pengujian" id="jp" onChange={(e) => setJenis_pengujian(e.target.value)}>
+            <div className='flex p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3'><p className='md:text-lg sm:text-base text-xs font-semibold text-white p-2'>Jenis Pengujian : </p> <select className='p-1 ' name="jenis_pengujian" id="jp" onChange={(e) => setJenis_pengujian(e.target.value)}>
               <option value="" className='input-style-lki' defaultChecked>all</option>
               {kode.map((v, i) => {
                 return <option value={v.jenis_pengujian} key={i} >{v.jenis_pengujian}</option>
@@ -198,7 +198,8 @@ export default function Report() {
                 </tr>
                 {loading ? <p className='text-center mt-10'>loading</p> : order.map((a, i) => {
                   return (
-                    <tr key={i}>
+
+                    <tr key={i} >
                       <td className='text-center text-xs'>{i + 1}</td>
                       <td className='text-center text-xs'>{a.date_format}</td>
                       <td className='text-center text-xs'>{a.no_invoice}</td>
