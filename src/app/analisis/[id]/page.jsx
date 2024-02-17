@@ -56,9 +56,9 @@ function Page({ params }) {
                             </p>
                         </div>
                         <div className='md:w-8/12 sm:w-8/12 flex items-center'>
-                            <p className='md:text-[22px] sm:text-[14px] text-[10px] font-medium leading-10 text-[#696969]'>
+                            <div className='md:text-[22px] sm:text-[14px] text-[10px] font-medium leading-10 text-[#696969]'>
                                 {parse(data?.deskripsi)}
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </div>

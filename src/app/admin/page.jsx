@@ -15,7 +15,7 @@ export default function admin(){
     const handleChange = (e) => {
         const { name, value } = e.target
         setUserForm(prev => ({ ...prev, [name]: value }))
-        console.log(userForm)
+     
     }
 
     useEffect(()=>{
@@ -27,7 +27,7 @@ export default function admin(){
         const get_user = async ()=>{
             try{
                 const data = await axios.post("http://localhost:5000/api/login",userForm,{withCredentials:true})
-                console.log(data)
+             
                 if(data.data.success==true){
                     const dataUser = await axios.get("http://localhost:5000/api/user",{withCredentials:true})
                     if (dataUser.data.data.role=="admin") {

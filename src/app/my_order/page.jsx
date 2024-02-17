@@ -14,11 +14,11 @@ export default function My_order() {
     async function getInvoice() {
       try {
         const dataUser = await axios.get("http://localhost:5000/api/user", { withCredentials: true })
-        console.log(dataUser)
+        
         if (dataUser.data.success) {
-          console.log(dataUser)
+      
           const data = await axios.get(`http://localhost:5000/api/invoice?id_user=${dataUser.data.data._id}&skip=${page * 15}&limit=15&success=false`, { withCredentials: true })
-          console.log(data)
+         
           if (data.data.success) {
             setInvoice(data.data.data)
             setLength(data.data.length_total)

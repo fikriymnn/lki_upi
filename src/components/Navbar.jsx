@@ -21,7 +21,7 @@ export default function NavbarCustom() {
     const user = async () => {
       try {
         const data = await axios("http://localhost:5000/api/user", { withCredentials: true })
-        console.log(data)
+       
         if (data.data.success == true) {
           setRole(data.data.data.role)
           if (data.data.data.role == "user") {

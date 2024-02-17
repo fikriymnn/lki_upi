@@ -214,7 +214,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                                         {add ? <input type="file" name="hasil_analisis" onChange={(e) => {
                                             e.preventDefault()
                                             setFile(e.target.files[0])
-                                            console.log(file)
+                                
                                           
                                         }} /> : (hasil_analisis ? <Button color="failure" size={5} onClick={handleDownloadHA}>download</Button> : <p className="input-style-lki">-</p>)}
                                     </div>

@@ -44,7 +44,7 @@ export default function login({ searchParams }) {
     const handleChange = (e) => {
         const { name, value } = e.target
         setUserForm(prev => ({ ...prev, [name]: value }))
-        console.log(userForm)
+        
     }
 
     const handleSubmit = (e) => {
@@ -52,7 +52,7 @@ export default function login({ searchParams }) {
         const get_user = async () => {
             
                 const data = await axios.post("http://localhost:5000/api/login", userForm, { withCredentials: true })
-                console.log(data)
+       
                 if (data.data.success == true) {
               
                         
@@ -74,10 +74,6 @@ export default function login({ searchParams }) {
 
         }
         get_user()
-    }
-
-    function onChange(value) {
-        console.log("Captcha value:", value);
     }
 
     return (

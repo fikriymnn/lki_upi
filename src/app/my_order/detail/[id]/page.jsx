@@ -39,7 +39,7 @@ export default function detail({ params, searchParams }) {
     try {
 
       const response = await axios.get(`http://localhost:5000/api/generate_invoice?no_invoice=${no_invoice}`, { withCredentials: true, responseType: 'blob' });
-      console.log(response.data)
+ 
 
       // Create a blob from the response data
       const blob = new Blob([response.data], { type: 'application/octet-stream' });
@@ -60,8 +60,6 @@ export default function detail({ params, searchParams }) {
     try {
 
       const response = await axios.get(`http://localhost:5000/api/generate_kuitansi?no_invoice=${no_invoice}`, { withCredentials: true, responseType: 'blob' });
-      console.log(response.data)
-
       // Create a blob from the response data
       const blob = new Blob([response.data], { type: 'application/octet-stream' });
 
