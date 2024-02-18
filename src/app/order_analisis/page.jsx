@@ -2,9 +2,10 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
-
+import { useRouter } from "next/navigation"
 
 export default function order_analisis() {
+    const router = useRouter()
     const uid = uuidv4()
     const [countForm, setCountForm] = useState(1);
     const [duplicate, setDuplicate] = useState([<CustomForm i={0} key={0} uuid={uid} />]);
@@ -157,6 +158,7 @@ export default function order_analisis() {
                         }
                         if (v == uuid.length) {
                             alert('success')
+                           router.replace('/success')
                         }
                     }
                 }

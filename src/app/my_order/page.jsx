@@ -74,7 +74,7 @@ export default function My_order() {
                             Detail
                           </a>
                         </Table.Cell>
-                        <Table.Cell className="text-center flex gap-2">
+                        <Table.Cell className="text-center gap-2">
                           <p className="text-center">{value.status}</p>
                           <br />
                           <a href={`/my_order/tracking/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white grad rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">

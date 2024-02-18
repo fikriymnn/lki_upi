@@ -2,7 +2,6 @@
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
-import barang from '../barang'
 import axios from 'axios';
 import parse from 'html-react-parser'
 
@@ -56,7 +55,7 @@ function Page({ params }) {
                             </p>
                         </div>
                         <div className='md:w-8/12 sm:w-8/12 flex items-center'>
-                            <div className='md:text-[22px] sm:text-[14px] text-[10px] font-medium leading-10 text-[#696969]'>
+                            <div className='md:text-[22px] sm:text-[14px] text-[10px] font-medium'>
                                 {parse(data?.deskripsi)}
                             </div>
                         </div>
@@ -64,7 +63,7 @@ function Page({ params }) {
                 </div>
 
                 <div className='bg-[#EDECECD4] w-11/12 rounded-lg shadow-2xl mt-20'>
-                    <p className='text-[24px] font-bold text-center my-3'>Contoh Hasil Penguji</p>
+                    <p className='text-[24px] font-bold text-center my-3'>Contoh Hasil Pengujian</p>
                     <div className=' bg-white px-3 py-5'>
                         <div className='mt-10 flex justify-center'>
                             <Image alt='' src={`data:${data?.contoh_hasil?.contentType};base64,${file2.toString('base64')}`} width={0} height={0} sizes='100vw' className='w-10/12 h-full' />

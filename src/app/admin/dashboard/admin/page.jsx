@@ -57,7 +57,7 @@ export default function Adminn() {
         if(data.data.success){
          setLayananCard(data.data.data)
          
-        }
+        }n
     }
     getData()
 },[])
