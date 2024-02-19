@@ -58,11 +58,10 @@ export default function History_order() {
               setLength(data.data.length_total)
             }
           }
-        }
-      } catch (err) {
+        } catch (err) {
         console.log(err.message)
       }
-    }
+      }
     getInvoice()
   }, [])
   return (
