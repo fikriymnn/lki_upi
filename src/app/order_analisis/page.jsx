@@ -117,6 +117,7 @@ export default function order_analisis() {
                 obj.deskripsi_sample = deskripsi_sample[i]
                 obj.riwayat_pengujian = riwayat_pengujian[i]
                 obj.sample_dikembalikan = sample_dikembalikan[i]
+                
                 obj.uuid = uuid[i]
               
                 arr[i] = obj
