@@ -111,72 +111,72 @@ export default function Order_Operator() {
       <div className='flex justify-center'>
         <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
       </div>
-      <div className='flex justify-center'>
-        <div className='flex items-center'>Tahun : <select className='ml-3' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
-          <option value="" defaultChecked>all</option>
+      <div className='flex justify-center mb-10'>
+        <div className='flex p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 '><p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">Tahun :</p> <select className='ml-3' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
+          <option value="" defaultChecked className='input-style-lki'>all</option>
           {yearOption.map((v, i) => {
             return <option value={v} key={i}>{v}</option>
 
           })}
         </select></div>
-        <div className='flex items-center ml-3'>Bulan : <select className='ml-3' name="bulan" id="bulan" onChange={(e) => setMonth(e.target.value)}>
-          <option value="" defaultChecked>all</option>
+        <div className='flex p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3  ml-3'><p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">Bulan :</p> <select className='ml-3' name="bulan" id="bulan" onChange={(e) => setMonth(e.target.value)}>
+          <option value="" defaultChecked className='input-style-lki'>all</option>
           {monthOption.map((v, i) => {
             return <option value={i} key={i} defaultValue>{v}</option>
           })}
         </select></div>
       </div>
       <div className="m-auto md:w-full sm:w-full w-11/12">
-          <div className=" overflow-scroll w-full">
-        <Table>
-          <Table.Head>
-            <Table.HeadCell>No</Table.HeadCell>
-            <Table.HeadCell>Tanggal</Table.HeadCell>
-            <Table.HeadCell>Invoice</Table.HeadCell>
-            <Table.HeadCell>Nama</Table.HeadCell>
-            <Table.HeadCell>
-              status
-            </Table.HeadCell>
-            <Table.HeadCell>
-              detail
-            </Table.HeadCell>
-            <Table.HeadCell>
-              konfirmasi
-            </Table.HeadCell>
-          </Table.Head>
-          <Table.Body className="divide-y">
+        <div className=" overflow-scroll w-full">
+          <Table>
+            <Table.Head>
+              <Table.HeadCell>No</Table.HeadCell>
+              <Table.HeadCell>Tanggal</Table.HeadCell>
+              <Table.HeadCell>Invoice</Table.HeadCell>
+              <Table.HeadCell>Nama</Table.HeadCell>
+              <Table.HeadCell>
+                status
+              </Table.HeadCell>
+              <Table.HeadCell>
+                detail
+              </Table.HeadCell>
+              <Table.HeadCell>
+                konfirmasi
+              </Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="divide-y">
 
-            {
-              invoice.map((v, i) => {
-                return (
-                  <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                      {i + 1}
-                    </Table.Cell>
-                    <Table.Cell>{v.date_format}</Table.Cell>
+              {
+                invoice.map((v, i) => {
+                  return (
+                    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {i + 1}
+                      </Table.Cell>
+                      <Table.Cell>{v.date_format}</Table.Cell>
 
-                    <Table.Cell>{v.no_invoice}</Table.Cell>
-                    <Table.Cell>{v?.id_user?.nama_lengkap}</Table.Cell>
-                    <Table.Cell>
-                      <p>{v.status}</p>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <a href={`/admin/dashboard/operator/detail/${v._id}?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
-                        keterangan
-                      </a>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <a href={`/admin/dashboard/operator/${v._id}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
-                        keterangan
-                      </a>
-                    </Table.Cell>
-                  </Table.Row>
-                )
-              })
-            }
+                      <Table.Cell>{v.no_invoice}</Table.Cell>
+                      <Table.Cell>{v?.id_user?.nama_lengkap}</Table.Cell>
+                      <Table.Cell>
+                        <p>{v.status}</p>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <a href={`/admin/dashboard/operator/detail/${v._id}?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+                          keterangan
+                        </a>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <a href={`/admin/dashboard/operator/${v._id}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+                          keterangan
+                        </a>
+                      </Table.Cell>
+                    </Table.Row>
+                  )
+                })
+              }
 
-          </Table.Body>
-        </Table>
+            </Table.Body>
+          </Table>
         </div>
       </div>
       <br />

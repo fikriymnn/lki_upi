@@ -26,11 +26,11 @@ export default function login({ searchParams }) {
 
                 if (data.data.success) {
                     if (prevRoute) {
-
+                        console.log(data.data.success)
                         router.replace(prevRoute)
                     } else {
 
-                        router.replace("/")
+                        // router.replace("/")
                     }
                 }
             } catch (err) {
@@ -49,8 +49,7 @@ export default function login({ searchParams }) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        const get_user = async () => {
-            
+        const get_user = async () => {     
                 const data = await axios.post("http://localhost:5000/api/login", userForm, { withCredentials: true })
        
                 if (data.data.success == true) {
@@ -70,7 +69,7 @@ export default function login({ searchParams }) {
                 }else{
                     alert(data.data.message)
                 }
-            
+
 
         }
         get_user()
