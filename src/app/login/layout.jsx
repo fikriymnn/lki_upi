@@ -13,7 +13,7 @@ export default function layout({ children }) {
                     withCredentials: true
                 })
                 if (data.data.success == "user") {
-                    router.replace("/")
+                    // router.replace("/")
                 }
             } catch (err) {
 
