@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from 'flowbite-react';
 import axios from "axios";
 
-export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, hasil_analisis, id, deskripsi, foto_sample, kode_pengujian, status, riwayat_pengujian,sample_dikembalikan
+export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, hasil_analisis, id, deskripsi, foto_sample, kode_pengujian, status, riwayat_pengujian, sample_dikembalikan
 
 }) {
 
@@ -67,12 +67,12 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
             async function getData() {
                 const response = await axios.get(`http://localhost:5000/api/download_foto_sample/${uuid}`, {
 
-         withCredentials: true  // Important for receiving binary data
+                    withCredentials: true  // Important for receiving binary data
                 });
                 console.log(response.data)
                 if (response) {
-                    const buffer = Buffer.from(response.data?.data);
-                    const base64Image = buffer.toString('base64');
+                    const buffer = response.data?.data;
+                    const base64Image = buffer?.toString('base64');
                     const contentType = foto_sample;
                     const src = `data:${contentType};base64,${base64Image}`;
                     setFoto(src);
@@ -118,7 +118,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
                         </div>
                     </div>
                     <div className="flex flex-col gap-5 mt-5">
-                        
+
                         <div>
                             <h1 className="text-lg font-semibold text-grey-600">jenis pengujian sample : </h1>
                             <h1 className="input-style-lki">{jenis_pengujian}</h1>
@@ -153,7 +153,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
                             <h1 className="text-lg font-semibold text-grey-600">riwayat pengujian : </h1>
                             <h1 className="input-style-lki-box ">{riwayat_pengujian}</h1>
                         </div>
-                        
+
 
 
                         <div className="mt-2">
