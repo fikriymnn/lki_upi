@@ -13,7 +13,7 @@ export default function tracking({ params }) {
                 const data = await axios.get(`http://localhost:5000/api/invoice/${id}`, { withCredentials: true })
                 if (data.data.success) {
                     setInvoice(data.data.data)
-                    console.log(invoice)
+           
                 }
 
             } catch (err) {

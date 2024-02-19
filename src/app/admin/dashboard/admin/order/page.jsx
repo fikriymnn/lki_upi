@@ -62,7 +62,7 @@ export default function Order() {
       }
     }
     getInvoice()
-  }, [page])
+  }, [page,month,year])
   return (
     <>
       <p className='text-center text-4xl font-bold text-gray-800 mt-7'>ORDER</p>

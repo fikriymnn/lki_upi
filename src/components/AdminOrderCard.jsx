@@ -81,25 +81,31 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
         }
     }
 
-    useEffect(() => {
-        if (foto_sample) {
-            async function getData() {
-                const data = await axios.get(`http://localhost:5000/api/download_foto_sample/${uuid}`)
-                const buffer = Buffer.from(data?.data?.data);
-                const base64Image = buffer.toString('base64');
-                const contentType = foto_sample
-                const src = `data:${contentType};base64,${base64Image}`;
-                setFoto(src);
-               
-            }
-            getData()
-        }
-        if(hasil_analisis){
-            setFile(hasil_analisis)
-        }
-    }, [foto_sample])
+ 
+    const handleDownloadFS = async () => {
+        try {
 
 
+            const response = await axios.get(`http://localhost:5000/api/download_foto_sample/${uuid}`, {
+
+                responseType: 'arraybuffer', withCredentials: true  // Important for receiving binary data
+            });
+
+            const blob = new Blob([response.data], { type: 'application/octet-stream' });
+
+            // Create a link element and click it to trigger the download
+
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = foto_sample;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error('Error downloading file:', error);
+        }
+
+    }
 
     // const download_foto = async ()=>{
 
@@ -190,7 +196,8 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                                     <h1 className="text-lg font-semibold text-grey-600">foto sample : </h1>
                                     <div className="input-style-lki-flexible">
 
-                                        {foto_sample ? <img src={foto} alt="foto sample" className="w-96 h-48 " /> : <p>-</p>}
+                                      
+                                    {foto_sample ? <Button className="grad" color="failure" size={5} onClick={handleDownloadFS}>download</Button> : <p>-</p>}
                                     </div>
 
                                 </div>
@@ -214,7 +221,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                                         {add ? <input type="file" name="hasil_analisis" onChange={(e) => {
                                             e.preventDefault()
                                             setFile(e.target.files[0])
-                                            console.log(file)
+                                
                                           
                                         }} /> : (hasil_analisis ? <Button color="failure" size={5} onClick={handleDownloadHA}>download</Button> : <p className="input-style-lki">-</p>)}
                                     </div>

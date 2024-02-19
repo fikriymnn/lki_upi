@@ -2,9 +2,10 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
-
+import { useRouter } from "next/navigation"
 
 export default function order_analisis() {
+    const router = useRouter()
     const uid = uuidv4()
     const [countForm, setCountForm] = useState(1);
     const [duplicate, setDuplicate] = useState([<CustomForm i={0} key={0} uuid={uid} />]);
@@ -75,8 +76,6 @@ export default function order_analisis() {
 
     const increment = (e) => {
         setCountForm(a => a + 1)
-        console.log(nama_sample)
-        console.log(jenis_pengujian)
         e.preventDefault()
         setDuplicate([...duplicate, <CustomForm i={countForm} key={duplicate.length} />])
         let add = [...jenis_pengujian]
@@ -91,12 +90,12 @@ export default function order_analisis() {
         let add4 = [...jurnal_pendukung]
         add4.push("")
         setJurnal_pendukung([...add4])
-        console.log(jurnal_pendukung)
+       
         let add5 = uuid
         const uid = uuidv4()
         add5.push(uid)
         setUuid([...add5])
-        console.log(uuid)
+        
 
 
     }
@@ -118,18 +117,19 @@ export default function order_analisis() {
                 obj.deskripsi_sample = deskripsi_sample[i]
                 obj.riwayat_pengujian = riwayat_pengujian[i]
                 obj.sample_dikembalikan = sample_dikembalikan[i]
+                
                 obj.uuid = uuid[i]
-                console.log(obj)
+              
                 arr[i] = obj
             }
-            console.log(arr)
+          
             if (arr.length == duplicate.length) {
-                console.log("post data")
+             
                 const data = await axios.post("http://localhost:5000/api/order", arr, {
                     withCredentials: true
 
                 })
-                console.log(data)
+        
                 if (data.data.success) {
                     var v;
                     for (v = 0; v <= uuid.length; v++) {
@@ -159,6 +159,7 @@ export default function order_analisis() {
                         }
                         if (v == uuid.length) {
                             alert('success')
+                           router.replace('/success')
                         }
                     }
                 }
@@ -185,8 +186,7 @@ export default function order_analisis() {
                                         <div key={b}>
                                             <input className='input-style-lki-checklist ' type="checkbox" id={`jenis_pengujian${b}${i}`} name={`jenis_pengujian`} value={a.jenis_pengujian} onChange={(e) => {
                                                 const { checked, value } = e.target
-                                                console.log(kode_pengujian)
-
+                                               
                                                 if (checked) {
 
                                                     let cccc = [...jenis_pengujian]
@@ -222,7 +222,7 @@ export default function order_analisis() {
                                                         return false
                                                     }
                                                 }
-                                                console.log(jenis_pengujian)
+                                           
                                             }} />
                                             <label htmlFor={`jenis_pengujian${b}${i}`} className='ml-3'>{a.jenis_pengujian}</label>
                                         </div>
@@ -237,8 +237,7 @@ export default function order_analisis() {
                             <h2 className="text-lg font-semibold" >Nama sample</h2>
                             <input placeholder='masukkan nama sample' className='input-style-lki' name="nama_sample" required type="text" onChange={(e) => {
                                 nama_sample[i] = e.target.value
-                                console.log(nama_sample)
-
+                          
                             }} />
                         </div>
                         <div>
@@ -319,7 +318,7 @@ export default function order_analisis() {
                             <select required name="sample_dikembalikan" id="sample_dikembalikan" className='input-style-lki' onChange={(e)=>{
                                 e.preventDefault()
                                 sample_dikembalikan[i] = e.target.value
-                                console.log(sample_dikembalikan)
+                            
                             }}>
                                 <option value="" selected>Pilih</option>
                                 <option value="ya">Ya</option>

@@ -39,7 +39,7 @@ export default function detail({ params, searchParams }) {
     try {
 
       const response = await axios.get(`http://localhost:5000/api/generate_invoice?no_invoice=${no_invoice}`, { withCredentials: true, responseType: 'blob' });
-      console.log(response.data)
+ 
 
       // Create a blob from the response data
       const blob = new Blob([response.data], { type: 'application/octet-stream' });
@@ -60,8 +60,6 @@ export default function detail({ params, searchParams }) {
     try {
 
       const response = await axios.get(`http://localhost:5000/api/generate_kuitansi?no_invoice=${no_invoice}`, { withCredentials: true, responseType: 'blob' });
-      console.log(response.data)
-
       // Create a blob from the response data
       const blob = new Blob([response.data], { type: 'application/octet-stream' });
 
@@ -140,7 +138,9 @@ export default function detail({ params, searchParams }) {
             <div className="">
               <div className="border-2 rounded-lg p-2 border-b-2 grid grid-cols-2  "><p className="md:text-xl sm:text-xl text-lg font-semibold">status : </p><p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto">{invoice?.status}</p>
             </div>
-              {invoice?.status == "form dikonfirmasi" ? <p >*kirim sample ke alamat yang tertera \n (Jl.lorem ipsum dolor)</p> : ""}
+              {invoice?.status == "form dikonfirmasi" ? <p >*kirim sample ke (Laboratorium Kimia Instrumen Universitas Pendidikan Indonesia Gedung
+            JICA &#40; FPMIPA-A &#41; Lt. 5 Jl. Dr. Setiabudhi No. 229 Bandung
+            40154)</p> : ""}
             </div>
 
             <div >

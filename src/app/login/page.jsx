@@ -44,40 +44,35 @@ export default function login({ searchParams }) {
     const handleChange = (e) => {
         const { name, value } = e.target
         setUserForm(prev => ({ ...prev, [name]: value }))
-        console.log(userForm)
+        
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        const get_user = async () => {
-
-            const data = await axios.post("http://localhost:5000/api/login", userForm, { withCredentials: true })
-            console.log(data)
-            if (data.data.success == true) {
-
-
-                alert("login sukses")
-
-                if (prevRoute) {
-                    window.location.replace(prevRoute)
-
-                } else {
-                    window.location.replace("/")
-
+        const get_user = async () => {     
+                const data = await axios.post("http://localhost:5000/api/login", userForm, { withCredentials: true })
+       
+                if (data.data.success == true) {
+              
+                        
+                        alert("login sukses")
+                  
+                        if (prevRoute) {
+                            window.location.replace(prevRoute)
+    
+                        } else {
+                            window.location.replace("/")
+    
+                        }
+                    
+                
+                }else{
+                    alert(data.data.message)
                 }
-
-
-            } else {
-                alert(data.data.message)
-            }
 
 
         }
         get_user()
-    }
-
-    function onChange(value) {
-        console.log("Captcha value:", value);
     }
 
     return (

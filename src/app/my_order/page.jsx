@@ -14,11 +14,11 @@ export default function My_order() {
     async function getInvoice() {
       try {
         const dataUser = await axios.get("http://localhost:5000/api/user", { withCredentials: true })
-        console.log(dataUser)
+        
         if (dataUser.data.success) {
-          console.log(dataUser)
+      
           const data = await axios.get(`http://localhost:5000/api/invoice?id_user=${dataUser.data.data._id}&skip=${page * 15}&limit=15&success=false`, { withCredentials: true })
-          console.log(data)
+         
           if (data.data.success) {
             setInvoice(data.data.data)
             setLength(data.data.length_total)
@@ -74,7 +74,7 @@ export default function My_order() {
                             Detail
                           </a>
                         </Table.Cell>
-                        <Table.Cell className="text-center flex gap-2">
+                        <Table.Cell className="text-center gap-2">
                           <p className="text-center">{value.status}</p>
                           <br />
                           <a href={`/my_order/tracking/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white grad rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">

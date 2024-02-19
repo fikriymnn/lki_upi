@@ -6,7 +6,6 @@ import Image from 'next/image'
 import CardPenguji from '@/components/CardPenguji';
 import { useEffect, useState } from 'react';
 import axios from 'axios'
-import barang from './barang'
 
 export default function analisis() {
     const [data, setData] = useState([])
