@@ -8,7 +8,7 @@ import Router from "next/router";
 import Image from "next/image";
 
 
-export default function login({ searchParams }) {
+export default function Login({ searchParams }) {
     const router = useRouter()
 
     const { prevRoute } = searchParams
