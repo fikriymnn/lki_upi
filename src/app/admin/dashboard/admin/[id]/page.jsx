@@ -6,7 +6,7 @@ import Image from "next/image"
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
 
-export default function detailCardAdmin({params}){
+export default function DetailCardAdmin({params}){
    const {id} = params
    const [cardData,setCardData] = useState({})
    const [sub_title,setSub_title] = useState("")

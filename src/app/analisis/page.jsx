@@ -7,7 +7,7 @@ import CardPenguji from '@/components/CardPenguji';
 import { useEffect, useState } from 'react';
 import axios from 'axios'
 
-export default function analisis() {
+export default function Analisis() {
     const [data, setData] = useState([])
 
 

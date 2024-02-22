@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from "next/navigation"
 
-export default function order_analisis() {
+export default function Order_analisis() {
     const router = useRouter()
     const uid = uuidv4()
     const [countForm, setCountForm] = useState(1);
@@ -159,7 +159,10 @@ export default function order_analisis() {
                         }
                         if (v == uuid.length) {
                             alert('success')
-                           router.replace('/success')
+                            setTimeout(()=>{
+                                router.replace('/success')
+                            },1500)
+                           
                         }
                     }
                 }

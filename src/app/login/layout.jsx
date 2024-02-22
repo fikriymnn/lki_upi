@@ -4,7 +4,7 @@ import axios from "axios"
 import { useRouter } from "next/navigation"
 
 
-export default function layout({ children }) {
+export default function Layout({ children }) {
     const router = useRouter()
     useEffect(() => {
         async function user() {
@@ -13,7 +13,7 @@ export default function layout({ children }) {
                     withCredentials: true
                 })
                 if (data.data.success == "user") {
-                    // router.replace("/")
+                    router.replace("/")
                 }
             } catch (err) {
 

@@ -4,7 +4,7 @@ import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
 import { useState,useEffect } from "react";
 import axios from "axios";
 
-export default function admin(){
+export default function Admin(){
     // const [role,setRole] = useState('')
     const [userForm, setUserForm] = useState({
         email: "",

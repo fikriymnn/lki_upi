@@ -5,7 +5,7 @@ import axios from "axios"
 import { Button } from 'flowbite-react';
 
 
-export default function detailOrderAdmin({ params, searchParams }) {
+export default function DetailOrderAdmin({ params, searchParams }) {
     const { id } = params
     const { no_invoice } = searchParams
     const [order, setOrder] = useState([])

@@ -1,4 +1,4 @@
-export default function success(){
+export default function Success(){
     return(
         <>
           <div className="md:h-96 h-screen  m-auto flex align-center items-center justify-center">

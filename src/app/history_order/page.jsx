@@ -105,7 +105,7 @@ export default function History_order() {
                 {
                   invoice.map((value, i) => {
                     return (
-                      <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                      <Table.Row key={i} className="bg-white dark:border-gray-700 dark:bg-gray-800">
 
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                           {i + 1}

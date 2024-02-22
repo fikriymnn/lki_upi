@@ -6,7 +6,7 @@ import axios from 'axios';
 import Image from "next/image";
 import { Button, Checkbox, Label, input } from 'flowbite-react';
 
-export default function register({ searchParams }) {
+export default function Register({ searchParams }) {
     const { prevRoute } = searchParams
     const router = useRouter()
 
