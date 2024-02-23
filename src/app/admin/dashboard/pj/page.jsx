@@ -48,7 +48,7 @@ export default function Order_Pj() {
     }
     async function getInvoice() {
       try {
-        const data = await axios.get(`http://localhost:5000/api/invoice?status=menunggu verifikasi&skip=${page * 15}&limit=15${year ? `&year=${year}` : ''}${month ? `&month=${month}` : ''}`, { withCredentials: true })
+        const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice?status=menunggu verifikasi&skip=${page * 15}&limit=15${year ? `&year=${year}` : ''}${month ? `&month=${month}` : ''}`, { withCredentials: true })
         if (data.data.success) {
           setInvoice(data.data.data)
           setLength(data.data.length_total)

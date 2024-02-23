@@ -24,7 +24,7 @@ export default function Detail({ params, searchParams }) {
   const handleBukti = async (e) => {
     e.preventDefault()
     try {
-      const data = await axios.post(`http://localhost:5000/api/bukti_pembayaran/${id}`, {bukti_pembayaran: buktiPembayaran}, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' }  })
+      const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/bukti_pembayaran/${id}`, {bukti_pembayaran: buktiPembayaran}, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' }  })
       if (data.data=='success') {
         alert('sukses dikirim')
         window.location.reload()
@@ -38,7 +38,7 @@ export default function Detail({ params, searchParams }) {
   const downloadInvoice = async (e) => {
     try {
 
-      const response = await axios.get(`http://localhost:5000/api/generate_invoice?no_invoice=${no_invoice}`, { withCredentials: true, responseType: 'blob' });
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/generate_invoice?no_invoice=${no_invoice}`, { withCredentials: true, responseType: 'blob' });
  
 
       // Create a blob from the response data
@@ -59,7 +59,7 @@ export default function Detail({ params, searchParams }) {
   const downloadKuitansi = async (e) => {
     try {
 
-      const response = await axios.get(`http://localhost:5000/api/generate_kuitansi?no_invoice=${no_invoice}`, { withCredentials: true, responseType: 'blob' });
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/generate_kuitansi?no_invoice=${no_invoice}`, { withCredentials: true, responseType: 'blob' });
       // Create a blob from the response data
       const blob = new Blob([response.data], { type: 'application/octet-stream' });
 
@@ -80,7 +80,7 @@ export default function Detail({ params, searchParams }) {
 
   const downloadBuktiTransfer = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/download_bukti_pembayaran/${id}`, { withCredentials: true, responseType: 'arraybuffer', withCredentials: true });
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/download_bukti_pembayaran/${id}`, { withCredentials: true, responseType: 'arraybuffer', withCredentials: true });
       // Create a blob from the response data
       const blob = new Blob([response.data], { type: 'application/octet-stream' });
 
@@ -101,8 +101,8 @@ export default function Detail({ params, searchParams }) {
       try {
 
 
-        const data = await axios.get(`http://localhost:5000/api/invoice/${id}`, { withCredentials: true })
-        const dataOrder = await axios.get(`http://localhost:5000/api/order?no_invoice=${no_invoice}&skip=0&limit=20`, { withCredentials: true })
+        const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`, { withCredentials: true })
+        const dataOrder = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?no_invoice=${no_invoice}&skip=0&limit=20`, { withCredentials: true })
 
 
         console.log(data)

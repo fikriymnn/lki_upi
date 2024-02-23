@@ -14,7 +14,7 @@ export default function Analisis() {
     useEffect(()=>{
        async function getData(){
         try{
-            const data = await axios.get(`http://localhost:5000/api/content?resize=true`, { withCredentials: true })
+            const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/content?resize=true`, { withCredentials: true })
             if(data.data.success){
                 setData(data.data.data)
             }

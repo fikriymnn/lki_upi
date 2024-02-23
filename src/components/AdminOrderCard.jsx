@@ -18,7 +18,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                 alert('no file uploaded')
                 setAdd(a => !a)
             } else {
-                const data = await axios.post(`http://localhost:5000/api/hasil_analisis/${id}`, { hasil_analisis: file }, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' } })
+                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}`, { hasil_analisis: file }, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' } })
                 if (data.data=='success') {
 
                     setAdd(a => !a)
@@ -34,7 +34,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
     const handleDownloadHA = async () => {
         try {
             try {
-                const response = await axios.get(`http://localhost:5000/api/download_hasil_analisis/${id}`, {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/download_hasil_analisis/${id}`, {
                     responseType: 'arraybuffer', withCredentials: true // Important for receiving binary data
                 });
 
@@ -59,7 +59,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
     const handleDownloadJP = async () => {
         try {
             try {
-                const response = await axios.get(`http://localhost:5000/api/download_jurnal_pendukung/${uuid}`, {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/download_jurnal_pendukung/${uuid}`, {
                     responseType: 'arraybuffer', withCredentials: true  // Important for receiving binary data
                 });
 
@@ -86,7 +86,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
         try {
 
 
-            const response = await axios.get(`http://localhost:5000/api/download_foto_sample/${uuid}`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/download_foto_sample/${uuid}`, {
 
                 responseType: 'arraybuffer', withCredentials: true  // Important for receiving binary data
             });

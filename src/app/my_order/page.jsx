@@ -13,11 +13,11 @@ export default function My_order() {
   useEffect(() => {
     async function getInvoice() {
       try {
-        const dataUser = await axios.get("http://localhost:5000/api/user", { withCredentials: true })
+        const dataUser = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`, { withCredentials: true })
         
         if (dataUser.data.success) {
       
-          const data = await axios.get(`http://localhost:5000/api/invoice?id_user=${dataUser.data.data._id}&skip=${page * 15}&limit=15&success=false`, { withCredentials: true })
+          const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice?id_user=${dataUser.data.data._id}&skip=${page * 15}&limit=15&success=false`, { withCredentials: true })
          
           if (data.data.success) {
             setInvoice(data.data.data)

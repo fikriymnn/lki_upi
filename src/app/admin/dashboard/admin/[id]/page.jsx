@@ -21,7 +21,7 @@ export default function DetailCardAdmin({params}){
 
    useEffect(()=>{
        async function getData(){
-           const data = await axios.get(`http://localhost:5000/api/content/${id}`,{
+           const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`,{
             withCredentials: true
             })
            if(data.data.success){
@@ -48,14 +48,14 @@ export default function DetailCardAdmin({params}){
     e.preventDefault()
      async function getData(){
       try{
-         await axios.put(`http://localhost:5000/api/content/${id}`,{
+         await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`,{
            title:title,
            sub_title:sub_title,deskripsi:deskripsi
          },{
          withCredentials: true,
          })
          if(newfoto){
-          await axios.put(`http://localhost:5000/api/content_foto/${id}`,{
+          await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/content_foto/${id}`,{
             foto:newfoto
             },{
             withCredentials: true,
@@ -63,7 +63,7 @@ export default function DetailCardAdmin({params}){
             })
          }
          if(newcontoh_hasil){
-          await axios.put(`http://localhost:5000/api/content_contoh_hasil/${id}`,{
+          await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/content_contoh_hasil/${id}`,{
             contoh_hasil:newcontoh_hasil
           },{
           withCredentials: true,

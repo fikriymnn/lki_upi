@@ -32,7 +32,7 @@ export default function ButtonOrder() {
 
     async function pesanLayanan() {
         try {
-            const data = await axios("http://localhost:5000/api/user", { withCredentials: true })
+            const data = await axios(`${process.env.NEXT_PUBLIC_URL}/api/user`, { withCredentials: true })
             console.log(data)
             if (data.data.success == true) {
                 if (data.data.data.role == "user") {

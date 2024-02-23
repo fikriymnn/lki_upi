@@ -18,7 +18,7 @@ function Page({ params }) {
    useEffect(()=>{
     async function getData(){
         try{
-            const data = await axios.get(`http://localhost:5000/api/content/${id}`, { withCredentials: true })
+            const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`, { withCredentials: true })
             if(data.data.success){
                 setData(data.data.data)
                 setFile1(Buffer.from(data.data.data.foto.data))

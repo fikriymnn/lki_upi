@@ -10,7 +10,7 @@ export default function Tracking({ params }) {
     useEffect(() => {
         async function getInvoice() {
             try {
-                const data = await axios.get(`http://localhost:5000/api/invoice/${id}`, { withCredentials: true })
+                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`, { withCredentials: true })
                 if (data.data.success) {
                     setInvoice(data.data.data)
            

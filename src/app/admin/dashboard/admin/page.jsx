@@ -27,7 +27,7 @@ export default function Adminn() {
     e.preventDefault()
      async function getData(){
       try{
-         const data = await axios.post(`http://localhost:5000/api/content`,{
+         const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/content`,{
           title:tambah.title,
           sub_title:sub_title,
           deskripsi:deskripsi,
@@ -51,7 +51,7 @@ export default function Adminn() {
 
   useEffect(()=>{
     async function getData(){
-        const data = await axios.get(`http://localhost:5000/api/content?resize=true`,{
+        const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/content?resize=true`,{
          withCredentials: true
          })
         if(data.data.success){

@@ -26,7 +26,7 @@ export default function Profile() {
         e.preventDefault()
         const users = async () => {
             try {
-                const data = await axios.put(`http://localhost:5000/api/user/${user._id}`, user, { withCredentials: true })
+                const data = await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/user/${user._id}`, user, { withCredentials: true })
                 if (data.data.success) {
                     setEdit(e => !e)
                     alert('update success')
@@ -41,7 +41,7 @@ export default function Profile() {
     useEffect(() => {
         const users = async () => {
             try {
-                const data = await axios("http://localhost:5000/api/user", { withCredentials: true })
+                const data = await axios(`${process.env.NEXT_PUBLIC_URL}/api/user`, { withCredentials: true })
                 console.log(data)
                 if (data.data.success == true) {
                     setUser(data.data.data)

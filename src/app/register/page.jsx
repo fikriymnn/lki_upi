@@ -31,7 +31,7 @@ export default function Register({ searchParams }) {
     useEffect(() => {
         async function user() {
             try {
-                const data = await axios.get("http://localhost:5000/api/user", {
+                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`, {
                     withCredentials: true
                 })
 
@@ -54,7 +54,7 @@ export default function Register({ searchParams }) {
         e.preventDefault()
         async function submit() {
             try {
-                const data = await axios.post("http://localhost:5000/api/register", userForm, {
+                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/register`, userForm, {
                     withCredentials: true
                 })
                 if(data.data.status==400){

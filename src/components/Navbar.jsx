@@ -20,7 +20,7 @@ export default function NavbarCustom() {
   useEffect(() => {
     const user = async () => {
       try {
-        const data = await axios("http://localhost:5000/api/user", { withCredentials: true })
+        const data = await axios(`${process.env.NEXT_PUBLIC_URL}/api/user`, { withCredentials: true })
        
         if (data.data.success == true) {
           setRole(data.data.data.role)
@@ -41,7 +41,7 @@ export default function NavbarCustom() {
 
   const handleLogout = async () => {
     try {
-      await axios.delete("http://localhost:5000/api/logout", { withCredentials: true })
+      await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/logout`, { withCredentials: true })
       window.location.replace('/')
     } catch (err) {
       alert(err.message)

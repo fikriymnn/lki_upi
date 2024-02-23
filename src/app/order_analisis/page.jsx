@@ -125,7 +125,7 @@ export default function Order_analisis() {
           
             if (arr.length == duplicate.length) {
              
-                const data = await axios.post("http://localhost:5000/api/order", arr, {
+                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/order`, arr, {
                     withCredentials: true
 
                 })
@@ -136,7 +136,7 @@ export default function Order_analisis() {
                         for (let a = 0; a < jurnal_pendukung.length; a++) {
                             if (uuid[v] == jurnal_pendukung[a].uid) {
                                 async function cek() {
-                                    await axios.post(`http://localhost:5000/api/jurnal_pendukung/${uuid[v]}`, { jurnal_pendukung: jurnal_pendukung[a].file }, {
+                                    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${uuid[v]}`, { jurnal_pendukung: jurnal_pendukung[a].file }, {
                                         withCredentials: true,
                                         headers: { "Content-Type": 'multipart/form-data' }
                                     })
@@ -149,7 +149,7 @@ export default function Order_analisis() {
                             if (uuid[v] == foto_sample[b].uid) {
                                 async function cek2() {
 
-                                    await axios.post(`http://localhost:5000/api/foto_sample/${uuid[v]}`, { foto_sample: foto_sample[b].file }, {
+                                    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${uuid[v]}`, { foto_sample: foto_sample[b].file }, {
                                         withCredentials: true,
                                         headers: { "Content-Type": 'multipart/form-data' }
                                     })

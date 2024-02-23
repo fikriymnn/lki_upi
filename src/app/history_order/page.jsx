@@ -50,9 +50,9 @@ export default function History_order() {
 
        async function getInvoice(){
         try{
-          const dataUser = await axios.get("http://localhost:5000/api/user",{withCredentials:true})   
+          const dataUser = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`,{withCredentials:true})   
           if(dataUser.data.success){    
-            const data = await axios.get(`http://localhost:5000/api/invoice?success=true&id_user=${dataUser.data.data._id}&skip=${page*15}&limit=15${year?`&year=${year}`:''}${month?`&month=${month}`:''}`,{withCredentials:true})
+            const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice?success=true&id_user=${dataUser.data.data._id}&skip=${page*15}&limit=15${year?`&year=${year}`:''}${month?`&month=${month}`:''}`,{withCredentials:true})
             if(data.data.success){
               setInvoice(data.data.data)
               setLength(data.data.length_total)

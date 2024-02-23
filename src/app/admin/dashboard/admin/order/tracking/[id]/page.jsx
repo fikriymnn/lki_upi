@@ -70,7 +70,7 @@ export default function Tracking_admin({ params }) {
                 }
             }
             if(selection()==true){
-                const data = await axios.put(`http://localhost:5000/api/invoice/${id}`,obj,{withCredentials:true})
+                const data = await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`,obj,{withCredentials:true})
                 alert("update successfully")
                 if(data.data.success){
                     window.location.reload()
@@ -86,7 +86,7 @@ export default function Tracking_admin({ params }) {
     useEffect(() => {
         async function getInvoice() {
             try {
-                const data = await axios.get(`http://localhost:5000/api/invoice/${id}`, { withCredentials: true })
+                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`, { withCredentials: true })
                 if (data.data.success) {
                     const obj = data.data.data
                     setInvoice(obj)

@@ -8,7 +8,7 @@ export default function Layout({children}){
 useEffect(()=>{
         async function user(){
             try{
-                const data = await axios.get("http://localhost:5000/api/user",{
+                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`,{
                     withCredentials: true
                 })
                 if(data.data.success==false){

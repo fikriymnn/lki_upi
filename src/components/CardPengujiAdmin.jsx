@@ -9,7 +9,7 @@ import axios from 'axios';
 function CardPengujiAdmin({ id, title,src }) {
     const handleDelete = async (e)=>{
         try{
-            await axios.delete(`http://localhost:5000/api/content/${id}`,{
+            await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`,{
               withCredentials: true,
               })
             alert('success')

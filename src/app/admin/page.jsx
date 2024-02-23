@@ -26,10 +26,10 @@ export default function Admin(){
         e.preventDefault()
         const get_user = async ()=>{
             try{
-                const data = await axios.post("http://localhost:5000/api/login",userForm,{withCredentials:true})
+                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/login`,userForm,{withCredentials:true})
              
                 if(data.data.success==true){
-                    const dataUser = await axios.get("http://localhost:5000/api/user",{withCredentials:true})
+                    const dataUser = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`,{withCredentials:true})
                     if (dataUser.data.data.role=="admin") {
                         window.location.replace('/admin/dashboard/admin')
                     } else if(dataUser.data.data.role=="operator") {

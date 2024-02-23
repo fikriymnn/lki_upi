@@ -14,7 +14,7 @@ export default function DetailOrderAdmin({ params, searchParams }) {
     const downloadInvoice = async (e) => {
         try {
 
-            const response = await axios.get(`http://localhost:5000/api/generate_invoice?no_invoice=${no_invoice}`, { withCredentials: true, responseType: 'blob' });
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/generate_invoice?no_invoice=${no_invoice}`, { withCredentials: true, responseType: 'blob' });
             console.log(response.data)
 
             // Create a blob from the response data
@@ -35,7 +35,7 @@ export default function DetailOrderAdmin({ params, searchParams }) {
     const downloadKuitansi = async (e) => {
         try {
 
-            const response = await axios.get(`http://localhost:5000/api/generate_kuitansi?no_invoice=${no_invoice}`, { withCredentials: true, responseType: 'blob' });
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/generate_kuitansi?no_invoice=${no_invoice}`, { withCredentials: true, responseType: 'blob' });
             console.log(response.data)
 
             // Create a blob from the response data
@@ -55,7 +55,7 @@ export default function DetailOrderAdmin({ params, searchParams }) {
 
     const downloadBuktiTransfer = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/download_bukti_pembayaran/${id}`, { withCredentials: true, responseType: 'arraybuffer', withCredentials: true });
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/download_bukti_pembayaran/${id}`, { withCredentials: true, responseType: 'arraybuffer', withCredentials: true });
             // Create a blob from the response data
             const blob = new Blob([response.data], { type: 'application/octet-stream' });
 
@@ -75,8 +75,8 @@ export default function DetailOrderAdmin({ params, searchParams }) {
         async function getnvoice() {
             try {
 
-                const data = await axios.get(`http://localhost:5000/api/invoice/${id}`, { withCredentials: true })
-                const dataOrder = await axios.get(`http://localhost:5000/api/order?no_invoice=${no_invoice}&skip=0&limit=20`, { withCredentials: true })
+                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`, { withCredentials: true })
+                const dataOrder = await axios.get(`${process.env.NEXT_PUBLIC_URL}api/order?no_invoice=${no_invoice}&skip=0&limit=20`, { withCredentials: true })
                 console.log(data.data.data)
                 if (data.data.success) {
                     setInvoice(data.data.data)

@@ -16,8 +16,8 @@ export default function DetailOrderPj({ params, searchParams }) {
         async function getnvoice() {
             try {
 
-                const data = await axios.get(`http://localhost:5000/api/invoice/${id}`, { withCredentials: true })
-                const dataOrder = await axios.get(`http://localhost:5000/api/order?no_invoice=${no_invoice}&skip=0&limit=20`, { withCredentials: true })
+                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`, { withCredentials: true })
+                const dataOrder = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?no_invoice=${no_invoice}&skip=0&limit=20`, { withCredentials: true })
                 console.log(data.data.data)
                 if (data.data.success) {
                     setInvoice(data.data.data)
