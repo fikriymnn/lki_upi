@@ -14,7 +14,7 @@ export default function CarouselCustom() {
             <p className=" md:mx-[112px] sm:mx-[50px] mx-[16px]  text-white font-bold md:text-5xl sm:text-xl text-lg ">
               Laboratorium Kimia Instrumen UPI
             </p>
-            <p className="font-semibold md:text-xl sm:text-lg md:pr-0 sm:pr-0 pr-8 text-xs md:mx-[112px] sm:mx-[50px] mx-[16px] text-white mt-2">
+            <p className="font-semibold md:text-2xl sm:text-lg md:pr-0 sm:pr-0 pr-8 text-xs md:mx-[112px] sm:mx-[50px] mx-[16px] text-white mt-2 md:mb-5">
               Laboratorium Kimia Instrumen UPI merupakan unit laboratorium pengujian di KIMIA UPI.
             </p>
             <div className="flex md:justify-center sm:justify-center md:ml-0 sm:ml-0 ml-5 md:mt-2 sm:mt-2 mt-5">
@@ -30,7 +30,7 @@ export default function CarouselCustom() {
             <p className=" md:mx-[112px] sm:mx-[50px] mx-[16px]  text-white font-bold md:text-5xl sm:text-xl text-lg ">
               Laboratorium Kimia Instrumen UPI
             </p>
-            <p className="font-semibold md:text-lg sm:text-xl text-xs md:pr-0 sm:pr-0 pr-8 md:mx-[112px] sm:mx-[50px] mx-[16px] text-white mt-2">
+            <p className="font-semibold md:text-2xl sm:text-lg text-xs md:pr-0 sm:pr-0 pr-8 md:mx-[112px] sm:mx-[50px] mx-[16px] text-white mt-2 md:mb-5">
             Laboratorium Kimia Instrumen UPI membuka layanan pengujian untuk dosen, mahasiswa, dan umum.
             </p>
             <div className="flex justify-centermd:justify-center sm:justify-center md:ml-0 sm:ml-0 ml-5 md:mt-2 sm:mt-2 mt-5">

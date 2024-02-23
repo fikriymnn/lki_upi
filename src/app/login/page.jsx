@@ -18,6 +18,7 @@ export default function Login({ searchParams }) {
     })
 
     useEffect(() => {
+        console.log(process.env.NEXT_PUBLIC_URL)
         async function user() {
             try {
                 const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`, {
@@ -50,7 +51,8 @@ export default function Login({ searchParams }) {
     const handleSubmit = (e) => {
         e.preventDefault()
         const get_user = async () => {     
-                const data = await axios.post("http://localhost:5000/api/login", userForm, { withCredentials: true })
+            try{
+                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/login`, userForm, { withCredentials: true })
        
                 if (data.data.success == true) {
               
@@ -69,7 +71,9 @@ export default function Login({ searchParams }) {
                 }else{
                     alert(data.data.message)
                 }
-
+            }catch(err){
+                alert(err.message)
+            }
 
         }
         get_user()
