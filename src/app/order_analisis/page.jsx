@@ -90,12 +90,12 @@ export default function Order_analisis() {
         let add4 = [...jurnal_pendukung]
         add4.push("")
         setJurnal_pendukung([...add4])
-       
+
         let add5 = uuid
         const uid = uuidv4()
         add5.push(uid)
         setUuid([...add5])
-        
+
 
 
     }
@@ -117,52 +117,56 @@ export default function Order_analisis() {
                 obj.deskripsi_sample = deskripsi_sample[i]
                 obj.riwayat_pengujian = riwayat_pengujian[i]
                 obj.sample_dikembalikan = sample_dikembalikan[i]
-                
+
                 obj.uuid = uuid[i]
-              
+
                 arr[i] = obj
             }
-          
+
             if (arr.length == duplicate.length) {
-             
+
                 const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/order`, arr, {
                     withCredentials: true
 
                 })
-        
+
                 if (data.data.success) {
-                            if (jurnal_pendukung) {
-                                async function cek() {
-                                    try{
+                    if (jurnal_pendukung) {
+                        async function cek() {
+                            try {
 
-                                   
-                                    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${uuid[0]}`, { jurnal_pendukung: jurnal_pendukung }, {
-                                        withCredentials: true,
-                                        headers: { "Content-Type": 'multipart/form-data' }
-                                    })
-                                }catch(err){
-                                    alert(err.message)
-                                }
-                                }
-                                cek()
 
+                                await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${uuid[0]}`, { jurnal_pendukung: jurnal_pendukung }, {
+                                    withCredentials: true,
+                                    headers: { "Content-Type": 'multipart/form-data' }
+                                })
+                            } catch (err) {
+                                alert(err.message)
                             }
-                            if (foto_sample){
-                                async function cek2() {
-try{
-                                    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${uuid[0]}`, { foto_sample: foto_sample }, {
-                                        withCredentials: true,
-                                        headers: { "Content-Type": 'multipart/form-data' }
-                                    })
-                                }catch(err){
-                                    alert(err.message)
-                                }
-                                }
-                                cek2()
+                        }
+                        cek()
+
+                    }
+                    if (foto_sample) {
+                        async function cek2() {
+                            try {
+                                await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${uuid[0]}`, { foto_sample: foto_sample }, {
+                                    withCredentials: true,
+                                    headers: { "Content-Type": 'multipart/form-data' }
+                                })
+                            } catch (err) {
+                                alert(err.message)
                             }
-               
+                        }
+                        cek2()
+                    }
+                    setTimeout(()=>{
+alert("success")
+router.replace('/success')
+                    },1500)
+
+                }
             }
-        }
         } catch (err) {
             alert(err.message)
         }
@@ -184,7 +188,7 @@ try{
                                         <div key={b}>
                                             <input className='input-style-lki-checklist ' type="checkbox" id={`jenis_pengujian${b}${i}`} name={`jenis_pengujian`} value={a.jenis_pengujian} onChange={(e) => {
                                                 const { checked, value } = e.target
-                                               
+
                                                 if (checked) {
 
                                                     let cccc = [...jenis_pengujian]
@@ -220,7 +224,7 @@ try{
                                                         return false
                                                     }
                                                 }
-                                           
+
                                             }} />
                                             <label htmlFor={`jenis_pengujian${b}${i}`} className='ml-3'>{a.jenis_pengujian}</label>
                                         </div>
@@ -235,7 +239,7 @@ try{
                             <h2 className="text-lg font-semibold" >Nama sample</h2>
                             <input placeholder='masukkan nama sample' className='input-style-lki' name="nama_sample" required type="text" onChange={(e) => {
                                 nama_sample[i] = e.target.value
-                          
+
                             }} />
                         </div>
                         <div>
@@ -302,7 +306,7 @@ try{
                             }} />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold" >Metode Parameter 
+                            <h2 className="text-lg font-semibold" >Metode Parameter
                             </h2>
                             <input className='input-style-lki' placeholder='Tuliskan metode parameter yang ingin digunakan (suhu/flow/panjang gelombang/fasa gerak, gas, dsb.)' name="metode_parameter" required type="text" onChange={(e) => {
                                 e.preventDefault()
@@ -313,15 +317,15 @@ try{
                         <div>
                             <h2 className="text-lg font-semibold" >APAKAH SAMPEL AKAN DIAMBIL SETELAH PENGUJIAN?
                             </h2>
-                            <select required name="sample_dikembalikan" id="sample_dikembalikan" className='input-style-lki' onChange={(e)=>{
+                            <select required name="sample_dikembalikan" id="sample_dikembalikan" className='input-style-lki' onChange={(e) => {
                                 e.preventDefault()
                                 sample_dikembalikan[i] = e.target.value
-                            
+
                             }}>
                                 <option value="" selected>Pilih</option>
                                 <option value="ya">Ya</option>
                                 <option value="tidak">Tidak</option>
-                                
+
                             </select>
                         </div>
                         <div className='grid md:grid-cols-2 grid-cols-1 gap-10'>
@@ -344,7 +348,7 @@ try{
                                     e.preventDefault()
 
                                     setJurnal_pendukung(e.target.files[0]
-                                        )
+                                    )
                                 }} />
                             </div>
                         </div>
