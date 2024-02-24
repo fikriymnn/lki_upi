@@ -20,10 +20,10 @@ export default function Order_analisis() {
     const [target_senyawa, setTarget_senyawa] = useState([])
     const [sample_dikembalikan, setSample_dikembalikan] = useState([])
     const [metode_parameter, setMetode_parameter] = useState([])
-    const [jurnal_pendukung, setJurnal_pendukung] = useState([])
+    const [jurnal_pendukung, setJurnal_pendukung] = useState({})
     const [deskripsi_sample, setDeskripsi_sample] = useState([])
     const [riwayat_pengujian, setRiwayat_pengujian] = useState([])
-    const [foto_sample, setFoto_sample] = useState([])
+    const [foto_sample, setFoto_sample] = useState({})
     const [uuid, setUuid] = useState([uid])
     const [verifikasi, setVerifikasi] = useState(false)
 
@@ -131,43 +131,38 @@ export default function Order_analisis() {
                 })
         
                 if (data.data.success) {
-                    var v;
-                    for (v = 0; v <= uuid.length; v++) {
-                        for (let a = 0; a < jurnal_pendukung.length; a++) {
-                            if (uuid[v] == jurnal_pendukung[a].uid) {
+                            if (jurnal_pendukung) {
                                 async function cek() {
-                                    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${uuid[v]}`, { jurnal_pendukung: jurnal_pendukung[a].file }, {
+                                    try{
+
+                                   
+                                    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${uuid[0]}`, { jurnal_pendukung: jurnal_pendukung }, {
                                         withCredentials: true,
                                         headers: { "Content-Type": 'multipart/form-data' }
                                     })
+                                }catch(err){
+                                    alert(err.message)
+                                }
                                 }
                                 cek()
 
                             }
-                        }
-                        for (let b = 0; b < foto_sample.length; b++) {
-                            if (uuid[v] == foto_sample[b].uid) {
+                            if (foto_sample){
                                 async function cek2() {
-
-                                    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${uuid[v]}`, { foto_sample: foto_sample[b].file }, {
+try{
+                                    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${uuid[0]}`, { foto_sample: foto_sample }, {
                                         withCredentials: true,
                                         headers: { "Content-Type": 'multipart/form-data' }
                                     })
+                                }catch(err){
+                                    alert(err.message)
+                                }
                                 }
                                 cek2()
                             }
-                        }
-                        if (v == uuid.length) {
-                            alert('success')
-                            setTimeout(()=>{
-                                router.replace('/success')
-                            },1500)
-                           
-                        }
-                    }
-                }
-
+               
             }
+        }
         } catch (err) {
             alert(err.message)
         }
@@ -337,7 +332,7 @@ export default function Order_analisis() {
                                 <input className='input-style-lki' name="foto_sample" type="file" onChange={(e) => {
                                     e.preventDefault()
 
-                                    foto_sample[i] = { file: e.target.files[0], uid: uuid[i] }
+                                    setFoto_sample(e.target.files[0])
 
                                 }} />
                             </div>
@@ -348,8 +343,8 @@ export default function Order_analisis() {
 
                                     e.preventDefault()
 
-                                    jurnal_pendukung[i] = { file: e.target.files[0], uid: uuid[i] }
-
+                                    setJurnal_pendukung(e.target.files[0]
+                                        )
                                 }} />
                             </div>
                         </div>

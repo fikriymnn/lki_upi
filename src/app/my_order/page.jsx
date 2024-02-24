@@ -92,13 +92,13 @@ export default function My_order() {
         <br />
 
     <p className=' text-center mb-2 text-red-600'>page : {page+1}</p>
+    
       <div className='m-auto flex items-center'>
-
         <ReactPaginate
           className="m-auto text-red-600 flex md:w-56 sm:w-40 w-40 justify-evenly"
           breakLabel="..."
           nextLabel={<p className="inline md:px-3 md:py-1 md:mb-2 px-1 py-1 mb-1 md:text-lg sm:text-base text-xs text-white bg-red-600 rounded">{"next >"}</p>}
-          onPageChange={(e) => { setPage(e.selected); console.log(e.selected) }}
+          onPageChange={(e) => { setPage(e.selected);}}
           pageRangeDisplayed={3}
           pageCount={parseInt(Math.ceil(length / 15).toFixed())}
           previousLabel={
