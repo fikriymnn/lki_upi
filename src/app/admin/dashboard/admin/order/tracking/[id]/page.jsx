@@ -103,7 +103,7 @@ export default function Tracking_admin({ params }) {
             <div className="m-auto">
                 <p className='text-center text-4xl font-bold text-gray-800 mt-7'>PROGRESS</p>
                 <div className='flex justify-center'>
-                    <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
+                    <hr className='grad h-2 mb-8 mt-5 w-56 text-center' />
                 </div>
                 <div className="m-auto">
 
@@ -112,31 +112,34 @@ export default function Tracking_admin({ params }) {
 
                         <br />
                         <br />
-                        <div className="mx-10">  {edit ? <div className="flex"><button onClick={handleConfirm} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Konfirmasi</button><button onClick={() => setEdit(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setEdit(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Edit</button>}
-                            {edit ? <div><p className="text-lg ">Status : <select name="status" onChange={(e) => setForm((a) => ({ ...a, [e.target.name]: e.target.value }))} value={form.status}>
+                        <div className="md:mx-10 mx-5 flex flex-col gap-3 md:w-6/12 ">
 
-                                <option value="order dibatalkan">batalkan order</option>
-                                <option value="form dikonfirmasi">form dikonfirmasi</option>
-                                <option value="sample diterima admin">sample diterima admin</option>
-                                <option value="sample dikerjakan operator">sample dikerjakan operator</option>
-                                <option value="menunggu verifikasi">menunggu verifikasi</option>
-                                <option value="menunggu pembayaran">menunggu pembayaran</option>
-                                <option value="selesai">selesai</option></select></p></div> : <div>
-                                <p className="text-lg ">Status  : {form.status} </p></div>}
+                            {edit ? <div>
+                                <p className="md:text-lg text-base grid grid-cols-2 font-semibold">Status : <select name="status" className="font-normal" onChange={(e) => setForm((a) => ({ ...a, [e.target.name]: e.target.value }))} value={form.status}>
+
+                                    <option value="order dibatalkan">batalkan order</option>
+                                    <option value="form dikonfirmasi">form dikonfirmasi</option>
+                                    <option value="sample diterima admin">sample diterima admin</option>
+                                    <option value="sample dikerjakan operator">sample dikerjakan operator</option>
+                                    <option value="menunggu verifikasi">menunggu verifikasi</option>
+                                    <option value="menunggu pembayaran">menunggu pembayaran</option>
+                                    <option value="selesai">selesai</option></select></p></div> : <div>
+                                <p className="md:text-lg text-base font-semibold md:grid grid-cols-2 gap-5 flex">Status  : <span className="font-normal">{form.status}</span> </p></div>}
 
 
                             {edit ? <div>
-                                <p className="text-lg ">Total harga  : <input type="number" name="total_harga" onChange={handleChange} value={form.total_harga} /></p></div> : <div>
-                                <p className="text-lg ">total harga  : Rp.{form.total_harga}</p></div>}
+                                <p className="md:text-lg text-base grid grid-cols-2 font-semibold">Total harga  : <input type="number" name="total_harga" onChange={handleChange} value={form.total_harga} /></p></div> : <div>
+                                <p className="md:text-lg text-base font-semibold md:grid grid-cols-2 gap-5 flex">total harga  : <span className="font-normal">Rp.{form.total_harga}</span></p></div>}
                             {edit ? <div>
-                                <p className="text-lg ">Tanggal estimasi selesai  : <input type="text" name="estimasi_date" onChange={handleChange} value={form.estimasi_date} /></p></div> : <div>
-                                <p className="text-lg ">Tanggal estimasi selesai  : {form.estimasi_date}</p></div>}
+                                <p className="md:text-lg text-base grid grid-cols-2 font-semibold">Tanggal estimasi selesai  : <input type="text" name="estimasi_date" onChange={handleChange} value={form.estimasi_date} /></p></div> : <div>
+                                <p className="md:text-lg text-base font-semibold md:grid grid-cols-2 gap-5 flex">Tanggal estimasi selesai  : <span className="font-normal">{form.estimasi_date}</span> </p></div>}
+                            {edit ? <div className="flex gap-5 mt-5"><button onClick={handleConfirm} className="grad text-white px-2 py-1 rounded-lg">Konfirmasi</button><button onClick={() => setEdit(a => !a)} className="grad text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setEdit(a => !a)} className="grad text-white px-2 py-1 rounded-lg w-40">Edit</button>}
                         </div>
                         <br />
                         <br />
 
                     </div>
-                    <div className="flex mb-20">
+                    <div className="flex mb-20 mt-10 ">
                         <div className="m-auto w-10/12 border-2 rounded-lg flex flex-col justify-start items-start ">
                             <p className="text-white text-xl font-bold px-10 w-full grad rounded-t-[6px]">Detail</p>
                             <div className="flex gap-5 w-62 mx-5  mt-10">
@@ -151,14 +154,14 @@ export default function Tracking_admin({ params }) {
                                 {invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Image alt="" width={0} height={0} sizes="100vw" className="w-[87.5px] h-[133.7px]" src={'/tracking/on/on2.png'} /> : <Image alt="" width={0} height={0} sizes="100vw" className="w-[87.5px] h-[133.7px]" src={'/tracking/off/off2.png'} />}
                                 <div>
                                     {invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">form diterima</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">form diterima</p></div>}
-                                    {invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">Menunggu sample diterima oleh admin</p><p className="text-red-600  text-center text-xs font-semibold">{invoice.s2_date}</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">Menunggu sample diterima oleh admin</p></div>}
+                                    {invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">Menunggu sample diterima oleh admin</p><p className="text-red-600   text-xs font-semibold">{invoice.s2_date}</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">Menunggu sample diterima oleh admin</p></div>}
                                 </div>
                             </div>
                             <div className="flex gap-5 w-62 mx-5">
                                 {invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Image alt="" width={0} height={0} sizes="100vw" className="w-[87.5px] h-[133.7px]" src={'/tracking/on/on3.png'} /> : <Image alt="" width={0} height={0} sizes="100vw" className="w-[87.5px] h-[133.7px]" src={'/tracking/off/off3.png'} />}
                                 <div>
                                     {invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">sample diterima oleh admin</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">sample diterima oleh admin</p></div>}
-                                    {invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">sample sedang dikirim ke operator</p><p className="text-red-600  text-center text-xs font-semibold">{invoice.s3_date}</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">Sedang dikirim ke operator </p></div>}
+                                    {invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <div className=""><p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">sample sedang dikirim ke operator</p><p className="text-red-600   text-xs font-semibold">{invoice.s3_date}</p></div> : <div className=""><p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">Sedang dikirim ke operator </p></div>}
                                 </div>
                             </div>
 

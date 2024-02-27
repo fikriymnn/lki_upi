@@ -6,14 +6,14 @@ import axios from 'axios';
 
 
 
-function CardPengujiAdmin({ id, title,src }) {
-    const handleDelete = async (e)=>{
-        try{
-            await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`,{
-              withCredentials: true,
-              })
+function CardPengujiAdmin({ id, title, src }) {
+    const handleDelete = async (e) => {
+        try {
+            await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`, {
+                withCredentials: true,
+            })
             alert('success')
-        }catch(err){
+        } catch (err) {
             alert(err.message)
         }
     }
@@ -21,7 +21,7 @@ function CardPengujiAdmin({ id, title,src }) {
         <div className='md:p-4 p-2 border border-black flex flex-col justify-center items-center gap-10 rounded-3xl'>
             <h1 className='font-bold text-2xl'>{title}</h1>
             <Image src={src} width={0} height={0} sizes='100vw' alt='' className='md:w-[274.89px] md:h-[220px] w-[200px] h-[150px]' />
-            <div className='grid grid-cols-2 md:px-5 '>
+            <div className='grid grid-cols-2 gap-2 md:px-5 '>
 
                 <Button color='failure' href={`/admin/dashboard/admin/${id}`} className='grad font-bold py-1 rounded-full '>
                     Edit
