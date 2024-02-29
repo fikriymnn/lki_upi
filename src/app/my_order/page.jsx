@@ -4,6 +4,7 @@ import { Table } from 'flowbite-react';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ReactPaginate from 'react-paginate';
+import { Pagination } from 'flowbite-react';
 
 export default function My_order() {
   const [invoice, setInvoice] = useState([])
@@ -29,7 +30,7 @@ export default function My_order() {
       }
     }
     getInvoice()
-  }, [])
+  }, [page])
   return (
     <>
       <div>
@@ -94,20 +95,11 @@ export default function My_order() {
     <p className=' text-center mb-2 text-red-600'>page : {page+1}</p>
     
       <div className='m-auto flex items-center'>
-        <ReactPaginate
-          className="m-auto text-red-600 flex md:w-56 sm:w-40 w-40 justify-evenly"
-          breakLabel="..."
-          nextLabel={<p className="inline md:px-3 md:py-1 md:mb-2 px-1 py-1 mb-1 md:text-lg sm:text-base text-xs text-white bg-red-600 rounded">{"next >"}</p>}
-          onPageChange={(e) => { setPage(e.selected);}}
-          pageRangeDisplayed={3}
-          pageCount={parseInt(Math.ceil(length / 15).toFixed())}
-          previousLabel={
-            <p className="inline md:px-3 md:py-1 md:mt-2 px-1 py-1 mt-1 text-white md:text-lg sm:text-base text-xs bg-red-600 rounded">{"< prev"}</p>
-          }
-          renderOnZeroPageCount={null}
-        />
+      <div className="flex overflow-x-auto sm:justify-center">
+      <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 15).toFixed())} onPageChange={(a)=>{console.log(a); setPage(a)}} />
+    </div>
        </div> 
-
+       
         <br />
         <br />
         <br />
