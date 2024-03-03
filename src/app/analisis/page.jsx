@@ -258,7 +258,7 @@ export default function Analisis() {
 
                         {data.map((v, i) => (
                             <>
-                                <CardPenguji key={i} id={v._id} nama={v.title} foto={`data:${v.foto.contentType};base64,${v.foto.data.toString('base64')}`} />
+                                <CardPenguji key={i} id={v._id} nama={v.title} foto={v.foto} />
                             </>
                         ))}
 
