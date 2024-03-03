@@ -7,26 +7,224 @@ import CardPenguji from '@/components/CardPenguji';
 import { useEffect, useState } from 'react';
 import axios from 'axios'
 
+
 export default function Analisis() {
     const [data, setData] = useState([])
 
 
-    useEffect(()=>{
-       async function getData(){
-        try{
-            const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/content?resize=true`, { withCredentials: true })
-            if(data.data.success){
-                setData(data.data.data)
+    useEffect(() => {
+        async function getData() {
+            try {
+                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/content?resize=true`, { withCredentials: true })
+                if (data.data.success) {
+                    setData(data.data.data)
+                }
+
+            } catch (err) {
+                alert(err.message)
             }
-            
-        }catch(err){
-            alert(err.message)
         }
-       }
-       getData()
-    },[])
+        getData()
+    }, [])
 
 
+
+    const dataPengukur = [
+        {
+            alatPengukuran: "UV-VIS",
+            jenisPengukuran: [
+                {
+                    jenis: "a. Kalibrasi",
+                    kimia: "a. 50.000",
+                    nonKimia: "a. 100.000",
+                    luarUpi: "a. 120.000"
+                },
+                {
+                    jenis: "b. Sampel",
+                    kimia: "b. 30.000",
+                    nonKimia: "b. 70.000",
+                    luarUpi: "b. 100.000"
+                },
+                {
+                    jenis: "c. Scanning",
+                    kimia: "c. 40.000",
+                    nonKimia: "c. 60.000",
+                    luarUpi: "c. 80.000"
+                },
+            ],
+        },
+        {
+            alatPengukuran: "HPLC",
+            jenisPengukuran: [
+                {
+                    jenis: "a. Kalibrasi",
+                    kimia: "a. 350.000",
+                    nonKimia: "a. 400.000",
+                    luarUpi: "a. 500.000"
+                },
+                {
+                    jenis: "b. Sampel",
+                    kimia: "b. 250.000",
+                    nonKimia: "b. 350.000",
+                    luarUpi: "b. 400.000"
+                },
+            ],
+        },
+        {
+            alatPengukuran: "AAS (Ca, Fe, Cu, Cd)",
+            jenisPengukuran: [
+                {
+                    jenis: "a. Kalibrasi",
+                    kimia: "a. 120.000",
+                    nonKimia: "a. 170.000",
+                    luarUpi: "a. 200.000"
+                },
+                {
+                    jenis: "b. Sampel",
+                    kimia: "b. 80.000",
+                    nonKimia: "b. 130.000",
+                    luarUpi: "b. 150.000"
+                },
+            ],
+        },
+        {
+            alatPengukuran: "LCMS/MS",
+            jenisPengukuran: [
+                {
+                    jenis: "a. Kalibrasi",
+                    kimia: "a. 1.000.000",
+                    nonKimia: "a. 1.300.000",
+                    luarUpi: "a. 1.400.000"
+                },
+                {
+                    jenis: "b. Sampel",
+                    kimia: "b. 600.000",
+                    nonKimia: "b. 650.000",
+                    luarUpi: "b. 700.000"
+                },
+            ],
+        },
+        {
+            alatPengukuran: "GC FID",
+            jenisPengukuran: [
+                {
+                    jenis: "a. Kalibrasi",
+                    kimia: "a. 260.000",
+                    nonKimia: "a. 300.000",
+                    luarUpi: "a. 500.000"
+                },
+                {
+                    jenis: "b. Sampel",
+                    kimia: "b. 130.000",
+                    nonKimia: "b. 150.000",
+                    luarUpi: "b. 250.000"
+                },
+            ],
+        },
+        {
+            alatPengukuran: "TG DTA",
+            jenisPengukuran: [
+                {
+                    jenis: "a.	Sampai Suhu 550 ℃",
+                    kimia: "a. 100.000",
+                    nonKimia: "a. 150.000",
+                    luarUpi: "a. 250.000"
+                },
+                {
+                    jenis: "b.	Diatas Suhu 550 ℃",
+                    kimia: "b. 170.000",
+                    nonKimia: "b. 200.000",
+                    luarUpi: "b. 300.000"
+                },
+            ],
+        },
+        {
+            alatPengukuran: "NMR",
+            jenisPengukuran: [
+                {
+                    jenis: "a. Proton",
+                    kimia: "a. 150.000",
+                    nonKimia: "a. 200.000",
+                    luarUpi: "a. 300.000"
+                },
+                {
+                    jenis: "b. Carbon",
+                    kimia: "b. 400.000",
+                    nonKimia: "b. 450.000",
+                    luarUpi: "b. 500.000"
+                },
+                {
+                    jenis: "c. 2D",
+                    kimia: "c. 300.000",
+                    nonKimia: "c. 350.000",
+                    luarUpi: "c. 450.000"
+                },
+            ],
+        },
+        {
+            alatPengukuran: "FTIR",
+            jenisPengukuran: [
+                {
+                    jenis: "a. FTIR",
+                    kimia: "a. 180.000",
+                    nonKimia: "a. 250.000",
+                    luarUpi: "a. 300.000"
+                },
+            ],
+        },
+        {
+            alatPengukuran: "XRD",
+            jenisPengukuran: [
+                {
+                    jenis: "a. XRD",
+                    kimia: "a. 400.000",
+                    nonKimia: "a. 450.000",
+                    luarUpi: "a. 500.000"
+                },
+            ],
+        },
+        {
+            alatPengukuran: "GCMS",
+            jenisPengukuran: [
+                {
+                    jenis: "a. GCMS",
+                    kimia: "a. 350.000",
+                    nonKimia: "a. 400.000",
+                    luarUpi: "a. 500.000"
+                },
+            ],
+        },
+        {
+            alatPengukuran: "Freedzy",
+            jenisPengukuran: [
+                {
+                    jenis: "a. Diatas 8 jam",
+                    kimia: "a. 15.000",
+                    nonKimia: "a. 20.000",
+                    luarUpi: "a. 25.000"
+                },
+                {
+                    jenis: "b. Diatas 8 jam",
+                    kimia: "b. 30.000",
+                    nonKimia: "b. 40.000",
+                    luarUpi: "b. 50.000"
+                },
+            ],
+        },
+        {
+            alatPengukuran: "PCR (Per Jam)",
+            jenisPengukuran: [
+                {
+                    jenis: "a. PCR (Per Jam)",
+                    kimia: "a. 100.000",
+                    nonKimia: "a. 120.000",
+                    luarUpi: "a. 150.000"
+                },
+
+            ],
+        },
+
+    ];
     return (
         <>
             <main className=''>
@@ -60,7 +258,7 @@ export default function Analisis() {
 
                         {data.map((v, i) => (
                             <>
-                                <CardPenguji key={i} id={v._id} nama={v.title} foto={`data:${v.foto.contentType};base64,${v.foto.data.toString('base64')}`}/>
+                                <CardPenguji key={i} id={v._id} nama={v.title} foto={`data:${v.foto.contentType};base64,${v.foto.data.toString('base64')}`} />
                             </>
                         ))}
 
@@ -68,8 +266,8 @@ export default function Analisis() {
 
 
                     <br />
-                  
-                    <ButtonOrder/>
+
+                    <ButtonOrder />
                     <br />
                     <div className='my-10'>
 
@@ -103,19 +301,90 @@ export default function Analisis() {
                         </div>
                     </div>
                     <p className='font-semibold text-xl md:ml-32 ml-0 my-3'>Pengukuran</p>
-                    <div className='flex justify-center items-center'>
+                    <div className='lg:mx-32 md:-mx-8 -mx-8 '>
+                        <p className='text-center font-bold text-lg mb-5'>Paket Harga</p>
+                        <div className='bg-[#EDECECD4] md:py-5 py-2 rounded-lg shadow-[rgba(0,0,0,0.3)_1px_2px_2px_1px] mb-3'>
+                            <p className='text-center mb-5 font-bold md:text-base text-[9px] underline'>Harga Dosen/Mahasiswa UPI</p>
+                            <div className='grid grid-cols-5 '>
 
-                        <Image
-                            src={'/images/tabel1.png'}
-                            alt=''
-                            width={0}
-                            height={0}
-                            sizes='100vw'
-                            className='w-[1000px] h-full'
-                        />
+                                <p className='font-bold md:text-base text-[9px] text-center'>No</p>
+                                <p className='font-bold md:text-base text-[9px]'>Jenis Alat Pengukuran</p>
+                                <p className='font-bold md:text-base text-[9px]'>Kimia </p>
+                                <p className='font-bold md:text-base text-[9px]'>Non Kimia </p>
+                                <p className='font-bold md:text-base text-[9px]'>Luar UPI</p>
+                            </div>
+                        </div>
 
+                        <div className='grid gap-3'>
+                            {dataPengukur.map((data, i) => (
+                                <>
+
+                                    <div className="bg-white border shadow-[rgba(0,0,10,0.3)_1px_2px_2px_1px] rounded-lg py-2">
+
+                                        <div className='grid grid-cols-5 '>
+                                            <p className='font-medium md:text-base text-[9px] text-center '>{i + 1}</p>
+                                            <p className='font-bold md:text-base text-[9px]'>{data.alatPengukuran}</p>
+                                        </div>
+                                        <div className='md:ml-3'>
+
+                                            <div className='grid grid-cols-5 gap-1 '>
+
+                                                <p className='font-medium md:text-base text-[9px]'>{""}</p>
+                                                <div>
+
+                                                    {data.jenisPengukuran.map((jenisPengukuran) => (
+
+
+                                                        <p className='font-medium md:text-base text-[9px]'>
+                                                            {jenisPengukuran.jenis}
+                                                        </p>
+
+                                                    ))}
+                                                </div>
+                                                <div>
+
+                                                    {data.jenisPengukuran.map((jenisPengukuran) => (
+
+
+                                                        <p className='font-medium md:text-base text-[9px]'>
+                                                            {jenisPengukuran.kimia}
+                                                        </p>
+
+                                                    ))}
+                                                </div>
+                                                <div>
+
+                                                    {data.jenisPengukuran.map((jenisPengukuran) => (
+
+
+                                                        <p className='font-medium md:text-base text-[9px]'>
+                                                            {jenisPengukuran.nonKimia}
+                                                        </p>
+
+                                                    ))}
+                                                </div>
+                                                <div>
+
+                                                    {data.jenisPengukuran.map((jenisPengukuran) => (
+
+
+                                                        <p className='font-medium md:text-base text-[9px]'>
+                                                            {jenisPengukuran.luarUpi}
+                                                        </p>
+
+                                                    ))}
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </>
+                            ))}
+
+                        </div>
                     </div>
-                    <p className='text-red-700 md:font-bold font-semibold text-end md:mx-28 mx-0 md:text-base text-sm'>*Biaya per Jam</p>
+                    <p className='text-red-700 md:font-bold font-semibold text-end md:mx-28 mx-0 md:text-base text-sm mt-5'>*Biaya per Jam</p>
                     <div className='mb-24'>
 
 
