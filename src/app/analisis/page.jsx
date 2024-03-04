@@ -333,10 +333,10 @@ export default function Analisis() {
                                                 <p className='font-medium md:text-base text-[9px]'>{""}</p>
                                                 <div>
 
-                                                    {data.jenisPengukuran.map((jenisPengukuran) => (
+                                                    {data.jenisPengukuran.map((jenisPengukuran,i) => (
 
 
-                                                        <p className='font-medium md:text-base text-[9px]'>
+                                                        <p key={i} className='font-medium md:text-base text-[9px]'>
                                                             {jenisPengukuran.jenis}
                                                         </p>
 
@@ -344,10 +344,10 @@ export default function Analisis() {
                                                 </div>
                                                 <div>
 
-                                                    {data.jenisPengukuran.map((jenisPengukuran) => (
+                                                    {data.jenisPengukuran.map((jenisPengukuran,i) => (
 
 
-                                                        <p className='font-medium md:text-base text-[9px]'>
+                                                        <p key={i} className='font-medium md:text-base text-[9px]'>
                                                             {jenisPengukuran.kimia}
                                                         </p>
 
@@ -355,10 +355,10 @@ export default function Analisis() {
                                                 </div>
                                                 <div>
 
-                                                    {data.jenisPengukuran.map((jenisPengukuran) => (
+                                                    {data.jenisPengukuran.map((jenisPengukuran,i) => (
 
 
-                                                        <p className='font-medium md:text-base text-[9px]'>
+                                                        <p key={i} className='font-medium md:text-base text-[9px]'>
                                                             {jenisPengukuran.nonKimia}
                                                         </p>
 
@@ -366,10 +366,10 @@ export default function Analisis() {
                                                 </div>
                                                 <div>
 
-                                                    {data.jenisPengukuran.map((jenisPengukuran) => (
+                                                    {data.jenisPengukuran.map((jenisPengukuran,i) => (
 
 
-                                                        <p className='font-medium md:text-base text-[9px]'>
+                                                        <p key={i} className='font-medium md:text-base text-[9px]'>
                                                             {jenisPengukuran.luarUpi}
                                                         </p>
 
