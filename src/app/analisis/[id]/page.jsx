@@ -20,6 +20,7 @@ function Page({ params }) {
         try{
             const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`, { withCredentials: true })
             if(data.data.success){
+                console.log(data.data.data)
                 setData(data.data.data)
                 setFile1(data.data.data.foto)
                 setFile2(data.data.data.contoh_hasil)
