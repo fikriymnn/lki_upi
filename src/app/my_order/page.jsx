@@ -93,11 +93,13 @@ export default function My_order() {
         <br />
 
     <p className=' text-center mb-2 text-red-600'>page : {page+1}</p>
-    
-      <div className='m-auto flex items-center'>
+    <div className="flex justify-center">
+    <div className='m-auto flex items-center'>
       <div className="flex overflow-x-auto sm:justify-center">
       <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 15).toFixed())} onPageChange={(a)=>{console.log(a); setPage(a)}} />
     </div>
+    </div>
+      
        </div> 
        
         <br />

@@ -5,6 +5,8 @@ import { useEffect, useState,useMemo } from "react"
 import Image from "next/image"
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
+import { ref, deleteObject,getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage"
+import {storage} from '../../../../../firebase/firebase'
 
 export default function DetailCardAdmin({params}){
    const {id} = params
@@ -28,17 +30,9 @@ export default function DetailCardAdmin({params}){
             const obj = data.data.data
             setTitle(obj.title)
             setSub_title(obj.sub_title)
-           setDeskripsi(obj.deskripsi)
-            const buffer = Buffer.from(data.data.data.foto.data);
-            const base64Image = buffer.toString('base64');
-            const contentType =  obj.foto.contentType
-            const src = `data:${contentType};base64,${base64Image}`;
-            setFoto(src)
-            const buffer2 = Buffer.from(data.data.data.contoh_hasil.data);
-            const base64Image2 = buffer2.toString('base64');
-            const contentType2 =  obj.contoh_hasil.contentType
-            const src2 = `data:${contentType2};base64,${base64Image2}`;
-            setContoh_hasil(src2)
+            setDeskripsi(obj.deskripsi)
+            setFoto(obj.foto)
+            setContoh_hasil(obj.contoh_hasil)
            }
        }
        getData()
@@ -50,28 +44,10 @@ export default function DetailCardAdmin({params}){
       try{
          await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`,{
            title:title,
-           sub_title:sub_title,deskripsi:deskripsi
+           sub_title:sub_title,deskripsi:deskripsi,contoh_hasil:newcontoh_hasil,foto:newfoto
          },{
          withCredentials: true,
          })
-         if(newfoto){
-          await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/content_foto/${id}`,{
-            foto:newfoto
-            },{
-            withCredentials: true,
-            headers:  {"Content-Type": 'multipart/form-data'}
-            })
-         }
-         if(newcontoh_hasil){
-          await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/content_contoh_hasil/${id}`,{
-            contoh_hasil:newcontoh_hasil
-          },{
-          withCredentials: true,
-          headers:  {"Content-Type": 'multipart/form-data'}
-          })
-         }
-         
-        
          alert('update success')
         }catch(err){
           alert(err.message)
@@ -79,6 +55,56 @@ export default function DetailCardAdmin({params}){
      }
      getData()
    }
+
+   const handleFoto = async (e)=>{
+    const directory = 'files/'
+    const fileName = `${e.name+new Date().toISOString()}`
+
+    const storageRef = ref(storage,directory+fileName);
+
+    // Create file metadata including the content type
+    const metadata = {
+        contentType: e.type,
+    };
+
+    // Upload the file in the bucket storage
+    const snapshot = await uploadBytesResumable(storageRef, e, metadata);
+    //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
+
+    // Grab the public url
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    if(downloadURL){
+      
+      setNewFoto(downloadURL)
+ 
+    }
+    
+  }
+
+  const handleContohHasil = async (e)=>{
+    const directory = 'files/'
+    const fileName = `${e.name+new Date().toISOString()}`
+
+    const storageRef = ref(storage,directory+fileName);
+
+    // Create file metadata including the content type
+    const metadata = {
+        contentType: e.type,
+    };
+
+    // Upload the file in the bucket storage
+    const snapshot = await uploadBytesResumable(storageRef, e, metadata);
+    //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
+
+    // Grab the public url
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    if(downloadURL){
+      
+      setNewContoh_hasil(downloadURL)
+ 
+    }
+  }
+
 
 
     return(
@@ -88,7 +114,7 @@ export default function DetailCardAdmin({params}){
               <div className="grid grid-cols-2">
               <div>
             <Image src={foto} width={400} height={400}/>
-            <input type="file" name="foto" onChange={(e)=>setNewFoto(e.target.files[0])}/>
+            <input type="file" name="foto" onChange={(e)=>handleFoto(e.target.files[0])}/>
           </div>
           <div>
           <p>judul</p>
@@ -106,7 +132,7 @@ export default function DetailCardAdmin({params}){
           </div>
           <div>
             <Image src={contoh_hasil} width={50} height={50}/>
-            <input type="file" name="contoh_hasil" onChange={(e)=>setNewContoh_hasil(e.target.files[0])}/>
+            <input type="file" name="contoh_hasil" onChange={(e)=>handleContohHasil(e.target.files[0])}/>
           </div>
           <button className="border-2" type="submit">submit edit</button>
           </form>

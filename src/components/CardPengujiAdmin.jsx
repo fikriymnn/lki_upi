@@ -9,10 +9,13 @@ import axios from 'axios';
 function CardPengujiAdmin({ id, title, src }) {
     const handleDelete = async (e) => {
         try {
-            await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`, {
+            const res = await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`, {
                 withCredentials: true,
             })
-            alert('success')
+            if(res.data=="success"){
+                alert('success')
+            }
+
         } catch (err) {
             alert(err.message)
         }
