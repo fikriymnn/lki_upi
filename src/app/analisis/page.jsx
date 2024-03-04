@@ -317,9 +317,9 @@ export default function Analisis() {
 
                         <div className='grid gap-3'>
                             {dataPengukur.map((data, i) => (
-                                <>
+                                <div key={i}>
 
-                                    <div key={i} className="bg-white border shadow-[rgba(0,0,10,0.3)_1px_2px_2px_1px] rounded-lg py-2">
+                                    <div className="bg-white border shadow-[rgba(0,0,10,0.3)_1px_2px_2px_1px] rounded-lg py-2">
 
                                         <div className='grid grid-cols-5 '>
                                             <p className='font-medium md:text-base text-[9px] text-center '>{i + 1}</p>
@@ -379,7 +379,7 @@ export default function Analisis() {
                                         </div>
 
                                     </div>
-                                </>
+                                </div>
                             ))}
 
                         </div>
