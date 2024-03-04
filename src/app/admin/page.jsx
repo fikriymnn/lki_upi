@@ -4,7 +4,7 @@ import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
 import { useState,useEffect } from "react";
 import axios from "axios";
 
-export default function admin(){
+export default function Admin(){
     // const [role,setRole] = useState('')
     const [userForm, setUserForm] = useState({
         email: "",
@@ -15,7 +15,7 @@ export default function admin(){
     const handleChange = (e) => {
         const { name, value } = e.target
         setUserForm(prev => ({ ...prev, [name]: value }))
-        console.log(userForm)
+     
     }
 
     useEffect(()=>{
@@ -26,10 +26,10 @@ export default function admin(){
         e.preventDefault()
         const get_user = async ()=>{
             try{
-                const data = await axios.post("http://localhost:5000/api/login",userForm,{withCredentials:true})
-                console.log(data)
+                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/login`,userForm,{withCredentials:true})
+             
                 if(data.data.success==true){
-                    const dataUser = await axios.get("http://localhost:5000/api/user",{withCredentials:true})
+                    const dataUser = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`,{withCredentials:true})
                     if (dataUser.data.data.role=="admin") {
                         window.location.replace('/admin/dashboard/admin')
                     } else if(dataUser.data.data.role=="operator") {

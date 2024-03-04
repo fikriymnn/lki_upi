@@ -2,9 +2,10 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
+import { useRouter } from "next/navigation"
 
-
-export default function order_analisis() {
+export default function Order_analisis() {
+    const router = useRouter()
     const uid = uuidv4()
     const [countForm, setCountForm] = useState(1);
     const [duplicate, setDuplicate] = useState([<CustomForm i={0} key={0} uuid={uid} />]);
@@ -17,10 +18,12 @@ export default function order_analisis() {
     const [pelarut, setPelarut] = useState([])
     const [preparasi_khusus, setPreparasi_khusus] = useState([])
     const [target_senyawa, setTarget_senyawa] = useState([])
+    const [sample_dikembalikan, setSample_dikembalikan] = useState([])
     const [metode_parameter, setMetode_parameter] = useState([])
-    const [jurnal_pendukung, setJurnal_pendukung] = useState([])
+    const [jurnal_pendukung, setJurnal_pendukung] = useState({})
     const [deskripsi_sample, setDeskripsi_sample] = useState([])
-    const [foto_sample, setFoto_sample] = useState([])
+    const [riwayat_pengujian, setRiwayat_pengujian] = useState([])
+    const [foto_sample, setFoto_sample] = useState({})
     const [uuid, setUuid] = useState([uid])
     const [verifikasi, setVerifikasi] = useState(false)
 
@@ -73,8 +76,6 @@ export default function order_analisis() {
 
     const increment = (e) => {
         setCountForm(a => a + 1)
-        console.log(nama_sample)
-        console.log(jenis_pengujian)
         e.preventDefault()
         setDuplicate([...duplicate, <CustomForm i={countForm} key={duplicate.length} />])
         let add = [...jenis_pengujian]
@@ -89,12 +90,12 @@ export default function order_analisis() {
         let add4 = [...jurnal_pendukung]
         add4.push("")
         setJurnal_pendukung([...add4])
-        console.log(jurnal_pendukung)
+
         let add5 = uuid
         const uid = uuidv4()
         add5.push(uid)
         setUuid([...add5])
-        console.log(uuid)
+
 
 
     }
@@ -114,51 +115,57 @@ export default function order_analisis() {
                 obj.target_senyawa = target_senyawa[i]
                 obj.metode_parameter = metode_parameter[i]
                 obj.deskripsi_sample = deskripsi_sample[i]
+                obj.riwayat_pengujian = riwayat_pengujian[i]
+                obj.sample_dikembalikan = sample_dikembalikan[i]
+
                 obj.uuid = uuid[i]
-                console.log(obj)
+
                 arr[i] = obj
             }
-            console.log(arr)
+
             if (arr.length == duplicate.length) {
-                console.log("post data")
-                const data = await axios.post("http://localhost:5000/api/order", arr, {
+
+                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/order`, arr, {
                     withCredentials: true
 
                 })
-                console.log(data)
+
                 if (data.data.success) {
-                    var v;
-                    for (v = 0; v <= uuid.length; v++) {
-                        for (let a = 0; a < jurnal_pendukung.length; a++) {
-                            if (uuid[v] == jurnal_pendukung[a].uid) {
-                                async function cek() {
-                                    await axios.post(`http://localhost:5000/api/jurnal_pendukung/${uuid[v]}`, { jurnal_pendukung: jurnal_pendukung[a].file }, {
-                                        withCredentials: true,
-                                        headers: { "Content-Type": 'multipart/form-data' }
-                                    })
-                                }
-                                cek()
+                    if (jurnal_pendukung) {
+                        async function cek() {
+                            try {
 
+
+                                await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${uuid[0]}`, { jurnal_pendukung: jurnal_pendukung }, {
+                                    withCredentials: true,
+                                    headers: { "Content-Type": 'multipart/form-data' }
+                                })
+                            } catch (err) {
+                                alert(err.message)
                             }
                         }
-                        for (let b = 0; b < foto_sample.length; b++) {
-                            if (uuid[v] == foto_sample[b].uid) {
-                                async function cek2() {
+                        cek()
 
-                                    await axios.post(`http://localhost:5000/api/foto_sample/${uuid[v]}`, { foto_sample: foto_sample[b].file }, {
-                                        withCredentials: true,
-                                        headers: { "Content-Type": 'multipart/form-data' }
-                                    })
-                                }
-                                cek2()
-                            }
-                        }
-                        if (v == uuid.length) {
-                            alert('success')
-                        }
                     }
-                }
+                    if (foto_sample) {
+                        async function cek2() {
+                            try {
+                                await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${uuid[0]}`, { foto_sample: foto_sample }, {
+                                    withCredentials: true,
+                                    headers: { "Content-Type": 'multipart/form-data' }
+                                })
+                            } catch (err) {
+                                alert(err.message)
+                            }
+                        }
+                        cek2()
+                    }
+                    setTimeout(()=>{
+alert("success")
+router.replace('/success')
+                    },1500)
 
+                }
             }
         } catch (err) {
             alert(err.message)
@@ -181,7 +188,6 @@ export default function order_analisis() {
                                         <div key={b}>
                                             <input className='input-style-lki-checklist ' type="checkbox" id={`jenis_pengujian${b}${i}`} name={`jenis_pengujian`} value={a.jenis_pengujian} onChange={(e) => {
                                                 const { checked, value } = e.target
-                                                console.log(kode_pengujian)
 
                                                 if (checked) {
 
@@ -218,7 +224,7 @@ export default function order_analisis() {
                                                         return false
                                                     }
                                                 }
-                                                console.log(jenis_pengujian)
+
                                             }} />
                                             <label htmlFor={`jenis_pengujian${b}${i}`} className='ml-3'>{a.jenis_pengujian}</label>
                                         </div>
@@ -233,7 +239,6 @@ export default function order_analisis() {
                             <h2 className="text-lg font-semibold" >Nama sample</h2>
                             <input placeholder='masukkan nama sample' className='input-style-lki' name="nama_sample" required type="text" onChange={(e) => {
                                 nama_sample[i] = e.target.value
-                                console.log(nama_sample)
 
                             }} />
                         </div>
@@ -295,19 +300,33 @@ export default function order_analisis() {
                         <div>
                             <h2 className="text-lg font-semibold">Target senyawa/logam yang di cari
                             </h2>
-                            <input className='input-style-lki' name="target_senyawa" required type="text" onChange={(e) => {
+                            <input placeholder='Tuliskan tujuan pengamatan yang ingin diperoleh, misal analisis logam natrium (Na) untuk AAS ' className='input-style-lki' name="target_senyawa" required type="text" onChange={(e) => {
                                 e.preventDefault()
                                 target_senyawa[i] = e.target.value
                             }} />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold" >Metode Parameter (Suhu/flow/panjang gelombang/fasa gerak, gas, dsb)
+                            <h2 className="text-lg font-semibold" >Metode Parameter
                             </h2>
-                            <input className='input-style-lki' name="metode_parameter" required type="text" onChange={(e) => {
+                            <input className='input-style-lki' placeholder='Tuliskan metode parameter yang ingin digunakan (suhu/flow/panjang gelombang/fasa gerak, gas, dsb.)' name="metode_parameter" required type="text" onChange={(e) => {
                                 e.preventDefault()
                                 metode_parameter[i] = e.target.value
 
                             }} />
+                        </div>
+                        <div>
+                            <h2 className="text-lg font-semibold" >APAKAH SAMPEL AKAN DIAMBIL SETELAH PENGUJIAN?
+                            </h2>
+                            <select required name="sample_dikembalikan" id="sample_dikembalikan" className='input-style-lki' onChange={(e) => {
+                                e.preventDefault()
+                                sample_dikembalikan[i] = e.target.value
+
+                            }}>
+                                <option value="" selected>Pilih</option>
+                                <option value="ya">Ya</option>
+                                <option value="tidak">Tidak</option>
+
+                            </select>
                         </div>
                         <div className='grid md:grid-cols-2 grid-cols-1 gap-10'>
 
@@ -317,7 +336,7 @@ export default function order_analisis() {
                                 <input className='input-style-lki' name="foto_sample" type="file" onChange={(e) => {
                                     e.preventDefault()
 
-                                    foto_sample[i] = { file: e.target.files[0], uid: uuid[i] }
+                                    setFoto_sample(e.target.files[0])
 
                                 }} />
                             </div>
@@ -328,8 +347,8 @@ export default function order_analisis() {
 
                                     e.preventDefault()
 
-                                    jurnal_pendukung[i] = { file: e.target.files[0], uid: uuid[i] }
-
+                                    setJurnal_pendukung(e.target.files[0]
+                                    )
                                 }} />
                             </div>
                         </div>
@@ -340,6 +359,15 @@ export default function order_analisis() {
 
                                 e.preventDefault()
                                 deskripsi_sample[i] = e.target.value
+                            }} />
+                        </div>
+                        <div>
+                            <h2 className="text-lg font-semibold" >Riwayat pengujian sample
+                            </h2>
+                            <textarea placeholder='Deskripsikan mengenai riwayat pengujian sampel: apakah pernah diuji di tempat lain dan bagaimana hasilnya' className='input-style-lki-box' name="riwayat_pengujian" type="text" onChange={(e) => {
+
+                                e.preventDefault()
+                                riwayat_pengujian[i] = e.target.value
                             }} />
                         </div>
                     </div>

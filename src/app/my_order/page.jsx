@@ -4,6 +4,7 @@ import { Table } from 'flowbite-react';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ReactPaginate from 'react-paginate';
+import { Pagination } from 'flowbite-react';
 
 export default function My_order() {
   const [invoice, setInvoice] = useState([])
@@ -13,12 +14,12 @@ export default function My_order() {
   useEffect(() => {
     async function getInvoice() {
       try {
-        const dataUser = await axios.get("http://localhost:5000/api/user", { withCredentials: true })
-        console.log(dataUser)
+        const dataUser = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`, { withCredentials: true })
+        
         if (dataUser.data.success) {
-          console.log(dataUser)
-          const data = await axios.get(`http://localhost:5000/api/invoice?id_user=${dataUser.data.data._id}&skip=${page * 15}&limit=15&success=false`, { withCredentials: true })
-          console.log(data)
+      
+          const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice?id_user=${dataUser.data.data._id}&skip=${page * 15}&limit=15&success=false`, { withCredentials: true })
+         
           if (data.data.success) {
             setInvoice(data.data.data)
             setLength(data.data.length_total)
@@ -29,7 +30,7 @@ export default function My_order() {
       }
     }
     getInvoice()
-  }, [])
+  }, [page])
   return (
     <>
       <div>
@@ -38,7 +39,7 @@ export default function My_order() {
           <hr className='text-red-700 grad md:h-2 h-1 md:mb-8 sm:mb-4 mb-2 md:mt-5 sm:mt-3 mt-2 md:w-56 sm:w-32 w-16 text-center' />
         </div>
 
-        <div className="m-auto md:w-full sm:w-full w-64">
+        <div className="m-auto w-11/12">
           <div className=" overflow-scroll w-full">
             <Table className="">
               <Table.Head>
@@ -59,7 +60,7 @@ export default function My_order() {
                 {
                   invoice.map((value, i) => {
                     return (
-                      <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                      <Table.Row key={i} className="bg-white dark:border-gray-700 dark:bg-gray-800">
 
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white text-center">
                           {i + 1}
@@ -74,7 +75,7 @@ export default function My_order() {
                             Detail
                           </a>
                         </Table.Cell>
-                        <Table.Cell className="text-center flex gap-2">
+                        <Table.Cell className="text-center gap-2">
                           <p className="text-center">{value.status}</p>
                           <br />
                           <a href={`/my_order/tracking/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white grad rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
@@ -92,22 +93,13 @@ export default function My_order() {
         <br />
 
     <p className=' text-center mb-2 text-red-600'>page : {page+1}</p>
+    
       <div className='m-auto flex items-center'>
-
-        <ReactPaginate
-          className="m-auto text-red-600 flex md:w-56 sm:w-40 w-40 justify-evenly"
-          breakLabel="..."
-          nextLabel={<p className="inline md:px-3 md:py-1 md:mb-2 px-1 py-1 mb-1 md:text-lg sm:text-base text-xs text-white bg-red-600 rounded">{"next >"}</p>}
-          onPageChange={(e) => { setPage(e.selected); console.log(e.selected) }}
-          pageRangeDisplayed={3}
-          pageCount={parseInt(Math.ceil(length / 15).toFixed())}
-          previousLabel={
-            <p className="inline md:px-3 md:py-1 md:mt-2 px-1 py-1 mt-1 text-white md:text-lg sm:text-base text-xs bg-red-600 rounded">{"< prev"}</p>
-          }
-          renderOnZeroPageCount={null}
-        />
+      <div className="flex overflow-x-auto sm:justify-center">
+      <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 15).toFixed())} onPageChange={(a)=>{console.log(a); setPage(a)}} />
+    </div>
        </div> 
-
+       
         <br />
         <br />
         <br />

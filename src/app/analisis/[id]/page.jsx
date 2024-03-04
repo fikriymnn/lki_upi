@@ -1,16 +1,36 @@
 'use client'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
-import barang from '../barang'
-
-
+import axios from 'axios';
+import parse from 'html-react-parser'
 
 function Page({ params }) {
+    const [data,setData] = useState({
+        title:'',
+        sub_title:'',
+        deskripsi:''
+    })
+    const [file1,setFile1] = useState('')
+    const [file2,setFile2] = useState('')
+    const {id} = params
 
-    const router = useRouter();
+   useEffect(()=>{
+    async function getData(){
+        try{
+            const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`, { withCredentials: true })
+            if(data.data.success){
+                setData(data.data.data)
+                setFile1(Buffer.from(data.data.data.foto.data))
+                setFile2(Buffer.from(data.data.data.contoh_hasil.data))
 
-
+            }      
+        }catch(err){
+            alert(err.message)
+        }
+       }
+       getData()
+   },[])
 
     return (
         <main>
@@ -25,34 +45,31 @@ function Page({ params }) {
 
                 <div className='bg-[#EDECECD4] w-11/12 rounded-lg shadow-2xl '>
                     <p className='text-[24px] font-bold text-center my-3'>Deskripsi Alat</p>
-                    <div className='flex bg-white p-3'>
-                        <div className='flex flex-col w-4/12 gap-y-10 mt-10'>
-                            <Image alt='' src={`${barang[params.id].thumbnail}`} width={0} height={0} sizes='100vw' className='w-[348px] h-full' />
-                            <p className='font-bold text-center ]'>{barang[params.id].nama}</p>
-                            <p className='text-center'>
+                    <div className='md:flex sm:flex bg-white p-3'>
+                        <div className='flex flex-col md:w-4/12 sm:w-4/12 gap-y-10 mt-10 justify-center'>
+                            <Image alt='' src={`data:${data?.foto?.contentType};base64,${file1.toString('base64')}`} width={0} height={0} sizes='100vw' className='w-[348px] h-full' />
+                            <p className='font-bold text-center md:text-xl sm:text-base text-base ]'>{data?.title}</p>
+                            <p className='text-center md:text-lg sm:text-base text-sm'>
 
-                                {barang[params.id].sub}
+                               { parse(data?.sub_title)}
                             </p>
                         </div>
-                        <div className='w-8/12 flex items-center'>
-                            <p className='text-[22px] font-medium leading-10 text-[#696969]'>
-                                {barang[params.id].desc}
-                            </p>
+                        <div className='md:w-8/12 sm:w-8/12 flex items-center'>
+                            <div className='md:text-[22px] sm:text-[14px] text-[10px] font-medium'>
+                                {parse(data?.deskripsi)}
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div className='bg-[#EDECECD4] w-11/12 rounded-lg shadow-2xl mt-20'>
-                    <p className='text-[24px] font-bold text-center my-3'>Contoh Hasil Penguji</p>
-                    <div className='grid grid-cols-2 bg-white px-3 py-5'>
-                        <div className='flex flex-col  gap-y-10 mt-10'>
-                            <Image alt='' src={`${barang[params.id].img1}`} width={0} height={0} sizes='100vw' className='w-[348px] h-full' />
+                    <p className='text-[24px] font-bold text-center my-3'>Contoh Hasil Pengujian</p>
+                    <div className=' bg-white px-3 py-5'>
+                        <div className='mt-10 flex justify-center'>
+                            <Image alt='' src={`data:${data?.contoh_hasil?.contentType};base64,${file2.toString('base64')}`} width={0} height={0} sizes='100vw' className='w-10/12 h-full' />
 
                         </div>
-                        <div className='flex flex-col  gap-y-10 mt-10'>
-                            <Image alt='' src={`${barang[params.id].img2}`} width={0} height={0} sizes='100vw' className='w-[348px] h-full' />
-
-                        </div>
+                       
                     </div>
                 </div>
             </div>

@@ -1,16 +1,32 @@
 "use client"
-import { UserContext } from '@/context/userContext';
-import { useContext } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from "react"
+import axios from "axios"
+import { useRouter } from "next/navigation"
 
-export default function layout({children}){
+
+export default function Layout({ children }) {
     const router = useRouter()
-    const {user} = useContext(UserContext)
-    const {login} = user
-    return(
+    useEffect(() => {
+        async function user() {
+            try {
+                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`, {
+                    withCredentials: true
+                })
+                if (data.data.success == "user") {
+                    router.replace("/")
+                }
+            } catch (err) {
+
+                router.replace("/")
+            }
+        }
+        user()
+    }, [])
+
+
+    return (
         <>
-        {children}
+            {children}
         </>
-        
     )
 }

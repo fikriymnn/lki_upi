@@ -8,7 +8,7 @@ import Router from "next/router";
 import Image from "next/image";
 
 
-export default function login({ searchParams }) {
+export default function Login({ searchParams }) {
     const router = useRouter()
 
     const { prevRoute } = searchParams
@@ -18,19 +18,20 @@ export default function login({ searchParams }) {
     })
 
     useEffect(() => {
+        console.log(process.env.NEXT_PUBLIC_URL)
         async function user() {
             try {
-                const data = await axios.get("http://localhost:5000/api/user", {
+                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`, {
                     withCredentials: true
                 })
 
                 if (data.data.success) {
                     if (prevRoute) {
-
+                        console.log(data.data.success)
                         router.replace(prevRoute)
                     } else {
 
-                        router.replace("/")
+                        // router.replace("/")
                     }
                 }
             } catch (err) {
@@ -44,15 +45,15 @@ export default function login({ searchParams }) {
     const handleChange = (e) => {
         const { name, value } = e.target
         setUserForm(prev => ({ ...prev, [name]: value }))
-        console.log(userForm)
+        
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        const get_user = async () => {
-            
-                const data = await axios.post("http://localhost:5000/api/login", userForm, { withCredentials: true })
-                console.log(data)
+        const get_user = async () => {     
+            try{
+                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/login`, userForm, { withCredentials: true })
+       
                 if (data.data.success == true) {
               
                         
@@ -70,14 +71,12 @@ export default function login({ searchParams }) {
                 }else{
                     alert(data.data.message)
                 }
-            
+            }catch(err){
+                alert(err.message)
+            }
 
         }
         get_user()
-    }
-
-    function onChange(value) {
-        console.log("Captcha value:", value);
     }
 
     return (
