@@ -30,8 +30,12 @@ const kode = [
     kode_pengujian: "IR"
   },
   {
-    jenis_pengujian: "TG DTA",
+    jenis_pengujian: "TG",
     kode_pengujian: "TG"
+  },
+  {
+    jenis_pengujian: "DTA",
+    kode_pengujian: "DTA"
   },
   {
     jenis_pengujian: "HPLC",
@@ -49,6 +53,12 @@ const kode = [
     jenis_pengujian: "LCMSMS",
     kode_pengujian: "LC"
   },
+  {
+    jenis_pengujian: "XRD",
+    kode_pengujian: "XRD"
+  },
+  
+
 
 ]
 
