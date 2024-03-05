@@ -133,6 +133,7 @@ export default function Order_Operator() {
               <Table.HeadCell>No</Table.HeadCell>
               <Table.HeadCell>Tanggal</Table.HeadCell>
               <Table.HeadCell>Invoice</Table.HeadCell>
+              <Table.HeadCell>Jenis Pengujian</Table.HeadCell>
               <Table.HeadCell>Nama</Table.HeadCell>
               <Table.HeadCell>
                 status
@@ -156,6 +157,7 @@ export default function Order_Operator() {
                       <Table.Cell>{v.date_format}</Table.Cell>
 
                       <Table.Cell>{v.no_invoice}</Table.Cell>
+                      <Table.Cell>{v.jenis_pengujian}</Table.Cell>
                       <Table.Cell>{v?.id_user?.nama_lengkap}</Table.Cell>
                       <Table.Cell>
                         <p>{v.status}</p>
@@ -183,7 +185,7 @@ export default function Order_Operator() {
       <p className=' text-center mb-2 text-red-600'>page : {page + 1}</p>
       <div className='m-auto flex items-center justify-center'>
       <div className="flex overflow-x-auto sm:justify-center">
-      <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 15).toFixed())} onPageChange={(a)=>{console.log(a); setPage(a)}} />
+      <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 15).toFixed())} onPageChange={(a)=>{console.log(a); setPage(a-1)}} />
     </div>
     </div>
       <br />

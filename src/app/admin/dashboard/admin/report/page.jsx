@@ -238,7 +238,7 @@ export default function Report() {
       <p className=' text-center mb-2 text-red-600'>page : {page + 1}</p>
       <div className='m-auto flex items-center justify-center'>
       <div className="flex overflow-x-auto sm:justify-center">
-      <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 50).toFixed())} onPageChange={(a)=>{console.log(a); setPage(a)}} />
+      <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 50).toFixed())} onPageChange={(a)=>{console.log(a); setPage(a-1)}} />
     </div>
     </div>
 
