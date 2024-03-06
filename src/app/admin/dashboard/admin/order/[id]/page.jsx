@@ -74,16 +74,18 @@ export default function DetailOrderAdmin({ params, searchParams }) {
     useEffect(() => {
         async function getnvoice() {
             try {
-
+                console.log(process.env.NEXT_PUBLIC_URL)
                 const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`, { withCredentials: true })
-                const dataOrder = await axios.get(`${process.env.NEXT_PUBLIC_URL}api/order?no_invoice=${no_invoice}&skip=0&limit=20`, { withCredentials: true })
-                console.log(data.data.data)
+                const dataOrder = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?no_invoice=${no_invoice}&skip=0&limit=20`, { withCredentials: true })
+                
                 if (data.data.success) {
                     setInvoice(data.data.data)
-                    console.log(dataOrder)
+                    console.log(data.data.data)
+          
+                  }
+                  if (dataOrder.data.success) {
                     setOrder(dataOrder.data.data)
-                    console.log(order)
-                }
+                  }
 
             } catch (err) {
                 console.log(err.message)

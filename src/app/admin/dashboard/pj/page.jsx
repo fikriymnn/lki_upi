@@ -4,6 +4,61 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 import ReactPaginate from 'react-paginate';
 import { Pagination } from 'flowbite-react';
+
+const kode = [
+  {
+    jenis_pengujian: "GCFID",
+    kode_pengujian: "FID",
+  },
+  {
+    jenis_pengujian: "GCMS",
+    kode_pengujian: "MS"
+  },
+  {
+    jenis_pengujian: "NMR",
+    kode_pengujian: "NMR"
+  },
+  {
+    jenis_pengujian: "AAS",
+    kode_pengujian: "AS"
+  },
+  {
+    jenis_pengujian: "FTIR",
+    kode_pengujian: "IR"
+  },
+  {
+    jenis_pengujian: "TG",
+    kode_pengujian: "TG"
+  },
+  {
+    jenis_pengujian: "DTA",
+    kode_pengujian: "DTA"
+  },
+  {
+    jenis_pengujian: "HPLC",
+    kode_pengujian: "HP"
+  },
+  {
+    jenis_pengujian: "UV VIS",
+    kode_pengujian: "UV"
+  },
+  {
+    jenis_pengujian: "Freezdry",
+    kode_pengujian: "FD"
+  },
+  {
+    jenis_pengujian: "LCMSMS",
+    kode_pengujian: "LC"
+  },
+  {
+    jenis_pengujian: "XRD",
+    kode_pengujian: "XRD"
+  },
+  
+
+
+]
+
 const monthOption = [
 
   "Januari",
@@ -38,6 +93,7 @@ export default function Order_Pj() {
   const [page, setPage] = useState(0)
   const [length, setLength] = useState(0)
   const [yearOption, setYearOption] = useState([])
+  const [jenis_pengujian, setJenis_pengujian] = useState('')
 
   useEffect(() => {
     let arr = []
@@ -48,7 +104,7 @@ export default function Order_Pj() {
     }
     async function getInvoice() {
       try {
-        const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice?status=menunggu verifikasi&skip=${page * 15}&limit=15${year ? `&year=${year}` : ''}${month ? `&month=${month}` : ''}`, { withCredentials: true })
+        const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice?status=menunggu verifikasi&skip=${page * 15}&limit=15${year ? `&year=${year}` : ''}${month ? `&month=${month}` : ''}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ''}`, { withCredentials: true })
         if (data.data.success) {
           setInvoice(data.data.data)
           setLength(data.data.length_total)
@@ -58,14 +114,14 @@ export default function Order_Pj() {
       }
     }
     getInvoice()
-  }, [])
+  }, [page,month,year,jenis_pengujian])
   return (
     <>
       <p className='text-center text-4xl font-bold text-gray-800 mt-7'>Order</p>
       <div className='flex justify-center'>
         <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
       </div>
-      <div className='flex justify-center mb-10'>
+      <div className='flex flex-wrap justify-center mb-10'>
         <div className='flex p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3'><p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">Tahun :</p> <select className='ml-3' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
           <option value="" defaultChecked className='input-style-lki'>all</option>
           {yearOption.map((v, i) => {
@@ -78,6 +134,14 @@ export default function Order_Pj() {
             return <option value={i} key={i} defaultValue>{v}</option>
           })}
         </select></div>
+
+        <div className='flex p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3'><p className='md:text-lg sm:text-base text-xs font-semibold text-white p-2'>Jenis Pengujian : </p> <select className='p-1 ' name="jenis_pengujian" id="jp" onChange={(e) => setJenis_pengujian(e.target.value)}>
+              <option value="" className='input-style-lki' defaultChecked>all</option>
+              {kode.map((v, i) => {
+                return <option value={v.jenis_pengujian} key={i} >{v.jenis_pengujian}</option>
+              })}
+        </select></div>
+
       </div>
       <div className="m-auto md:w-full sm:w-full w-11/12">
         <div className=" overflow-scroll w-full">
@@ -86,6 +150,7 @@ export default function Order_Pj() {
               <Table.HeadCell>No</Table.HeadCell>
               <Table.HeadCell>Tanggal</Table.HeadCell>
               <Table.HeadCell>Invoice</Table.HeadCell>
+              <Table.HeadCell>Jenis Pengujian</Table.HeadCell>
               <Table.HeadCell>Nama</Table.HeadCell>
               <Table.HeadCell>
                 status
@@ -107,8 +172,10 @@ export default function Order_Pj() {
                         {i + 1}
                       </Table.Cell>
                       <Table.Cell>{v.date_format}</Table.Cell>
-                      <Table.Cell>{v?.id_user?.nama_lengkap}</Table.Cell>
+                      
                       <Table.Cell>{v.no_invoice}</Table.Cell>
+                      <Table.Cell>{v.jenis_pengujian}</Table.Cell>
+                      <Table.Cell>{v?.id_user?.nama_lengkap}</Table.Cell>
                       <Table.Cell>
                         <p>{v.status}</p>
                       </Table.Cell>
@@ -135,7 +202,7 @@ export default function Order_Pj() {
       <p className=' text-center mb-2 text-red-600'>page : {page + 1}</p>
       <div className='m-auto flex items-center justify-center'>
       <div className="flex overflow-x-auto sm:justify-center">
-      <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 15).toFixed())} onPageChange={(a)=>{console.log(a); setPage(a)}} />
+      <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 15).toFixed())} onPageChange={(a)=>{console.log(a); setPage(a-1)}} />
     </div>
     </div>
       <br />

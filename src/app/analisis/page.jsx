@@ -70,6 +70,7 @@ export default function Analisis() {
                 },
             ],
         },
+        
         {
             alatPengukuran: "AAS (Ca, Fe, Cu, Cd)",
             jenisPengukuran: [
