@@ -30,8 +30,12 @@ const kode = [
     kode_pengujian: "IR"
   },
   {
-    jenis_pengujian: "TG DTA",
+    jenis_pengujian: "TG",
     kode_pengujian: "TG"
+  },
+  {
+    jenis_pengujian: "DTA",
+    kode_pengujian: "DTA"
   },
   {
     jenis_pengujian: "HPLC",
@@ -49,6 +53,12 @@ const kode = [
     jenis_pengujian: "LCMSMS",
     kode_pengujian: "LC"
   },
+  {
+    jenis_pengujian: "XRD",
+    kode_pengujian: "XRD"
+  },
+  
+
 
 ]
 
@@ -238,7 +248,7 @@ export default function Report() {
       <p className=' text-center mb-2 text-red-600'>page : {page + 1}</p>
       <div className='m-auto flex items-center justify-center'>
       <div className="flex overflow-x-auto sm:justify-center">
-      <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 50).toFixed())} onPageChange={(a)=>{console.log(a); setPage(a)}} />
+      <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 50).toFixed())} onPageChange={(a)=>{console.log(a); setPage(a-1)}} />
     </div>
     </div>
 

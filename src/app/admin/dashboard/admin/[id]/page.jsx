@@ -42,9 +42,10 @@ export default function DetailCardAdmin({ params }) {
     e.preventDefault()
     async function getData() {
       try {
+
         await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`, {
           title: title,
-          sub_title: sub_title, deskripsi: deskripsi, contoh_hasil: newcontoh_hasil, foto: newfoto
+          sub_title: sub_title, deskripsi: deskripsi, contoh_hasil: contoh_hasil, foto: foto
         }, {
           withCredentials: true,
         })
@@ -75,7 +76,7 @@ export default function DetailCardAdmin({ params }) {
     const downloadURL = await getDownloadURL(snapshot.ref);
     if (downloadURL) {
 
-      setNewFoto(downloadURL)
+      setFoto(downloadURL)
 
     }
 
@@ -100,7 +101,7 @@ export default function DetailCardAdmin({ params }) {
     const downloadURL = await getDownloadURL(snapshot.ref);
     if (downloadURL) {
 
-      setNewContoh_hasil(downloadURL)
+      seContoh_hasil(downloadURL)
 
     }
   }
