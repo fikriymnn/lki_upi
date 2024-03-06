@@ -101,7 +101,7 @@ export default function DetailCardAdmin({ params }) {
     const downloadURL = await getDownloadURL(snapshot.ref);
     if (downloadURL) {
 
-      seContoh_hasil(downloadURL)
+      setContoh_hasil(downloadURL)
 
     }
   }
