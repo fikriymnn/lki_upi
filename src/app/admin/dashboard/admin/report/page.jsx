@@ -123,7 +123,8 @@ export default function Report() {
           setLength(data.data.length_total)
           setLoading(false)
           console.log(length);
-          console.log(data.data.data.length);
+           console.log(data.data);
+          console.log(data.data.length_total);
           console.log(Math.ceil(length / 50))
           console.log(parseInt(Math.ceil(length / 50).toFixed()))
 
