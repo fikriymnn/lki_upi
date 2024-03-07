@@ -12,7 +12,7 @@ function CardPengujiAdmin({ id, title, src }) {
             const res = await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`, {
                 withCredentials: true,
             })
-            if(res.data=="success"){
+            if (res.data == "success") {
                 alert('success')
             }
 
@@ -22,8 +22,8 @@ function CardPengujiAdmin({ id, title, src }) {
     }
     return (
         <div className='md:p-4 p-2 border border-black flex flex-col justify-center items-center gap-10 rounded-3xl'>
-            <h1 className='font-bold text-2xl'>{title}</h1>
-            <Image src={src} width={0} height={0} sizes='100vw' alt='' className='md:w-[274.89px] md:h-[220px] w-[200px] h-[150px]' />
+            <h1 className='font-bold md:text-2xl text-lg text-center w-[200px]'>{title}</h1>
+            <Image src={src} width={0} height={0} sizes='100vw' alt='' className='md:w-[274.89px] md:h-[220px] w-[150px] h-[100px]' />
             <div className='grid grid-cols-2 gap-2 md:px-5 '>
 
                 <Button color='failure' href={`/admin/dashboard/admin/${id}`} className='grad font-bold py-1 rounded-full '>
