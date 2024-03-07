@@ -30,12 +30,8 @@ const kode = [
     kode_pengujian: "IR"
   },
   {
-    jenis_pengujian: "TG",
+    jenis_pengujian: "TG DTA",
     kode_pengujian: "TG"
-  },
-  {
-    jenis_pengujian: "DTA",
-    kode_pengujian: "DTA"
   },
   {
     jenis_pengujian: "HPLC",
@@ -126,6 +122,8 @@ export default function Report() {
           setOrder(data.data.data)
           setLength(data.data.length_total)
           setLoading(false)
+          console.log(length);
+          console.log(data.data.data.length);
           console.log(Math.ceil(length / 50))
           console.log(parseInt(Math.ceil(length / 50).toFixed()))
 
