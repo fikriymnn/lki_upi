@@ -75,11 +75,13 @@ export default function NavbarCustom() {
 
             {/* UMUM */}
 
+            {adminPath[2] !== "dashboard" ? <Navbar.Link href="/" className="mt-[2vh] font-extrabold text-white ">Home</Navbar.Link> : ""}
+
             {adminPath[2] !== "dashboard" ? <Navbar.Link href="/about" className="mt-[2vh] font-extrabold text-white ">About</Navbar.Link> : ""}
 
             {adminPath[2] !== "dashboard" ? <Navbar.Link href="/contact" className="mt-[2vh] font-extrabold text-white ">Contact</Navbar.Link> : ""}
 
-            {adminPath[2] !== "dashboard" ? <Navbar.Link href="/analisis" className="mt-[2vh] font-extrabold text-white ">
+            {adminPath[2] !== "dashboard" ? <Navbar.Link href="/layanan" className="mt-[2vh] font-extrabold text-white ">
               Layanan
             </Navbar.Link> : ""}
 
