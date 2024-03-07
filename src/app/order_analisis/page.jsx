@@ -182,58 +182,18 @@ router.replace('/success')
                     <div className='px-10 py-5 flex flex-col gap-3'>
                         <div>
                             <h2 className="text-lg font-semibold">Jenis pengujian</h2>
-                            {
-                                kode.map((a, b) => {
-                                    return (
-                                        <div key={b}>
-                                            <input className='input-style-lki-checklist ' type="checkbox" id={`jenis_pengujian${b}${i}`} name={`jenis_pengujian`} value={a.jenis_pengujian} onChange={(e) => {
-                                                const { checked, value } = e.target
-
-                                                if (checked) {
-
-                                                    let cccc = [...jenis_pengujian]
-
-                                                    let copya2 = cccc[i]
-                                                    copya2.push(value)
-                                                    cccc[i] = copya2
-                                                    setJenis_pengujian(cccc)
-
-                                                    let cccc2 = [...kode_pengujian]
-                                                    let copya22 = cccc2[i]
-                                                    copya22.push(a.kode_pengujian)
-                                                    cccc2[i] = copya22
-                                                    setKode_pengujian(cccc2)
-
-                                                } else {
-                                                    let copy = [...jenis_pengujian]
-                                                    let copy2 = copy[i]
-
-                                                    let copy3 = [...kode_pengujian]
-                                                    let copy4 = copy3[i]
-                                                    if (copy2?.includes(value)) {
-                                                        let index = copy2.indexOf(value)
-                                                        copy2.splice(index, 1)
-                                                        copy[i] = copy2
-                                                        setJenis_pengujian([...copy])
-
-                                                        let index2 = copy4.indexOf(a.kode_pengujian)
-                                                        copy4.splice(index2, 1)
-                                                        copy3[i] = copy4
-                                                        setKode_pengujian([...copy3])
-                                                    } else {
-                                                        return false
-                                                    }
-                                                }
-
-                                            }} />
-                                            <label htmlFor={`jenis_pengujian${b}${i}`} className='ml-3'>{a.jenis_pengujian}</label>
-                                        </div>
-                                    )
-                                })
-                            }
-
-
-
+                            <select required name="jenis_pengujian" id="jenis_pengujian" className='input-style-lki' onChange={(e) => {       
+                                jenis_pengujian[0][0] = kode[e.target.value].jenis_pengujian
+                                kode_pengujian[0][0] = kode[e.target.value].kode_pengujian
+                            }}>
+                                <option value="" defaultValue>Pilih</option>
+                               {kode.map((v,i)=>{
+                                return(
+                                    <option key={i} value={i}>{v.jenis_pengujian}</option>
+                                )
+                               })}
+                            </select>
+            
                         </div>
                         <div>
                             <h2 className="text-lg font-semibold" >Nama sample</h2>

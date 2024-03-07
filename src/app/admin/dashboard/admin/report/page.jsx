@@ -6,6 +6,7 @@ import { DownloadTableExcel } from 'react-export-table-to-excel';
 import axios from 'axios'
 import ReactPaginate from 'react-paginate';
 import month_bahasa from '@/utils/month_bahasa'
+import { Pagination } from 'flowbite-react';
 
 const kode = [
   {
@@ -48,6 +49,12 @@ const kode = [
     jenis_pengujian: "LCMSMS",
     kode_pengujian: "LC"
   },
+  {
+    jenis_pengujian: "XRD",
+    kode_pengujian: "XRD"
+  },
+
+
 
 ]
 
@@ -115,6 +122,9 @@ export default function Report() {
           setOrder(data.data.data)
           setLength(data.data.length_total)
           setLoading(false)
+          console.log(length);
+           console.log(data.data);
+          console.log(data.data.length_total);
           console.log(Math.ceil(length / 50))
           console.log(parseInt(Math.ceil(length / 50).toFixed()))
 
@@ -144,7 +154,7 @@ export default function Report() {
             <Button color="failure" size={5} className='ml-10 p-2  grad'>download report excel</Button>
           </DownloadTableExcel>
           <div className='flex mt-10 md:justify-center sm:justify-center md:justify-items-center  sm:flex flex-wrap  ml-2 md:w-full sm:w-full gap-1 justify-center'>
-            <div className='flex p-1 mt-2  justify-between grad rounded-lg '>
+            <div className='md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:w-72 sm:w-64 w-52'>
               <p className='md:text-lg sm:text-base text-xs font-semibold text-white p-2'>Tahun : </p> <select className='p-2 ml-3 w-20 h-10' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
                 <option value="" className='input-style-lki' defaultChecked>all</option>
                 {yearOption.map((v, i) => {
@@ -153,14 +163,14 @@ export default function Report() {
                 })}
               </select></div>
 
-            <div className=' flex mt-2 p-1  justify-between grad rounded-lg md:ml-3 sm:ml-3 '>
+            <div className=' md:flex grid grid-cols-2 mt-2 p-1  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52 '>
               <p className='md:text-lg sm:text-base text-xs font-semibold text-white p-2'>Bulan : </p><select className='p-2 ml-3' name="bulan" id="bulan" onChange={(e) => setMonth(e.target.value)}>
                 <option value="" className='input-style-lki' defaultChecked>all</option>
                 {monthOption.map((v, i) => {
                   return <option value={i} key={i} defaultValue>{v}</option>
                 })}
               </select></div>
-            <div className='flex p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3'><p className='md:text-lg sm:text-base text-xs font-semibold text-white p-2'>Jenis Pengujian : </p> <select className='p-1 ' name="jenis_pengujian" id="jp" onChange={(e) => setJenis_pengujian(e.target.value)}>
+            <div className='md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52'><p className='md:text-lg sm:text-base text-xs font-semibold text-white p-2'>Jenis Pengujian : </p> <select className='p-1 ' name="jenis_pengujian" id="jp" onChange={(e) => setJenis_pengujian(e.target.value)}>
               <option value="" className='input-style-lki' defaultChecked>all</option>
               {kode.map((v, i) => {
                 return <option value={v.jenis_pengujian} key={i} >{v.jenis_pengujian}</option>
@@ -235,20 +245,10 @@ export default function Report() {
       </div>
       <br />
       <p className=' text-center mb-2 text-red-600'>page : {page + 1}</p>
-      <div className='m-auto flex items-center'>
-
-        <ReactPaginate
-          className="m-auto text-red-600 flex md:w-56 sm:w-40 w-40 justify-evenly"
-          breakLabel="..."
-          nextLabel={<p className="inline md:px-3 md:py-1 md:mb-2 px-1 py-1 mb-1 md:text-lg sm:text-base text-xs text-white bg-red-600 rounded">{"next >"}</p>}
-          onPageChange={(e) => { setPage(e.selected); console.log(e.selected) }}
-          pageRangeDisplayed={3}
-          pageCount={parseInt(Math.ceil(length / 50).toFixed())}
-          previousLabel={
-            <p className="inline md:px-3 md:py-1 md:mt-2 px-1 py-1 mt-1 text-white md:text-lg sm:text-base text-xs bg-red-600 rounded">{"< prev"}</p>
-          }
-          renderOnZeroPageCount={null}
-        />
+      <div className='m-auto flex items-center justify-center'>
+        <div className="flex overflow-x-auto sm:justify-center">
+          <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 50).toFixed())} onPageChange={(a) => { console.log(a); setPage(a - 1) }} />
+        </div>
       </div>
 
 

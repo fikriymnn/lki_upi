@@ -46,6 +46,7 @@ export default function My_order() {
                 <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs ">No</Table.HeadCell>
                 <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">Tanggal</Table.HeadCell>
                 <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">No Invoice</Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">Jenis Pengujian</Table.HeadCell>
                 <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
                   Harga
                 </Table.HeadCell>
@@ -67,6 +68,7 @@ export default function My_order() {
                         </Table.Cell>
                         <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{`${value.date_format}`}</Table.Cell>
                         <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{value.no_invoice}</Table.Cell>
+                        <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{value.jenis_pengujian}</Table.Cell>
                         <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
                           {value.total_harga !== 0 ? value.total_harga : "-"}
                         </Table.Cell>
@@ -93,11 +95,13 @@ export default function My_order() {
         <br />
 
     <p className=' text-center mb-2 text-red-600'>page : {page+1}</p>
-    
-      <div className='m-auto flex items-center'>
+    <div className="flex justify-center">
+    <div className='m-auto flex items-center'>
       <div className="flex overflow-x-auto sm:justify-center">
-      <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 15).toFixed())} onPageChange={(a)=>{console.log(a); setPage(a)}} />
+      <Pagination currentPage={page} totalPages={parseInt(Math.ceil(length / 15).toFixed())} onPageChange={(a)=>{console.log(a); setPage(a-1)}} />
     </div>
+    </div>
+      
        </div> 
        
         <br />

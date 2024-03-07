@@ -21,7 +21,7 @@ export default function NavbarCustom() {
     const user = async () => {
       try {
         const data = await axios(`${process.env.NEXT_PUBLIC_URL}/api/user`, { withCredentials: true })
-       
+
         if (data.data.success == true) {
           setRole(data.data.data.role)
           if (data.data.data.role == "user") {
@@ -63,36 +63,36 @@ export default function NavbarCustom() {
           <Navbar.Toggle className='bg-white' />
           <Navbar.Collapse className='md:mr-20 '>
             {/* ADMIN */}
-            {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard/admin" className="mt-[2vh] font-bold text-white">
+            {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard/admin" className="mt-[2vh] font-extrabold text-white ">
               Content
             </Navbar.Link> : ''}
 
-            {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard/admin/order" className="mt-[2vh] font-bold text-white"> Order </Navbar.Link> : ""}
+            {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard/admin/order" className="mt-[2vh] font-extrabold text-white "> Order </Navbar.Link> : ""}
 
-            {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard/admin/report" className="mt-[2vh] font-bold text-white">Report</Navbar.Link> : ""}
+            {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard/admin/report" className="mt-[2vh] font-extrabold text-white ">Report</Navbar.Link> : ""}
 
-            {adminPath[2] == "dashboard" || (adminPath[1] == "admin" && role) ? <Navbar.Link onClick={handleLogout} className="mt-[2vh] font-bold text-white">Logout</Navbar.Link> : ""}
+            {adminPath[2] == "dashboard" || (adminPath[1] == "admin" && role) ? <Navbar.Link onClick={handleLogout} className="mt-[2vh] font-extrabold text-white ">Logout</Navbar.Link> : ""}
 
             {/* UMUM */}
 
-            {adminPath[2] !== "dashboard" ? <Navbar.Link href="/about" className="mt-[2vh] font-bold text-white">About</Navbar.Link> : ""}
+            {adminPath[2] !== "dashboard" ? <Navbar.Link href="/about" className="mt-[2vh] font-extrabold text-white ">About</Navbar.Link> : ""}
 
-            {adminPath[2] !== "dashboard" ? <Navbar.Link href="/contact" className="mt-[2vh] font-bold text-white">Contact</Navbar.Link> : ""}
+            {adminPath[2] !== "dashboard" ? <Navbar.Link href="/contact" className="mt-[2vh] font-extrabold text-white ">Contact</Navbar.Link> : ""}
 
-            {adminPath[2] !== "dashboard" ? <Navbar.Link href="/analisis" className="mt-[2vh] font-bold text-white">
+            {adminPath[2] !== "dashboard" ? <Navbar.Link href="/analisis" className="mt-[2vh] font-extrabold text-white ">
               Layanan
             </Navbar.Link> : ""}
 
-            {!login && adminPath[2] !== "dashboard" ? <Navbar.Link href={`/login?prevRoute=${path}`} className="mt-[2vh] font-bold text-white">Login</Navbar.Link> : ""}
+            {!login && adminPath[2] !== "dashboard" ? <Navbar.Link href={`/login?prevRoute=${path}`} className="mt-[2vh] font-extrabold text-white ">Login</Navbar.Link> : ""}
 
             {/* LOGIN */}
 
-            {login && adminPath[2] !== "dashboard" ? <Navbar.Link href="/my_order" className="mt-[2vh] font-bold text-white">Order saya</Navbar.Link> : ""}
+            {login && adminPath[2] !== "dashboard" ? <Navbar.Link href="/my_order" className="mt-[2vh] font-extrabold text-white ">Order saya</Navbar.Link> : ""}
 
-            {login && adminPath[2] !== "dashboard" ? <Navbar.Link href="/history_order" className="mt-[2vh] font-bold text-white">History order </Navbar.Link> : ""}
-            {login && adminPath[2] !== "dashboard" ? <Navbar.Link href="/profil" className="mt-[2vh] font-bold  text-white">Profile</Navbar.Link> : ""}
+            {login && adminPath[2] !== "dashboard" ? <Navbar.Link href="/history_order" className="mt-[2vh] font-extrabold text-white ">History order </Navbar.Link> : ""}
+            {login && adminPath[2] !== "dashboard" ? <Navbar.Link href="/profil" className="mt-[2vh] font-extrabold   text-white">Profile</Navbar.Link> : ""}
 
-            {login && adminPath[2] !== "dashboard" ? <Navbar.Link onClick={handleLogout} className="mt-[2vh] font-bold text-white ">Logout</Navbar.Link> : ""}
+            {login && adminPath[2] !== "dashboard" ? <Navbar.Link onClick={handleLogout} className="mt-[2vh] font-extrabold text-white  ">Logout</Navbar.Link> : ""}
 
             {/* <div className=''>
 
