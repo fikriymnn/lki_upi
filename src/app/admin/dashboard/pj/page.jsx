@@ -27,12 +27,8 @@ const kode = [
     kode_pengujian: "IR"
   },
   {
-    jenis_pengujian: "TG",
+    jenis_pengujian: "TG DTA",
     kode_pengujian: "TG"
-  },
-  {
-    jenis_pengujian: "DTA",
-    kode_pengujian: "DTA"
   },
   {
     jenis_pengujian: "HPLC",
@@ -151,7 +147,6 @@ export default function Order_Pj() {
               <Table.HeadCell>Tanggal</Table.HeadCell>
               <Table.HeadCell>Invoice</Table.HeadCell>
               <Table.HeadCell>Jenis Pengujian</Table.HeadCell>
-              <Table.HeadCell>Nama</Table.HeadCell>
               <Table.HeadCell>
                 status
               </Table.HeadCell>
@@ -175,7 +170,6 @@ export default function Order_Pj() {
 
                       <Table.Cell>{v.no_invoice}</Table.Cell>
                       <Table.Cell>{v.jenis_pengujian}</Table.Cell>
-                      <Table.Cell>{v?.id_user?.nama_lengkap}</Table.Cell>
                       <Table.Cell>
                         <p>{v.status}</p>
                       </Table.Cell>
