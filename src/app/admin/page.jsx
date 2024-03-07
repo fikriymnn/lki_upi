@@ -36,6 +36,9 @@ export default function Admin(){
                         window.location.replace('/admin/dashboard/operator')
                     }else if(dataUser.data.data.role=="pj") {
                         window.location.replace('/admin/dashboard/pj')
+                    }else{
+                      await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/logout`, { withCredentials: true })
+                      window.location.replace('/')
                     }
                 }else{
                     alert(data.message)
