@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react'
 import { Button } from 'flowbite-react';
 
 
-function CardPenguji({ id, nama,foto }) {
-  
+function CardPenguji({ id, nama, foto }) {
+
     return (
         <div className='md:p-4 p-2 border border-black flex flex-col justify-center items-center gap-10 rounded-3xl'>
             <h1 className='font-bold text-2xl'>{nama}</h1>

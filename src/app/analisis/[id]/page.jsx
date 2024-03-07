@@ -47,18 +47,18 @@ function Page({ params }) {
                 <div className='bg-[#EDECECD4] w-11/12 rounded-lg shadow-2xl h-full'>
                     <p className='text-[24px] font-bold text-center my-3'>Deskripsi Alat</p>
                     <div className='md:flex sm:flex bg-white p-3 gap-5 h-full'>
-                        <div className='flex flex-col align-start items-start md:w-4/12 sm:w-4/12 gap-y-10 mt-10 mb-10'>
+                        <div className='flex flex-col align-start md:items-start md:justify-start sm:justify-start justify-center md:w-4/12 sm:w-4/12 gap-y-10 mt-10 mb-10'>
                             <div >
-                                <Image alt='' src={data?.foto} width={0} height={0} sizes='100vw' className='w-[348px]  mx-auto' />
-                                <p className='font-bold text-center md:text-xl sm:text-base text-base ]'>{data?.title}</p>
-                                <p className='text-center md:text-lg sm:text-base text-sm'>
+                                <Image alt='' src={data?.foto} width={0} height={0} sizes='100vw' className='md:w-[348px] w-[250px]  mx-auto mb-5' />
+                                <p className='font-bold text-center md:text-xl sm:text-base text-base ] '>{data?.title}</p>
+                                <p className='text-center md:text-lg sm:text-base text-[10px]'>
 
                                     {parse(data?.sub_title)}
                                 </p>
                             </div>
                         </div>
-                        <div className='md:w-8/12 sm:w-8/12 flex '>
-                            <div className='md:text-[18px] sm:text-[10px] text-[9px] font-medium'>
+                        <div className='md:w-8/12 sm:w-8/12 flex mx-5'>
+                            <div className='md:text-[18px] sm:text-[10px] text-[10px] font-medium'>
                                 {parse(data?.deskripsi)}
                             </div>
                         </div>
@@ -69,7 +69,7 @@ function Page({ params }) {
                     <p className='text-[24px] font-bold text-center my-3'>Contoh Hasil Pengujian</p>
                     <div className=' bg-white px-3 py-5'>
                         <div className='mt-10 flex justify-center'>
-                            <Image alt='' src={data?.contoh_hasil} width={0} height={0} sizes='100vw' className='w-10/12 h-full' />
+                            <Image alt='' src={data?.contoh_hasil} width={0} height={0} sizes='100vw' className='w-9/12 h-full' />
 
                         </div>
 
