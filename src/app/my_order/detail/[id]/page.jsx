@@ -127,11 +127,12 @@ export default function Detail({ params, searchParams }) {
   return (
     <>
       <div>
-        <p className='text-center text-4xl font-bold text-gray-800 mt-7'>DETAIL</p>
+      <Navigasi text1={"user"} text2={'detail order'}/>
+        {/* <p className='text-center text-4xl font-bold text-gray-800 mt-7'>DETAIL</p>
         <div className='flex justify-center'>
           <hr className='grad h-2 mb-8 mt-5 w-56 text-center' />
 
-        </div>
+        </div> */}
 
         <div className="md:mx-20 mx-5">
           <div className="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2">

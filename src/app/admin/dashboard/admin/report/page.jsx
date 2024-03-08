@@ -130,10 +130,11 @@ export default function Report() {
   }, [year, jenis_pengujian, month, page])
   return (
     <>
-      <p className='text-center text-4xl font-bold text-gray-800 mt-7'>REPORT</p>
+      {/* <p className='text-center text-4xl font-bold text-gray-800 mt-7'>REPORT</p>
       <div className='flex justify-center'>
         <hr className='grad rounded-lg h-2 mb-8 mt-5 w-56 text-center' />
-      </div>
+      </div> */}
+      <Navigasi text1={"admin"} text2={'report'}/>
 
 
       <br />

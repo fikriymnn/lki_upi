@@ -105,10 +105,11 @@ export default function Hdetail({ params, searchParams }) {
   return (
     <>
       <div>
-        <p className='text-center text-4xl font-bold text-gray-800 mt-7'>DETAIL</p>
+      <Navigasi text1={"user"} text2={'detail history order'}/>
+        {/* <p className='text-center text-4xl font-bold text-gray-800 mt-7'>DETAIL</p>
         <div className='flex justify-center'>
           <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
-        </div>
+        </div> */}
         <div className="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 md:mx-20 mx-5">
           <p className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">status : <span className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto text-end ">{invoice?.status}</span> </p>
           {invoice?.status == "form dikonfirmasi" ? <p>*kirim sample ke alamat yang tertera \n (Jl.lorem ipsum dolor)</p> : ""}

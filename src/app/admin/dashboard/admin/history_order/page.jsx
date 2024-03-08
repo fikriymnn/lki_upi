@@ -5,6 +5,55 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ReactPaginate from 'react-paginate';
 import { Pagination } from 'flowbite-react';
+
+const kode = [
+  {
+    jenis_pengujian: "GCFID",
+    kode_pengujian: "FID",
+  },
+  {
+    jenis_pengujian: "GCMS",
+    kode_pengujian: "MS"
+  },
+  {
+    jenis_pengujian: "NMR",
+    kode_pengujian: "NMR"
+  },
+  {
+    jenis_pengujian: "AAS",
+    kode_pengujian: "AS"
+  },
+  {
+    jenis_pengujian: "FTIR",
+    kode_pengujian: "IR"
+  },
+  {
+    jenis_pengujian: "TG DTA",
+    kode_pengujian: "TG"
+  },
+  {
+    jenis_pengujian: "HPLC",
+    kode_pengujian: "HP"
+  },
+  {
+    jenis_pengujian: "UV VIS",
+    kode_pengujian: "UV"
+  },
+  {
+    jenis_pengujian: "Freezdry",
+    kode_pengujian: "FD"
+  },
+  {
+    jenis_pengujian: "LCMSMS",
+    kode_pengujian: "LC"
+  },
+  {
+    jenis_pengujian: "XRD",
+    kode_pengujian: "XRD"
+  },
+
+]
+
 const monthOption = [
 
   "Januari",
@@ -37,6 +86,7 @@ export default function HHistory_order() {
   const [year, setYear] = useState(0)
   const [month, setMonth] = useState(0)
   const [page, setPage] = useState(0)
+  const [jenis_pengujian, setJenis_pengujian] = useState("")
   const [length, setLength] = useState(0)
   const [yearOption, setYearOption] = useState([])
 
@@ -64,15 +114,16 @@ export default function HHistory_order() {
       }
       }
     getInvoice()
-  }, [year,month])
+  }, [year,month,jenis_pengujian,page])
   return (
     <>
       <div>
-        <p className='text-center text-4xl font-bold text-gray-800 mt-7'>MY ORDER</p>
+      <Navigasi text1={"admin"} text2={'history order'}/>
+        {/* <p className='text-center text-4xl font-bold text-gray-800 mt-7'>MY ORDER</p>
         <div className='flex justify-center'>
           <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
-        </div>
-        <div className='flex justify-center mb-10'>
+        </div> */}
+        <div className='flex flex-wrap justify-center mb-10'>
           <div className='flex p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 ml-3'><p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">Tahun :</p> <select className='ml-3' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
             <option value="" defaultChecked className="input-style-lki">all</option>
             {yearOption.map((v, i) => {
@@ -86,6 +137,12 @@ export default function HHistory_order() {
               return <option value={i} key={i} defaultValue>{v}</option>
             })}
           </select></div>
+          <div className='md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52'><p className='md:text-lg sm:text-base text-xs font-semibold text-white p-2 '>Jenis Pengujian : </p> <select className='p-1 ' name="jenis_pengujian" id="jp" onChange={(e) => setJenis_pengujian(e.target.value)}>
+          <option value="" className='input-style-lki' defaultChecked>all</option>
+          {kode.map((v, i) => {
+            return <option value={v.jenis_pengujian} key={i} >{v.jenis_pengujian}</option>
+          })}
+        </select></div>
         </div>
         <div className="m-auto w-11/12">
           <div className=" overflow-scroll w-full">

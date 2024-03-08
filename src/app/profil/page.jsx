@@ -56,7 +56,7 @@ export default function Profile() {
 
 
     return (
-        <>
+        <>   <Navigasi text1={"/"} text2={'profile'}/>
             <div className="mb-20">
                 <div className="flex justify-end items-end">
 

@@ -34,10 +34,11 @@ export default function My_order() {
   return (
     <>
       <div>
-        <p className='text-center md:text-3xl text-xl text-lg font-bold text-gray-800 mt-7'>MY ORDER</p>
+      <Navigasi text1={"user"} text2={'my order'}/>
+        {/* <p className='text-center md:text-3xl text-xl text-lg font-bold text-gray-800 mt-7'>MY ORDER</p>
         <div className='flex justify-center'>
           <hr className='text-red-700 grad md:h-2 h-1 md:mb-8 sm:mb-4 mb-2 md:mt-5 sm:mt-3 mt-2 md:w-56 sm:w-32 w-16 text-center' />
-        </div>
+        </div> */}
 
         <div className="m-auto w-11/12">
           <div className=" overflow-scroll w-full">
