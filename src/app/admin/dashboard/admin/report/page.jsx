@@ -141,14 +141,8 @@ export default function Report() {
       <br />
       <div>
         <div>
-          <DownloadTableExcel
-            filename={`report_${new Date().toISOString()}`}
-            sheet={`${month_bahasa(new Date().getMonth())} ${new Date().getFullYear()}`}
-            currentTableRef={tableRef.current}
-          >
-            <Button color="failure" size={5} className='ml-10 p-2  grad'>download report excel</Button>
-          </DownloadTableExcel>
-          <div className='flex mt-10 md:justify-center sm:justify-center md:justify-items-center  sm:flex flex-wrap  ml-2 md:w-full sm:w-full gap-1 justify-center'>
+         
+          <div className='flex mt-5 md:justify-center sm:justify-center md:justify-items-center  sm:flex flex-wrap  ml-2 md:w-full sm:w-full gap-1 justify-center'>
             <div className='md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:w-72 sm:w-64 w-52'>
               <p className='md:text-lg sm:text-base text-xs font-semibold text-white p-2'>Tahun : </p> <select className='p-2 ml-3 w-20 h-10' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
                 <option value="" className='input-style-lki' defaultChecked>all</option>
@@ -171,9 +165,17 @@ export default function Report() {
                 return <option value={v.jenis_pengujian} key={i} >{v.jenis_pengujian}</option>
               })}
             </select></div>
+            <DownloadTableExcel
+            filename={`report_${new Date().toISOString()}`}
+            sheet={`${month_bahasa(new Date().getMonth())} ${new Date().getFullYear()}`}
+            currentTableRef={tableRef.current}
+          >
+            <Button color="failure" size={5} className='ml-10 p-2  grad'>download report excel</Button>
+          </DownloadTableExcel>
           </div>
           <br />
-          <div className='w-11/12 overflow-scroll md:h-96 h-56' >
+          <div className='flex justify-center items-center'>
+          <div className='w-11/12 overflow-scroll md:h-96 h-56 m-auto' >
             <table ref={tableRef} className='m-auto table-auto'>
               <tbody>
                 <tr>
@@ -234,6 +236,7 @@ export default function Report() {
               </tbody>
             </table>
             {order ? "" : <p className='text-center'>loading</p>}
+          </div>
           </div>
 
         </div>
