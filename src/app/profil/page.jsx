@@ -1,6 +1,7 @@
 "use client"
 import axios from "axios";
 import { useEffect, useState } from "react"
+import Navigasi from '@/components/Navigasi'
 
 export default function Profile() {
     const [edit, setEdit] = useState(false)

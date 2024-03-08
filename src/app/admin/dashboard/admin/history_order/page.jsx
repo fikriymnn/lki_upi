@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ReactPaginate from 'react-paginate';
 import { Pagination } from 'flowbite-react';
+import Navigasi from '@/components/Navigasi'
 
 const kode = [
   {

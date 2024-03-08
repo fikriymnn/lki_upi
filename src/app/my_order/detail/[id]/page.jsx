@@ -5,6 +5,7 @@ import OrderCard from "@/components/OrderCard"
 import { Button } from 'flowbite-react';
 import axios from 'axios'
 import month_bahasa from '@/utils/month_bahasa'
+import Navigasi from '@/components/Navigasi'
 
 
 export default function Detail({ params, searchParams }) {

@@ -7,6 +7,7 @@ import axios from 'axios'
 import ReactPaginate from 'react-paginate';
 import month_bahasa from '@/utils/month_bahasa'
 import { Pagination } from 'flowbite-react';
+import Navigasi from '@/components/Navigasi'
 
 const kode = [
   {

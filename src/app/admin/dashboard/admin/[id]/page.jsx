@@ -7,6 +7,7 @@ import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
 import { ref, deleteObject, getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { storage } from '../../../../../firebase/firebase'
+import Navigasi from '@/components/Navigasi'
 
 export default function DetailCardAdmin({ params }) {
   const { id } = params
