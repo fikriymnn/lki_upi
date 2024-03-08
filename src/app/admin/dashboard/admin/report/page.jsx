@@ -115,18 +115,11 @@ export default function Report() {
         console.log('S')
 
         setLoading(true)
-        const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?report=true&skip=${page * 50}&limit=50${month ? `&month=${month}` : ""}${year ? `&year=${year}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`, { withCredentials: true })
-        // const dataReport = await axios.get(`http://localhost:5000/api/order?${month?`&month=${month}`:""}${year?`&year=${year}`:""}${jenis_pengujian?`&jenis_pengujian=${jenis_pengujian}`:""}`, { withCredentials: true })
-        console.log(data.data)
+        const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?report=true&success=true&status=selesai&skip=${page * 50}&limit=50${month ? `&month=${month}` : ""}${year ? `&year=${year}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`, { withCredentials: true })
         if (data.data.success) {
           setOrder(data.data.data)
           setLength(data.data.length_total)
           setLoading(false)
-          console.log(length);
-           console.log(data.data);
-          console.log(data.data.length_total);
-          console.log(Math.ceil(length / 50))
-          console.log(parseInt(Math.ceil(length / 50).toFixed()))
 
         }
       } catch (err) {

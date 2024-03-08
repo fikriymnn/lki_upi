@@ -142,22 +142,22 @@ export default function Order() {
           })}
         </select></div>
       </div>
-      <div className="m-auto md:w-full sm:w-full w-11/12">
+      <div className="m-auto  w-11/12">
         <div className=" overflow-scroll w-full">
           <Table>
             <Table.Head>
-              <Table.HeadCell>No</Table.HeadCell>
-              <Table.HeadCell>Tanggal</Table.HeadCell>
-              <Table.HeadCell>Invoice</Table.HeadCell>
-              <Table.HeadCell>Jenis Pengujian</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">No</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">Tanggal</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">Invoice</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">Jenis Pengujian</Table.HeadCell>
            
-              <Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
                 Harga
               </Table.HeadCell>
-              <Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
                 Keterangan
               </Table.HeadCell>
-              <Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
                 Status
               </Table.HeadCell>
             </Table.Head>
@@ -170,17 +170,17 @@ export default function Order() {
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                         {i + 1}
                       </Table.Cell>
-                      <Table.Cell>{v.date_format}</Table.Cell>
-                      <Table.Cell>{v.no_invoice}</Table.Cell>
-                      <Table.Cell>{v.jenis_pengujian}</Table.Cell>
+                      <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{v.date_format}</Table.Cell>
+                      <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{v.no_invoice}</Table.Cell>
+                      <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{v.jenis_pengujian}</Table.Cell>
                 
-                      <Table.Cell>{v.total_harga}</Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{v.total_harga}</Table.Cell>
+                      <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
                         <a href={`/admin/dashboard/admin/order/${v._id}?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                           keterangan
                         </a>
                       </Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
                         <p>{v.status}</p>
                         <br />
                         <a href={`/admin/dashboard/admin/order/tracking/${v._id}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
