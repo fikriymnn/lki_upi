@@ -91,14 +91,14 @@ export default function History_order() {
           <div className=" overflow-scroll w-full">
             <Table>
               <Table.Head>
-                <Table.HeadCell>No</Table.HeadCell>
-                <Table.HeadCell>Tanggal</Table.HeadCell>
-                <Table.HeadCell>No Invoice</Table.HeadCell>
-                <Table.HeadCell>Jenis Pengujian</Table.HeadCell>
-                <Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">No</Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">Tanggal</Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">No Invoice</Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">Jenis Pengujian</Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
                   Harga
                 </Table.HeadCell>
-                <Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
                   Keterangan
                 </Table.HeadCell>
 
@@ -112,13 +112,13 @@ export default function History_order() {
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                           {i + 1}
                         </Table.Cell>
-                        <Table.Cell>{`${value.date_format}`}</Table.Cell>
-                        <Table.Cell>{value.no_invoice}</Table.Cell>
+                        <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{`${value.date_format}`}</Table.Cell>
+                        <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{value.no_invoice}</Table.Cell>
                         <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{value.jenis_pengujian}</Table.Cell>
-                        <Table.Cell>
+                        <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
                           {value.total_harga !== 0 ? value.total_harga : "-"}
                         </Table.Cell>
-                        <Table.Cell>
+                        <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
                           <a href={`/history_order/detail/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                             detail
                           </a>
