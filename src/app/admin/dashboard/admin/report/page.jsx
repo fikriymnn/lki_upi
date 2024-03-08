@@ -171,7 +171,7 @@ export default function Report() {
             </select></div>
           </div>
           <br />
-          <div className='w-full overflow-scroll md:h-96 h-56' >
+          <div className='w-11/12 overflow-scroll md:h-96 h-56' >
             <table ref={tableRef} className='m-auto table-auto'>
               <tbody>
                 <tr>
