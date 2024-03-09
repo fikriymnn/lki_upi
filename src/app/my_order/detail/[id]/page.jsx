@@ -97,6 +97,51 @@ export default function Detail({ params, searchParams }) {
     }
   };
 
+  const resizeImage = (file, maxWidth, maxHeight, callback) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+                if (width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+            } else {
+                if (height > maxHeight) {
+                    width *= maxHeight / height;
+                    height = maxHeight;
+                }
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            canvas.toBlob((blob) => {
+                callback(blob);
+            }, file.type);
+        };
+    };
+};
+
+const handleBuktiPembayaran = (e)=>{
+  const file = e.target.files[0];
+        if (file) {
+            resizeImage(file, 300, 300, (resizedBlob) => {
+                setBuktiPembayaran(URL.createObjectURL(resizedBlob));
+            });
+        }
+}
+
   useEffect(() => {
     async function getInvoice() {
       try {
@@ -123,17 +168,14 @@ export default function Detail({ params, searchParams }) {
     getInvoice()
   }, [])
 
+  
+
 
 
   return (
     <>
       <div>
       <Navigasi text1={"user"} text2={'detail order'}/>
-        {/* <p className='text-center text-4xl font-bold text-gray-800 mt-7'>DETAIL</p>
-        <div className='flex justify-center'>
-          <hr className='grad h-2 mb-8 mt-5 w-56 text-center' />
-
-        </div> */}
 
         <div className="md:mx-20 mx-5">
           <div className="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2">
@@ -158,7 +200,7 @@ export default function Detail({ params, searchParams }) {
 
 
 
-            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">bukti pembayaran : </p> {invoice?.status == "menunggu pembayaran" || invoice?.status == "menunggu konfirmasi pembayaran" || invoice?.status == "selesai" ? invoice.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button> :<div className="flex"><input className="ml-5 w-10/12 h-10/12" type="file" name="bukti_pembayaran" onChange={(e) => setBuktiPembayaran(e.target.files[0])} /><Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button></div> : <p className="ml-5">-</p>} </div>
+            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">bukti pembayaran : </p> {invoice?.status == "menunggu pembayaran" || invoice?.status == "menunggu konfirmasi pembayaran" || invoice?.status == "selesai" ? invoice.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button> :<div className="flex"><input className="ml-5 w-10/12 h-10/12" type="file" name="bukti_pembayaran" onChange={handleBuktiPembayaran} /><Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button></div> : <p className="ml-5">-</p>} </div>
 
           </div>
         </div>

@@ -120,7 +120,7 @@ export default function History_order() {
                           {value.total_harga !== 0 ? value.total_harga : "-"}
                         </Table.Cell>
                         <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
-                          <a href={`/history_order/detail/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+                          <a href={`/admin/dashboard/admin/history_order/detail/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                             detail
                           </a>
                         </Table.Cell>

@@ -100,6 +100,44 @@ export default function Order_analisis() {
 
     }
 
+    const resizeImage = (file, maxWidth, maxHeight, callback) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height *= maxWidth / width;
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width *= maxHeight / height;
+                        height = maxHeight;
+                    }
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob((blob) => {
+                    callback(blob);
+                }, file.type);
+            };
+        };
+    };
+
+
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
@@ -160,10 +198,10 @@ export default function Order_analisis() {
                         }
                         cek2()
                     }
-                    setTimeout(()=>{
-alert("success")
-router.replace('/success')
-                    },1500)
+                    setTimeout(() => {
+                        alert("success")
+                        router.replace('/success')
+                    }, 1500)
 
                 }
             }
@@ -172,6 +210,8 @@ router.replace('/success')
         }
 
     }
+
+
 
     function CustomForm({ i }) {
         return (
@@ -182,18 +222,18 @@ router.replace('/success')
                     <div className='px-10 py-5 flex flex-col gap-3'>
                         <div>
                             <h2 className="text-lg font-semibold">Jenis pengujian</h2>
-                            <select required name="jenis_pengujian" id="jenis_pengujian" className='input-style-lki' onChange={(e) => {       
+                            <select required name="jenis_pengujian" id="jenis_pengujian" className='input-style-lki' onChange={(e) => {
                                 jenis_pengujian[0][0] = kode[e.target.value].jenis_pengujian
                                 kode_pengujian[0][0] = kode[e.target.value].kode_pengujian
                             }}>
                                 <option value="" defaultValue>Pilih</option>
-                               {kode.map((v,i)=>{
-                                return(
-                                    <option key={i} value={i}>{v.jenis_pengujian}</option>
-                                )
-                               })}
+                                {kode.map((v, i) => {
+                                    return (
+                                        <option key={i} value={i}>{v.jenis_pengujian}</option>
+                                    )
+                                })}
                             </select>
-            
+
                         </div>
                         <div>
                             <h2 className="text-lg font-semibold" >Nama sample</h2>
@@ -295,8 +335,12 @@ router.replace('/success')
                                 </h2>
                                 <input className='input-style-lki' name="foto_sample" type="file" onChange={(e) => {
                                     e.preventDefault()
-
-                                    setFoto_sample(e.target.files[0])
+                                    const file = e.target.files[0];
+                                    if (file) {
+                                        resizeImage(file, 300, 300, (resizedBlob) => {
+                                            setFoto_sample(URL.createObjectURL(resizedBlob));
+                                        });
+                                    }
 
                                 }} />
                             </div>
