@@ -58,8 +58,8 @@ export default function Admin(){
     // }
     return(
         <>
-        <div className="">
-        <p className='text-center text-2xl sm:text-xl text-lg font-bold text-gray-800 mt-7'>LOGIN ADMIN</p>
+        <div className="md:mt-20 sm:mt-14 mt-8 mb-14">
+        <p className='text-center md:text-2xl sm:text-xl text-lg font-bold text-gray-800 mt-7'>LOGIN ADMIN</p>
                       <div className='flex justify-center'>
         </div>
                 <form className="flex max-w-md flex-col gap-4 m-auto " onSubmit={onSubmit}>
