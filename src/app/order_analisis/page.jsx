@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from "next/navigation"
+import Resizer from "react-image-file-resizer";
 
 export default function Order_analisis() {
     const router = useRouter()
@@ -23,7 +24,7 @@ export default function Order_analisis() {
     const [jurnal_pendukung, setJurnal_pendukung] = useState({})
     const [deskripsi_sample, setDeskripsi_sample] = useState([])
     const [riwayat_pengujian, setRiwayat_pengujian] = useState([])
-    const [foto_sample, setFoto_sample] = useState({})
+    const [foto_sample, setFoto_sample] = useState([])
     const [uuid, setUuid] = useState([uid])
     const [verifikasi, setVerifikasi] = useState(false)
 
@@ -69,72 +70,100 @@ export default function Order_analisis() {
             jenis_pengujian: "LCMSMS",
             kode_pengujian: "LC"
         },
+        {
+            jenis_pengujian: "XRD",
+            kode_pengujian: "XRD"
+        },
 
     ]
 
 
 
-    const increment = (e) => {
-        setCountForm(a => a + 1)
-        e.preventDefault()
-        setDuplicate([...duplicate, <CustomForm i={countForm} key={duplicate.length} />])
-        let add = [...jenis_pengujian]
-        add.push([])
-        setJenis_pengujian([...add])
-        let add2 = [...kode_pengujian]
-        add2.push([])
-        setKode_pengujian([...add2])
-        let add3 = [...foto_sample]
-        add3.push("")
-        setFoto_sample([...add3])
-        let add4 = [...jurnal_pendukung]
-        add4.push("")
-        setJurnal_pendukung([...add4])
+    // const increment = (e) => {
+    //     setCountForm(a => a + 1)
+    //     e.preventDefault()
+    //     setDuplicate([...duplicate, <CustomForm i={countForm} key={duplicate.length} />])
+    //     let add = [...jenis_pengujian]
+    //     add.push([])
+    //     setJenis_pengujian([...add])
+    //     let add2 = [...kode_pengujian]
+    //     add2.push([])
+    //     setKode_pengujian([...add2])
+    //     let add3 = [...foto_sample]
+    //     add3.push("")
+    //     setFoto_sample([...add3])
+    //     let add4 = [...jurnal_pendukung]
+    //     add4.push("")
+    //     setJurnal_pendukung([...add4])
 
-        let add5 = uuid
-        const uid = uuidv4()
-        add5.push(uid)
-        setUuid([...add5])
+    //     let add5 = uuid
+    //     const uid = uuidv4()
+    //     add5.push(uid)
+    //     setUuid([...add5])
 
 
 
-    }
+    // }
 
-    const resizeImage = (file, maxWidth, maxHeight, callback) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
+    
+
+    const handleFS = (event) => {
+        let reader = new FileReader();
+        const imageFile = event.target.files[0];
+        const imageFilname = event.target.files[0].name
+        reader.onload = (e) => {
             const img = new Image();
-            img.src = event.target.result;
             img.onload = () => {
-                let width = img.width;
-                let height = img.height;
+
+                //------------- Resize img code ----------------------------------
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+
+                var MAX_WIDTH = 437;
+                var MAX_HEIGHT = 437;
+                var width = img.width;
+                var height = img.height;
 
                 if (width > height) {
-                    if (width > maxWidth) {
-                        height *= maxWidth / width;
-                        width = maxWidth;
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
                     }
                 } else {
-                    if (height > maxHeight) {
-                        width *= maxHeight / height;
-                        height = maxHeight;
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
                     }
                 }
-
-                const canvas = document.createElement('canvas');
                 canvas.width = width;
                 canvas.height = height;
-
-                const ctx = canvas.getContext('2d');
+                var ctx = canvas.getContext("2d");
                 ctx.drawImage(img, 0, 0, width, height);
+                ctx.canvas.toBlob((blob) => {
+                    const file = new File([blob], imageFilname, {
+                        type: imageFile.type,
+                        lastModified: Date.now()
+                    });
+                    
+                        foto_sample[0] = file
+                    
+                    
+                    
+                }, imageFile.type, 1);
 
-                canvas.toBlob((blob) => {
-                    callback(blob);
-                }, file.type);
             };
+            img.onerror = () => {
+               alert("invalid image content")
+            };
+            //debugger
+            img.src = e.target.result;
         };
+
+        reader.readAsDataURL(imageFile);
+       
     };
+
 
 
 
@@ -188,7 +217,7 @@ export default function Order_analisis() {
                     if (foto_sample) {
                         async function cek2() {
                             try {
-                                await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${uuid[0]}`, { foto_sample: foto_sample }, {
+                                await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${uuid[0]}`, { foto_sample: foto_sample[0] }, {
                                     withCredentials: true,
                                     headers: { "Content-Type": 'multipart/form-data' }
                                 })
@@ -331,21 +360,12 @@ export default function Order_analisis() {
                         <div className='grid md:grid-cols-2 grid-cols-1 gap-10'>
 
                             <div>
-                                <h2 className="text-lg font-semibold" >Foto sample
+                                <h2 className="text-lg font-semibold" >Foto sample (*format file yang diupload berupa png, jpg atau jpeg)
                                 </h2>
-                                <input className='input-style-lki' name="foto_sample" type="file" onChange={(e) => {
-                                    e.preventDefault()
-                                    const file = e.target.files[0];
-                                    if (file) {
-                                        resizeImage(file, 300, 300, (resizedBlob) => {
-                                            setFoto_sample(URL.createObjectURL(resizedBlob));
-                                        });
-                                    }
-
-                                }} />
+                                <input className='input-style-lki' name="foto_sample" type="file" onChange={handleFS} />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold" >Jurnal pendukung
+                                <h2 className="text-lg font-semibold" >Jurnal pendukung (*format file yang diupload berupa docx atau pdf)
                                 </h2>
                                 <input className='input-style-lki' name="jurnal_pendukung" type="file" onChange={(e) => {
 
@@ -366,8 +386,9 @@ export default function Order_analisis() {
                             }} />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold" >Riwayat pengujian sample
+                            <h2 className="text-lg font-semibold" >Riwayat pengujian sample 
                             </h2>
+                            
                             <textarea placeholder='Deskripsikan mengenai riwayat pengujian sampel: apakah pernah diuji di tempat lain dan bagaimana hasilnya' className='input-style-lki-box' name="riwayat_pengujian" type="text" onChange={(e) => {
 
                                 e.preventDefault()

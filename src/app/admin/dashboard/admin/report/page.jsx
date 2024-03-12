@@ -8,6 +8,7 @@ import ReactPaginate from 'react-paginate';
 import month_bahasa from '@/utils/month_bahasa'
 import { Pagination } from 'flowbite-react';
 import Navigasi from '@/components/Navigasi'
+import { v4 as uuidv4 } from 'uuid';
 
 const kode = [
   {
@@ -89,6 +90,7 @@ const monthOption = [
 
 export default function Report() {
   const [order, setOrder] = useState([])
+  const [invoice, setInvoice] = useState([])
   const tableRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0)
@@ -120,6 +122,7 @@ export default function Report() {
         if (data.data.success) {
           setOrder(data.data.data)
           setLength(data.data.length_total)
+          console.log(order)
           setLoading(false)
 
         }
@@ -142,7 +145,7 @@ export default function Report() {
       <div>
         <div>
          
-          <div className='flex mt-5 md:justify-center sm:justify-center md:justify-items-center  sm:flex flex-wrap  ml-2 md:w-full sm:w-full gap-1 justify-center'>
+          <div className='flex mt-[-20px] md:justify-center sm:justify-center md:justify-items-center  sm:flex flex-wrap  ml-2 md:w-full sm:w-full gap-1 justify-center'>
             <div className='md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:w-72 sm:w-64 w-52'>
               <p className='md:text-lg sm:text-base text-xs font-semibold text-white p-2'>Tahun : </p> <select className='p-2 ml-3 w-20 h-10' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
                 <option value="" className='input-style-lki' defaultChecked>all</option>
@@ -166,7 +169,7 @@ export default function Report() {
               })}
             </select></div>
             <DownloadTableExcel
-            filename={`report_${new Date().toISOString()}`}
+            filename={`report_${new Date().getDate()}_${month_bahasa(new Date().getMonth())}_${new Date().getFullYear()}_${new Date().getHours()}_${new Date().getMinutes()}_${new Date().getMilliseconds()}`}
             sheet={`${month_bahasa(new Date().getMonth())} ${new Date().getFullYear()}`}
             currentTableRef={tableRef.current}
           >
@@ -183,6 +186,10 @@ export default function Report() {
                   <th className='px-10 text-sm'>Tanggal</th>
                   <th className='px-10 text-sm'>No invoice</th>
                   <th className='px-10 text-sm'>Kode Pengujian</th>
+                  <th className='px-10 text-sm'>Harga</th>
+                  <th className='px-10 text-sm'>Operator</th>
+                  <th className='px-10 text-sm'>PJ</th>
+                  <th className='px-10 text-sm'>Admin</th>
                   <th className='px-10 text-sm'>Nama</th>
                   <th className='px-10 text-sm'>Jenis Institusi</th>
                   <th className='px-10 text-sm'>Nama Institusi</th>
@@ -202,6 +209,7 @@ export default function Report() {
                   <th className='px-10 text-sm'>Sample dikembalikan</th>
                   <th className='px-10 text-sm'>Deskripsi</th>
                   <th className='px-10 text-sm'>Riwayat pengujian</th>
+                  
                 </tr>
                 {loading ? <p className='text-center mt-10'>loading</p> : order.map((a, i) => {
                   return (
@@ -211,6 +219,10 @@ export default function Report() {
                       <td className='text-center text-xs'>{a.date_format}</td>
                       <td className='text-center text-xs'>{a.no_invoice}</td>
                       <td className='text-center text-xs'>{a.kode_pengujian}</td>
+                      <td className='text-center text-xs'>{a.total_harga}</td>
+                      <td className='text-center text-xs'>{a.operator_date}</td>
+                      <td className='text-center text-xs'>{a.pj_date}</td>
+                      <td className='text-center text-xs'>{a.admin_date}</td>
                       <td className='text-center text-xs'>{a.id_user[0].nama_lengkap}</td>
                       <td className='text-center text-xs'>{a.id_user[0].jenis_institusi}</td>
                       <td className='text-center text-xs'>{a.id_user[0].nama_institusi}</td>

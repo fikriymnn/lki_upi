@@ -104,7 +104,7 @@ export default function HHistory_order() {
         try{
           const dataUser = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`,{withCredentials:true})   
           if(dataUser.data.success){    
-            const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice?success=true&skip=${page*15}&limit=15${year?`&year=${year}`:''}${month?`&month=${month}`:''}`,{withCredentials:true})
+            const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice?success=true&skip=${page*15}&limit=15${year?`&year=${year}`:''}${month?`&month=${month}`:''}${jenis_pengujian?`&jenis_pengujian=${jenis_pengujian}`:''}`,{withCredentials:true})
             if(data.data.success){
               setInvoice(data.data.data)
               setLength(data.data.length_total)
@@ -157,6 +157,9 @@ export default function HHistory_order() {
                   Harga
                 </Table.HeadCell>
                 <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
+                  Status
+                </Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
                   Keterangan
                 </Table.HeadCell>
 
@@ -176,8 +179,9 @@ export default function HHistory_order() {
                         <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
                           {value.total_harga !== 0 ? value.total_harga : "-"}
                         </Table.Cell>
+                        <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{value.status}</Table.Cell>
                         <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
-                          <a href={`/history_order/detail/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+                          <a href={`/admin/dashboard/admin/history_order/detail/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                             detail
                           </a>
                         </Table.Cell>
