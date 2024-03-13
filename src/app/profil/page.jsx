@@ -43,7 +43,6 @@ export default function Profile() {
         const users = async () => {
             try {
                 const data = await axios(`${process.env.NEXT_PUBLIC_URL}/api/user`, { withCredentials: true })
-                console.log(data)
                 if (data.data.success == true) {
                     setUser(data.data.data)
                 }

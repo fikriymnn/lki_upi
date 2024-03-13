@@ -208,7 +208,7 @@ export default function Order_analisis() {
                                     headers: { "Content-Type": 'multipart/form-data' }
                                 })
                             } catch (err) {
-                                alert(err.message)
+                                console.log(err.message)
                             }
                         }
                         cek()
@@ -222,7 +222,7 @@ export default function Order_analisis() {
                                     headers: { "Content-Type": 'multipart/form-data' }
                                 })
                             } catch (err) {
-                                alert(err.message)
+                                console.log(err.message)
                             }
                         }
                         cek2()

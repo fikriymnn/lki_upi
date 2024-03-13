@@ -27,7 +27,7 @@ export default function Login({ searchParams }) {
 
                 if (data.data.success) {
                     if (prevRoute) {
-                        console.log(data.data.success)
+                        
                         router.replace(prevRoute)
                     } else {
 

@@ -144,17 +144,17 @@ export default function Order_Operator() {
         <div className=" overflow-scroll w-full">
           <Table>
             <Table.Head>
-              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">No</Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">Tanggal</Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">Invoice</Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">Jenis Pengujian</Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">No</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">Tanggal</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">Invoice</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">Jenis Pengujian</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                 status
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                 detail
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                 konfirmasi
               </Table.HeadCell>
             </Table.Head>
@@ -167,19 +167,19 @@ export default function Order_Operator() {
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                         {i + 1}
                       </Table.Cell>
-                      <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{v.date_format}</Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{v.date_format}</Table.Cell>
 
-                      <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{v.no_invoice}</Table.Cell>
-                      <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{v.jenis_pengujian}</Table.Cell>
-                      <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{v.no_invoice}</Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{v.jenis_pengujian}</Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                         <p>{v.status}</p>
                       </Table.Cell>
-                      <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                         <a href={`/admin/dashboard/operator/detail/${v._id}?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                           keterangan
                         </a>
                       </Table.Cell>
-                      <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                         <a href={`/admin/dashboard/operator/${v._id}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                           keterangan
                         </a>
