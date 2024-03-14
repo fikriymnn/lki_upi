@@ -205,7 +205,7 @@ export default function Analisis() {
                     luarUpi: "a. 25.000"
                 },
                 {
-                    jenis: "b. Diatas 8 jam",
+                    jenis: "b. Dibawah 8 jam",
                     kimia: "b. 30.000",
                     nonKimia: "b. 40.000",
                     luarUpi: "b. 50.000"
