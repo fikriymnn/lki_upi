@@ -12,7 +12,7 @@ function CardPenguji({ id, nama, foto }) {
             <Image src={foto} width={0} height={0} sizes='100vw' alt='' className='md:w-[274.89px] md:h-[220px] w-[200px] h-[150px]' />
             <div className='md:px-5 '>
 
-                <Button color='failure' href={`/analisis/${id}?`} className='grad font-bold py-1 rounded-full '>
+                <Button color='failure' href={`/layanan/${id}?`} className='grad font-bold py-1 rounded-full '>
                     Selengkapnya
                     <svg className="-mr-1 ml-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path

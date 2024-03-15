@@ -1,6 +1,7 @@
 "use client"
 import axios from "axios";
 import { useEffect, useState } from "react"
+import Navigasi from '@/components/Navigasi'
 
 export default function Profile() {
     const [edit, setEdit] = useState(false)
@@ -42,7 +43,6 @@ export default function Profile() {
         const users = async () => {
             try {
                 const data = await axios(`${process.env.NEXT_PUBLIC_URL}/api/user`, { withCredentials: true })
-                console.log(data)
                 if (data.data.success == true) {
                     setUser(data.data.data)
                 }
@@ -56,7 +56,7 @@ export default function Profile() {
 
 
     return (
-        <>
+        <>   <Navigasi text1={"/"} text2={'profile'}/>
             <div className="mb-20">
                 <div className="flex justify-end items-end">
 

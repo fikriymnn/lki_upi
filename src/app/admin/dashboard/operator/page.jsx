@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 import ReactPaginate from 'react-paginate';
 import { Pagination } from 'flowbite-react';
+import Navigasi from '@/components/Navigasi'
 
 const kode = [
   {
@@ -113,10 +114,11 @@ export default function Order_Operator() {
   }, [year, month, page, jenis_pengujian])
   return (
     <>
-      <p className='text-center text-4xl font-bold text-gray-800 mt-7'>OPERATOR ORDER</p>
+      {/* <p className='text-center text-4xl font-bold text-gray-800 mt-7'>OPERATOR ORDER</p>
       <div className='flex justify-center'>
         <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
-      </div>
+      </div> */}
+      <Navigasi text1={"operator"} text2={'order'}/>
       <div className='flex flex-wrap justify-center mb-10'>
         <div className='md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52 '><p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">Tahun :</p> <select className='ml-3' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
           <option value="" defaultChecked className='input-style-lki'>all</option>
@@ -138,21 +140,21 @@ export default function Order_Operator() {
           })}
         </select></div>
       </div>
-      <div className="m-auto md:w-full sm:w-full w-11/12">
+      <div className="m-auto w-11/12">
         <div className=" overflow-scroll w-full">
           <Table>
             <Table.Head>
-              <Table.HeadCell>No</Table.HeadCell>
-              <Table.HeadCell>Tanggal</Table.HeadCell>
-              <Table.HeadCell>Invoice</Table.HeadCell>
-              <Table.HeadCell>Jenis Pengujian</Table.HeadCell>
-              <Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">No</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">Tanggal</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">Invoice</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">Jenis Pengujian</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                 status
               </Table.HeadCell>
-              <Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                 detail
               </Table.HeadCell>
-              <Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                 konfirmasi
               </Table.HeadCell>
             </Table.Head>
@@ -165,19 +167,19 @@ export default function Order_Operator() {
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                         {i + 1}
                       </Table.Cell>
-                      <Table.Cell>{v.date_format}</Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{v.date_format}</Table.Cell>
 
-                      <Table.Cell>{v.no_invoice}</Table.Cell>
-                      <Table.Cell>{v.jenis_pengujian}</Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{v.no_invoice}</Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{v.jenis_pengujian}</Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                         <p>{v.status}</p>
                       </Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                         <a href={`/admin/dashboard/operator/detail/${v._id}?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                           keterangan
                         </a>
                       </Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                         <a href={`/admin/dashboard/operator/${v._id}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                           keterangan
                         </a>

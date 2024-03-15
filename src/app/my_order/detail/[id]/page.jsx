@@ -5,6 +5,7 @@ import OrderCard from "@/components/OrderCard"
 import { Button } from 'flowbite-react';
 import axios from 'axios'
 import month_bahasa from '@/utils/month_bahasa'
+import Navigasi from '@/components/Navigasi'
 
 
 export default function Detail({ params, searchParams }) {
@@ -12,7 +13,7 @@ export default function Detail({ params, searchParams }) {
   const { no_invoice } = searchParams
   const [order, setOrder] = useState([])
   const [invoice, setInvoice] = useState({})
-  const [buktiPembayaran, setBuktiPembayaran] = useState('')
+  const [buktiPembayaran, setBuktiPembayaran] = useState([])
 
   function timeNow() {
     var d = new Date(),
@@ -24,7 +25,7 @@ export default function Detail({ params, searchParams }) {
   const handleBukti = async (e) => {
     e.preventDefault()
     try {
-      const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/bukti_pembayaran/${id}`, {bukti_pembayaran: buktiPembayaran}, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' }  })
+      const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/bukti_pembayaran/${id}`, {bukti_pembayaran: buktiPembayaran[0]}, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' }  })
       if (data.data=='success') {
         alert('sukses dikirim')
         window.location.reload()
@@ -96,6 +97,64 @@ export default function Detail({ params, searchParams }) {
     }
   };
 
+  const handleBP = (event) => {
+    let reader = new FileReader();
+    const imageFile = event.target.files[0];
+    const imageFilname = event.target.files[0].name
+    reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+
+            //------------- Resize img code ----------------------------------
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+
+            var MAX_WIDTH = 437;
+            var MAX_HEIGHT = 437;
+            var width = img.width;
+            var height = img.height;
+
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width *= MAX_HEIGHT / height;
+                    height = MAX_HEIGHT;
+                }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+            ctx.canvas.toBlob((blob) => {
+                const file = new File([blob], imageFilname, {
+                    type: imageFile.type,
+                    lastModified: Date.now()
+                });
+                
+                    buktiPembayaran[0] = file
+                
+              
+                
+            }, imageFile.type, 1);
+
+        };
+        img.onerror = () => {
+           alert("invalid image content")
+        };
+        //debugger
+        img.src = e.target.result;
+    };
+
+    reader.readAsDataURL(imageFile);
+   
+};
+
+
   useEffect(() => {
     async function getInvoice() {
       try {
@@ -122,16 +181,14 @@ export default function Detail({ params, searchParams }) {
     getInvoice()
   }, [])
 
+  
+
 
 
   return (
     <>
       <div>
-        <p className='text-center text-4xl font-bold text-gray-800 mt-7'>DETAIL</p>
-        <div className='flex justify-center'>
-          <hr className='grad h-2 mb-8 mt-5 w-56 text-center' />
-
-        </div>
+      <Navigasi text1={"user"} text2={'detail order'}/>
 
         <div className="md:mx-20 mx-5">
           <div className="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2">
@@ -149,14 +206,14 @@ export default function Detail({ params, searchParams }) {
             </div>
             <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">estimasi selesai : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.estimasi_date ? invoice.estimasi_date : ""}</p></div>
 
-            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold">invoice : </p>{invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download invoice</Button> : <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">-</p>}</div>
+            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold">invoice : </p>{invoice.status == "form dikonfirmasi" || invoice.status == "sample diterima admin" || invoice.status == "sample dikerjakan operator" || invoice.status == "menunggu verifikasi" || invoice.status == "menunggu pembayaran" || invoice.status == "menunggu konfirmasi pembayaran" || invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download </Button> : <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">-</p>}</div>
 
 
-            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">kuitansi : </p>{ invoice?.status == "selesai" ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button> : <p className="ml-5">-</p>}</div>
+            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">kuitansi : </p>{ invoice?.status == "selesai" ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download </Button> : <p className="ml-5">-</p>}</div>
 
 
 
-            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">bukti pembayaran : </p> {invoice?.status == "menunggu pembayaran" || invoice?.status == "menunggu konfirmasi pembayaran" || invoice?.status == "selesai" ? invoice.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button> :<div className="flex"><input className="ml-5" type="file" name="bukti_pembayaran" onChange={(e) => setBuktiPembayaran(e.target.files[0])} /><Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button></div> : <p className="ml-5">-</p>} </div>
+            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">bukti pembayaran : </p> {invoice?.status == "menunggu pembayaran" || invoice?.status == "menunggu konfirmasi pembayaran" || invoice?.status == "selesai" ? invoice.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download </Button> :<div className="flex"><input className="ml-5 w-11/12 h-10/12" type="file" name="bukti_pembayaran" onChange={handleBP} />{buktiPembayaran?<Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button>:""}</div> : <p className="ml-5">-</p>} </div>
 
           </div>
         </div>

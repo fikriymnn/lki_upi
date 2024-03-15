@@ -5,10 +5,9 @@ import OrderCard from "@/components/OrderCard"
 import { Button } from 'flowbite-react';
 import axios from 'axios'
 import month_bahasa from '@/utils/month_bahasa'
-import Navigasi from '@/components/Navigasi'
 
 
-export default function Hdetail({ params, searchParams }) {
+export default function HAdetail({ params, searchParams }) {
   const { id } = params
   const { no_invoice } = searchParams
   const [order, setOrder] = useState([])
@@ -106,19 +105,18 @@ export default function Hdetail({ params, searchParams }) {
   return (
     <>
       <div>
-      <Navigasi text1={"user"} text2={'detail history order'}/>
-        {/* <p className='text-center text-4xl font-bold text-gray-800 mt-7'>DETAIL</p>
+        <p className='text-center text-4xl font-bold text-gray-800 mt-7'>DETAIL</p>
         <div className='flex justify-center'>
           <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
-        </div> */}
+        </div>
         <div className="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 md:mx-20 mx-5">
-          <p className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">status : <span className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto text-end ">{invoice?.status}</span> </p>
+          <p className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">status : <span className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto ">{invoice?.status}</span> </p>
           {invoice?.status == "form dikonfirmasi" ? <p>*kirim sample ke alamat yang tertera \n (Jl.lorem ipsum dolor)</p> : ""}
-          <p className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">total harga  : <span className="text-end"> Rp.{invoice?.total_harga}</span></p>
+          <p className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">total harga  : <span className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto "> Rp.{invoice?.total_harga}</span></p>
           <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
-            <p className="md:text-xl sm:text-xl  font-semibold">invoice : </p>{invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download invoice</Button> : <p className="ml-5">-</p>}</div>
-          <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className=" md:text-xl sm:text-xl  font-semibold">kuitansi : </p>{invoice?.status == "selesai" ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button> : <p className="ml-5">-</p>}</div>
-          <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className="md:text-xl sm:text-xl  font-semibold">bukti pembayaran : </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button> : ""} </div>
+            <p className="md:text-xl sm:text-xl  font-semibold">invoice : </p>{invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download </Button> : <p className="ml-5">-</p>}</div>
+          <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className=" md:text-xl sm:text-xl  font-semibold">kuitansi : </p>{invoice?.status == "selesai" ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download </Button> : <p className="ml-5">-</p>}</div>
+          <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className="md:text-xl sm:text-xl  font-semibold">bukti pembayaran : </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download</Button> : ""} </div>
 
         </div>
         <div className="md:mx-20 mx-5">

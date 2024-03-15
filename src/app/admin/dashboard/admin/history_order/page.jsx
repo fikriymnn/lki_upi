@@ -6,6 +6,55 @@ import axios from "axios";
 import ReactPaginate from 'react-paginate';
 import { Pagination } from 'flowbite-react';
 import Navigasi from '@/components/Navigasi'
+
+const kode = [
+  {
+    jenis_pengujian: "GCFID",
+    kode_pengujian: "FID",
+  },
+  {
+    jenis_pengujian: "GCMS",
+    kode_pengujian: "MS"
+  },
+  {
+    jenis_pengujian: "NMR",
+    kode_pengujian: "NMR"
+  },
+  {
+    jenis_pengujian: "AAS",
+    kode_pengujian: "AS"
+  },
+  {
+    jenis_pengujian: "FTIR",
+    kode_pengujian: "IR"
+  },
+  {
+    jenis_pengujian: "TG DTA",
+    kode_pengujian: "TG"
+  },
+  {
+    jenis_pengujian: "HPLC",
+    kode_pengujian: "HP"
+  },
+  {
+    jenis_pengujian: "UV VIS",
+    kode_pengujian: "UV"
+  },
+  {
+    jenis_pengujian: "Freezdry",
+    kode_pengujian: "FD"
+  },
+  {
+    jenis_pengujian: "LCMSMS",
+    kode_pengujian: "LC"
+  },
+  {
+    jenis_pengujian: "XRD",
+    kode_pengujian: "XRD"
+  },
+
+]
+
 const monthOption = [
 
   "Januari",
@@ -33,11 +82,12 @@ const monthOption = [
   "desember"
 ]
 
-export default function History_order() {
+export default function HHistory_order() {
   const [invoice, setInvoice] = useState([])
   const [year, setYear] = useState(0)
   const [month, setMonth] = useState(0)
   const [page, setPage] = useState(0)
+  const [jenis_pengujian, setJenis_pengujian] = useState("")
   const [length, setLength] = useState(0)
   const [yearOption, setYearOption] = useState([])
 
@@ -54,7 +104,7 @@ export default function History_order() {
         try{
           const dataUser = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`,{withCredentials:true})   
           if(dataUser.data.success){    
-            const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice?success=true&id_user=${dataUser.data.data._id}&skip=${page*15}&limit=15${year?`&year=${year}`:''}${month?`&month=${month}`:''}`,{withCredentials:true})
+            const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice?success=true&skip=${page*15}&limit=15${year?`&year=${year}`:''}${month?`&month=${month}`:''}${jenis_pengujian?`&jenis_pengujian=${jenis_pengujian}`:''}`,{withCredentials:true})
             if(data.data.success){
               setInvoice(data.data.data)
               setLength(data.data.length_total)
@@ -65,15 +115,16 @@ export default function History_order() {
       }
       }
     getInvoice()
-  }, [year,month,page])
+  }, [year,month,jenis_pengujian,page])
   return (
     <>
       <div>
-      <Navigasi text1={"user"} text2={'history order'}/>
+      <Navigasi text1={"admin"} text2={'history order'}/>
+        {/* <p className='text-center text-4xl font-bold text-gray-800 mt-7'>MY ORDER</p>
         <div className='flex justify-center'>
           <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
-        </div>
-        <div className='flex justify-center mb-10'>
+        </div> */}
+        <div className='flex flex-wrap justify-center mb-10'>
           <div className='flex p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 ml-3'><p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">Tahun :</p> <select className='ml-3' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
             <option value="" defaultChecked className="input-style-lki">all</option>
             {yearOption.map((v, i) => {
@@ -87,6 +138,12 @@ export default function History_order() {
               return <option value={i} key={i} defaultValue>{v}</option>
             })}
           </select></div>
+          <div className='md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52'><p className='md:text-lg sm:text-base text-xs font-semibold text-white p-2 '>Jenis Pengujian : </p> <select className='p-1 ' name="jenis_pengujian" id="jp" onChange={(e) => setJenis_pengujian(e.target.value)}>
+          <option value="" className='input-style-lki' defaultChecked>all</option>
+          {kode.map((v, i) => {
+            return <option value={v.jenis_pengujian} key={i} >{v.jenis_pengujian}</option>
+          })}
+        </select></div>
         </div>
         <div className="m-auto w-11/12">
           <div className=" overflow-scroll w-full">
@@ -98,6 +155,9 @@ export default function History_order() {
                 <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">Jenis Pengujian</Table.HeadCell>
                 <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                   Harga
+                </Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+                  Status
                 </Table.HeadCell>
                 <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                   Keterangan
@@ -119,9 +179,9 @@ export default function History_order() {
                         <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                           {value.total_harga !== 0 ? value.total_harga : "-"}
                         </Table.Cell>
-                        
+                        <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{value.status}</Table.Cell>
                         <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
-                          <a href={`/history_order/detail/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
+                          <a href={`/admin/dashboard/admin/history_order/detail/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                             detail
                           </a>
                         </Table.Cell>

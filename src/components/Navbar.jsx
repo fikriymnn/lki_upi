@@ -69,17 +69,23 @@ export default function NavbarCustom() {
 
             {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard/admin/order" className="mt-[2vh] font-extrabold text-white "> Order </Navbar.Link> : ""}
 
+            {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard/admin/history_order" className="mt-[2vh] font-extrabold text-white "> History Order</Navbar.Link> : ""}
+
+            {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard/admin/user" className="mt-[2vh] font-extrabold text-white "> User </Navbar.Link> : ""}
+
             {adminPath[2] == "dashboard" && role == "admin" ? <Navbar.Link href="/admin/dashboard/admin/report" className="mt-[2vh] font-extrabold text-white ">Report</Navbar.Link> : ""}
 
             {adminPath[2] == "dashboard" || (adminPath[1] == "admin" && role) ? <Navbar.Link onClick={handleLogout} className="mt-[2vh] font-extrabold text-white ">Logout</Navbar.Link> : ""}
 
             {/* UMUM */}
 
+            {adminPath[2] !== "dashboard" ? <Navbar.Link href="/" className="mt-[2vh] font-extrabold text-white ">Home</Navbar.Link> : ""}
+
             {adminPath[2] !== "dashboard" ? <Navbar.Link href="/about" className="mt-[2vh] font-extrabold text-white ">About</Navbar.Link> : ""}
 
             {adminPath[2] !== "dashboard" ? <Navbar.Link href="/contact" className="mt-[2vh] font-extrabold text-white ">Contact</Navbar.Link> : ""}
 
-            {adminPath[2] !== "dashboard" ? <Navbar.Link href="/analisis" className="mt-[2vh] font-extrabold text-white ">
+            {adminPath[2] !== "dashboard" ? <Navbar.Link href="/layanan" className="mt-[2vh] font-extrabold text-white ">
               Layanan
             </Navbar.Link> : ""}
 

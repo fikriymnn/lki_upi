@@ -5,6 +5,7 @@ import { Table } from 'flowbite-react';
 import axios from "axios"
 import ReactPaginate from 'react-paginate';
 import { Pagination } from 'flowbite-react';
+import Navigasi from '@/components/Navigasi'
 
 const kode = [
   {
@@ -93,6 +94,18 @@ export default function Order() {
   const [jenis_pengujian, setJenis_pengujian] = useState('')
   const [yearOption, setYearOption] = useState([])
 
+  const handleDelete = async (no_invoice)=>{
+    try{
+       const data = await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/invoice?no_invoice=${no_invoice}`,{withCredentials:true})
+       if(data.data.success){
+         alert("Delete successfully!")
+         window.location.reload()
+       }
+    }catch(err){
+      alert(err.message)
+    }
+  }
+
 
   useEffect(() => {
     let arr = []
@@ -117,10 +130,7 @@ export default function Order() {
   }, [page, month, year, jenis_pengujian])
   return (
     <>
-      <p className='text-center text-4xl font-bold text-gray-800 mt-7'>ORDER</p>
-      <div className='flex justify-center'>
-        <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
-      </div>
+      <Navigasi text1={"admin"} text2={'order'}/>
       <div className='flex flex-wrap justify-center gap-3 mb-10'>
         <div className='md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52 '><p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2 ">Tahun :</p> <select className='ml-3' name="year" id="year" onChange={(e) => setYear(e.target.value)}>
           <option value="" defaultChecked className="input-style-lki text-black">all</option>
@@ -142,23 +152,29 @@ export default function Order() {
           })}
         </select></div>
       </div>
-      <div className="m-auto md:w-full sm:w-full w-11/12">
+      <div className="m-auto  w-11/12">
         <div className=" overflow-scroll w-full">
           <Table>
             <Table.Head>
-              <Table.HeadCell>No</Table.HeadCell>
-              <Table.HeadCell>Tanggal</Table.HeadCell>
-              <Table.HeadCell>Invoice</Table.HeadCell>
-              <Table.HeadCell>Jenis Pengujian</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">No</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">Tanggal</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">Invoice</Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">Jenis Pengujian</Table.HeadCell>
            
-              <Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                 Harga
               </Table.HeadCell>
-              <Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                 Keterangan
               </Table.HeadCell>
-              <Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                 Status
+              </Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+                Edit
+              </Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+                Hapus
               </Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
@@ -170,21 +186,31 @@ export default function Order() {
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                         {i + 1}
                       </Table.Cell>
-                      <Table.Cell>{v.date_format}</Table.Cell>
-                      <Table.Cell>{v.no_invoice}</Table.Cell>
-                      <Table.Cell>{v.jenis_pengujian}</Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{v.date_format}</Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{v.no_invoice}</Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{v.jenis_pengujian}</Table.Cell>
                 
-                      <Table.Cell>{v.total_harga}</Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{v.total_harga}</Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                         <a href={`/admin/dashboard/admin/order/${v._id}?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                           keterangan
                         </a>
                       </Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                         <p>{v.status}</p>
                         <br />
                         <a href={`/admin/dashboard/admin/order/tracking/${v._id}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                           keterangan
+                        </a>
+                      </Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs"><a href={`/admin/dashboard/admin/order/edit?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 w-24">
+                          edit
+                        </a></Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                      
+              
+                        <a onClick={(e)=>{handleDelete(v.no_invoice)}} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 w-24 mt-5">
+                          delete
                         </a>
                       </Table.Cell>
                     </Table.Row>

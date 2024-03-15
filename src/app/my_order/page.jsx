@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ReactPaginate from 'react-paginate';
 import { Pagination } from 'flowbite-react';
+import Navigasi from '@/components/Navigasi'
 
 export default function My_order() {
   const [invoice, setInvoice] = useState([])
@@ -34,26 +35,27 @@ export default function My_order() {
   return (
     <>
       <div>
-        <p className='text-center md:text-3xl text-xl text-lg font-bold text-gray-800 mt-7'>MY ORDER</p>
+      <Navigasi text1={"user"} text2={'my order'}/>
+        {/* <p className='text-center md:text-3xl text-xl text-lg font-bold text-gray-800 mt-7'>MY ORDER</p>
         <div className='flex justify-center'>
           <hr className='text-red-700 grad md:h-2 h-1 md:mb-8 sm:mb-4 mb-2 md:mt-5 sm:mt-3 mt-2 md:w-56 sm:w-32 w-16 text-center' />
-        </div>
+        </div> */}
 
         <div className="m-auto w-11/12">
           <div className=" overflow-scroll w-full">
             <Table className="">
               <Table.Head>
-                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs ">No</Table.HeadCell>
-                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">Tanggal</Table.HeadCell>
-                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">No Invoice</Table.HeadCell>
-                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">Jenis Pengujian</Table.HeadCell>
-                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
+                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs ">No</Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">Tanggal</Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">No Invoice</Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">Jenis Pengujian</Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                   Harga
                 </Table.HeadCell>
-                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
+                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                   Keterangan
                 </Table.HeadCell>
-                <Table.HeadCell className="text-center md:text-lg sm:text-lg text-xs">
+                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                   Status
                 </Table.HeadCell>
               </Table.Head>
@@ -66,13 +68,13 @@ export default function My_order() {
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white text-center">
                           {i + 1}
                         </Table.Cell>
-                        <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{`${value.date_format}`}</Table.Cell>
-                        <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{value.no_invoice}</Table.Cell>
-                        <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">{value.jenis_pengujian}</Table.Cell>
-                        <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
+                        <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{`${value.date_format}`}</Table.Cell>
+                        <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{value.no_invoice}</Table.Cell>
+                        <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{value.jenis_pengujian}</Table.Cell>
+                        <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                           {value.total_harga !== 0 ? value.total_harga : "-"}
                         </Table.Cell>
-                        <Table.Cell className="text-center md:text-lg sm:text-lg text-xs">
+                        <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                           <a href={`/my_order/detail/${value._id}?no_invoice=${value.no_invoice}`} className="font-medium text-white grad rounded-lg py-1 px-2 hover:underline dark:text-cyan-500">
                             Detail
                           </a>

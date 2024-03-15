@@ -7,6 +7,7 @@ import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
 import { ref, deleteObject, getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { storage } from '../../../../../firebase/firebase'
+import Navigasi from '@/components/Navigasi'
 
 export default function DetailCardAdmin({ params }) {
   const { id } = params
@@ -110,7 +111,8 @@ export default function DetailCardAdmin({ params }) {
 
   return (
     <>
-      <p className='text-center text-4xl font-bold text-gray-800 mt-7'>EDIT CONTENT</p>
+      {/* <p className='text-center text-4xl font-bold text-gray-800 mt-7'>EDIT CONTENT</p> */}
+      <Navigasi text1={"admin"} text2={'edit content'}/>
       <div className=" md:mx-20 mx-5 rounded-lg  mt-24 border-2 border-black p-7 h-full mb-24">
 
         <form onSubmit={handleConfirm} className="flex flex-col ">

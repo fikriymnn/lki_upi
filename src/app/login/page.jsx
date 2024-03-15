@@ -27,7 +27,7 @@ export default function Login({ searchParams }) {
 
                 if (data.data.success) {
                     if (prevRoute) {
-                        console.log(data.data.success)
+                        
                         router.replace(prevRoute)
                     } else {
 
@@ -129,10 +129,10 @@ export default function Login({ searchParams }) {
                                 />
                             </div>
                         </div>
-                        <div className="md:my-8 my-3">
+                        {/* <div className="md:my-8 my-3">
                             <input type="checkbox" id="check" /> <label htmlFor="check">Ingat Saya</label>
-                        </div>
-                        <div className="flex justify-between mt-20 md:mt-0">
+                        </div> */}
+                        <div className="flex justify-between mt-5 sm:mt-8 md:mt-14">
                             <button type="submit" className="md:w-[238px] w-[200px] h-[56px] bg-gradient-to-r from-red-700 via-red-700 to-rose-950 text-2xl font-bold text-white flex justify-center items-center rounded-full">
                                 Masuk
                             </button>
@@ -141,9 +141,9 @@ export default function Login({ searchParams }) {
                             </a>
                         </div>
                     </form>
-                    <div className="flex justify-center mt-5 mb-20 font-medium ">
+                    {/* <div className="flex justify-center mt-5 mb-20 font-medium ">
                         <a href="/">Lupa Password?</a>
-                    </div>
+                    </div> */}
 
 
 

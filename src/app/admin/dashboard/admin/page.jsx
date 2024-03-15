@@ -5,8 +5,12 @@ import dynamic from "next/dynamic";
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
 import CardPengujiAdmin from '../../../../components/CardPengujiAdmin';
 import axios from 'axios';
-import { ref, deleteObject, getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage"
-import { storage } from '../../../../firebase/firebase'
+
+import { ref, deleteObject,getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage"
+import {storage} from '../../../../firebase/firebase'
+import Navigasi from '@/components/Navigasi'
+
+
 
 export default function Adminn() {
   const [tambah, setTambah] = useState({
@@ -116,10 +120,11 @@ export default function Adminn() {
 
   return (
     <div className='h-full'>
-      <p className='text-center text-4xl font-bold text-gray-800 mt-7'>WRITE CONTENT</p>
+      <Navigasi text1={"admin"} text2={'content'}/>
+      {/* <p className='text-center text-4xl font-bold text-gray-800 mt-7'>WRITE CONTENT</p>
       <div className='flex justify-center'>
         <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
-      </div>
+      </div> */}
       <div className="">
         <div className=" md:px-20 px-5 rounded-lg">
           <div className='my-5'>
