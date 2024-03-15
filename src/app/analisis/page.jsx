@@ -70,7 +70,7 @@ export default function Analisis() {
                 },
             ],
         },
-        
+
         {
             alatPengukuran: "AAS (Ca, Fe, Cu, Cd)",
             jenisPengukuran: [
@@ -196,16 +196,16 @@ export default function Analisis() {
             ],
         },
         {
-            alatPengukuran: "Freedzy",
+            alatPengukuran: "Freeze Dry",
             jenisPengukuran: [
                 {
-                    jenis: "a. Diatas 8 jam",
+                    jenis: "a. Dibawah 8 jam",
                     kimia: "a. 15.000",
                     nonKimia: "a. 20.000",
                     luarUpi: "a. 25.000"
                 },
                 {
-                    jenis: "b. Diatas 8 jam",
+                    jenis: "b. Dibawah 8 jam",
                     kimia: "b. 30.000",
                     nonKimia: "b. 40.000",
                     luarUpi: "b. 50.000"
@@ -333,7 +333,7 @@ export default function Analisis() {
                                                 <p className='font-medium md:text-base text-[9px]'>{""}</p>
                                                 <div>
 
-                                                    {data.jenisPengukuran.map((jenisPengukuran,i) => (
+                                                    {data.jenisPengukuran.map((jenisPengukuran, i) => (
 
 
                                                         <p key={i} className='font-medium md:text-base text-[9px]'>
@@ -344,7 +344,7 @@ export default function Analisis() {
                                                 </div>
                                                 <div>
 
-                                                    {data.jenisPengukuran.map((jenisPengukuran,i) => (
+                                                    {data.jenisPengukuran.map((jenisPengukuran, i) => (
 
 
                                                         <p key={i} className='font-medium md:text-base text-[9px]'>
@@ -355,7 +355,7 @@ export default function Analisis() {
                                                 </div>
                                                 <div>
 
-                                                    {data.jenisPengukuran.map((jenisPengukuran,i) => (
+                                                    {data.jenisPengukuran.map((jenisPengukuran, i) => (
 
 
                                                         <p key={i} className='font-medium md:text-base text-[9px]'>
@@ -366,7 +366,7 @@ export default function Analisis() {
                                                 </div>
                                                 <div>
 
-                                                    {data.jenisPengukuran.map((jenisPengukuran,i) => (
+                                                    {data.jenisPengukuran.map((jenisPengukuran, i) => (
 
 
                                                         <p key={i} className='font-medium md:text-base text-[9px]'>

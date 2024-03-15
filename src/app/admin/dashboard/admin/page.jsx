@@ -5,9 +5,11 @@ import dynamic from "next/dynamic";
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
 import CardPengujiAdmin from '../../../../components/CardPengujiAdmin';
 import axios from 'axios';
+
 import { ref, deleteObject,getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import {storage} from '../../../../firebase/firebase'
 import Navigasi from '@/components/Navigasi'
+
 
 
 export default function Adminn() {
@@ -65,15 +67,15 @@ export default function Adminn() {
     getData()
   }, [])
 
-  const handleFoto = async (e)=>{
+  const handleFoto = async (e) => {
     const directory = 'files/'
-    const fileName = `${e.name+new Date().toISOString()}`
+    const fileName = `${e.name + new Date().toISOString()}`
 
-    const storageRef = ref(storage,directory+fileName);
+    const storageRef = ref(storage, directory + fileName);
 
     // Create file metadata including the content type
     const metadata = {
-        contentType: e.type,
+      contentType: e.type,
     };
 
     // Upload the file in the bucket storage
@@ -82,23 +84,23 @@ export default function Adminn() {
 
     // Grab the public url
     const downloadURL = await getDownloadURL(snapshot.ref);
-    if(downloadURL){
-      
-      setTambah((a)=>({...a,foto:downloadURL}))
- 
+    if (downloadURL) {
+
+      setTambah((a) => ({ ...a, foto: downloadURL }))
+
     }
-    
+
   }
 
-  const handleContohHasil = async (e)=>{
+  const handleContohHasil = async (e) => {
     const directory = 'files/'
-    const fileName = `${e.name+new Date().toISOString()}`
+    const fileName = `${e.name + new Date().toISOString()}`
 
-    const storageRef = ref(storage,directory+fileName);
+    const storageRef = ref(storage, directory + fileName);
 
     // Create file metadata including the content type
     const metadata = {
-        contentType: e.type,
+      contentType: e.type,
     };
 
     // Upload the file in the bucket storage
@@ -107,10 +109,10 @@ export default function Adminn() {
 
     // Grab the public url
     const downloadURL = await getDownloadURL(snapshot.ref);
-    if(downloadURL){
-      
-      setTambah((a)=>({...a,contoh_hasil:downloadURL}))
- 
+    if (downloadURL) {
+
+      setTambah((a) => ({ ...a, contoh_hasil: downloadURL }))
+
     }
   }
 
@@ -153,7 +155,7 @@ export default function Adminn() {
 
                     <input type="file" name="contoh_hasil" onChange={(e) => handleContohHasil(e.target.files[0])} />
                   </div>
-                  <button className="border-2 w-60 mx-auto grad text-white rounded-md mt-5" type="submit">Submit edit</button>
+                  <button className="border-2 w-60 mx-auto grad text-white rounded-md mt-5" type="submit">Submit</button>
                 </div>
               </form>
 
