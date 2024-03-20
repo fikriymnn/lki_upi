@@ -33,7 +33,7 @@ export default function HAdetail({ params, searchParams }) {
       // Create a link element and click it to trigger the download
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      link.download = `${invoice?.id_user?.nama_lengkap.replace(" ", "_")}_${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}_invoice.docx`;
+      link.download = `${invoice?.id_user?.nama_lengkap.replace(" ", "_")}_${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}_invoice.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -54,7 +54,7 @@ export default function HAdetail({ params, searchParams }) {
       // Create a link element and click it to trigger the download
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      link.download = `${invoice?.id_user?.nama_lengkap.replace(" ", "_")}_${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}_kuitansi.xlsx`;
+      link.download = `kuitansi_${invoice?.id_user?.nama_lengkap.replace(" ","_")}_${new Date().getDate()}_${new Date().getMonth() + 1}_${new Date().getFullYear()}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
