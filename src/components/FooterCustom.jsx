@@ -30,7 +30,7 @@ function FooterCustom() {
               height={0}
               className="w-6"
             />
-            <p>+61892765628</p>
+            <p>+6285795101010</p>
           </div>
           <div className="flex gap-3">
             <Image
