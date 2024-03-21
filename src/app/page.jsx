@@ -9,7 +9,7 @@ export default function Home() {
       <CarouselCustom />
       <div className=" ">
         <div className="">
-          <h1 className="text-center md:text-3xl sm:text-xl text-lg font-bold mt-10 mb-5 text-gray-800">
+          <h1 className="text-center md:text-3xl sm:text-xl text-xl p-5 font-bold mt-10 mb-5 text-gray-800">
             LAYANAN DAN JASA LAB KIMIA UPI
           </h1>
           <div className="flex justify-center">
