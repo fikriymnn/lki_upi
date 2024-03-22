@@ -115,8 +115,6 @@ export default function Report() {
     async function getInvoice() {
       try {
 
-        console.log('S')
-
         setLoading(true)
         const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?report=true&status_pengujian=success&skip=${page * 50}&limit=50${month ? `&month=${month}` : ""}${year ? `&year=${year}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`, { withCredentials: true })
         if (data.data.success) {
@@ -170,7 +168,7 @@ export default function Report() {
             </select></div>
             <DownloadTableExcel
             filename={`report_${new Date().getDate()}_${month_bahasa(new Date().getMonth())}_${new Date().getFullYear()}_${new Date().getHours()}_${new Date().getMinutes()}_${new Date().getMilliseconds()}`}
-            sheet={`${month_bahasa(new Date().getMonth())} ${new Date().getFullYear()}`}
+            sheet={`${month?month:month_bahasa(new Date().getMonth())} ${year?year:new Date().getFullYear()}`}
             currentTableRef={tableRef.current}
           >
             <Button color="failure" size={5} className='ml-10 p-2  grad'>download report excel</Button>
