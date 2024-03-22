@@ -199,13 +199,13 @@ export default function Analisis() {
             alatPengukuran: "Freeze Dry",
             jenisPengukuran: [
                 {
-                    jenis: "a. Dibawah 8 jam",
+                    jenis: "a. Di atas 8 jam",
                     kimia: "a. 15.000",
                     nonKimia: "a. 20.000",
                     luarUpi: "a. 25.000"
                 },
                 {
-                    jenis: "b. Dibawah 8 jam",
+                    jenis: "b. Di bawah 8 jam",
                     kimia: "b. 30.000",
                     nonKimia: "b. 40.000",
                     luarUpi: "b. 50.000"
