@@ -30,7 +30,7 @@ function FooterCustom() {
               height={0}
               className="w-6"
             />
-            <p>+6285795101010</p>
+            <a href="https://wa.me/+6285795101010">+6285795101010</a>
           </div>
           <div className="flex gap-3">
             <Image

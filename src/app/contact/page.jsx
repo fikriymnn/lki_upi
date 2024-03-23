@@ -55,7 +55,7 @@ export default function Contact() {
           <div className="flex items-center justify-center mt-[29px]">
             <div className=" md:w-[574px] w-[330px] ">
               <form>
-                <div class="md:w-[574px] w-[330px]  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px] ">
+                <div className="md:w-[574px] w-[330px]  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px] ">
                   <div className="md:w-[574px] w-[330px] flex-col justify-start items-start gap-2 flex">
                     <div className="text-neutral-700 md:text-lg text-sm font-medium  tracking-wide">
                       NAMA
@@ -67,7 +67,7 @@ export default function Contact() {
                     />
                   </div>
                 </div>
-                <div class="md:w-[574px] w-[330px]  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px]">
+                <div className="md:w-[574px] w-[330px]  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px]">
                   <div className="md:w-[574px] w-[330px] flex-col justify-start items-start gap-2 flex">
                     <div className="text-neutral-700 md:text-lg text-sm font-medium  tracking-wide">
                       EMAIL
@@ -79,7 +79,7 @@ export default function Contact() {
                     />
                   </div>
                 </div>
-                <div class="md:w-[574px] w-[330px]  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px]">
+                <div className="md:w-[574px] w-[330px]  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px]">
                   <div className="md:w-[574px] w-[330px] flex-col justify-start items-start gap-2 flex">
                     <div className="text-neutral-700 md:text-lg text-sm font-medium  tracking-wide">
                       DESKRIPSI
@@ -102,9 +102,12 @@ export default function Contact() {
                   <p className="text-center my-5 md:text-base text-sm">
                     Atau hubungi kami di
                   </p>
-                  <p className="md:py-3 py-1 md:w-60 w-44  bg-gradient-to-r from-lime-600 via-green-600 to-lime-900 rounded-full shadow text-center md:text-2xl text-lg text-white font-bold">
-                    Whatsapp
-                  </p>
+                  <div className="md:py-3 py-1 md:w-60 w-44  bg-gradient-to-r from-lime-600 via-green-600 to-lime-900 rounded-full shadow text-center md:text-2xl text-lg text-white font-bold">
+
+                    <a href="https://wa.me/+6285795101010" >
+                      Whatsapp
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
