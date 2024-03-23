@@ -16,7 +16,7 @@ export default function Contact() {
     const publicKey = 'LFS33TqpA9m6wQqxg'
 
     const templateParams = {
-      name: name,
+      from_name: name,
       from_email: email,
       to_name: 'lki_upi',
       message: message
