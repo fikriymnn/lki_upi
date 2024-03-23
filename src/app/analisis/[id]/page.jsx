@@ -49,7 +49,8 @@ function Page({ params }) {
                     <div className='md:flex sm:flex bg-white p-3 gap-5 h-full'>
                         <div className='flex flex-col align-start md:items-start md:justify-start sm:justify-start justify-center md:w-4/12 sm:w-4/12 gap-y-10 mt-10 mb-10'>
                             <div >
-                                <Image alt='' src={data?.foto} width={0} height={0} sizes='100vw' className='md:w-[348px] w-[250px]  mx-auto mb-5' />
+                                <img src={data?.foto} width={0} height={0} sizes='100vw' className='md:w-[348px] w-[250px]  mx-auto mb-5' alt="" />
+                                {/* <Image alt='' src={data?.foto} width={0} height={0} sizes='100vw' className='md:w-[348px] w-[250px]  mx-auto mb-5' /> */}
                                 <p className='font-bold text-center md:text-xl sm:text-base text-base ] '>{data?.title}</p>
                                 <p className='text-center md:text-lg sm:text-base text-[10px]'>
 
