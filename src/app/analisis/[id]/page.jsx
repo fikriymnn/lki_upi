@@ -45,13 +45,13 @@ function Page({ params }) {
             <div className='flex flex-col justify-center items-center mb-96'>
 
                 <div className='bg-[#EDECECD4] w-11/12 rounded-lg shadow-2xl h-full'>
-                    <p className='text-[24px] font-bold text-center my-3'>Deskripsi Alat</p>
+                    <p className='text-[24px] font-bold text-center my-3'>Deskripsii Alat</p>
                     <div className='md:flex sm:flex bg-white p-3 gap-5 h-full'>
                         <div className='flex flex-col align-start md:items-start md:justify-start sm:justify-start justify-center md:w-4/12 sm:w-4/12 gap-y-10 mt-10 mb-10'>
                             <div >
-                                <img src={data?.foto} width={0} height={0} sizes='100vw' className='md:w-[348px] w-[250px]  mx-auto mb-5' alt="" />
+                                <img src={data?.foto} className='md:w-[348px] w-[250px]  mx-auto mb-5' alt="" />
                                 {/* <Image alt='' src={data?.foto} width={0} height={0} sizes='100vw' className='md:w-[348px] w-[250px]  mx-auto mb-5' /> */}
-                                <p className='font-bold text-center md:text-xl sm:text-base text-base ] '>{data?.title}</p>
+                                <p className='font-bold text-center md:text-xl sm:text-base text-base '>{data?.title}</p>
                                 <p className='text-center md:text-lg sm:text-base text-[10px]'>
 
                                     {parse(data?.sub_title)}
