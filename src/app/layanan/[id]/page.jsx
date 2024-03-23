@@ -58,7 +58,7 @@ function Page({ params }) {
                             </div>
                         </div>
                         <div className='md:w-8/12 sm:w-8/12 flex items-center'>
-                            <div className='md:text-[18px] sm:text-[10px] text-[9px] font-medium'>
+                            <div className='md:text-[18px] sm:text-[10px] text-[9px] font-medium mt-5 md:mt-0 sm:mt-5'>
                                 {parse(data?.deskripsi)}
                             </div>
                         </div>
