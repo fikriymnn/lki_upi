@@ -50,7 +50,7 @@ function Page({ params }) {
                         <div className='flex flex-col align-start items-start md:w-4/12 sm:w-4/12 gap-y-10 mt-10 justify-center'>
                             <div>
                             <Image alt='' src={data?.foto} width={0} height={0} sizes='100vw' className='w-[348px]' />
-                            <p className='font-bold text-center md:text-xl sm:text-base text-base ]'>{data?.title}</p>
+                            <p className='font-bold text-center md:text-xl sm:text-base text-base mt-5'>{data?.title}</p>
                             <p className='text-center md:text-lg sm:text-base text-sm'>
 
                                { parse(data?.sub_title)}
