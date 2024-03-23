@@ -1,7 +1,38 @@
+'use client'
 import Iframe from "react-iframe";
 import Image from "next/image";
+import emailjs from "@emailjs/browser"
+import { useState } from "react";
 
 export default function Contact() {
+  const [name, setName] = useState()
+  const [email, setEmail] = useState()
+  const [message, setMessage] = useState()
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const serviceId = 'service_ba0a13q'
+    const templateId = 'template_ofvo97e'
+    const publicKey = 'LFS33TqpA9m6wQqxg'
+
+    const templateParams = {
+      from_name: name,
+      from_email: email,
+      to_name: 'lki_upi',
+      message: message
+    }
+    emailjs.send(serviceId, templateId, templateParams, publicKey)
+      .then((response) => {
+        alert('email sent successfully', response)
+        setName(''),
+          setEmail(''),
+          setMessage('')
+      }).catch((error) => {
+        alert('error email sent', error)
+      });
+
+  };
+
   return (
     <div className="mb-16">
       <div className=" flex md:h-[229px] h-40 w-full  ">
@@ -54,45 +85,57 @@ export default function Contact() {
           </div>
           <div className="flex items-center justify-center mt-[29px]">
             <div className=" md:w-[574px] w-[330px] ">
-              <form>
-                <div class="md:w-[574px] w-[330px]  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px] ">
+              <form onSubmit={handleSubmit}>
+                <div className="md:w-[574px] w-[330px]  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px] ">
                   <div className="md:w-[574px] w-[330px] flex-col justify-start items-start gap-2 flex">
                     <div className="text-neutral-700 md:text-lg text-sm font-medium  tracking-wide">
                       NAMA
                     </div>
                     <input
+                      name="name"
+                      id="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       type="text"
                       placeholder="Masukan nama disini"
                       className="md:w-[574px] w-[330px] h-12 pl-4 pr-2 py-2 bg-zinc-100 bg-opacity-80 rounded-lg border border-neutral-900 border-opacity-10 justify-start items-center gap-2 inline-flex text-zinc-500 text-base font-medium  tracking-wide"
                     />
                   </div>
                 </div>
-                <div class="md:w-[574px] w-[330px]  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px]">
+                <div className="md:w-[574px] w-[330px]  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px]">
                   <div className="md:w-[574px] w-[330px] flex-col justify-start items-start gap-2 flex">
                     <div className="text-neutral-700 md:text-lg text-sm font-medium  tracking-wide">
                       EMAIL
                     </div>
                     <input
                       type="email"
+                      name="email"
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       placeholder="Masukan email di sini"
                       className="md:w-[574px] w-[330px] h-12 pl-4 pr-2 py-2 bg-zinc-100 bg-opacity-80 rounded-lg border border-neutral-900 border-opacity-10 justify-start items-center gap-2 inline-flex text-zinc-500 text-base font-medium  tracking-wide"
                     />
                   </div>
                 </div>
-                <div class="md:w-[574px] w-[330px]  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px]">
+                <div className="md:w-[574px] w-[330px]  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px]">
                   <div className="md:w-[574px] w-[330px] flex-col justify-start items-start gap-2 flex">
                     <div className="text-neutral-700 md:text-lg text-sm font-medium  tracking-wide">
                       DESKRIPSI
                     </div>
                     <textarea
                       type="name"
+                      name="message"
+                      id="message"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
                       placeholder="Masukan Deskripsi di sini"
                       className="md:w-[574px] w-[330px]  h-[159px] pl-4 pr-2 py-2 bg-zinc-100 bg-opacity-80 rounded-lg border border-neutral-900 border-opacity-10   gap-2  text-base font-medium resize-none"
                     />
                   </div>
                 </div>
                 <div className="mx-auto flex justify-center">
-                  <button className="md:py-3 py-1 md:w-60 w-44 bg-gradient-to-r from-red-700 via-red-600 to-rose-950 rounded-full shadow text-center md:text-2xl text-lg text-white font-bold">
+                  <button type="submit" value='Send' className="md:py-3 py-1 md:w-60 w-44 bg-gradient-to-r from-red-700 via-red-600 to-rose-950 rounded-full shadow text-center md:text-2xl text-lg text-white font-bold">
                     Kirim
                   </button>
                 </div>
@@ -102,9 +145,12 @@ export default function Contact() {
                   <p className="text-center my-5 md:text-base text-sm">
                     Atau hubungi kami di
                   </p>
-                  <p className="md:py-3 py-1 md:w-60 w-44  bg-gradient-to-r from-lime-600 via-green-600 to-lime-900 rounded-full shadow text-center md:text-2xl text-lg text-white font-bold">
-                    Whatsapp
-                  </p>
+                  <div className="md:py-3 py-1 md:w-60 w-44  bg-gradient-to-r from-lime-600 via-green-600 to-lime-900 rounded-full shadow text-center md:text-2xl text-lg text-white font-bold">
+
+                    <a href="https://wa.me/+6285795101010" >
+                      Whatsapp
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
