@@ -193,7 +193,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                             <div className="w-full">
 
                                 <div className="">
-                                    <h1 className="text-lg font-semibold text-grey-600">foto sample : </h1>
+                                    <h1 className="text-lg font-semibold text-grey-600">foto sample (*format file berupa png, jpg dan jpeg) : </h1>
                                     <div className="input-style-lki-flexible">
 
                                       
@@ -204,7 +204,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                                 <div className="grid md:grid-cols-2 gap-10 mt-5">
 
                                     <div cl>
-                                        <h1 className="text-lg font-semibold text-grey-600">jurnal pendukung : </h1>
+                                        <h1 className="text-lg font-semibold text-grey-600">jurnal pendukung (*format file berupa docx atau pdf, ukuran file dibawah 10mb) : </h1>
                                         <div className="input-style-lki">
 
                                             {jurnal_pendukung ? <Button className="grad" color="failure" size={5} onClick={handleDownloadJP}>download</Button> : <p>-</p>}
@@ -214,7 +214,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
 
                                     <div>
                                         <div className="md:flex gap-1">
-                                            <h1 className="text-lg font-semibold text-grey-600">Hasil analisis : </h1>
+                                            <h1 className="text-lg font-semibold text-grey-600">Hasil analisis (*format file berupa pdf) : </h1>
                                             {add ? <div className="flex"><button onClick={handleConfirm} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Kirim</button><button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">upload file hasil analisis</button>}
                                         </div>
 

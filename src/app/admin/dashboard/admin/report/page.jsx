@@ -84,7 +84,7 @@ const monthOption = [
 
   "November",
 
-  "desember"
+  "Desember"
 ]
 
 

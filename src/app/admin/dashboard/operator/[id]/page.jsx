@@ -101,8 +101,10 @@ export default function Tracking_admin({ params }) {
                         <br />
                         <br />
                         {edit ? <div><p className="text-lg flex font-semibold gap-5">Status : <select className="font-normal" name="status" onChange={(e) => setForm((a) => ({ ...a, [e.target.name]: e.target.value }))} value={form.status}>
-                            <option value="" selected>Sample dikerjakan operator</option>
-                            <option value="menunggu verifikasi">menunggu verifikasi</option></select></p></div> : <div>
+                        <option value="sample diterima admin">Sample diterima admin</option>
+                            <option value="sample dikerjakan operator" selected>Sample dikerjakan operator</option>
+                            <option value="menunggu verifikasi">menunggu verifikasi</option>
+                            </select></p></div> : <div>
                             <p className="text-lg flex gap-5 font-semibold">Status  : <span className="font-normal">{form.status} </span></p></div>}
                         <div className="mx-1 flex flex-col gap-3 md:w-6/12 w-full">  {edit ? <div className="flex gap-5 mt-5"><button onClick={handleConfirm} className="bg-blue-400 text-white px-2 py-1 rounded-lg grad ">Konfirmasi</button><button onClick={() => setEdit(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg grad">Cancel</button></div> : <button onClick={() => setEdit(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg grad w-40 mt-5">Edit</button>}
                         </div>

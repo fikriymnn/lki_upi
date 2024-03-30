@@ -30,7 +30,7 @@ const monthOption = [
 
   "November",
 
-  "desember"
+  "Desember"
 ]
 
 export default function History_order() {

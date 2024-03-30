@@ -81,7 +81,7 @@ const monthOption = [
 
   "November",
 
-  "desember"
+  "Desember"
 ]
 
 export default function Order() {

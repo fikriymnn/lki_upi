@@ -365,7 +365,7 @@ export default function Order_analisis() {
                                 <input className='input-style-lki' name="foto_sample" type="file" onChange={handleFS} />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold" >Jurnal pendukung (*format file yang diupload berupa docx atau pdf)
+                                <h2 className="text-lg font-semibold" >Jurnal pendukung (*format file yang diupload berupa docx atau pdf, ukuran file dibawah 10mb)
                                 </h2>
                                 <input className='input-style-lki' name="jurnal_pendukung" type="file" onChange={(e) => {
 
