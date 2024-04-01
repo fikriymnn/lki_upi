@@ -86,7 +86,7 @@ export default function Login({ searchParams }) {
                     <Image alt="" src={"/images/gedung.jpg"} width={0} height={0} sizes="100vw" className="w-[800px] md:h-[807px] h-[300px] opacity-50" />
                     <div className="text-white absolute flex flex-col justify-center items-center md:w-6/12 w-full md:h-[807px] h-[300px]">
                         <h1 className="md:text-4xl text-2xl font-bold w-[300px] text-center mb-10">Masuk atau Daftar</h1>
-                        <p className="md:text-2xl text-base font-semibold md:w-10/12 w-11/12 text-justify">Laboratorium Kimia Instrumen UPI bla bla bla bla bla bla bla pengujian dan analisis sampel.</p>
+                        <p className="md:text-2xl text-base font-semibold md:w-10/12 w-11/12 text-justify">Laboratorium Kimia Instrumen UPI pengujian dan analisis sampel.</p>
                     </div>
                 </div>
                 <div className="w-11/12 flex flex-col mx-auto mt-10 md:mt-0">
