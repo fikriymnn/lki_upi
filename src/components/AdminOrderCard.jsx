@@ -150,19 +150,19 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                     <div className="border-1 rounded grid md:grid-cols-2 md:gap-10 gap-5">
 
                         <div>
-                            <h1 className="text-lg font-semibold text-grey-600">nama sample : </h1>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">nama sample : </h1>
                             <h1 className="input-style-lki">{nama_sample}</h1>
                         </div>
                         <div>
-                            <h1 className="text-lg font-semibold text-grey-600">jumlah sample : </h1>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">jumlah sample : </h1>
                             <h1 className="input-style-lki">{jumlah_sample}</h1>
                         </div>
                         <div>
-                            <h1 className="text-lg font-semibold text-grey-600">wujud sample : </h1>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">wujud sample : </h1>
                             <h1 className="input-style-lki">{wujud_sample}</h1>
                         </div>
                         <div>
-                            <h1 className="text-lg font-semibold text-grey-600">pelarut : </h1>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">pelarut : </h1>
 
                             <h1 className="input-style-lki">{pelarut}</h1>
 
@@ -171,37 +171,37 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                     </div>
                     <div className="flex flex-col gap-5 mt-5">
                          <div>
-                            <h1 className="text-lg font-semibold text-grey-600">sample_dikembalikan : </h1>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">sample_dikembalikan : </h1>
                             <h1 className="input-style-lki-box ">{sample_dikembalikan}</h1>
                         </div>
                         <div>
-                            <h1 className="text-lg font-semibold text-grey-600">jenis pengujian sample : </h1>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">jenis pengujian sample : </h1>
                             <h1 className="input-style-lki">{jenis_pengujian}</h1>
                         </div>
                         <div>
-                            <h1 className="text-lg font-semibold text-grey-600">kode pengujian sample : </h1>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">kode pengujian sample : </h1>
                             <h1 className="input-style-lki">{kode_pengujian}</h1>
                         </div>
                         <div>
-                            <h1 className="text-lg font-semibold text-grey-600">preparasi khusus : </h1>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">preparasi khusus : </h1>
                             <h1 className="input-style-lki">{preparasi_khusus ? "ya" : "tidak"}</h1>
 
                         </div>
                         <div>
-                            <h1 className="text-lg font-semibold text-grey-600">target senyawa : </h1>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">target senyawa : </h1>
                             <h1 className="input-style-lki">{target_senyawa}</h1>
                         </div>
 
                         <div>
-                            <h1 className="text-lg font-semibold text-grey-600">metode parameter : </h1>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">metode parameter : </h1>
                             <h1 className="input-style-lki">{metode_parameter}</h1>
                         </div>
                         <div>
-                            <h1 className="text-lg font-semibold text-grey-600">deskripsi : </h1>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">deskripsi : </h1>
                             <h1 className="input-style-lki-box ">{deskripsi}</h1>
                         </div>
                         <div>
-                            <h1 className="text-lg font-semibold text-grey-600">riwayat pengujian : </h1>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">riwayat pengujian : </h1>
                             <h1 className="input-style-lki-box ">{riwayat_pengujian}</h1>
                         </div>
 
@@ -212,7 +212,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                             <div className="w-full">
 
                                 <div className="">
-                                    <h1 className="text-lg font-semibold text-grey-600">foto sample (*format file berupa png, jpg dan jpeg) : </h1>
+                                    <h1 className="md:text-lg text-xs font-semibold text-grey-600">foto sample (*format file berupa png, jpg dan jpeg) : </h1>
                                     <div className="input-style-lki-flexible">
 
                                       
@@ -223,7 +223,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                                 <div className="grid md:grid-cols-2 gap-10 mt-5">
 
                                     <div cl>
-                                        <h1 className="text-lg font-semibold text-grey-600">jurnal pendukung (*format file berupa docx atau pdf) : </h1>
+                                        <h1 className="md:text-lg text-xs font-semibold text-grey-600">jurnal pendukung (*format file berupa docx atau pdf) : </h1>
                                         <div className="input-style-lki">
 
                                             {jurnal_pendukung ? <Button className="grad" color="failure" size={5} href={jurnal_pendukung}>download</Button> : <p>-</p>}
@@ -233,7 +233,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
 
                                     <div>
                                         <div className="md:flex gap-1">
-                                            <h1 className="text-lg font-semibold text-grey-600">Hasil analisis (*format file berupa pdf, ukuran file dibawah 10mb) : </h1>
+                                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">Hasil analisis (*format file berupa pdf, ukuran file dibawah 10mb) : </h1>
                                             {add ? <div className="flex"><button onClick={handleConfirm} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Kirim</button><button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">upload file hasil analisis</button>}
                                         </div>
 
