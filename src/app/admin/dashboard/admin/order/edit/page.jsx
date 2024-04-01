@@ -213,12 +213,12 @@ export default function Order_analisis({ searchParams }) {
                     <div className='px-10 py-5 flex flex-col gap-3'>
                         <div>
                             <h2 className="text-lg font-semibold">Jenis pengujian</h2>
-                            <input className='input-style-lki' name="nama_sample" type="text" readOnly defaultValue={jenis_pengujian[0][0]?jenis_pengujian[0][0]:''}/>
+                            <input className='input-style-lki' name="nama_sample" type="text" readOnly value={jenis_pengujian[0][0]?jenis_pengujian[0][0]:''}/>
 
                         </div>
                         <div>
                             <h2 className="text-lg font-semibold" >Nama sample</h2>
-                            <input className='input-style-lki' name="nama_sample" defaultValue={nama_sample[0]} type="text" onChange={(e) => {
+                            <input className='input-style-lki' name="nama_sample" value={nama_sample[0]} type="text" onChange={(e) => {
                                 nama_sample[0] = e.target.value
 
                             }} />
