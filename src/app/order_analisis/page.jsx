@@ -120,8 +120,8 @@ export default function Order_analisis() {
                 var ctx = canvas.getContext("2d");
                 ctx.drawImage(img, 0, 0);
 
-                var MAX_WIDTH = 437;
-                var MAX_HEIGHT = 437;
+                var MAX_WIDTH = 700;
+                var MAX_HEIGHT = 700;
                 var width = img.width;
                 var height = img.height;
 
