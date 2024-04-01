@@ -112,13 +112,13 @@ export default function Hdetail({ params, searchParams }) {
           <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
         </div> */}
         <div className="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 md:mx-20 mx-5">
-          <p className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">status : <span className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto text-end ">{invoice?.status}</span> </p>
+          <p className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl   font-semibold">status : <span className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto text-end ">{invoice?.status}</span> </p>
           {invoice?.status == "form dikonfirmasi" ? <p>*kirim sample ke alamat yang tertera \n (Jl.lorem ipsum dolor)</p> : ""}
-          <p className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">total harga  : <span className="text-end"> Rp.{invoice?.total_harga}</span></p>
-          <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
+          <p className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">total harga  : <span className="text-end md:text-xl sm:text-xl text-xs"> Rp.{invoice?.total_harga}</span></p>
+          <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
             <p className="md:text-xl sm:text-xl  font-semibold">invoice : </p>{invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download</Button> : <p className="ml-5">-</p>}</div>
-          <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className=" md:text-xl sm:text-xl  font-semibold">kuitansi : </p>{invoice?.status == "selesai" ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download</Button> : <p className="ml-5">-</p>}</div>
-          <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className="md:text-xl sm:text-xl  font-semibold">bukti pembayaran : </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} href={invoice.bukti_pembayaran}>download</Button> : ""} </div>
+          <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className=" md:text-xl sm:text-xl  font-semibold">kuitansi : </p>{invoice?.status == "selesai" ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download</Button> : <p className="ml-5">-</p>}</div>
+          <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className="md:text-xl sm:text-xl  font-semibold">bukti pembayaran : </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} href={invoice.bukti_pembayaran}>download</Button> : ""} </div>
 
         </div>
         <div className="md:mx-20 mx-5">

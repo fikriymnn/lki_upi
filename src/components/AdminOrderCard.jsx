@@ -242,7 +242,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                                             setFile(e.target.files[0])
                                 
                                           
-                                        }} /> : (hasil_analisis ? <Button color="failure" size={5} href={hasil_analisis}>download</Button> : <p className="input-style-lki">-</p>)}
+                                        }} /> : (hasil_analisis ?<Button color="failure" size={5} href={hasil_analisis}>download</Button> : <p className="input-style-lki">-</p>)}
                                     </div>
                                 </div>
                             </div>
