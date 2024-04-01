@@ -203,7 +203,7 @@ export default function Order() {
                           keterangan
                         </a>
                       </Table.Cell>
-                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs"><a href={`/admin/dashboard/admin/order/edit/a/?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 w-24">
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs"><a href={`/admin/dashboard/admin/order/edit/a?no_invoice=${v.no_invoice}`} className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 w-24">
                           edit
                         </a></Table.Cell>
                       <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
