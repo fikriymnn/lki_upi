@@ -101,7 +101,7 @@ export default function Tracking_admin({ params }) {
                         <br />
                         <br />
                         {edit ? <div><p className="text-lg flex font-semibold gap-5">Status : <select className="font-normal" name="status" onChange={(e) => setForm((a) => ({ ...a, [e.target.name]: e.target.value }))} value={form.status}>
-                        <option value="sample diterima admin">Sample diterima admin</option>
+                        
                             <option value="sample dikerjakan operator" selected>Sample dikerjakan operator</option>
                             <option value="menunggu verifikasi">menunggu verifikasi</option>
                             </select></p></div> : <div>
