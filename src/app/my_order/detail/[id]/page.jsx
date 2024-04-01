@@ -107,8 +107,8 @@ export default function Detail({ params, searchParams }) {
             var ctx = canvas.getContext("2d");
             ctx.drawImage(img, 0, 0);
 
-            var MAX_WIDTH = 437;
-            var MAX_HEIGHT = 437;
+            var MAX_WIDTH =700;
+            var MAX_HEIGHT =700;
             var width = img.width;
             var height = img.height;
 
@@ -210,7 +210,7 @@ export default function Detail({ params, searchParams }) {
 
 
 
-            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">bukti pembayaran : </p> {invoice?.status == "menunggu pembayaran" || invoice?.status == "menunggu konfirmasi pembayaran" || invoice?.status == "selesai" ? invoice.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download </Button> :<div className="flex"><input className="ml-5 w-11/12 h-10/12" type="file" name="bukti_pembayaran" onChange={handleBP} />{buktiPembayaran?<Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button>:""}</div> : <p className="ml-5">-</p>} </div>
+            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-lg font-semibold ">bukti pembayaran : </p> {invoice?.status == "menunggu pembayaran" || invoice?.status == "menunggu konfirmasi pembayaran" || invoice?.status == "selesai" ? invoice.bukti_pembayaran?<Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download </Button> :<div className="flex"><input className="ml-5 w-11/12 h-10/12" type="file" name="bukti_pembayaran" onChange={handleBP} />{buktiPembayaran?<Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button>:""}</div> : <p className="ml-5">-</p>}<div className="flex"><input className="ml-5 w-11/12 h-10/12" type="file" name="bukti_pembayaran" onChange={handleBP} />{buktiPembayaran?<Button className="ml-5" color="blue" size={5} onClick={handleBukti}>kirim</Button>:""}</div> </div>
 
           </div>
         </div>
