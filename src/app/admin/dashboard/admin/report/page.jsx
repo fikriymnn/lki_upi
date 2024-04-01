@@ -116,7 +116,7 @@ export default function Report() {
       try {
 
         setLoading(true)
-        const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?report=true&status_pengujian=success&skip=${page * 50}&limit=50${month ? `&month=${month}` : ""}${year ? `&year=${year}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`, { withCredentials: true })
+        const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?report=true&status_pengujian=success&skip=${page * 100}&limit=100${month ? `&month=${month}` : ""}${year ? `&year=${year}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`, { withCredentials: true })
         if (data.data.success) {
           setOrder(data.data.data)
           setLength(data.data.length_total)

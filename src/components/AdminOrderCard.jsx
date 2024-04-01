@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios"
 import { Button } from 'flowbite-react';
 import { imagefrombuffer } from "imagefrombuffer";
-import { ref, deleteObject,getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage"
+import { ref, deleteObject,getStorage, getDownloadURL, uploadBytesResumable,getMetadata } from "firebase/storage"
 import {storage} from '../firebase/firebase'
 
 export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id, kode_pengujian
@@ -17,7 +17,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
         e.preventDefault()
         try{
         const directory = 'hasilanalisis/'
-        const fileName = `${file.name + new Date().toISOString()}`
+        const fileName = `${file.name}`
     
         const storageRef = ref(storage, directory + fileName);
     
@@ -27,12 +27,11 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
         };
     
         // Upload the file in the bucket storage
-        const snapshot = await uploadBytesResumable(storageRef, e, metadata);
+        const snapshot = await uploadBytesResumable(storageRef, file, metadata);
         //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
     
         // Grab the public url
         const downloadURL = await getDownloadURL(snapshot.ref);
-        
             if (!file) {
                 alert('no file uploaded')
                 setAdd(a => !a)
@@ -46,6 +45,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                 }
             }
         } catch (err) {
+        console.log(err)
             alert(err.message)
         }
     }
@@ -216,7 +216,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                                     <div className="input-style-lki-flexible">
 
                                       
-                                    {foto_sample ? <Button className="grad" color="failure" size={5} onClick={handleDownloadFS}>download</Button> : <p>-</p>}
+                                    {foto_sample ? <Button className="grad" color="failure" size={5} href={foto_sample}>download</Button> : <p>-</p>}
                                     </div>
 
                                 </div>
@@ -226,7 +226,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                                         <h1 className="text-lg font-semibold text-grey-600">jurnal pendukung (*format file berupa docx atau pdf) : </h1>
                                         <div className="input-style-lki">
 
-                                            {jurnal_pendukung ? <Button className="grad" color="failure" size={5} onClick={handleDownloadJP}>download</Button> : <p>-</p>}
+                                            {jurnal_pendukung ? <Button className="grad" color="failure" size={5} href={jurnal_pendukung}>download</Button> : <p>-</p>}
                                         </div>
 
                                     </div>

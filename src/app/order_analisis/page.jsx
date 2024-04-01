@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from "next/navigation"
 import Resizer from "react-image-file-resizer";
+import { ref, deleteObject, getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage"
+import { storage } from '../../firebase/firebase'
 
 export default function Order_analisis() {
     const router = useRouter()
@@ -105,7 +107,7 @@ export default function Order_analisis() {
 
     // }
 
-    
+
 
     const handleFS = (event) => {
         let reader = new FileReader();
@@ -145,23 +147,23 @@ export default function Order_analisis() {
                         type: imageFile.type,
                         lastModified: Date.now()
                     });
-                    
-                        foto_sample[0] = file
-                    
-                    
-                    
+
+                    foto_sample[0] = file
+
+
+
                 }, imageFile.type, 1);
 
             };
             img.onerror = () => {
-               alert("invalid image content")
+                alert("invalid image content")
             };
             //debugger
             img.src = e.target.result;
         };
 
         reader.readAsDataURL(imageFile);
-       
+
     };
 
 
@@ -199,14 +201,34 @@ export default function Order_analisis() {
 
                 if (data.data.success) {
                     if (jurnal_pendukung) {
+
                         async function cek() {
                             try {
+                                const directory = 'jurnalpendukung/'
+                                const fileName = `${jurnal_pendukung.name}`
+
+                                const storageRef = ref(storage, directory + fileName);
+
+                                // Create file metadata including the content type
+                                const metadata = {
+                                    contentType: jurnal_pendukung.type,
+                                };
+
+                                // Upload the file in the bucket storage
+                                const snapshot = await uploadBytesResumable(storageRef, jurnal_pendukung, metadata);
+                                //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
+
+                                // Grab the public url
+                                const downloadURL = await getDownloadURL(snapshot.ref);
 
 
-                                await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${uuid[0]}`, { jurnal_pendukung: jurnal_pendukung }, {
-                                    withCredentials: true,
-                                    headers: { "Content-Type": 'multipart/form-data' }
-                                })
+                                if (downloadURL) {
+
+                                    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${uuid[0]}`, { jurnal_pendukung: downloadURL }, {
+                                        withCredentials: true
+                                    })
+                                }
+
                             } catch (err) {
                                 console.log(err.message)
                             }
@@ -217,10 +239,28 @@ export default function Order_analisis() {
                     if (foto_sample) {
                         async function cek2() {
                             try {
-                                await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${uuid[0]}`, { foto_sample: foto_sample[0] }, {
-                                    withCredentials: true,
-                                    headers: { "Content-Type": 'multipart/form-data' }
-                                })
+                                const directory = 'fotosample/'
+                                const fileName = `${foto_sample[0].name}`
+
+                                const storageRef = ref(storage, directory + fileName);
+
+                                // Create file metadata including the content type
+                                const metadata = {
+                                    contentType: foto_sample[0].type,
+                                };
+
+                                // Upload the file in the bucket storage
+                                const snapshot = await uploadBytesResumable(storageRef, foto_sample[0], metadata);
+                                //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
+
+                                // Grab the public url
+                                const downloadURL = await getDownloadURL(snapshot.ref);
+                                if (downloadURL) {
+                                    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${uuid[0]}`, { foto_sample: downloadURL }, {
+                                        withCredentials: true
+                                    })
+                                }
+
                             } catch (err) {
                                 console.log(err.message)
                             }
@@ -386,9 +426,9 @@ export default function Order_analisis() {
                             }} />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold" >Riwayat pengujian sample 
+                            <h2 className="text-lg font-semibold" >Riwayat pengujian sample
                             </h2>
-                            
+
                             <textarea placeholder='Deskripsikan mengenai riwayat pengujian sampel: apakah pernah diuji di tempat lain dan bagaimana hasilnya' className='input-style-lki-box' name="riwayat_pengujian" type="text" onChange={(e) => {
 
                                 e.preventDefault()

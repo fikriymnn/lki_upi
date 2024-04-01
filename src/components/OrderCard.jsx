@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from 'flowbite-react';
+import { ref, deleteObject,getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage"
+import {storage} from '../firebase/firebase'
 import axios from "axios";
 
 export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, hasil_analisis, id, deskripsi, foto_sample, kode_pengujian, status, riwayat_pengujian, sample_dikembalikan
@@ -9,6 +11,22 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
 }) {
 
     const [foto, setFoto] = useState('')
+
+    // const download = ()=>{
+    //     try{
+    //         const storageRef = storage()
+    
+    //         // Mendapatkan metadata file
+    //         const metadata = await storageRef.getMetadata();
+            
+    //         // Mengambil nama file dari metadata
+    //         const fileName = metadata.name;
+            
+    //         return fileName;
+    //     }catch(err){
+    //         console.log(err.message)
+    //     }
+    // }
 
 
 
@@ -172,7 +190,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
 
                                   
 
-                                            {foto_sample ? <Button className="grad" color="failure" size={5} onClick={handleDownloadFS}>download</Button> : <p>-</p>}
+                                            {foto_sample ? <Button className="grad" color="failure" size={5} href={foto_sample}>download</Button> : <p>-</p>}
                        
 
                               
@@ -185,7 +203,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
                                         <h1 className="text-lg font-semibold text-grey-600">jurnal pendukung : </h1>
                                         <div className="input-style-lki">
 
-                                            {jurnal_pendukung ? <Button className="grad" color="failure" size={5} onClick={handleDownloadJP}>download</Button> : <p>-</p>}
+                                            {jurnal_pendukung ? <Button className="grad" color="failure" size={5} href={jurnal_pendukung}>download</Button> : <p>-</p>}
                                         </div>
 
                                     </div>
@@ -194,7 +212,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
                                         <h1 className="text-lg font-semibold text-grey-600">Hasil analisis : </h1>
                                         <div className="input-style-lki">
 
-                                            {status == "selesai" ?hasil_analisis? <h1 className="input-style-lki"><Button className="grad" color="failure" size={5} onClick={handleDownloadHA}>download</Button></h1> : <p>-</p>:<p>-</p>}
+                                            {status == "selesai" ?hasil_analisis? <h1 className="input-style-lki"><Button className="grad" color="failure" size={5} href={hasil_analisis}>download</Button></h1> : <p>-</p>:<p>-</p>}
                                         </div>
                                     </div>
                                 </div>

@@ -116,9 +116,9 @@ export default function Hdetail({ params, searchParams }) {
           {invoice?.status == "form dikonfirmasi" ? <p>*kirim sample ke alamat yang tertera \n (Jl.lorem ipsum dolor)</p> : ""}
           <p className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">total harga  : <span className="text-end"> Rp.{invoice?.total_harga}</span></p>
           <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
-            <p className="md:text-xl sm:text-xl  font-semibold">invoice : </p>{invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download invoice</Button> : <p className="ml-5">-</p>}</div>
-          <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className=" md:text-xl sm:text-xl  font-semibold">kuitansi : </p>{invoice?.status == "selesai" ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download kuitansi</Button> : <p className="ml-5">-</p>}</div>
-          <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className="md:text-xl sm:text-xl  font-semibold">bukti pembayaran : </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download bukti pembayaran</Button> : ""} </div>
+            <p className="md:text-xl sm:text-xl  font-semibold">invoice : </p>{invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download</Button> : <p className="ml-5">-</p>}</div>
+          <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className=" md:text-xl sm:text-xl  font-semibold">kuitansi : </p>{invoice?.status == "selesai" ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download</Button> : <p className="ml-5">-</p>}</div>
+          <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className="md:text-xl sm:text-xl  font-semibold">bukti pembayaran : </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} href={invoice.bukti_pembayaran}>download</Button> : ""} </div>
 
         </div>
         <div className="md:mx-20 mx-5">

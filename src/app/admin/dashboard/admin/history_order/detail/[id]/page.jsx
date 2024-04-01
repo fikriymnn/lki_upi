@@ -116,7 +116,7 @@ export default function HAdetail({ params, searchParams }) {
           <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
             <p className="md:text-xl sm:text-xl  font-semibold">invoice : </p>{invoice.status == "selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download </Button> : <p className="ml-5">-</p>}</div>
           <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className=" md:text-xl sm:text-xl  font-semibold">kuitansi : </p>{invoice?.status == "selesai" ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download </Button> : <p className="ml-5">-</p>}</div>
-          <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className="md:text-xl sm:text-xl  font-semibold">bukti pembayaran : </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} onClick={downloadBuktiTransfer}>download</Button> : ""} </div>
+          <div className="text-lg border-2 rounded-lg p-2 border-b-2 grid grid-cols-2"><p className="md:text-xl sm:text-xl  font-semibold">bukti pembayaran : </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} href={invoice.bukti_pembayaran}>download</Button> : ""} </div>
 
         </div>
         <div className="md:mx-20 mx-5">
