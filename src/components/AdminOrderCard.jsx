@@ -37,7 +37,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                 alert('no file uploaded')
                 setAdd(a => !a)
             } else {
-                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}`, { hasil_analisis: downloadURL }, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' } })
+                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}`, { hasil_analisis: downloadURL }, { withCredentials: true } )
                 if (data.data=='success') {
 
                     setAdd(a => !a)
