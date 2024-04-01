@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import axios from "axios"
 import { Button } from 'flowbite-react';
 import { imagefrombuffer } from "imagefrombuffer";
+import { ref, deleteObject,getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage"
+import {storage} from '../firebase/firebase'
 
 export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id, kode_pengujian
 }) {
@@ -13,12 +15,29 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
 
     const handleConfirm = async (e) => {
         e.preventDefault()
-        try {
+        try{
+        const directory = 'hasilanalisis/'
+        const fileName = `${file.name + new Date().toISOString()}`
+    
+        const storageRef = ref(storage, directory + fileName);
+    
+        // Create file metadata including the content type
+        const metadata = {
+          contentType: file.type,
+        };
+    
+        // Upload the file in the bucket storage
+        const snapshot = await uploadBytesResumable(storageRef, e, metadata);
+        //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
+    
+        // Grab the public url
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        
             if (!file) {
                 alert('no file uploaded')
                 setAdd(a => !a)
             } else {
-                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}`, { hasil_analisis: file }, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' } })
+                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}`, { hasil_analisis: downloadURL }, { withCredentials: true, headers: { "Content-Type": 'multipart/form-data' } })
                 if (data.data=='success') {
 
                     setAdd(a => !a)
@@ -223,7 +242,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                                             setFile(e.target.files[0])
                                 
                                           
-                                        }} /> : (hasil_analisis ? <Button color="failure" size={5} onClick={handleDownloadHA}>download</Button> : <p className="input-style-lki">-</p>)}
+                                        }} /> : (hasil_analisis ? <Button color="failure" size={5} href={hasil_analisis}>download</Button> : <p className="input-style-lki">-</p>)}
                                     </div>
                                 </div>
                             </div>
