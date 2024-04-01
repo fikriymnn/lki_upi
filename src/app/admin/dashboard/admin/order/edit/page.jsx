@@ -159,11 +159,13 @@ export default function Order_analisis({ searchParams }) {
 
     }
     useEffect(() => {
+        console.log(no_invoice)
 
         async function cek() {
             try {
                 const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?no_invoice=${no_invoice}`)
-                if (data.data.success) {
+                console.log(data)
+                if (data) {
                     const datas = data.data.data
                     console.log(datas)
                     setID(datas._id)
