@@ -48,6 +48,7 @@ export default function Tracking_admin({ params }) {
                         obj.s3_date = date_format
                         return true;
                     case "sample dikerjakan operator":
+                        obj.s3_date = date_format
                         obj.s4_date = date_format
                         return true;
                     case "menunggu verifikasi":
@@ -121,8 +122,8 @@ export default function Tracking_admin({ params }) {
                                     <option value="">pilih</option>
                                     <option value="order dibatalkan">batalkan order</option>
                                     <option value="form dikonfirmasi">form dikonfirmasi</option>
-                                    <option value="sample diterima admin">sample diterima admin</option>
-                                    {/* <option value="sample dikerjakan operator">sample dikerjakan operator</option> */}
+                                    {/* <option value="sample diterima admin">sample diterima admin</option> */}
+                                    <option value="sample dikerjakan operator">sample diterima admin dan diproses</option>
                                     {/* <option value="menunggu verifikasi">menunggu verifikasi</option> */}
                                     <option value="menunggu pembayaran">menunggu pembayaran</option>
                                     <option value="selesai">konfirmasi pembayaran dan selesai</option></select>
