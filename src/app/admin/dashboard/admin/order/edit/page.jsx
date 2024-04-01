@@ -159,14 +159,12 @@ export default function Order_analisis({ searchParams }) {
 
     }
     useEffect(() => {
-        console.log(no_invoice)
 
         async function cek() {
             try {
-                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?no_invoice=${no_invoice}`)
-                console.log(data)
-                if (data) {
-                    const datas = data.data.data
+                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?no_invoice=${no_invoice}&skip=0&limit&10`)
+                if (data.data.success) {
+                    const datas = data.data.data[0]
                     console.log(datas)
                     setID(datas._id)
                     jenis_pengujian[0][0] = datas.jenis_pengujian
