@@ -162,7 +162,8 @@ export default function Order_analisis({ searchParams }) {
 
         async function cek() {
             try {
-                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?no_invoice=${no_invoice}&skip=0&limit=10`)
+                console.log(no_invoice)
+                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?no_invoice=${no_invoice}&skip=0&limit=10`, { withCredentials: true })
                 console.log(data)
                 if (data.data.success) {
                     const datas = data.data.data[0]
