@@ -583,10 +583,10 @@ export default function Analisis() {
 
                                                     {data.jenisPengukuran.map((jenisPengukuran, i) => (
 
-                                                        <div className='flex flex-col justify-center items-center  '>
+                                                        <div key={i} className='flex flex-col justify-center items-center  '>
 
                                                             <div className='grid grid-cols-2 gap-5'>
-                                                                <p key={i} className='font-medium md:text-[14px] text-[7px]'>
+                                                                <p className='font-medium md:text-[14px] text-[7px]'>
                                                                     {jenisPengukuran.tigaHariKimia}
                                                                 </p>
                                                                 <p className='font-medium md:text-[14px] text-[7px]'>
@@ -603,10 +603,10 @@ export default function Analisis() {
                                                     {data.jenisPengukuran.map((jenisPengukuran, i) => (
 
 
-                                                        <div className='flex flex-col justify-center items-center  '>
+                                                        <div key={i} className='flex flex-col justify-center items-center  '>
 
                                                             <div className='grid grid-cols-2 gap-5'>
-                                                                <p key={i} className='font-medium md:text-[14px] text-[7px]'>
+                                                                <p className='font-medium md:text-[14px] text-[7px]'>
                                                                     {jenisPengukuran.tigaHariNonKimia}
                                                                 </p>
                                                                 <p className='font-medium md:text-[14px] text-[7px]'>
@@ -622,10 +622,10 @@ export default function Analisis() {
                                                     {data.jenisPengukuran.map((jenisPengukuran, i) => (
 
 
-                                                        <div className='flex flex-col justify-center items-center  '>
+                                                        <div key={i} className='flex flex-col justify-center items-center  '>
 
                                                             <div className='grid grid-cols-2 gap-5'>
-                                                                <p key={i} className='font-medium md:text-[14px] text-[7px]'>
+                                                                <p className='font-medium md:text-[14px] text-[7px]'>
                                                                     {jenisPengukuran.tigaHariLuarUpi}
                                                                 </p>
                                                                 <p className='font-medium md:text-[14px] text-[7px]'>
