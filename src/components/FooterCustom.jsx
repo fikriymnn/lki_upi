@@ -15,9 +15,12 @@ function FooterCustom() {
         <div className="w-11/12 md:mx-0 mx-3">
           <h1 className="mb-5 font-bold md:text-xl text-lg">Tentang Kami</h1>
           <p>
-            Laboratorium Kimia Instrumen Universitas Pendidikan Indonesia Gedung
-            JICA &#40; FPMIPA-A &#41; Lt. 5 Jl. Dr. Setiabudhi No. 229 Bandung
-            40154
+            Laboratorium Kimia Instrumen
+            <br />
+            Universitas Pendidikan Indonesia
+            <br />
+            Gedung JICA &#40; FPMIPA-A &#41; Lt. 5 Jl. Dr. Setiabudhi No. 229
+            Bandung 40154
           </p>
         </div>
         <div className="md:mx-0 mx-3">
