@@ -397,7 +397,7 @@ export default function Analisis() {
                                 alt=''
                                 width={0}
                                 height={0}
-                                sizes='100vw'
+                                sizes='108vw'
                                 className='w-[1000px] h-full'
                             />
 

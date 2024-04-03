@@ -132,7 +132,7 @@ export default function Login({ searchParams }) {
                         {/* <div className="md:my-8 my-3">
                             <input type="checkbox" id="check" /> <label htmlFor="check">Ingat Saya</label>
                         </div> */}
-                        <div className="flex justify-between mt-5 sm:mt-8 md:mt-14 mb:8">
+                        <div className="flex justify-between mt-5 sm:mt-8 md:mt-14 mb-8">
                             <button type="submit" className="md:w-[238px] w-[200px] h-[56px] bg-gradient-to-r from-red-700 via-red-700 to-rose-950 text-2xl font-bold text-white flex justify-center items-center rounded-full">
                                 Masuk
                             </button>
