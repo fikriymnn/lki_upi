@@ -560,20 +560,20 @@ export default function Analisis() {
                                     <div className="bg-white border shadow-[rgba(0,0,10,0.3)_1px_2px_2px_1px] rounded-lg py-2">
 
                                         <div className='flex md:gap-20 gap-4 grid-cols-5 '>
-                                            <p className='font-medium md:text-[14px] text-[7px] text-center md:ml-5 ml-1'>{i + 1}</p>
-                                            <p className='font-bold md:text-[14px] text-[7px] '>{data.alatPengukuran}</p>
+                                            <p className='font-medium md:text-[14px] text-[6px] text-center md:ml-5 ml-1'>{i + 1}</p>
+                                            <p className='font-bold md:text-[14px] text-[6px] '>{data.alatPengukuran}</p>
                                         </div>
                                         <div className='md:ml-3'>
 
                                             <div className='flex  w-full gap-3 '>
 
-                                                <p className='font-medium md:text-[14px] text-[7px]  md:w-[8%] w-[3%]'>{""}</p>
+                                                <p className='font-medium md:text-[14px] text-[6px]  md:w-[8%] w-[3%]'>{""}</p>
                                                 <div className='w-[15%]'>
 
                                                     {data.jenisPengukuran.map((jenisPengukuran, i) => (
 
 
-                                                        <p key={i} className=' font-medium md:text-[14px] text-[7px] '>
+                                                        <p key={i} className=' font-medium md:text-[14px] text-[6px] '>
                                                             {jenisPengukuran.jenis}
                                                         </p>
 
@@ -585,11 +585,11 @@ export default function Analisis() {
 
                                                         <div key={i} className='flex flex-col justify-center items-center  '>
 
-                                                            <div className='grid grid-cols-2 gap-5'>
-                                                                <p className='font-medium md:text-[14px] text-[7px]'>
+                                                            <div className='grid grid-cols-2 md:gap-5 gap-1'>
+                                                                <p className='font-medium md:text-[14px] text-[6px]'>
                                                                     {jenisPengukuran.tigaHariKimia}
                                                                 </p>
-                                                                <p className='font-medium md:text-[14px] text-[7px]'>
+                                                                <p className='font-medium md:text-[14px] text-[6px]'>
                                                                     {jenisPengukuran.tujuhHariKimia}
                                                                 </p>
                                                             </div>
@@ -605,11 +605,11 @@ export default function Analisis() {
 
                                                         <div key={i} className='flex flex-col justify-center items-center  '>
 
-                                                            <div className='grid grid-cols-2 gap-5'>
-                                                                <p className='font-medium md:text-[14px] text-[7px]'>
+                                                            <div className='grid grid-cols-2 md:gap-5 gap-1'>
+                                                                <p className='font-medium md:text-[14px] text-[6px]'>
                                                                     {jenisPengukuran.tigaHariNonKimia}
                                                                 </p>
-                                                                <p className='font-medium md:text-[14px] text-[7px]'>
+                                                                <p className='font-medium md:text-[14px] text-[6px]'>
                                                                     {jenisPengukuran.tujuhHariNonKimia}
                                                                 </p>
                                                             </div>
@@ -624,11 +624,11 @@ export default function Analisis() {
 
                                                         <div key={i} className='flex flex-col justify-center items-center  '>
 
-                                                            <div className='grid grid-cols-2 gap-5'>
-                                                                <p className='font-medium md:text-[14px] text-[7px]'>
+                                                            <div className='grid grid-cols-2 md:gap-5 gap-1'>
+                                                                <p className='font-medium md:text-[14px] text-[6px]'>
                                                                     {jenisPengukuran.tigaHariLuarUpi}
                                                                 </p>
-                                                                <p className='font-medium md:text-[14px] text-[7px]'>
+                                                                <p className='font-medium md:text-[14px] text-[6px]'>
                                                                     {jenisPengukuran.tujuhHariLuarUpi}
                                                                 </p>
                                                             </div>
