@@ -37,19 +37,38 @@ export default function Analisis() {
                     jenis: "a. Kalibrasi",
                     kimia: "a. 50.000",
                     nonKimia: "a. 100.000",
-                    luarUpi: "a. 120.000"
+                    luarUpi: "a. 120.000",
+                    tigaHariKimia: "a. 67.500",
+                    tujuhHariKimia: "a. 62.500",
+                    tigaHariNonKimia: "a. 135.000",
+                    tujuhHariNonKimia: "a. 125.000",
+                    tigaHariLuarUpi: "a. 162.000",
+                    tujuhHariLuarUpi: "a. 150.000",
+
                 },
                 {
                     jenis: "b. Sampel",
                     kimia: "b. 30.000",
                     nonKimia: "b. 70.000",
-                    luarUpi: "b. 100.000"
+                    luarUpi: "b. 100.000",
+                    tigaHariKimia: "a. 40.500",
+                    tujuhHariKimia: "a. 37.500",
+                    tigaHariNonKimia: "a. 94.500",
+                    tujuhHariNonKimia: "a. 87.500",
+                    tigaHariLuarUpi: "a. 135.000",
+                    tujuhHariLuarUpi: "a. 125.000",
                 },
                 {
                     jenis: "c. Scanning",
                     kimia: "c. 40.000",
                     nonKimia: "c. 60.000",
-                    luarUpi: "c. 80.000"
+                    luarUpi: "c. 80.000",
+                    tigaHariKimia: "a. 54.000",
+                    tujuhHariKimia: "a. 50.000",
+                    tigaHariNonKimia: "a. 81.000",
+                    tujuhHariNonKimia: "a. 75.000",
+                    tigaHariLuarUpi: "a. 108.000",
+                    tujuhHariLuarUpi: "a. 100.000",
                 },
             ],
         },
@@ -60,17 +79,29 @@ export default function Analisis() {
                     jenis: "a. Kalibrasi",
                     kimia: "a. 350.000",
                     nonKimia: "a. 400.000",
-                    luarUpi: "a. 500.000"
+                    luarUpi: "a. 500.000",
+                    tigaHariKimia: "a. 472.500",
+                    tujuhHariKimia: "a. 437.500",
+                    tigaHariNonKimia: "a. 540.000",
+                    tujuhHariNonKimia: "a. 500.000",
+                    tigaHariLuarUpi: "a. 675.000",
+                    tujuhHariLuarUpi: "a. 625.000",
                 },
                 {
                     jenis: "b. Sampel",
                     kimia: "b. 250.000",
                     nonKimia: "b. 350.000",
-                    luarUpi: "b. 400.000"
+                    luarUpi: "b. 400.000",
+                    tigaHariKimia: "a. 337.500",
+                    tujuhHariKimia: "a. 312.500",
+                    tigaHariNonKimia: "a. 472.500",
+                    tujuhHariNonKimia: "a. 437.500",
+                    tigaHariLuarUpi: "a. 540.000",
+                    tujuhHariLuarUpi: "a. 500.000",
                 },
             ],
         },
-        
+
         {
             alatPengukuran: "AAS (Ca, Fe, Cu, Cd)",
             jenisPengukuran: [
@@ -78,13 +109,25 @@ export default function Analisis() {
                     jenis: "a. Kalibrasi",
                     kimia: "a. 120.000",
                     nonKimia: "a. 170.000",
-                    luarUpi: "a. 200.000"
+                    luarUpi: "a. 200.000",
+                    tigaHariKimia: "a. 162.000",
+                    tujuhHariKimia: "a. 150.000",
+                    tigaHariNonKimia: "a. 229.500",
+                    tujuhHariNonKimia: "a. 121.500",
+                    tigaHariLuarUpi: "a. 270.000",
+                    tujuhHariLuarUpi: "a. 250.000",
                 },
                 {
                     jenis: "b. Sampel",
                     kimia: "b. 80.000",
                     nonKimia: "b. 130.000",
-                    luarUpi: "b. 150.000"
+                    luarUpi: "b. 150.000",
+                    tigaHariKimia: "a. 108.000",
+                    tujuhHariKimia: "a. 100.000",
+                    tigaHariNonKimia: "a. 175.500",
+                    tujuhHariNonKimia: "a. 162.500",
+                    tigaHariLuarUpi: "a. 202.500",
+                    tujuhHariLuarUpi: "a. 187.500",
                 },
             ],
         },
@@ -95,13 +138,25 @@ export default function Analisis() {
                     jenis: "a. Kalibrasi",
                     kimia: "a. 1.000.000",
                     nonKimia: "a. 1.300.000",
-                    luarUpi: "a. 1.400.000"
+                    luarUpi: "a. 1.400.000",
+                    tigaHariKimia: "a. 1.350.000",
+                    tujuhHariKimia: "a. 1.250.000",
+                    tigaHariNonKimia: "a. 1.755.000",
+                    tujuhHariNonKimia: "a. 1.625.000",
+                    tigaHariLuarUpi: "a. 1.890.000",
+                    tujuhHariLuarUpi: "a. 1.750.000",
                 },
                 {
                     jenis: "b. Sampel",
                     kimia: "b. 600.000",
                     nonKimia: "b. 650.000",
-                    luarUpi: "b. 700.000"
+                    luarUpi: "b. 700.000",
+                    tigaHariKimia: "a. 810.000",
+                    tujuhHariKimia: "a. 750.000",
+                    tigaHariNonKimia: "a. 877.500",
+                    tujuhHariNonKimia: "a. 812.500",
+                    tigaHariLuarUpi: "a. 945.000",
+                    tujuhHariLuarUpi: "a. 875.000",
                 },
             ],
         },
@@ -112,13 +167,25 @@ export default function Analisis() {
                     jenis: "a. Kalibrasi",
                     kimia: "a. 260.000",
                     nonKimia: "a. 300.000",
-                    luarUpi: "a. 500.000"
+                    luarUpi: "a. 500.000",
+                    tigaHariKimia: "a. 351.000",
+                    tujuhHariKimia: "a. 325.000",
+                    tigaHariNonKimia: "a.405.000",
+                    tujuhHariNonKimia: "a. 375.000",
+                    tigaHariLuarUpi: "a. 675.000",
+                    tujuhHariLuarUpi: "a. 625.000",
                 },
                 {
                     jenis: "b. Sampel",
                     kimia: "b. 130.000",
                     nonKimia: "b. 150.000",
-                    luarUpi: "b. 250.000"
+                    luarUpi: "b. 250.000",
+                    tigaHariKimia: "a. 175.500",
+                    tujuhHariKimia: "a. 162.500",
+                    tigaHariNonKimia: "a. 202.500",
+                    tujuhHariNonKimia: "a. 187.500",
+                    tigaHariLuarUpi: "a. 337.500",
+                    tujuhHariLuarUpi: "a. 312.500",
                 },
             ],
         },
@@ -129,13 +196,25 @@ export default function Analisis() {
                     jenis: "a.	Sampai Suhu 550 ℃",
                     kimia: "a. 100.000",
                     nonKimia: "a. 150.000",
-                    luarUpi: "a. 250.000"
+                    luarUpi: "a. 250.000",
+                    tigaHariKimia: "a. 135.000",
+                    tujuhHariKimia: "a. 125.000",
+                    tigaHariNonKimia: "a. 202.500",
+                    tujuhHariNonKimia: "a. 187.500",
+                    tigaHariLuarUpi: "a. 337.500",
+                    tujuhHariLuarUpi: "a. 312.500",
                 },
                 {
                     jenis: "b.	Diatas Suhu 550 ℃",
                     kimia: "b. 170.000",
                     nonKimia: "b. 200.000",
-                    luarUpi: "b. 300.000"
+                    luarUpi: "b. 300.000",
+                    tigaHariKimia: "a. 229.500",
+                    tujuhHariKimia: "a. 212.500",
+                    tigaHariNonKimia: "a. 270.000",
+                    tujuhHariNonKimia: "a. 250.000",
+                    tigaHariLuarUpi: "a. 405.000",
+                    tujuhHariLuarUpi: "a. 375.000",
                 },
             ],
         },
@@ -146,19 +225,38 @@ export default function Analisis() {
                     jenis: "a. Proton",
                     kimia: "a. 150.000",
                     nonKimia: "a. 200.000",
-                    luarUpi: "a. 300.000"
+                    luarUpi: "a. 300.000",
+                    tigaHariKimia: "a. 202.500",
+                    tujuhHariKimia: "a. 187.500",
+                    tigaHariNonKimia: "a. 270.000",
+                    tujuhHariNonKimia: "a. 250.000",
+                    tigaHariLuarUpi: "a. 405.000",
+                    tujuhHariLuarUpi: "a. 375.000",
+
                 },
                 {
                     jenis: "b. Carbon",
                     kimia: "b. 400.000",
                     nonKimia: "b. 450.000",
-                    luarUpi: "b. 500.000"
+                    luarUpi: "b. 500.000",
+                    tigaHariKimia: "a. 540.000",
+                    tujuhHariKimia: "a. 500.000",
+                    tigaHariNonKimia: "a. 607.500",
+                    tujuhHariNonKimia: "a. 562.500",
+                    tigaHariLuarUpi: "a. 675.000",
+                    tujuhHariLuarUpi: "a. 625.000",
                 },
                 {
                     jenis: "c. 2D",
                     kimia: "c. 300.000",
                     nonKimia: "c. 350.000",
-                    luarUpi: "c. 450.000"
+                    luarUpi: "c. 450.000",
+                    tigaHariKimia: "a. 405.500",
+                    tujuhHariKimia: "a. 375.000",
+                    tigaHariNonKimia: "a. 472.500",
+                    tujuhHariNonKimia: "a. 437.500",
+                    tigaHariLuarUpi: "a. 607.500",
+                    tujuhHariLuarUpi: "a. 562.500",
                 },
             ],
         },
@@ -169,7 +267,13 @@ export default function Analisis() {
                     jenis: "a. FTIR",
                     kimia: "a. 180.000",
                     nonKimia: "a. 250.000",
-                    luarUpi: "a. 300.000"
+                    luarUpi: "a. 300.000",
+                    tigaHariKimia: "a. 243.000",
+                    tujuhHariKimia: "a. 225.000",
+                    tigaHariNonKimia: "a. 337.500",
+                    tujuhHariNonKimia: "a. 312.500",
+                    tigaHariLuarUpi: "a. 405.000",
+                    tujuhHariLuarUpi: "a. 375.000",
                 },
             ],
         },
@@ -180,7 +284,13 @@ export default function Analisis() {
                     jenis: "a. XRD",
                     kimia: "a. 400.000",
                     nonKimia: "a. 450.000",
-                    luarUpi: "a. 500.000"
+                    luarUpi: "a. 500.000",
+                    tigaHariKimia: "a. 540.000",
+                    tujuhHariKimia: "a. 500.000",
+                    tigaHariNonKimia: "a. 607.500",
+                    tujuhHariNonKimia: "a. 562.500",
+                    tigaHariLuarUpi: "a. 675.000",
+                    tujuhHariLuarUpi: "a. 625.000",
                 },
             ],
         },
@@ -191,7 +301,13 @@ export default function Analisis() {
                     jenis: "a. GCMS",
                     kimia: "a. 350.000",
                     nonKimia: "a. 400.000",
-                    luarUpi: "a. 500.000"
+                    luarUpi: "a. 500.000",
+                    tigaHariKimia: "a. 472.500",
+                    tujuhHariKimia: "a. 437.500",
+                    tigaHariNonKimia: "a. 540.000",
+                    tujuhHariNonKimia: "a. 500.000",
+                    tigaHariLuarUpi: "a. 675.000",
+                    tujuhHariLuarUpi: "a. 625.000",
                 },
             ],
         },
@@ -202,13 +318,25 @@ export default function Analisis() {
                     jenis: "a. Di atas 8 jam",
                     kimia: "a. 15.000",
                     nonKimia: "a. 20.000",
-                    luarUpi: "a. 25.000"
+                    luarUpi: "a. 25.000",
+                    tigaHariKimia: "-",
+                    tujuhHariKimia: "-",
+                    tigaHariNonKimia: "-",
+                    tujuhHariNonKimia: "-",
+                    tigaHariLuarUpi: "-",
+                    tujuhHariLuarUpi: "-",
                 },
                 {
                     jenis: "b. Di bawah 8 jam",
                     kimia: "b. 30.000",
                     nonKimia: "b. 40.000",
-                    luarUpi: "b. 50.000"
+                    luarUpi: "b. 50.000",
+                    tigaHariKimia: "-",
+                    tujuhHariKimia: "-",
+                    tigaHariNonKimia: "-",
+                    tujuhHariNonKimia: "-",
+                    tigaHariLuarUpi: "-",
+                    tujuhHariLuarUpi: "-",
                 },
             ],
         },
@@ -219,7 +347,13 @@ export default function Analisis() {
                     jenis: "a. PCR (Per Jam)",
                     kimia: "a. 100.000",
                     nonKimia: "a. 120.000",
-                    luarUpi: "a. 150.000"
+                    luarUpi: "a. 150.000",
+                    tigaHariKimia: "-",
+                    tujuhHariKimia: "-",
+                    tigaHariNonKimia: "-",
+                    tujuhHariNonKimia: "-",
+                    tigaHariLuarUpi: "-",
+                    tujuhHariLuarUpi: "-",
                 },
 
             ],
@@ -302,17 +436,17 @@ export default function Analisis() {
                         </div>
                     </div>
                     <p className='font-semibold text-xl md:ml-32 ml-0 my-3'>Pengukuran</p>
-                    <div className='lg:mx-32 md:-mx-8 -mx-8 '>
+                    <div className='lg:mx-16 md:-mx-8 -mx-8 '>
                         <p className='text-center font-bold text-lg mb-5'>Paket Harga</p>
                         <div className='bg-[#EDECECD4] md:py-5 py-2 rounded-lg shadow-[rgba(0,0,0,0.3)_1px_2px_2px_1px] mb-3'>
-                            <p className='text-center mb-5 font-bold md:text-base text-[9px] underline'>Harga Dosen/Mahasiswa UPI</p>
+                            <p className='text-center mb-5 font-bold md:text-[14px] text-[7px] underline'>Harga Dosen/Mahasiswa UPI</p>
                             <div className='grid grid-cols-5 '>
 
-                                <p className='font-bold md:text-base text-[9px] text-center'>No</p>
-                                <p className='font-bold md:text-base text-[9px]'>Jenis Alat Pengukuran</p>
-                                <p className='font-bold md:text-base text-[9px]'>Kimia </p>
-                                <p className='font-bold md:text-base text-[9px]'>Non Kimia </p>
-                                <p className='font-bold md:text-base text-[9px]'>Luar UPI</p>
+                                <p className='font-bold md:text-[14px] text-[7px] text-center'>No</p>
+                                <p className='font-bold md:text-[14px] text-[7px]'>Jenis Alat Pengukuran</p>
+                                <p className='font-bold md:text-[14px] text-[7px]'>Kimia </p>
+                                <p className='font-bold md:text-[14px] text-[7px]'>Non Kimia </p>
+                                <p className='font-bold md:text-[14px] text-[7px]'>Luar UPI</p>
                             </div>
                         </div>
 
@@ -323,20 +457,20 @@ export default function Analisis() {
                                     <div className="bg-white border shadow-[rgba(0,0,10,0.3)_1px_2px_2px_1px] rounded-lg py-2">
 
                                         <div className='grid grid-cols-5 '>
-                                            <p className='font-medium md:text-base text-[9px] text-center '>{i + 1}</p>
-                                            <p className='font-bold md:text-base text-[9px]'>{data.alatPengukuran}</p>
+                                            <p className='font-medium md:text-[14px] text-[7px] text-center '>{i + 1}</p>
+                                            <p className='font-bold md:text-[14px] text-[7px]'>{data.alatPengukuran}</p>
                                         </div>
                                         <div className='md:ml-3'>
 
                                             <div className='grid grid-cols-5 gap-1 '>
 
-                                                <p className='font-medium md:text-base text-[9px]'>{""}</p>
+                                                <p className='font-medium md:text-[14px] text-[7px]'>{""}</p>
                                                 <div>
 
-                                                    {data.jenisPengukuran.map((jenisPengukuran,i) => (
+                                                    {data.jenisPengukuran.map((jenisPengukuran, i) => (
 
 
-                                                        <p key={i} className='font-medium md:text-base text-[9px]'>
+                                                        <p key={i} className='font-medium md:text-[14px] text-[7px]'>
                                                             {jenisPengukuran.jenis}
                                                         </p>
 
@@ -344,10 +478,10 @@ export default function Analisis() {
                                                 </div>
                                                 <div>
 
-                                                    {data.jenisPengukuran.map((jenisPengukuran,i) => (
+                                                    {data.jenisPengukuran.map((jenisPengukuran, i) => (
 
 
-                                                        <p key={i} className='font-medium md:text-base text-[9px]'>
+                                                        <p key={i} className='font-medium md:text-[14px] text-[7px]'>
                                                             {jenisPengukuran.kimia}
                                                         </p>
 
@@ -355,10 +489,10 @@ export default function Analisis() {
                                                 </div>
                                                 <div>
 
-                                                    {data.jenisPengukuran.map((jenisPengukuran,i) => (
+                                                    {data.jenisPengukuran.map((jenisPengukuran, i) => (
 
 
-                                                        <p key={i} className='font-medium md:text-base text-[9px]'>
+                                                        <p key={i} className='font-medium md:text-[14px] text-[7px]'>
                                                             {jenisPengukuran.nonKimia}
                                                         </p>
 
@@ -366,10 +500,10 @@ export default function Analisis() {
                                                 </div>
                                                 <div>
 
-                                                    {data.jenisPengukuran.map((jenisPengukuran,i) => (
+                                                    {data.jenisPengukuran.map((jenisPengukuran, i) => (
 
 
-                                                        <p key={i} className='font-medium md:text-base text-[9px]'>
+                                                        <p key={i} className='font-medium md:text-[14px] text-[7px]'>
                                                             {jenisPengukuran.luarUpi}
                                                         </p>
 
@@ -385,11 +519,137 @@ export default function Analisis() {
 
                         </div>
                     </div>
-                    <p className='text-red-700 md:font-bold font-semibold text-end md:mx-28 mx-0 md:text-base text-sm mt-5'>*Biaya per Jam</p>
+                    <p className='text-red-700 md:font-bold font-semibold text-end md:mx-28 mx-0 md:text-[14px] text-sm mt-5'>*Biaya per Jam</p>
+                    <div className='lg:mx-16 md:-mx-8 -mx-8 '>
+                        <p className='text-center font-bold text-lg mb-5 mt-10'>Paket Harga Fast Track</p>
+                        <div className='bg-[#EDECECD4] md:py-5 py-2 rounded-lg shadow-[rgba(0,0,0,0.3)_1px_2px_2px_1px] mb-3'>
+                            <p className='text-center mb-5 font-bold md:text-[14px] text-[7px] underline'>Harga Dosen/Mahasiswa UPI</p>
+                            <div className='flex md:gap-3 gap-2'>
+
+                                <p className='font-bold md:text-[14px] text-[7px] text-center md:w-[8%] w-[3%]'>No</p>
+                                <p className='font-bold md:text-[14px] text-[7px] w-[15%]'>Jenis Alat Pengukuran</p>
+                                <div className='flex flex-col justify-center items-center w-[22%]'>
+                                    <p className='font-bold md:text-[14px] text-[7px] '>Kimia </p>
+                                    <div className='grid grid-cols-2 gap-5 font-medium md:text-[14px] text-[7px] '>
+                                        <p>3 Hari</p>
+                                        <p>7 Hari</p>
+                                    </div>
+                                </div>
+                                <div className='flex flex-col justify-center items-center w-[22%]'>
+                                    <p className='font-bold md:text-[14px] text-[7px]'>Non Kimia </p>
+                                    <div className='grid grid-cols-2 gap-5 font-medium md:text-[14px] text-[7px]'>
+                                        <p>3 Hari</p>
+                                        <p>7 Hari</p>
+                                    </div>
+                                </div>
+                                <div className='flex flex-col justify-center items-center w-[22%]'>
+                                    <p className='font-bold md:text-[14px] text-[7px]'>Luar Upi </p>
+                                    <div className='grid grid-cols-2 gap-5 font-medium md:text-[14px] text-[7px]'>
+                                        <p>3 Hari</p>
+                                        <p>7 Hari</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div className='grid gap-3'>
+                            {dataPengukur.map((data, i) => (
+                                <div key={i}>
+
+                                    <div className="bg-white border shadow-[rgba(0,0,10,0.3)_1px_2px_2px_1px] rounded-lg py-2">
+
+                                        <div className='flex md:gap-20 gap-4 grid-cols-5 '>
+                                            <p className='font-medium md:text-[14px] text-[7px] text-center md:ml-5 ml-1'>{i + 1}</p>
+                                            <p className='font-bold md:text-[14px] text-[7px] '>{data.alatPengukuran}</p>
+                                        </div>
+                                        <div className='md:ml-3'>
+
+                                            <div className='flex  w-full gap-3 '>
+
+                                                <p className='font-medium md:text-[14px] text-[7px]  md:w-[8%] w-[3%]'>{""}</p>
+                                                <div className='w-[15%]'>
+
+                                                    {data.jenisPengukuran.map((jenisPengukuran, i) => (
+
+
+                                                        <p key={i} className=' font-medium md:text-[14px] text-[7px] '>
+                                                            {jenisPengukuran.jenis}
+                                                        </p>
+
+                                                    ))}
+                                                </div>
+                                                <div className='w-[22%]'>
+
+                                                    {data.jenisPengukuran.map((jenisPengukuran, i) => (
+
+                                                        <div className='flex flex-col justify-center items-center  '>
+
+                                                            <div className='grid grid-cols-2 gap-5'>
+                                                                <p key={i} className='font-medium md:text-[14px] text-[7px]'>
+                                                                    {jenisPengukuran.tigaHariKimia}
+                                                                </p>
+                                                                <p className='font-medium md:text-[14px] text-[7px]'>
+                                                                    {jenisPengukuran.tujuhHariKimia}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+
+                                                    ))}
+                                                </div>
+                                                <div className='w-[22%]'>
+
+                                                    {data.jenisPengukuran.map((jenisPengukuran, i) => (
+
+
+                                                        <div className='flex flex-col justify-center items-center  '>
+
+                                                            <div className='grid grid-cols-2 gap-5'>
+                                                                <p key={i} className='font-medium md:text-[14px] text-[7px]'>
+                                                                    {jenisPengukuran.tigaHariNonKimia}
+                                                                </p>
+                                                                <p className='font-medium md:text-[14px] text-[7px]'>
+                                                                    {jenisPengukuran.tujuhHariNonKimia}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+                                                    ))}
+                                                </div>
+                                                <div className='w-[22%]'>
+
+                                                    {data.jenisPengukuran.map((jenisPengukuran, i) => (
+
+
+                                                        <div className='flex flex-col justify-center items-center  '>
+
+                                                            <div className='grid grid-cols-2 gap-5'>
+                                                                <p key={i} className='font-medium md:text-[14px] text-[7px]'>
+                                                                    {jenisPengukuran.tigaHariLuarUpi}
+                                                                </p>
+                                                                <p className='font-medium md:text-[14px] text-[7px]'>
+                                                                    {jenisPengukuran.tujuhHariLuarUpi}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+                                                    ))}
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            ))}
+
+                        </div>
+                    </div>
                     <div className='mb-24'>
 
 
-                        <p className='md:text-[29px] text-xl font-bold md:mx-28 mx-0 mt-20 mb-5'>PENGUKURAN DAN ANALISIS LANJUTAN</p>
+                        <p className='md:text-[29px] text-xl font-bold md:mx-16 mx-0 mt-20 mb-5'>PENGUKURAN DAN ANALISIS LANJUTAN</p>
                         <div className='flex justify-center items-center'>
 
                             <Image
