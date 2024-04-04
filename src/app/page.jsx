@@ -20,14 +20,30 @@ export default function Home() {
           <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 justify-items-center gap-6">
             <LayananCard
               title={"Layanan Analisis "}
+              href={"/analisis"}
               selengkapnya={"Selengkapnya"}
-              desc={"Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.  biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order"}
+              desc={
+                "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.  biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order"
+              }
             />
-            <LayananCard title={"Sertifikasi"} selengkapnya={"Segera Hadir"} desc={"Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."} />
-            <LayananCard title={"Pelatihan"} selengkapnya={"Segera Hadir"} desc={"Here are the biggest enterprise technology acquisitions of 2021 so "} />
+            <LayananCard
+              title={"Sertifikasi"}
+              href={""}
+              selengkapnya={"Segera Hadir"}
+              desc={
+                "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
+              }
+            />
+            <LayananCard
+              title={"Pelatihan"}
+              selengkapnya={"Segera Hadir"}
+              desc={
+                "Here are the biggest enterprise technology acquisitions of 2021 so "
+              }
+            />
           </div>
           <div>
-            <ButtonOrder  />
+            <ButtonOrder />
           </div>
         </div>
       </div>
