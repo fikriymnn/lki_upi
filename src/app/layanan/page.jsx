@@ -371,9 +371,12 @@ export default function Analisis() {
               Layanan Jasa Analisis LKI UPI
             </p>
             <div className="flex justify-center mt-5">
-              <div className="px-10 py-2 bg-slate-900 text-white grad rounded-xl font-bold md:text-lg sm:text-base text-sm">
+              <a
+                href="/about"
+                className="px-10 py-2 bg-slate-900 text-white grad rounded-xl font-bold md:text-lg sm:text-base text-sm"
+              >
                 Tentang Kami
-              </div>
+              </a>
             </div>
           </div>
         </div>
