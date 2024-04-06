@@ -1,36 +1,35 @@
-'use client'
+"use client";
 import Iframe from "react-iframe";
 import Image from "next/image";
-import emailjs from "@emailjs/browser"
+import emailjs from "@emailjs/browser";
 import { useState } from "react";
 
 export default function Contact() {
-  const [name, setName] = useState()
-  const [email, setEmail] = useState()
-  const [message, setMessage] = useState()
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const [message, setMessage] = useState();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const serviceId = 'service_ba0a13q'
-    const templateId = 'template_ofvo97e'
-    const publicKey = 'LFS33TqpA9m6wQqxg'
+    const serviceId = "service_ba0a13q";
+    const templateId = "template_ofvo97e";
+    const publicKey = "LFS33TqpA9m6wQqxg";
 
     const templateParams = {
       from_name: name,
       from_email: email,
-      to_name: 'lki_upi',
-      message: message
-    }
-    emailjs.send(serviceId, templateId, templateParams, publicKey)
+      to_name: "lki_upi",
+      message: message,
+    };
+    emailjs
+      .send(serviceId, templateId, templateParams, publicKey)
       .then((response) => {
-        alert('email sent successfully', response)
-        setName(''),
-          setEmail(''),
-          setMessage('')
-      }).catch((error) => {
-        alert('error email sent', error)
+        alert("email sent successfully", response);
+        setName(""), setEmail(""), setMessage("");
+      })
+      .catch((error) => {
+        alert("error email sent", error);
       });
-
   };
 
   return (
@@ -69,7 +68,10 @@ export default function Contact() {
               position=""
             />
             <p className="md:w-[493px] w-[300px] text-center text-neutral-700 md:text-lg text-base md:font-semibold leading-6 mt-[50px]">
-              Laboratorium Kimia Instrumen Universitas Pendidikan Indonesia
+              Laboratorium Kimia Instrumen
+              <br />
+              Universitas Pendidikan Indonesia
+              <br />
               Gedung JICA &#40;FPMIPA-A&#41; Lt. 5 Jl. Dr. Setiabudhi No. 229
               Bandung 40154
             </p>
@@ -135,7 +137,11 @@ export default function Contact() {
                   </div>
                 </div>
                 <div className="mx-auto flex justify-center">
-                  <button type="submit" value='Send' className="md:py-3 py-1 md:w-60 w-44 bg-gradient-to-r from-red-700 via-red-600 to-rose-950 rounded-full shadow text-center md:text-2xl text-lg text-white font-bold">
+                  <button
+                    type="submit"
+                    value="Send"
+                    className="md:py-3 py-1 md:w-60 w-44 bg-gradient-to-r from-red-700 via-red-600 to-rose-950 rounded-full shadow text-center md:text-2xl text-lg text-white font-bold"
+                  >
                     Kirim
                   </button>
                 </div>
@@ -146,10 +152,7 @@ export default function Contact() {
                     Atau hubungi kami di
                   </p>
                   <div className="md:py-3 py-1 md:w-60 w-44  bg-gradient-to-r from-lime-600 via-green-600 to-lime-900 rounded-full shadow text-center md:text-2xl text-lg text-white font-bold">
-
-                    <a href="https://wa.me/+6285795101010" >
-                      Whatsapp
-                    </a>
+                    <a href="https://wa.me/+6285795101010">Whatsapp</a>
                   </div>
                 </div>
               </div>
