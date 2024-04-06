@@ -231,7 +231,7 @@ export default function Profile() {
               ) : (
                 <div className="grid grid-cols-2 md:w-11/12  w-full border-2 rounded-xl p-2 border-b-3 shadow-[rgba(0,0,10,0.3)_3px_2px_2px_0px]">
                   <p className="font-semibold my-auto">Nama Institusi</p>
-                  <p>{user?.jenis_institusi}</p>
+                  <p>{user?.nama_institusi}</p>
                 </div>
               )}
             </>
