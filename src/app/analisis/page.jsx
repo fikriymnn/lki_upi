@@ -434,7 +434,9 @@ export default function Analisis() {
           </div>
           <p className="font-semibold text-xl md:ml-32 ml-0 my-3">Pengukuran</p>
           <div className="lg:mx-16 md:-mx-8 -mx-8 ">
-            <p className="text-center font-bold text-lg mb-5">Paket Harga</p>
+            <p className="text-center font-bold text-lg mb-5">
+              Paket Harga Normal (14 Hari kerja)
+            </p>
             <div className="bg-[#EDECECD4] md:py-5 py-2 rounded-lg shadow-[rgba(0,0,0,0.3)_1px_2px_2px_1px] mb-3">
               <p className="text-center mb-5 font-bold md:text-[14px] text-[7px] underline">
                 Harga Dosen/Mahasiswa UPI
