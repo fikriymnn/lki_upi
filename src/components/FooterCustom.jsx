@@ -13,7 +13,7 @@ function FooterCustom() {
           className="md:w-[343px] w-[250px] md:mx-0 mx-3"
         />
         <div className="w-11/12 md:mx-0 mx-3">
-          <h1 className="mb-5 font-bold md:text-xl text-lg">Tentang Kami</h1>
+          <h2 className="mb-5 font-bold md:text-xl text-xl">Tentang Kami</h2>
           <p>
             Laboratorium Kimia Instrumen
             <br />
@@ -24,7 +24,7 @@ function FooterCustom() {
           </p>
         </div>
         <div className="md:mx-0 mx-3">
-          <h1 className="mb-5 font-bold md:text-xl text-lg">Kontak Kami</h1>
+          <h2 className="mb-5 font-bold md:text-xl text-xl">Kontak Kami</h2>
           <div className="flex gap-3 mb-6">
             <Image
               src={"/images/wa.svg"}
@@ -47,7 +47,7 @@ function FooterCustom() {
           </div>
         </div>
         <div className="md:mx-0 mx-3">
-          <h1 className="mb-5 font-bold md:text-xl text-lg">Layanan</h1>
+          <h2 className="mb-5 font-bold md:text-xl text-xl">Layanan</h2>
           <div className="flex flex-col md:gap-5 gap-2">
             <p>Layanan Analisis</p>
             <p>Sertifikat</p>
