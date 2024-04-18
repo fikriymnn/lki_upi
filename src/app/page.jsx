@@ -23,23 +23,19 @@ export default function Home() {
               href={"/analisis"}
               selengkapnya={"Selengkapnya"}
               desc={
-                "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.  biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order"
+                "Layanan analisis ataupun pengujian sampel Laboratorium Kimia Instrumen UPI."
               }
             />
             <LayananCard
               title={"Sertifikasi"}
               href={""}
               selengkapnya={"Segera Hadir"}
-              desc={
-                "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
-              }
+              desc={"Sertifikasi LKI UPI."}
             />
             <LayananCard
               title={"Pelatihan"}
               selengkapnya={"Segera Hadir"}
-              desc={
-                "Here are the biggest enterprise technology acquisitions of 2021 so "
-              }
+              desc={"Pelatihan LKI UPI."}
             />
           </div>
           <div>
