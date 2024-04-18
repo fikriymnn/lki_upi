@@ -8,8 +8,8 @@ import { UserProvider } from '@/context/userContext'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'LKI UPI',
-  description: 'LAB KIMIA UNIVERSITAS PENDIDIKAN INDONESIA',
+  title: 'LAB KIMIA INSTRUMEN UPI',
+  description: 'Layanan Laboratorium Kimia Instrumen Universitas Pendidikan Indonesia (UPI)',
 }
 
 export default function RootLayout({
@@ -18,9 +18,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="id">
       <head>
-      <link rel="icon" href="/logo.svg" sizes="any" />
+        <link rel="icon" href="/logo.svg" sizes="any" />
       </head>
       <body className={inter.className}>
         <UserProvider>
