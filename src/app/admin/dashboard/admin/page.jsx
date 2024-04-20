@@ -162,7 +162,7 @@ export default function Adminn() {
             </div>
           </div>
           <br />
-          <div className='grid md:grid-cols-3 sm:grid-cols-2 grid-cols-2 justify-items-center gap-5'>
+          <div className='grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 justify-items-center gap-5'>
             {
               layananCard.map((e, i) => {
                 return (

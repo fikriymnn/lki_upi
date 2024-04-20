@@ -17,7 +17,9 @@ export default function Admin() {
     setUserForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log(userForm)
+  }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -28,12 +30,14 @@ export default function Admin() {
           userForm,
           { withCredentials: true }
         );
+        
 
         if (data.data.success == true) {
           const dataUser = await axios.get(
             `${process.env.NEXT_PUBLIC_URL}/api/user`,
             { withCredentials: true }
           );
+          
           if (dataUser.data.data.role == "admin") {
             window.location.replace("/admin/dashboard/admin");
           } else if (dataUser.data.data.role == "operator") {
@@ -47,7 +51,7 @@ export default function Admin() {
             window.location.replace("/");
           }
         } else {
-          alert(data.message);
+          alert(data.data.message);
         }
       } catch (err) {
         alert(err.message);
@@ -56,15 +60,11 @@ export default function Admin() {
     get_user();
   };
 
-  // if(role=="admin"){
-  //     router.push('/admin/dashboard/admin')
-  // } else {
-  //     router.push('/admin/dashboard/operator')
-  // }
+
   return (
     <>
       <div className="md:mt-20 sm:mt-14 mt-8 mb-14">
-        <p className="text-center md:text-2xl sm:text-xl text-lg font-bold text-gray-800 mt-7">
+        <p className="text-center md:text-2xl sm:text-xl text-lg font-bold text-gray-800 mt-10 md:mb-5 sm:mb-5 mb-8">
           LOGIN ADMIN
         </p>
         <div className="flex justify-center"></div>
@@ -72,7 +72,7 @@ export default function Admin() {
           className="flex max-w-md flex-col gap-4 m-auto "
           onSubmit={onSubmit}
         >
-          <div>
+          <div className="md:w-full sm:w-full w-10/12 m-auto">
             <div className="mb-2 block ">
               <Label htmlFor="email" value="Your Email" />
             </div>
@@ -85,7 +85,7 @@ export default function Admin() {
               onChange={handleChange}
             />
           </div>
-          <div>
+          <div className="md:w-full sm:w-full w-10/12 m-auto">
             <div className="mb-2 block ">
               <Label htmlFor="password" value="Your Password" />
             </div>
@@ -99,7 +99,7 @@ export default function Admin() {
             />
           </div>
 
-          <Button type="submit" color="failure">
+          <Button type="submit" color="failure" className="md:w-full sm:w-full w-6/12 m-auto">
             Submit
           </Button>
           <br />

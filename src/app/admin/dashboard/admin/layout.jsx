@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { useRouter } from "next/navigation"
+import Loading from "../../../../components/Loading"
 
 export default function Layout({children}){
     const [role,setRole] = useState("")
@@ -25,7 +26,7 @@ useEffect(()=>{
 
     return (
         <>
-        {role=="admin"?children:<div className="h-screen"><p className="m-auto text-center">Loading</p></div>}
+        {role=="admin"?children:<Loading/>}
         </>
     )
 }

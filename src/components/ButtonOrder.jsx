@@ -51,8 +51,8 @@ export default function ButtonOrder() {
         <>
             <div className='cursor-pointer mb-5'>
 
-                <div className="flex justify-center md:mt-[86px] sm:mt-[56px] mt-10">
-                    <div className="md:px-20 sm:px-10 px-2 py-4 bg-slate-900 text-white grad rounded-xl font-bold text-lg" onClick={() => pesanLayanan()}>
+                <div className="flex justify-center md:mt-[20px] sm:mt-[56px] mt-5">
+                    <div className="md:px-20 sm:px-10 px-10 py-4 bg-slate-900 text-white grad rounded-xl font-bold md:text-lg sm:text-lg text-sm" onClick={() => pesanLayanan()}>
                         Pesan Sekarang
                     </div>
                 </div>

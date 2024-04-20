@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
 import Resizer from "react-image-file-resizer";
+import Loading from "@/components/Loading"
 import {
   ref,
   deleteObject,
@@ -16,6 +17,7 @@ import { storage } from "../../firebase/firebase";
 export default function Order_analisis() {
   const router = useRouter();
   const uid = uuidv4();
+  const [loading,setLoading] = useState(false)
   const [countForm, setCountForm] = useState(1);
   const [duplicate, setDuplicate] = useState([
     <CustomForm i={0} key={0} uuid={uid} />,
@@ -166,6 +168,7 @@ export default function Order_analisis() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
     try {
       for (let i = 0; i < jenis_pengujian.length; i++) {
         let obj = {};
@@ -276,6 +279,7 @@ export default function Order_analisis() {
           }
           setTimeout(() => {
             alert("success");
+            setLoading(false)
             router.replace("/success");
           }, 1500);
         }
@@ -288,12 +292,12 @@ export default function Order_analisis() {
   function CustomForm({ i }) {
     return (
       <>
-        <div className=" border-2 rounded-lg md:mx-20 mx-5">
+        <div className=" border-2 rounded-lg md:mx-20 md:mx-20 mx-2">
           {/* <p className='text-xl font-semibold text-xl text-white bg-red-600 rounded-lg p-3'>{i + 1}</p> */}
           <div className="w-full h-10 grad rounded-[5px]"></div>
-          <div className="px-10 py-5 flex flex-col gap-3">
+          <div className="md:px-10 md:px-10 px-5 py-5 flex flex-col gap-3">
             <div>
-              <h2 className="text-lg font-semibold">Jenis Pengujian</h2>
+              <h2 className="md:text-lg sm:text-lg text-sm font-semibold">Jenis Pengujian</h2>
               <select
                 required
                 name="jenis_pengujian"
@@ -317,7 +321,7 @@ export default function Order_analisis() {
               </select>
             </div>
             <div>
-              <h2 className="text-lg font-semibold">Nama Sample</h2>
+              <h2 className="md:text-lg sm:text-lg text-sm font-semibold">Nama Sample</h2>
               <input
                 placeholder="masukkan nama sample"
                 className="input-style-lki"
@@ -330,7 +334,7 @@ export default function Order_analisis() {
               />
             </div>
             <div>
-              <h2 className="text-lg font-semibold">Jumlah Sample</h2>
+              <h2 className="md:text-lg sm:text-lg text-sm font-semibold">Jumlah Sample</h2>
               <input
                 placeholder="masukkan jumlah sample"
                 className="input-style-lki"
@@ -343,7 +347,7 @@ export default function Order_analisis() {
               />
             </div>
             <div>
-              <p className="text-lg font-semibold">Wujud Sample</p>
+              <p className="md:text-lg sm:text-lg text-sm font-semibold">Wujud Sample</p>
 
               <input
                 type="radio"
@@ -392,7 +396,7 @@ export default function Order_analisis() {
               </label>
             </div>
             <div>
-              <h2 className="text-lg font-semibold">Pelarut</h2>
+              <h2 className="md:text-lg sm:text-lg text-sm font-semibold">Pelarut</h2>
               <input
                 placeholder="masukkan pelarut yang digunakan"
                 className="input-style-lki"
@@ -406,7 +410,7 @@ export default function Order_analisis() {
               />
             </div>
             <div>
-              <p className="text-lg font-semibold">Preparasi Khusus</p>
+              <p className="md:text-lg sm:text-lg text-sm font-semibold">Preparasi Khusus</p>
               <div className="flex">
                 <input
                   type="radio"
@@ -418,7 +422,7 @@ export default function Order_analisis() {
                   }}
                   value={true}
                 />
-                <h2 className="ml-3" htmlFor={`preparasi_khusus${i}`}>
+                <h2 className="ml-3 md:text-lg sm:text-lg text-sm" htmlFor={`preparasi_khusus${i}`}>
                   Ya (esterifikasi/destruksi)
                 </h2>
               </div>
@@ -434,14 +438,14 @@ export default function Order_analisis() {
                   }}
                   value={false}
                 />
-                <h2 className="ml-3" htmlFor="preparasi_khusus">
+                <h2 className="ml-3 md:text-lg sm:text-lg text-sm" htmlFor="preparasi_khusus">
                   Tidak
                 </h2>
               </div>
               <br />
             </div>
             <div>
-              <h2 className="text-lg font-semibold">
+              <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
                 Target senyawa/logam yang di cari
               </h2>
               <input
@@ -457,7 +461,7 @@ export default function Order_analisis() {
               />
             </div>
             <div>
-              <h2 className="text-lg font-semibold">Metode Parameter</h2>
+              <h2 className="md:text-lg sm:text-lg text-sm font-semibold">Metode Parameter</h2>
               <input
                 className="input-style-lki"
                 placeholder="Tuliskan metode parameter yang ingin digunakan (suhu/flow/panjang gelombang/fasa gerak, gas, dsb.)"
@@ -471,7 +475,7 @@ export default function Order_analisis() {
               />
             </div>
             <div>
-              <h2 className="text-lg font-semibold">
+              <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
                 APAKAH SAMPEL AKAN DIAMBIL SETELAH PENGUJIAN?
               </h2>
               <select
@@ -493,7 +497,7 @@ export default function Order_analisis() {
             </div>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-10">
               <div>
-                <h2 className="text-lg font-semibold">
+                <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
                   Foto Sample (*format file yang diupload berupa png, jpg atau
                   jpeg)
                 </h2>
@@ -505,7 +509,7 @@ export default function Order_analisis() {
                 />
               </div>
               <div>
-                <h2 className="text-lg font-semibold">
+                <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
                   Jurnal Pendukung (*format file yang diupload berupa docx atau
                   pdf, ukuran file dibawah 10mb)
                 </h2>
@@ -522,7 +526,7 @@ export default function Order_analisis() {
               </div>
             </div>
             <div>
-              <h2 className="text-lg font-semibold">Deskripsi Sample</h2>
+              <h2 className="md:text-lg sm:text-lg text-sm font-semibold">Deskripsi Sample</h2>
               <textarea
                 placeholder="Deskripsikan mengenai sampel: sifat fisik, jumlah sampel (gram atau volume), penyimpanan (suhu tertentu atau tidak) dan bagaimana sampel diperoleh"
                 className="input-style-lki-box"
@@ -535,7 +539,7 @@ export default function Order_analisis() {
               />
             </div>
             <div>
-              <h2 className="text-lg font-semibold">
+              <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
                 Riwayat Pengujian Sample
               </h2>
 
@@ -558,9 +562,10 @@ export default function Order_analisis() {
 
   return (
     <>
+     {loading?<Loading/>:""}
       <div>
         {/* <button onClick={() => { console.log(jenis_pengujian); console.log(nama_sample) }}>asd</button> */}
-        <p className="text-center text-4xl font-bold text-gray-800 mt-7">
+        <p className="md:mt-14 sm:mt-14 mt-10 text-center md:text-3xl sm:text-2xl text-sm font-bold text-gray-800">
           Layanan Analisis Laboratorium Kimia Instrumen &#40;LKI&#41; UPI
         </p>
         <div className="flex justify-center">
@@ -569,7 +574,7 @@ export default function Order_analisis() {
         <form onSubmit={handleSubmit}>
           {duplicate}
           <br />
-          <div className="flex mx-20 gap-2">
+          <div className="flex md:mx-20 sm:mx-20 mx-4 gap-2">
             <input
               className="my-auto"
               type="checkbox"
@@ -578,7 +583,7 @@ export default function Order_analisis() {
               required
               onChange={(e) => setVerifikasi(true)}
             />
-            <h2 htmlFor="verifikasi">
+            <h2 htmlFor="verifikasi" className="md:text-xl sm:text-lg text-xs">
               Saya telah memahami proses pengujian yang akan dilakukan dan
               memahami syarat dan ketentuan yang telah dijelaskan oleh
               staff/pengelola laboratorium
@@ -602,6 +607,7 @@ export default function Order_analisis() {
                    
                 </div> */}
       </div>
+     
     </>
   );
 }

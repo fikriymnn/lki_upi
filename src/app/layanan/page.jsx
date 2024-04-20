@@ -380,14 +380,16 @@ export default function Analisis() {
             </div>
           </div>
         </div>
-        <div className="mx-[60px]">
-          <p className="text-center md:text-4xl text-2xl font-bold text-gray-800 mt-7">
+        <div className="md:mx-[60px] sm:mx-[40px] mx-4">
+          <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
             Layanan Pengujian Laboratorium Kimia Instrumen LKI UPI
           </p>
           <div className="flex justify-center">
             <hr className="grad h-2 mb-8 mt-5 w-56 text-center" />
           </div>
-          <div className="grid md:grid-cols-3 grid-cols-1 md:gap-10 gap-3">
+          <ButtonOrder />
+          <br />
+          <div className="grid md:grid-cols-3 grid-cols-1 md:gap-10 gap-0">
             {data.map((v, i) => (
               <>
                 <CardPenguji key={i} id={v._id} nama={v.title} foto={v.foto} />
@@ -397,10 +399,9 @@ export default function Analisis() {
 
           <br />
 
-          <ButtonOrder />
-          <br />
+          
           <div className="my-10">
-            <p className="text-center md:text-4xl text-2xl font-bold text-gray-800 mt-7">
+            <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
               Alur Pengujian Laboratorium Kimia Instrumen UPI
             </p>
             <div className="flex justify-center">
@@ -414,7 +415,7 @@ export default function Analisis() {
               width={0}
               height={0}
               sizes="100vw"
-              className="w-[600px] md:h-[900px] h-full"
+              className="md:w-[600px] sm:w-[550px] w-[240px] md:h-[900px] h-full"
             />
           </div>
           <div className="my-10 ">
@@ -425,7 +426,7 @@ export default function Analisis() {
             </p>
           </div>
           <div className="mt-24 mb-10">
-            <p className="text-center md:text-4xl text-2xl font-bold text-gray-800 mt-7">
+            <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
               Daftar Harga Pengujian Laboratorium Kimia Instrumen UPI
             </p>
             <div className="flex justify-center">
@@ -434,7 +435,7 @@ export default function Analisis() {
           </div>
           <p className="font-semibold text-xl md:ml-32 ml-0 my-3">Pengukuran</p>
           <div className="lg:mx-16 md:-mx-8 -mx-8 ">
-            <p className="text-center font-bold text-lg mb-5">
+            <p className="text-center font-bold md:text-lg sm:text-lg text-sm mb-5">
               Paket Harga Normal (14 Hari kerja)
             </p>
             <div className="bg-[#EDECECD4] md:py-5 py-2 rounded-lg shadow-[rgba(0,0,0,0.3)_1px_2px_2px_1px] mb-3">
@@ -456,7 +457,7 @@ export default function Analisis() {
               </div>
             </div>
 
-            <div className="grid gap-3">
+            <div className="grid md:gap-3 sm:gap-3 gap-1">
               {dataPengukur.map((data, i) => (
                 <div key={i}>
                   <div className="bg-white border shadow-[rgba(0,0,10,0.3)_1px_2px_2px_1px] rounded-lg py-2">
@@ -566,12 +567,12 @@ export default function Analisis() {
               </div>
             </div>
 
-            <div className="grid gap-3">
+            <div className="grid md:gap-3 sm:gap-3 gap-1">
               {dataPengukur.map((data, i) => (
                 <div key={i}>
                   <div className="bg-white border shadow-[rgba(0,0,10,0.3)_1px_2px_2px_1px] rounded-lg py-2">
                     <div className="flex md:gap-20 gap-4 grid-cols-5 ">
-                      <p className="font-medium md:text-[14px] text-[6px] text-center md:ml-5 ml-1">
+                      <p className="font-medium md:text-[14px] text-[6px] text-center md:ml-5 ml-0">
                         {i + 1}
                       </p>
                       <p className="font-bold md:text-[14px] text-[6px] ">
