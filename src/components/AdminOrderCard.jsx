@@ -233,7 +233,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
 
                                     <div>
                                         <div className="md:flex gap-1">
-                                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">Hasil analisis (*format file berupa pdf, ukuran file dibawah 10mb) : </h1>
+                                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">Hasil analisis (*format file berupa .pdf dan jika lebih dari satu kirimkan dalam format .zip/.rar, ukuran file dibawah 20mb) : </h1>
                                             {add ? <div className="flex"><button onClick={handleConfirm} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Kirim</button><button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">upload file hasil analisis</button>}
                                         </div>
 
