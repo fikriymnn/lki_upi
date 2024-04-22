@@ -96,20 +96,20 @@ export default function DetailOrderAdmin({ params, searchParams }) {
 
     return (
         <>
-            <p className='text-center text-4xl font-bold text-gray-800 mt-7'>EDIT ORDER</p>
+            <p className='text-center md:text-4xl sm:text-3xl text-xl font-bold text-gray-800 mt-7'>EDIT ORDER</p>
             <div className='flex justify-center'>
                 <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
             </div>
             <div className="md:mx-20 mx-5">
                 <div className=" grid md:grid-cols-2 gap-5">
-                    <div className="flex input-style-lki"><p className="text-lg ">Nama lengkap : {invoice.id_user?.nama_lengkap}</p> </div>
-                    <div className="flex input-style-lki"><p className="text-lg ">Email : {invoice.id_user?.email}</p> </div>
-                    <div className="flex input-style-lki"><p className="text-lg ">No whatsapp : {invoice.id_user?.no_whatsapp}</p> </div>
-                    <div className="flex input-style-lki"><p className="text-lg ">No telepon : {invoice.id_user?.no_telp}</p> </div>
-                    <div className="flex input-style-lki"><p className="text-lg ">Nama Institusi : {invoice.id_user?.nama_institusi}</p> </div>
+                    <div className="flex input-style-lki"><p className="md:text-lg sm:text-lg text-xs ">Nama lengkap : {invoice.id_user?.nama_lengkap}</p> </div>
+                    <div className="flex input-style-lki"><p className="md:text-lg sm:text-lg text-xs ">Email : {invoice.id_user?.email}</p> </div>
+                    <div className="flex input-style-lki"><p className="md:text-lg sm:text-lg text-xs ">No whatsapp : {invoice.id_user?.no_whatsapp}</p> </div>
+                    <div className="flex input-style-lki"><p className="md:text-lg sm:text-lg text-xs ">No telepon : {invoice.id_user?.no_telp}</p> </div>
+                    <div className="flex input-style-lki"><p className="md:text-lg sm:text-lg text-xs ">Nama Institusi : {invoice.id_user?.nama_institusi}</p> </div>
                     {invoice.id_user?.jenis_institusi == "Perguruan Tinggi" ? <>
-                        <div className="flex input-style-lki"><p className="text-lg ">Fakultas : {invoice.id_user?.fakultas}</p> </div>
-                        <div className="flex input-style-lki"><p className="text-lg ">Program studi : {invoice.id_user?.program_studi}</p> </div>
+                        <div className="flex input-style-lki"><p className="md:text-lg sm:text-lg text-xs ">Fakultas : {invoice.id_user?.fakultas}</p> </div>
+                        <div className="flex input-style-lki"><p className="md:text-lg sm:text-lg text-xs ">Program studi : {invoice.id_user?.program_studi}</p> </div>
 
 
                     </> : ""}
