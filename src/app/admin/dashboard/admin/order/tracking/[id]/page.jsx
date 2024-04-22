@@ -151,7 +151,7 @@ export default function Tracking_admin({ params }) {
                       <option value="Sample Dikerjakan Operator">
                         Sample Diterima Admin dan Diproses
                       </option>
-                      <option value="Menunggu verifikasi">Menunggu verifikasi</option>
+                      <option value="Menunggu Verifikasi">Menunggu verifikasi</option>
                       <option value="Menunggu Pembayaran">
                         Menunggu Pembayaran
                       </option>
