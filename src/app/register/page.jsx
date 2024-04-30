@@ -68,6 +68,7 @@ export default function Register({ searchParams }) {
         }
 
         if (data.data.success == true) {
+          localStorage.setItem('access_token', data.data.token);
           if (prevRoute) {
             window.location.replace(prevRoute);
           } else {

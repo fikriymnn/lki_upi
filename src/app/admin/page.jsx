@@ -33,8 +33,9 @@ export default function Admin() {
         
 
         if (data.data.success == true) {
+          localStorage.setItem('access_token', data.data.token);
           const dataUser = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/user`,
+            `${process.env.NEXT_PUBLIC_URL}/api/user/${data.data.token}`,
             { withCredentials: true }
           );
           

@@ -26,6 +26,7 @@ export default function Login({ searchParams }) {
                 })
 
                 if (data.data.success) {
+                    
                     if (prevRoute) {
                         
                         router.replace(prevRoute)
@@ -55,6 +56,7 @@ export default function Login({ searchParams }) {
                 const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/login`, userForm, { withCredentials: true })
        
                 if (data.data.success == true) {
+                    localStorage.setItem('access_token', data.data.token);
               
                         
                         alert("login sukses")
