@@ -186,7 +186,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
 
                                 <div className="">
                                     <h1 className="md:text-lg text-xs font-semibold text-grey-600">foto sample : </h1>
-                                    <div className="input-style-lki-flexible">
+                                    <div className="">
 
                                   
 
@@ -201,7 +201,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
 
                                     <div >
                                         <h1 className="md:text-lg text-xs font-semibold text-grey-600">jurnal pendukung : </h1>
-                                        <div className="input-style-lki">
+                                        <div className="">
 
                                             {jurnal_pendukung ? <Button className="grad" color="failure" size={5} href={jurnal_pendukung}>download</Button> : <p>-</p>}
                                         </div>
@@ -212,7 +212,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
                                         <h1 className="md:text-lg text-xs font-semibold text-grey-600">Hasil analisis : </h1>
                                         <div className="input-style-lki">
 
-                                            {status == "selesai" ?hasil_analisis? <h1 className="input-style-lki"><Button className="grad" color="failure" size={5} href={hasil_analisis}>download</Button></h1> : <p>-</p>:<p>-</p>}
+                                            {status == "selesai" ?hasil_analisis? <h1 className=""><Button className="grad" color="failure" size={5} href={hasil_analisis}>download</Button></h1> : <p>-</p>:<p>-</p>}
                                         </div>
                                     </div>
                                 </div>
