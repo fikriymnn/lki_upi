@@ -54,6 +54,24 @@ const kode = [
   },
 ];
 
+const stats = [
+  {
+    status: "menunggu form dikonfirmasi",
+  },
+  {
+    status: "Sample Dikerjakan Operator",
+  },
+  {
+    status: "Menunggu Verifikasi",
+  },
+  {
+    status: "Menunggu Pembayaran",
+  },
+  {
+    status: "menunggu konfirmasi pembayaran",
+  },
+];
+
 const monthOption = [
   "Januari",
 
@@ -87,6 +105,7 @@ export default function Order() {
   const [year, setYear] = useState(0);
   const [month, setMonth] = useState(0);
   const [jenis_pengujian, setJenis_pengujian] = useState("");
+  const [status, setStatus] = useState("");
   const [yearOption, setYearOption] = useState([]);
 
   const handleDelete = async (no_invoice) => {
@@ -118,7 +137,9 @@ export default function Order() {
             page * 15
           }&limit=15${year ? `&year=${year}` : ""}${
             month ? `&month=${month}` : ""
-          }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`,
+          }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${
+            status ? `&status=${status}` : ""
+          }`,
           { withCredentials: true }
         );
         console.log(data.data);
@@ -131,11 +152,11 @@ export default function Order() {
       }
     }
     getInvoice();
-  }, [page, month, year, jenis_pengujian]);
+  }, [page, month, year, jenis_pengujian, status]);
   return (
     <>
       <Navigasi text1={"admin"} text2={"order"} />
-      <div className="flex flex-wrap justify-center gap-3 mb-10">
+      <div className="flex flex-wrap justify-center gap-1 mb-10">
         <div className="md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52 ">
           <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2 ">
             Tahun :
@@ -207,6 +228,28 @@ export default function Order() {
             })}
           </select>
         </div>
+        <div className="md:flex grid grid-cols-1 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-96 sm:w-64 w-52">
+          <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-1 ">
+            Status:{" "}
+          </p>{" "}
+          <select
+            className="p-1"
+            name="status"
+            id="status"
+            onChange={(e) => setStatus(e.target.value)}
+          >
+            <option value="" className="input-style-lki" defaultChecked>
+              All
+            </option>
+            {stats.map((v, i) => {
+              return (
+                <option value={v.status} key={i}>
+                  {v.status}
+                </option>
+              );
+            })}
+          </select>
+        </div>
       </div>
       <div className="m-auto  w-11/12">
         <div className=" overflow-scroll w-full">
@@ -246,6 +289,7 @@ export default function Order() {
             </Table.Head>
             <Table.Body className="divide-y">
               {invoice.map((v, i) => {
+                console.log(v);
                 return (
                   <Table.Row
                     key={i}
