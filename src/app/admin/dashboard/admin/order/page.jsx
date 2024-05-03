@@ -222,6 +222,9 @@ export default function Order() {
                 Invoice
               </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+                Nama Customer
+              </Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                 Jenis Pengujian
               </Table.HeadCell>
 
@@ -256,6 +259,9 @@ export default function Order() {
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                       {v.no_invoice}
+                    </Table.Cell>
+                    <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                      {v.id_user[0].nama_lengkap}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                       {v.jenis_pengujian}
