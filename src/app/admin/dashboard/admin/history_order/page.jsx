@@ -213,6 +213,9 @@ export default function HHistory_order() {
                   No Invoice
                 </Table.HeadCell>
                 <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+                  Nama Customer
+                </Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                   Jenis Pengujian
                 </Table.HeadCell>
                 <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
@@ -238,6 +241,9 @@ export default function HHistory_order() {
                       <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{`${value.date_format}`}</Table.Cell>
                       <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                         {value.no_invoice}
+                      </Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                        {v.id_user[0].nama_lengkap}
                       </Table.Cell>
                       <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                         {value.jenis_pengujian}
