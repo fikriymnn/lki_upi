@@ -243,7 +243,7 @@ export default function HHistory_order() {
                         {value.no_invoice}
                       </Table.Cell>
                       <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
-                        {v.id_user[0].nama_lengkap}
+                        {value.id_user[0].nama_lengkap}
                       </Table.Cell>
                       <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                         {value.jenis_pengujian}
