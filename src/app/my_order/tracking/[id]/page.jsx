@@ -75,13 +75,13 @@ export default function Tracking({ params }) {
                 invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Form Dikirim
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Form Dikirim
                     </p>
                   </div>
@@ -95,16 +95,16 @@ export default function Tracking({ params }) {
                 invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Menunggu Acc
                     </p>
-                    <p className="mx-10  text-center text-xs">
+                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
                       {invoice.s1_date}
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Menunggu Acc
                     </p>
                   </div>
@@ -147,13 +147,13 @@ export default function Tracking({ params }) {
                 invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Form Diterima
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Form Diterima
                     </p>
                   </div>
@@ -166,16 +166,16 @@ export default function Tracking({ params }) {
                 invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Menunggu Sample Diterima Oleh Admin
                     </p>
-                    <p className="mx-10  text-center text-xs">
+                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
                       {invoice.s2_date}
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Menunggu Sample Diterima Oleh Admin
                     </p>
                   </div>
@@ -215,13 +215,13 @@ export default function Tracking({ params }) {
                 invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Sample Diterima Oleh Admin
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Sample Diterima Oleh Admin
                     </p>
                   </div>
@@ -233,16 +233,16 @@ export default function Tracking({ params }) {
                 invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Sample Sedang Dikirim ke Operator
                     </p>
-                    <p className="mx-10  text-center text-xs">
+                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
                       {invoice.s3_date}
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Sedang dikirim ke operator{" "}
                     </p>
                   </div>
@@ -281,13 +281,13 @@ export default function Tracking({ params }) {
                 invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Sample Diterima oleh Operator
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Sample Diterima oleh Operator{" "}
                     </p>
                   </div>
@@ -298,16 +298,16 @@ export default function Tracking({ params }) {
                 invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Sedang Dikerjakan oleh Operator
                     </p>
-                    <p className="mx-10  text-center text-xs">
+                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
                       {invoice.s4_date}
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Sedang Dikerjakan oleh Operator
                     </p>
                   </div>
@@ -343,13 +343,13 @@ export default function Tracking({ params }) {
                 invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Selesai Dikerjakan oleh Operator
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Selesai Dikerjakan oleh Operator{" "}
                     </p>
                   </div>
@@ -359,16 +359,16 @@ export default function Tracking({ params }) {
                 invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Menunggu Verifikasi
                     </p>
-                    <p className="mx-10  text-center text-xs">
+                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
                       {invoice.s5_date}
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Menunggu Verifikasi{" "}
                     </p>
                   </div>
@@ -402,13 +402,13 @@ export default function Tracking({ params }) {
                 invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Selesai Verifikasi
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Selesai Verifikasi{" "}
                     </p>
                   </div>
@@ -417,16 +417,16 @@ export default function Tracking({ params }) {
                 invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Menunggu Pembayaran
                     </p>
-                    <p className="mx-10  text-center text-xs">
+                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
                       {invoice.s6_date}
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Menunggu Pembayaran{" "}
                     </p>
                   </div>
@@ -458,13 +458,13 @@ export default function Tracking({ params }) {
                 {invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Pembayaran Selesai
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Pembayaran Selesai
                     </p>
                   </div>
@@ -472,16 +472,16 @@ export default function Tracking({ params }) {
                 {invoice.status == "Menunggu Konfirmasi Pembayaran" ||
                 invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Menunggu Pembayaran Dikonfirmasi
                     </p>
-                    <p className="mx-10  text-center text-xs">
+                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
                       {invoice.s7_date}
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Menunggu Pembayaran Dikonfirmasi
                     </p>
                   </div>
@@ -512,16 +512,16 @@ export default function Tracking({ params }) {
               <div>
                 {invoice.status == "Selesai" ? (
                   <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Selesai
                     </p>
-                    <p className="mx-10  text-center text-xs">
+                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
                       {invoice.s8_date}
                     </p>
                   </div>
                 ) : (
                   <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-base font-semibold">
+                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
                       Selesai
                     </p>
                   </div>

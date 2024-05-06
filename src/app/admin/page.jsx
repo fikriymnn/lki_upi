@@ -19,6 +19,25 @@ export default function Admin() {
 
   useEffect(() => {
     console.log(userForm)
+    const token = localStorage.getItem('access_token')
+    async function cek(){
+      const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user/${token}`, {
+        withCredentials: true
+    })
+  
+      if(data.data.data.role=="user"){
+        router.replace("/")
+      }
+      else if(data.data.data.role == "admin"){
+        router.replace("/admin/dashboard/admin")
+    } else if(data.data.success == "operator"){
+        router.replace("/admin/dashboard/operator")
+    } else if(data.data.success == "pj"){
+        router.replace("/admin/dashboard/pj")
+    }
+    }
+    cek()
+   
   }, []);
 
   const onSubmit = (e) => {
