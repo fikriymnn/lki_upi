@@ -225,6 +225,7 @@ export default function Order_analisis() {
                 const downloadURL = await getDownloadURL(snapshot.ref);
 
                 if (downloadURL) {
+                  console.log(downloadURL)
                   await axios.post(
                     `${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${uuid[0]}`,
                     { jurnal_pendukung: downloadURL },

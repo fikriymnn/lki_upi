@@ -13,6 +13,9 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
     const [file, setFile] = useState('')
     const [foto, setFoto] = useState('')
 
+    useEffect(()=>{
+        console.log(jurnal_pendukung)
+    },[])
     const handleConfirm = async (e) => {
         e.preventDefault()
         try{
