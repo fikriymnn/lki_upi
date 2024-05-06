@@ -213,7 +213,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
 
                                 <div className="">
                                     <h1 className="md:text-lg text-xs font-semibold text-grey-600">foto sample (*format file berupa png, jpg dan jpeg) : </h1>
-                                    <div className="md:text-lg sm:text-lg text-xs input-style-lki-flexible">
+                                    <div className="md:text-lg sm:text-lg text-xs ">
 
                                       
                                     {foto_sample ? <Button className="grad" color="failure" size={5} href={foto_sample}>download</Button> : <p>-</p>}
@@ -224,7 +224,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
 
                                     <div className="md:w-full sm:w-full w-8/12">
                                         <h1 className="md:text-lg text-xs font-semibold text-grey-600">jurnal pendukung (*format file berupa docx atau pdf) : </h1>
-                                        <div className="md:text-lg sm:text-lg text-xs input-style-lki">
+                                        <div className="md:text-lg sm:text-lg text-xs">
 
                                             {jurnal_pendukung ? <Button className="grad" color="failure" size={5} href={jurnal_pendukung}>download</Button> : <p>-</p>}
                                         </div>
@@ -242,7 +242,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                                             setFile(e.target.files[0])
                                 
                                           
-                                        }} /> : (hasil_analisis ?<Button color="failure" size={5} href={hasil_analisis}>download</Button> : <p className="md:text-lg sm:text-lg text-xs input-style-lki">-</p>)}
+                                        }} /> : (hasil_analisis ?<Button color="failure" size={5} href={hasil_analisis}>download</Button> : <p className="md:text-lg sm:text-lg text-xs ">-</p>)}
                                     </div>
                                 </div>
                             </div>
