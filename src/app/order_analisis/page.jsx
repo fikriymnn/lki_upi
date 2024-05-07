@@ -23,6 +23,7 @@ export default function Order_analisis() {
     <CustomForm i={0} key={0} uuid={uid} />,
   ]);
   const [arr, setArr] = useState([]);
+  const [nonupi,setNonupi] = useState([]);
   const [jenis_pengujian, setJenis_pengujian] = useState([[]]);
   const [kode_pengujian, setKode_pengujian] = useState([[]]);
   const [nama_sample, setNama_sample] = useState([]);
@@ -33,9 +34,11 @@ export default function Order_analisis() {
   const [target_senyawa, setTarget_senyawa] = useState([]);
   const [sample_dikembalikan, setSample_dikembalikan] = useState([]);
   const [metode_parameter, setMetode_parameter] = useState([]);
-  const [jurnal_pendukung, setJurnal_pendukung] = useState({});
+  const [jurnal_pendukung, setJurnal_pendukung] = useState([]);
   const [deskripsi_sample, setDeskripsi_sample] = useState([]);
   const [riwayat_pengujian, setRiwayat_pengujian] = useState([]);
+  const [nama_pembimbing, setNama_pembimbing] = useState([]);
+  const [lama_pengerjaan, setLama_pengerjaan] = useState([]);
   const [foto_sample, setFoto_sample] = useState([]);
   const [uuid, setUuid] = useState([uid]);
   const [verifikasi, setVerifikasi] = useState(false);
@@ -184,6 +187,8 @@ export default function Order_analisis() {
         obj.deskripsi_sample = deskripsi_sample[i];
         obj.riwayat_pengujian = riwayat_pengujian[i];
         obj.sample_dikembalikan = sample_dikembalikan[i];
+        obj.nama_pembimbing = nama_pembimbing[i];
+        obj.lama_pengerjaan = lama_pengerjaan[i];
 
         obj.uuid = uuid[i];
 
@@ -204,19 +209,19 @@ export default function Order_analisis() {
             async function cek() {
               try {
                 const directory = "jurnalpendukung/";
-                const fileName = `${jurnal_pendukung.name}`;
+                const fileName = `${jurnal_pendukung[0].name}`;
 
                 const storageRef = ref(storage, directory + fileName);
 
                 // Create file metadata including the content type
                 const metadata = {
-                  contentType: jurnal_pendukung.type,
+                  contentType: jurnal_pendukung[0].type,
                 };
 
                 // Upload the file in the bucket storage
                 const snapshot = await uploadBytesResumable(
                   storageRef,
-                  jurnal_pendukung,
+                  jurnal_pendukung[0],
                   metadata
                 );
                 //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
@@ -477,7 +482,7 @@ export default function Order_analisis() {
             </div>
             <div>
               <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
-                APAKAH SAMPEL AKAN DIAMBIL SETELAH PENGUJIAN?
+                Apakah sampel akan diambil setelah pengujian?
               </h2>
               <select
                 required
@@ -494,6 +499,64 @@ export default function Order_analisis() {
                 </option>
                 <option value="ya">Ya</option>
                 <option value="tidak">Tidak</option>
+              </select>
+            </div>
+            {/* <div>
+              <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
+                Apakah anda dari program studi KIMIA UPI??
+              </h2>
+              <select
+                required
+                name="nonupi"
+                id="nonupi"
+                className="input-style-lki"
+                onChange={(e) => {
+                  e.preventDefault();
+                  nonupi[i] = e.target.value
+                  console.log(nonupi)
+                }}
+              ><option value="" selected>
+                  Pilih
+                </option>
+                <option value={true}>Ya</option>
+                <option value={false}>Tidak</option>
+              </select>
+            </div>
+            <div><h2 className="md:text-lg sm:text-lg text-sm font-semibold">Nama Pembimbing</h2><input
+                className="input-style-lki"
+                placeholder="Tuliskan nama pembimbing"
+                name="nama_pembimbing"
+                required
+                type="text"
+                onChange={(e) => {
+                  e.preventDefault();
+                  nama_pembimbing[i] = e.target.value;
+                 
+                }}
+              /> </div>
+            {nonupi[0]?<p>haii</p>:""} */}
+            <div>
+              <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
+                Pilih lama pengerjaan
+              </h2>
+              <select
+                required
+                name="lama_pengerjaan"
+                id="lama_pengerjaan"
+                className="input-style-lki"
+                onChange={(e) => {
+                  e.preventDefault();
+                  lama_pengerjaan[i] = e.target.value;
+                  console.log(lama_pengerjaan[0])
+                }}
+              >
+                <option value="" selected>
+                  Pilih
+                </option>
+                <option value="3 hari">3 hari</option>
+                <option value="7 hari">7 hari</option>
+                <option value="14 hari">14 hari</option>
+                <option value="normal">normal</option>
               </select>
             </div>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-10">
@@ -521,7 +584,7 @@ export default function Order_analisis() {
                   onChange={(e) => {
                     e.preventDefault();
 
-                    setJurnal_pendukung(e.target.files[0]);
+                    jurnal_pendukung[0]= e.target.files[0];
                   }}
                 />
               </div>

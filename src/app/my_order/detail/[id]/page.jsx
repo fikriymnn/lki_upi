@@ -386,6 +386,9 @@ export default function Detail({ params, searchParams }) {
                 deskripsi={e.deskripsi_sample}
                 hasil_analisis={e.hasil_analisis}
                 foto_sample={e.foto_sample}
+                lama_pengerjaan={e.lama_pengerjaan}
+                nama_pembimbing={e.nama_pembimbing}
+                
               />
             );
           })}

@@ -6,7 +6,7 @@ import { ref, deleteObject,getStorage, getDownloadURL, uploadBytesResumable } fr
 import {storage} from '../firebase/firebase'
 import axios from "axios";
 
-export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, hasil_analisis, id, deskripsi, foto_sample, kode_pengujian, status, riwayat_pengujian, sample_dikembalikan
+export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, hasil_analisis, id, deskripsi, foto_sample, kode_pengujian, status, riwayat_pengujian, sample_dikembalikan,lama_pengerjaan,nama_pembimbing
 
 }) {
 
@@ -121,19 +121,19 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
                     <div className="border-1 rounded grid md:grid-cols-2 md:gap-10 gap-5">
 
                         <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">nama sample : </h1>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">nama sample : </h1>
                             <h1 className="input-style-lki">{nama_sample}</h1>
                         </div>
                         <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">jumlah sample : </h1>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">jumlah sample : </h1>
                             <h1 className="input-style-lki">{jumlah_sample}</h1>
                         </div>
                         <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">wujud sample : </h1>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">wujud sample : </h1>
                             <h1 className="input-style-lki">{wujud_sample}</h1>
                         </div>
                         <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">pelarut : </h1>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">pelarut : </h1>
 
                             <h1 className="input-style-lki">{pelarut}</h1>
 
@@ -143,37 +143,45 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
                     <div className="flex flex-col gap-5 mt-5">
 
                         <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">jenis pengujian sample : </h1>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">jenis pengujian sample : </h1>
                             <h1 className="input-style-lki">{jenis_pengujian}</h1>
                         </div>
                         <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">kode pengujian sample : </h1>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">kode pengujian sample : </h1>
                             <h1 className="input-style-lki">{kode_pengujian}</h1>
                         </div>
                         <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">sample_dikembalikan : </h1>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">lama pengerjaan : </h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{lama_pengerjaan}</h1>
+                        </div>
+                        <div>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">nama pembimbing : </h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{nama_pembimbing}</h1>
+                        </div>
+                        <div>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">sample_dikembalikan : </h1>
                             <h1 className="input-style-lki-box ">{sample_dikembalikan}</h1>
                         </div>
                         <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">preparasi khusus : </h1>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">preparasi khusus : </h1>
                             <h1 className="input-style-lki">{preparasi_khusus ? "ya" : "tidak"}</h1>
 
                         </div>
                         <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">target senyawa : </h1>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">target senyawa : </h1>
                             <h1 className="input-style-lki">{target_senyawa}</h1>
                         </div>
 
                         <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">metode parameter : </h1>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">metode parameter : </h1>
                             <h1 className="input-style-lki">{metode_parameter}</h1>
                         </div>
                         <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">deskripsi : </h1>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">deskripsi : </h1>
                             <h1 className="input-style-lki-box ">{deskripsi}</h1>
                         </div>
                         <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">riwayat pengujian : </h1>
+                            <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">riwayat pengujian : </h1>
                             <h1 className="input-style-lki-box ">{riwayat_pengujian}</h1>
                         </div>
 
@@ -185,7 +193,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
                             <div className="w-full">
 
                                 <div className="">
-                                    <h1 className="md:text-lg text-xs font-semibold text-grey-600">foto sample : </h1>
+                                    <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">foto sample : </h1>
                                     <div className="">
 
                                   
@@ -200,7 +208,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
                                 <div className="grid md:grid-cols-2 gap-10 mt-5">
 
                                     <div >
-                                        <h1 className="md:text-lg text-xs font-semibold text-grey-600">jurnal pendukung : </h1>
+                                        <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">jurnal pendukung : </h1>
                                         <div className="">
 
                                             {jurnal_pendukung ? <Button className="grad" color="failure" size={5} href={jurnal_pendukung}>download</Button> : <p>-</p>}
@@ -209,7 +217,7 @@ export default function OrderCard({ uuid, jenis_pengujian, nama_sample, jumlah_s
                                     </div>
 
                                     <div>
-                                        <h1 className="md:text-lg text-xs font-semibold text-grey-600">Hasil analisis : </h1>
+                                        <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">Hasil analisis : </h1>
                                         <div className="input-style-lki">
 
                                             {status == "selesai" ?hasil_analisis? <h1 className=""><Button className="grad" color="failure" size={5} href={hasil_analisis}>download</Button></h1> : <p>-</p>:<p>-</p>}

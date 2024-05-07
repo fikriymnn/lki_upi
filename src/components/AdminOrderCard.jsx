@@ -7,7 +7,7 @@ import { imagefrombuffer } from "imagefrombuffer";
 import { ref, deleteObject,getStorage, getDownloadURL, uploadBytesResumable,getMetadata } from "firebase/storage"
 import {storage} from '../firebase/firebase'
 
-export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id, kode_pengujian
+export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id, kode_pengujian,nama_pembimbing,lama_pengerjaan
 }) {
     const [add, setAdd] = useState(false)
     const [file, setFile] = useState('')
@@ -184,6 +184,14 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">kode pengujian sample : </h1>
                             <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{kode_pengujian}</h1>
+                        </div>
+                        <div>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">lama pengerjaan : </h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{lama_pengerjaan}</h1>
+                        </div>
+                        <div>
+                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">nama pembimbing : </h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{nama_pembimbing}</h1>
                         </div>
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">preparasi khusus : </h1>
