@@ -1,4 +1,9 @@
 import Image from "next/image";
+export const metadata = {
+  title: "About",
+  description:
+    "Laboratorium Kimia Instrumen (LKI) merupakan salah satu unit kerja di Prodi Kimia Universitas Pendidikan Indonesia. LKI membuka layanan untuk pengujian untuk dosen, mahasiswa, instansi, dan juga masyarakat umum.",
+};
 
 export default function About() {
   return (

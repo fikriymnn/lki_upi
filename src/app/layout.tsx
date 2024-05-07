@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://lablkiupi.com"),
+  icons: {
+    icon: '/logo.svg',
+  },
   title: {
     default: "LAB KIMIA INSTRUMEN UPI",
     template: `%s | LAB KIMIA INSTRUMEN UPI`,
