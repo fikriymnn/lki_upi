@@ -2,6 +2,10 @@ import React from "react";
 import Image from "next/image";
 import AnalisisComponent from "/src/components/AnalisisComponent";
 
+export const metadata = {
+  title: "Layanan Analisis",
+  description: "Layanan Pengujian Laboratorium Kimia Instrumen LKI UPI",
+};
 const Layanan = () => {
   const dataPengukur = [
     {
