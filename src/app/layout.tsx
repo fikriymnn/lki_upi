@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     default: "LAB KIMIA INSTRUMEN UPI",
     template: `%s | LAB KIMIA INSTRUMEN UPI`,
   },
+  description: "Layanan Laboratorium Kimia Instrumen Universitas Pendidikan Indonesia (UPI)",
   openGraph: {
     description: "Layanan Laboratorium Kimia Instrumen Universitas Pendidikan Indonesia (UPI)",
     images: [''],

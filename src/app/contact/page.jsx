@@ -3,6 +3,11 @@ import Iframe from "react-iframe";
 import Image from "next/image";
 import emailjs from "@emailjs/browser";
 import { useState } from "react";
+export const metadata = {
+  title: "Contact",
+  description:
+    "Kontak kami jika ada yang ingin ditanyakan atau ada kesulitan dalam pemesanan layanan analisis Laboratorium Kimia Instrumen UPI",
+};
 
 export default function Contact() {
   const [name, setName] = useState();
