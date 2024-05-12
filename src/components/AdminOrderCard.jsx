@@ -154,20 +154,20 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
 
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">nama sample : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{nama_sample}</h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{nama_sample?nama_sample:"-"}</h1>
                         </div>
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">jumlah sample : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{jumlah_sample}</h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{jumlah_sample?jumlah_sample:"-"}</h1>
                         </div>
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">wujud sample : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{wujud_sample}</h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{wujud_sample?wujud_sample:"-"}</h1>
                         </div>
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">pelarut : </h1>
 
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{pelarut}</h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{pelarut?pelarut:"-"}</h1>
 
 
                         </div>
@@ -175,23 +175,23 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                     <div className="flex flex-col gap-5 mt-5">
                          <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">sample_dikembalikan : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki-box ">{sample_dikembalikan}</h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki-box ">{sample_dikembalikan?sample_dikembalikan:"tidak"}</h1>
                         </div>
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">jenis pengujian sample : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{jenis_pengujian}</h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{jenis_pengujian?jenis_pengujian:"-"}</h1>
                         </div>
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">kode pengujian sample : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{kode_pengujian}</h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{kode_pengujian?kode_pengujian:"-"}</h1>
                         </div>
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">lama pengerjaan : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{lama_pengerjaan}</h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{lama_pengerjaan?lama_pengerjaan:"-"}</h1>
                         </div>
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">nama pembimbing : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{nama_pembimbing}</h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{nama_pembimbing?nama_pembimbing:"-"}</h1>
                         </div>
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">preparasi khusus : </h1>
@@ -200,20 +200,20 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                         </div>
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">target senyawa : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{target_senyawa}</h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{target_senyawa?target_senyawa:"-"}</h1>
                         </div>
 
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">metode parameter : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{metode_parameter}</h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{metode_parameter?metode_parameter:"-"}</h1>
                         </div>
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">deskripsi : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki-box ">{deskripsi}</h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki-box ">{deskripsi?deskripsi:"-"}</h1>
                         </div>
                         <div>
                             <h1 className="md:text-lg text-xs font-semibold text-grey-600">riwayat pengujian : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki-box ">{riwayat_pengujian}</h1>
+                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki-box ">{riwayat_pengujian?riwayat_pengujian:"-"}</h1>
                         </div>
 
 

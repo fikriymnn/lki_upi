@@ -231,6 +231,7 @@ export default function Report() {
                     <th className="px-10 text-sm">No invoice</th>
                     <th className="px-10 text-sm">Kode Pengujian</th>
                     <th className="px-10 text-sm">Harga</th>
+                    <th className="px-10 text-sm">Lama Pengerjaan</th>
                     <th className="px-10 text-sm">Operator</th>
                     <th className="px-10 text-sm">PJ</th>
                     <th className="px-10 text-sm">Admin</th>
@@ -272,6 +273,9 @@ export default function Report() {
                           </td>
                           <td className="text-center text-xs">
                             {a.total_harga}
+                          </td>
+                          <td className="text-center text-xs">
+                            {a.lama_pengerjaan}
                           </td>
                           <td className="text-center text-xs">
                             {a.operator_date}

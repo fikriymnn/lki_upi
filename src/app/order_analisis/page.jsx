@@ -18,13 +18,13 @@ export default function Order_analisis() {
   const router = useRouter();
   const uid = uuidv4();
   const i = 0;
-  const [loading,setLoading] = useState(false)
+  const [loading,setLoading] = useState('')
   const [countForm, setCountForm] = useState(1);
-  const [duplicate, setDuplicate] = useState([
-    <CustomForm i={0} key={0} uuid={uid} />,
-  ]);
+  // const [duplicate, setDuplicate] = useState([
+  //   <CustomForm i={0} key={0} uuid={uid} />,
+  // ]);
   const [arr, setArr] = useState([]);
-  const [nonupi,setNonupi] = useState(false);
+  const [nonupi,setNonupi] = useState("");
   const [jenis_pengujian, setJenis_pengujian] = useState([[]]);
   const [kode_pengujian, setKode_pengujian] = useState([[]]);
   const [nama_sample, setNama_sample] = useState([]);
@@ -173,7 +173,7 @@ export default function Order_analisis() {
         arr[i] = obj;
       }
 
-      if (arr.length == duplicate.length) {
+      if (arr.length == 1) {
         const data = await axios.post(
           `${process.env.NEXT_PUBLIC_URL}/api/order`,
           arr,
@@ -501,17 +501,16 @@ export default function Order_analisis() {
                 onChange={(e) => {
                   e.preventDefault();
                   setNonupi(e.target.value)
-                  console.log(nonupi)
                 }}
+                defaultValue={false}
               ><option value="" selected>
                   Pilih
                 </option>
-                <option value={true}>Ya</option>
-                <option value={false}>Tidak</option>
+                <option value="ya">Ya</option>
+                <option value="tidak">Tidak</option>
               </select>
             </div>
-            {
-              nonupi==true?<div><h2 className="md:text-lg sm:text-lg text-sm font-semibold">Nama Pembimbing</h2><input
+            { nonupi=="ya"?<div><h2 className="md:text-lg sm:text-lg text-sm font-semibold">Nama Pembimbing</h2><input
               className="input-style-lki"
               placeholder="Tuliskan nama pembimbing"
               name="nama_pembimbing"
@@ -520,10 +519,8 @@ export default function Order_analisis() {
               onChange={(e) => {
                 e.preventDefault();
                 nama_pembimbing[i] = e.target.value;
-               
               }}
-            /> </div>:""
-            }
+            /> </div>:""}
             <div>
               <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
                 Pilih lama pengerjaan
@@ -536,7 +533,6 @@ export default function Order_analisis() {
                 onChange={(e) => {
                   e.preventDefault();
                   lama_pengerjaan[i] = e.target.value;
-                  console.log(lama_pengerjaan[0])
                 }}
               >
                 <option value="" selected>
@@ -555,7 +551,7 @@ export default function Order_analisis() {
                   jpeg)
                 </h2>
                 <input
-                  className="input-style-lki"
+                  className=""
                   name="foto_sample"
                   type="file"
                   onChange={handleFS}
@@ -567,12 +563,11 @@ export default function Order_analisis() {
                   pdf, ukuran file dibawah 10mb)
                 </h2>
                 <input
-                  className="input-style-lki"
+                  className=""
                   name="jurnal_pendukung"
                   type="file"
                   onChange={(e) => {
                     e.preventDefault();
-
                     jurnal_pendukung[0]= e.target.files[0];
                   }}
                 />

@@ -105,8 +105,6 @@ export default function Profile() {
           `${process.env.NEXT_PUBLIC_URL}/api/admin_user`,
           { withCredentials: true }
         );
-        console.log(data);
-
         if (data.data.success == true) {
           console.log(data.data.data);
           setAdmin(data.data.data.admin);

@@ -32,8 +32,8 @@ export default function ButtonOrder() {
 
     async function pesanLayanan() {
         try {
-            const data = await axios(`${process.env.NEXT_PUBLIC_URL}/api/user`, { withCredentials: true })
-            console.log(data)
+            const token = localStorage.getItem('access_token')
+            const data = await axios(`${process.env.NEXT_PUBLIC_URL}/api/user/${token}`, { withCredentials: true })
             if (data.data.success == true) {
                 if (data.data.data.role == "user") {
                     router.push(`/order_analisis`)
