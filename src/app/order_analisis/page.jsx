@@ -17,13 +17,14 @@ import { storage } from "../../firebase/firebase";
 export default function Order_analisis() {
   const router = useRouter();
   const uid = uuidv4();
+  const i = 0;
   const [loading,setLoading] = useState(false)
   const [countForm, setCountForm] = useState(1);
   const [duplicate, setDuplicate] = useState([
     <CustomForm i={0} key={0} uuid={uid} />,
   ]);
   const [arr, setArr] = useState([]);
-  const [nonupi,setNonupi] = useState([]);
+  const [nonupi,setNonupi] = useState(false);
   const [jenis_pengujian, setJenis_pengujian] = useState([[]]);
   const [kode_pengujian, setKode_pengujian] = useState([[]]);
   const [nama_sample, setNama_sample] = useState([]);
@@ -90,29 +91,6 @@ export default function Order_analisis() {
     },
   ];
 
-  // const increment = (e) => {
-  //     setCountForm(a => a + 1)
-  //     e.preventDefault()
-  //     setDuplicate([...duplicate, <CustomForm i={countForm} key={duplicate.length} />])
-  //     let add = [...jenis_pengujian]
-  //     add.push([])
-  //     setJenis_pengujian([...add])
-  //     let add2 = [...kode_pengujian]
-  //     add2.push([])
-  //     setKode_pengujian([...add2])
-  //     let add3 = [...foto_sample]
-  //     add3.push("")
-  //     setFoto_sample([...add3])
-  //     let add4 = [...jurnal_pendukung]
-  //     add4.push("")
-  //     setJurnal_pendukung([...add4])
-
-  //     let add5 = uuid
-  //     const uid = uuidv4()
-  //     add5.push(uid)
-  //     setUuid([...add5])
-
-  // }
 
   const handleFS = (event) => {
     let reader = new FileReader();
@@ -295,9 +273,19 @@ export default function Order_analisis() {
     }
   };
 
-  function CustomForm({ i }) {
-    return (
-      <>
+  
+  return (
+    <>
+     {loading?<Loading/>:""}
+      <div>
+        {/* <button onClick={() => { console.log(jenis_pengujian); console.log(nama_sample) }}>asd</button> */}
+        <p className="md:mt-14 sm:mt-14 mt-10 text-center md:text-3xl sm:text-2xl text-sm font-bold text-gray-800">
+          Layanan Analisis Laboratorium Kimia Instrumen &#40;LKI&#41; UPI
+        </p>
+        <div className="flex justify-center">
+          <hr className="grad h-2 mb-8 mt-5 w-56 text-center" />
+        </div>
+        <form onSubmit={handleSubmit}>
         <div className=" border-2 rounded-lg md:mx-20 md:mx-20 mx-2">
           {/* <p className='text-xl font-semibold text-xl text-white bg-red-600 rounded-lg p-3'>{i + 1}</p> */}
           <div className="w-full h-10 grad rounded-[5px]"></div>
@@ -501,7 +489,7 @@ export default function Order_analisis() {
                 <option value="tidak">Tidak</option>
               </select>
             </div>
-            {/* <div>
+            <div>
               <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
                 Apakah anda dari program studi KIMIA UPI??
               </h2>
@@ -512,7 +500,7 @@ export default function Order_analisis() {
                 className="input-style-lki"
                 onChange={(e) => {
                   e.preventDefault();
-                  nonupi[i] = e.target.value
+                  setNonupi(e.target.value)
                   console.log(nonupi)
                 }}
               ><option value="" selected>
@@ -522,19 +510,20 @@ export default function Order_analisis() {
                 <option value={false}>Tidak</option>
               </select>
             </div>
-            <div><h2 className="md:text-lg sm:text-lg text-sm font-semibold">Nama Pembimbing</h2><input
-                className="input-style-lki"
-                placeholder="Tuliskan nama pembimbing"
-                name="nama_pembimbing"
-                required
-                type="text"
-                onChange={(e) => {
-                  e.preventDefault();
-                  nama_pembimbing[i] = e.target.value;
-                 
-                }}
-              /> </div>
-            {nonupi[0]?<p>haii</p>:""} */}
+            {
+              nonupi==true?<div><h2 className="md:text-lg sm:text-lg text-sm font-semibold">Nama Pembimbing</h2><input
+              className="input-style-lki"
+              placeholder="Tuliskan nama pembimbing"
+              name="nama_pembimbing"
+              required
+              type="text"
+              onChange={(e) => {
+                e.preventDefault();
+                nama_pembimbing[i] = e.target.value;
+               
+              }}
+            /> </div>:""
+            }
             <div>
               <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
                 Pilih lama pengerjaan
@@ -620,23 +609,6 @@ export default function Order_analisis() {
             </div>
           </div>
         </div>
-      </>
-    );
-  }
-
-  return (
-    <>
-     {loading?<Loading/>:""}
-      <div>
-        {/* <button onClick={() => { console.log(jenis_pengujian); console.log(nama_sample) }}>asd</button> */}
-        <p className="md:mt-14 sm:mt-14 mt-10 text-center md:text-3xl sm:text-2xl text-sm font-bold text-gray-800">
-          Layanan Analisis Laboratorium Kimia Instrumen &#40;LKI&#41; UPI
-        </p>
-        <div className="flex justify-center">
-          <hr className="grad h-2 mb-8 mt-5 w-56 text-center" />
-        </div>
-        <form onSubmit={handleSubmit}>
-          {duplicate}
           <br />
           <div className="flex md:mx-20 sm:mx-20 mx-4 gap-2">
             <input
