@@ -240,6 +240,7 @@ export default function Report() {
                     <th className="px-10 text-sm">Nama Institusi</th>
                     <th className="px-10 text-sm">Fakultas</th>
                     <th className="px-10 text-sm">Program Studi</th>
+                    <th className="px-10 text-sm">Nama Pembimbing</th>
                     <th className="px-10 text-sm">Email</th>
                     <th className="px-10 text-sm">No telepon</th>
                     <th className="px-10 text-sm">No Whatsapp</th>
@@ -298,6 +299,9 @@ export default function Report() {
                           </td>
                           <td className="text-center text-xs">
                             {a.id_user[0].program_studi}
+                          </td>
+                          <td className="text-center text-xs">
+                            {a.nama_pembimbing}
                           </td>
                           <td className="text-center text-xs">
                             {a.id_user[0].email}
