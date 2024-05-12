@@ -15,8 +15,9 @@ export default function My_order() {
   useEffect(() => {
     async function getInvoice() {
       try {
+        const token = localStorage.getItem('access_token')
         const dataUser = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/user`,
+          `${process.env.NEXT_PUBLIC_URL}/api/user/${token}`,
           { withCredentials: true }
         );
 

@@ -1,32 +1,12 @@
-"use client";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import ButtonOrder from "@/components/ButtonOrder";
+import React from "react";
 import Image from "next/image";
-import CardPenguji from "@/components/CardPenguji";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import AnalisisComponent from "/src/components/AnalisisComponent";
 
-export default function Analisis() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    async function getData() {
-      try {
-        const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/content?resize=true`,
-          { withCredentials: true }
-        );
-        if (data.data.success) {
-          setData(data.data.data);
-        }
-      } catch (err) {
-        alert(err.message);
-      }
-    }
-    getData();
-  }, []);
-
+export const metadata = {
+  title: "Layanan Analisis",
+  description: "Layanan Pengujian Laboratorium Kimia Instrumen LKI UPI",
+};
+const Layanan = () => {
   const dataPengukur = [
     {
       alatPengukuran: "UV-VIS",
@@ -356,8 +336,8 @@ export default function Analisis() {
   ];
   return (
     <>
-      <main className="">
-        <div className=" flex md:h-[229px] h-40 w-full  ">
+      <main>
+        <div className="flex md:h-[229px] h-40 w-full">
           <Image
             alt=""
             src={"/carousel.jpg"}
@@ -381,25 +361,7 @@ export default function Analisis() {
           </div>
         </div>
         <div className="md:mx-[60px] sm:mx-[40px] mx-4">
-          <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
-            Layanan Pengujian Laboratorium Kimia Instrumen LKI UPI
-          </p>
-          <div className="flex justify-center">
-            <hr className="grad h-2 mb-8 mt-5 w-56 text-center" />
-          </div>
-          <ButtonOrder />
-          <br />
-          <div className="grid md:grid-cols-3 grid-cols-1 md:gap-10 gap-0">
-            {data.map((v, i) => (
-              <>
-                <CardPenguji key={i} id={v._id} nama={v.title} foto={v.foto} />
-              </>
-            ))}
-          </div>
-
-          <br />
-
-          
+          <AnalisisComponent />
           <div className="my-10">
             <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
               Alur Pengujian Laboratorium Kimia Instrumen UPI
@@ -674,4 +636,6 @@ export default function Analisis() {
       </main>
     </>
   );
-}
+};
+
+export default Layanan;
