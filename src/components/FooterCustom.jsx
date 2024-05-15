@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 function FooterCustom() {
   return (
     <div>
@@ -49,9 +50,15 @@ function FooterCustom() {
         <div className="md:mx-0 mx-3">
           <h2 className="mb-5 font-bold md:text-xl text-xl">Layanan</h2>
           <div className="flex flex-col md:gap-5 gap-2">
-            <p>Layanan Analisis</p>
-            <p>Sertifikat</p>
-            <p>Pelatihan</p>
+            <Link href="/layanan">
+              <p>Layanan Analisis</p>
+            </Link>
+            <Link href="/">
+              <p>Sertifikat</p>
+            </Link>
+            <Link href="/">
+              <p>Pelatihan</p>
+            </Link>
           </div>
         </div>
       </div>
