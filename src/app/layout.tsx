@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     icon: '/logo.svg',
   },
   title: {
-    default: "LAB KIMIA INSTRUMEN UPI",
+    default: "LABORATORIUM KIMIA INSTRUMEN UPI",
     template: `%s | LAB KIMIA INSTRUMEN UPI`,
   },
   description: "Layanan Laboratorium Kimia Instrumen Universitas Pendidikan Indonesia (UPI)",
