@@ -18,7 +18,6 @@ export default function Tracking_admin({ params }) {
     setEdit((a) => !a);
     let obj = { status: form.status };
     try {
-      console.log(form);
       function timeNow() {
         var d = new Date(),
           h = (d.getHours() < 10 ? "0" : "") + d.getHours(),
@@ -44,7 +43,7 @@ export default function Tracking_admin({ params }) {
             obj.s4_date = date_format;
             return true;
           case "Menunggu Verifikasi":
-            obj.s5_date = date_format;
+            obj.s5_date = date_format;        
             return true;
           case "Menunggu Pembayaran":
             obj.s6_date = date_format;
@@ -105,7 +104,8 @@ export default function Tracking_admin({ params }) {
           <div className="m-auto w-10/12 border-2 rounded-lg px-5">
             <br />
             <br />
-            {edit ? (
+            <p className="md:text-base sm:text-base text-xs text-red-600">*Upload hasil analisis terlebih dahulu sebelum verifikasi</p>
+            {edit&&invoice.opTask? (
               <div>
                 <p className="text-lg flex font-semibold gap-5">
                   Status :{" "}
@@ -138,7 +138,7 @@ export default function Tracking_admin({ params }) {
             )}
             <div className="mx-1 flex flex-col gap-3 md:w-6/12 w-full">
               {" "}
-              {edit ? (
+              {edit&&invoice.opTask ? (
                 <div className="flex gap-5 mt-5">
                   <button
                     onClick={handleConfirm}

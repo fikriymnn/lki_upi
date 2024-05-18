@@ -18,7 +18,6 @@ export default function Admin() {
   };
 
   useEffect(() => {
-    console.log(userForm)
     const token = localStorage.getItem('access_token')
     async function cek(){
       const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user/${token}`, {

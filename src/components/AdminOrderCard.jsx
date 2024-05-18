@@ -7,7 +7,7 @@ import { imagefrombuffer } from "imagefrombuffer";
 import { ref, deleteObject,getStorage, getDownloadURL, uploadBytesResumable,getMetadata } from "firebase/storage"
 import {storage} from '../firebase/firebase'
 
-export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id, kode_pengujian,nama_pembimbing,lama_pengerjaan
+export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id, kode_pengujian,nama_pembimbing,lama_pengerjaan,no_invoice,status
 }) {
     const [add, setAdd] = useState(false)
     const [file, setFile] = useState('')
@@ -39,7 +39,7 @@ export default function AdminOrderCard({  riwayat_pengujian,sample_dikembalikan,
                 alert('no file uploaded')
                 setAdd(a => !a)
             } else {
-                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}`, { hasil_analisis: downloadURL }, { withCredentials: true } )
+                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}?no_invoice=${no_invoice}${status=="Sample Dikerjakan Operator"?"&task=operator":""}${status=="Menunggu Verifikasi"?"&task=pj":""}`, { hasil_analisis: downloadURL }, { withCredentials: true } )
                 if (data.data=='success') {
 
                     setAdd(a => !a)
