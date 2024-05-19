@@ -108,7 +108,7 @@ export default function Report() {
         const data = await axios.get(
           `${
             process.env.NEXT_PUBLIC_URL
-          }/api/order?report=true&status_report=success&skip=${
+          }/api/order?report=true&status_pengujian=success&status_report=success&skip=${
             page * 100
           }&limit=100${month ? `&month=${month}` : ""}${
             year ? `&year=${year}` : ""
