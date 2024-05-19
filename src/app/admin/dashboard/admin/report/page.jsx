@@ -102,20 +102,19 @@ export default function Report() {
       arr.push(2024 + i);
       setYearOption(arr);
     }
-
     async function getInvoice() {
       try {
         setLoading(true);
-        const queryString = `${
-          process.env.NEXT_PUBLIC_URL
-        }/api/order?report=true&skip=${page * 100}&limit=100${
-          month ? `&month=${month}` : ""
-        }${year ? `&year=${year}` : ""}${
-          jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""
-        }&status_pengujian=success&status_report=success`;
-
-        const data = await axios.get(queryString, { withCredentials: true });
-
+        const data = await axios.get(
+          `${
+            process.env.NEXT_PUBLIC_URL
+          }/api/order?report=true&status_pengujian=success&skip=${
+            page * 100
+          }&limit=100${month ? `&month=${month}` : ""}${
+            year ? `&year=${year}` : ""
+          }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`,
+          { withCredentials: true }
+        );
         if (data.data.success) {
           setOrder(data.data.data);
           setLength(data.data.length_total);
@@ -126,7 +125,6 @@ export default function Report() {
         console.log(err.message);
       }
     }
-
     getInvoice();
   }, [year, jenis_pengujian, month, page]);
   return (
