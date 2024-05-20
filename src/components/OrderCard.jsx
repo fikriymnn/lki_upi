@@ -308,7 +308,7 @@ export default function OrderCard({
                     <h1 className="md:text-lg text-xs sm:text-sm font-semibold text-grey-600">
                       Hasil analisis :{" "}
                     </h1>
-                    <div className="input-style-lki">
+                    <div className="">
                       {status == "Selesai" ? (
                         hasil_analisis ? (
                           <h1 className="">
