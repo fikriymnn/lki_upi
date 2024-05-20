@@ -104,6 +104,7 @@ export default function Register({ searchParams }) {
           <div className="grid md:grid-cols-2 gap-4 grid-cols-1   m-auto">
             <div className="flex flex-col gap-4">
               <div>
+              <div>
                 <div className="mb-2 block">
                   <Label htmlFor="nama_lengkap" value="Nama Lengkap" />
                 </div>
@@ -163,6 +164,7 @@ export default function Register({ searchParams }) {
                   onChange={handleChange}
                   placeholder="Masukkan Password"
                 />
+              </div>
               </div>
             </div>
             <div className="flex flex-col gap-4">
@@ -243,6 +245,7 @@ export default function Register({ searchParams }) {
                 ""
               )}
               <div>
+              <div>
                 <div className="mb-2 block">
                   <Label htmlFor="no_whatsapp" value="No Whatsapp" />
                 </div>
@@ -270,7 +273,7 @@ export default function Register({ searchParams }) {
               </div>
             </div>
           </div>
-
+          </div>
           <div className=" mx-auto w-full mt-10">
             <Button
               type="submit"
