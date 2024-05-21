@@ -105,7 +105,7 @@ export default function Tracking_Pj({ params }) {
             <br />
             <div className="">
             <p className="md:text-base sm:text-base text-xs text-red-600">*Upload hasil analisis terlebih dahulu sebelum verifikasi</p>
-              {edit&&invoice.pjTask ? (
+              {edit ? (
                 <div>
                   <p className="text-lg flex font-semibold gap-5 ">
                     Status :{" "}
@@ -133,7 +133,7 @@ export default function Tracking_Pj({ params }) {
                   </p>
                 </div>
               )}
-              {edit&&invoice.pjTask ? (
+              {edit ? (
                 <div className="flex gap-5 mt-5">
                   <button
                     onClick={handleConfirm}
