@@ -7,10 +7,14 @@ import Image from "next/image";
 export default function Tracking_admin({ params }) {
   const [edit, setEdit] = useState(false);
   const { id } = params;
+  const arry = [
+    { deskripsi: "", hs: 0, jumlah: 0 }
+  ];
   const [form, setForm] = useState({
     estimasi_date: "",
     total_harga: 0,
     status: "",
+    pesan: []
   });
   const [invoice, setInvoice] = useState({});
   // const [invoice, setInvoice] = useState({ status: "menunggu verifikasi" })
@@ -20,13 +24,17 @@ export default function Tracking_admin({ params }) {
     setForm((e) => ({ ...e, [name]: value }));
   };
 
+
+
   const handleConfirm = async (e) => {
     e.preventDefault();
     setEdit((a) => !a);
+    const arry_pesan = [...form.pesan, ...arry];
     let obj = {
       status: form.status,
       estimasi_date: form.estimasi_date,
       total_harga: form.total_harga,
+      pesan: arry_pesan
     };
     try {
       console.log(form);
@@ -91,6 +99,7 @@ export default function Tracking_admin({ params }) {
     }
   };
 
+
   useEffect(() => {
     async function getInvoice() {
       try {
@@ -106,7 +115,8 @@ export default function Tracking_admin({ params }) {
             estimasi_date: obj.estimasi_date,
             total_harga: obj.total_harga,
             status: obj.status,
-            user: obj.id_user
+            user: obj.id_user,
+            pesan: obj.pesan
           });
         }
       } catch (err) {
@@ -115,6 +125,13 @@ export default function Tracking_admin({ params }) {
     }
     getInvoice();
   }, []);
+
+  
+
+  function handlePlus(v) {
+    console.log(arry)
+    arry.push({ deskripsi: "", jumlah: 0, hs: 0 })
+  }
   return (
     <>
       <div className="m-auto">
@@ -135,16 +152,16 @@ export default function Tracking_admin({ params }) {
                 </p>
               </div>
               <div>
-                    <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
-                      Jenis Institusi :  {form.user ? <span className="font-normal md:text-lg sm:text-xs text-xs">{form.user.jenis_institusi}</span> : ""}
-                    </p>
+                <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                  Jenis Institusi :  {form.user ? <span className="font-normal md:text-lg sm:text-xs text-xs">{form.user.jenis_institusi}</span> : ""}
+                </p>
               </div>
               {
                 form?.user?.jenis_institusi == "Perusahaan" ? <div>
-                    <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
-                      Nama Institusi :  {form.user ? <span className="font-normal md:text-lg sm:text-xs text-xs">{form.user.nama_institusi}</span> : ""}
-                    </p>
-                  </div>: <>
+                  <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                    Nama Institusi :  {form.user ? <span className="font-normal md:text-lg sm:text-xs text-xs">{form.user.nama_institusi}</span> : ""}
+                  </p>
+                </div> : <>
                   <div>
                     <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
                       Nama Institusi :  {form.user ? <span className="font-normal md:text-lg sm:text-xs text-xs">{form.user.nama_institusi}</span> : ""}
@@ -220,8 +237,82 @@ export default function Tracking_admin({ params }) {
               ) : (
                 <div>
                   <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
-                    Total harga :{" "}
+                    Harga satuan :{" "}
                     <span className="font-normal md:text-lg sm:text-xs text-xs">Rp.{form.total_harga}</span>
+                  </p>
+                </div>
+              )}
+              {edit ? (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm grid grid-cols-2 font-semibold">
+                    Tambahan :{" "}
+                    <div>
+                      
+                      {
+                        arry.map((v, i) => {
+                          return(
+                          <div className="flex flex-wrap" key={i}>
+                            <div>
+                              <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                                Deskripsi :{" "}
+                              </p>
+                              <input
+                                type="text"
+                                name="deskripsi"
+                                onChange={(e)=>{
+                                  arry[i].deskripsi = e.target.value
+                                }}
+                         
+                              />
+                            </div>
+                            <div>
+                              <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                                Harga satuan :{" "}
+                              </p>
+                              <input
+                                type="number"
+                                name="hs"
+                                onChange={(e)=>{
+                                  arry[i].hs = e.target.value
+                                }}
+                                
+                              />
+                            </div>
+                            <div>
+                              <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                                Jumlah :{" "}
+                              </p>
+                              <input
+                                type="number"
+                                name="jumlah"
+                                onChange={(e)=>{
+                                  arry[i].jumlah = e.target.value
+                                }}
+                               
+                              />
+                            </div>
+                          </div>)
+                        })
+                      }
+                      <button onClick={handlePlus}>+</button>
+                    </div>
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                    Tambahan :{" "}
+                    {form.pesan?.map((v, i) => {
+                      return (
+                        <div>
+                          <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                            Harga satuan :{" "}
+                            <span className="font-normal md:text-lg sm:text-xs text-xs">Rp.{v.total_harga}</span>
+                          </p>
+                        </div>
+                      )
+                    })}
+                    <span className="font-normal md:text-lg sm:text-xs text-xs">{form.estimasi_date}</span>{" "}
                   </p>
                 </div>
               )}
@@ -245,6 +336,7 @@ export default function Tracking_admin({ params }) {
                   </p>
                 </div>
               )}
+
               {edit ? (
                 <div className="flex gap-5 mt-5">
                   <button
