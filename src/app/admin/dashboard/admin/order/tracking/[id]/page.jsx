@@ -36,7 +36,6 @@ export default function Tracking_admin({ params }) {
           m = (d.getMinutes() < 10 ? "0" : "") + d.getMinutes();
         return h + ":" + m;
       }
-
       const date_format = `${timeNow()} ${new Date().getDate()} ${month_bahasa(
         new Date().getMonth()
       )} ${new Date().getFullYear()}`;
