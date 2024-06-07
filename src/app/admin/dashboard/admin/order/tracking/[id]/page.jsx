@@ -36,7 +36,6 @@ export default function Tracking_admin({ params }) {
           m = (d.getMinutes() < 10 ? "0" : "") + d.getMinutes();
         return h + ":" + m;
       }
-alert("1") 
       const date_format = `${timeNow()} ${new Date().getDate()} ${month_bahasa(
         new Date().getMonth()
       )} ${new Date().getFullYear()}`;
@@ -75,7 +74,6 @@ alert("1")
             return true;
         }
       }
-      alert(" 2") 
       if (selection() == true) {
         const data = await axios.put(
           `${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`,
