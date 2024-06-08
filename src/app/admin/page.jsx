@@ -20,7 +20,7 @@ export default function Admin() {
   useEffect(() => {
     const token = localStorage.getItem('access_token')
     async function cek(){
-      const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user/${token}`, {
+      const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/remember/${token}`, {
         withCredentials: true
     })
   
