@@ -99,11 +99,11 @@ export default function HHistory_order() {
 
     async function getInvoice() {
       try {
-        const dataUser = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/user`,
-          { withCredentials: true }
-        );
-        if (dataUser.data.success) {
+        // const dataUser = await axios.get(
+        //   `${process.env.NEXT_PUBLIC_URL}/api/user`,
+        //   { withCredentials: true }
+        // );
+
           const data = await axios.get(
             `${process.env.NEXT_PUBLIC_URL}/api/invoice?success=true&skip=${
               page * 15
@@ -116,7 +116,7 @@ export default function HHistory_order() {
             setInvoice(data.data.data);
             setLength(data.data.length_total);
           }
-        }
+        
       } catch (err) {
         console.log(err.message);
       }
