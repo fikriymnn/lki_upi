@@ -137,7 +137,6 @@ export default function Order_analisis({ searchParams }) {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-
             let obj = {}
             obj.nama_sample = nama_sample[0]
             obj.jumlah_sample = jumlah_sample[0]
@@ -222,14 +221,14 @@ export default function Order_analisis({ searchParams }) {
                             </div>
                             <div>
                                 <h2 className="text-lg font-semibold" >Nama sample</h2>
-                                <input className='input-style-lki' name="nama_sample" value={nama_sample[0]} type="text" onChange={(e) => {
+                                <input className='input-style-lki' name="nama_sample" defaultValue={nama_sample[0]} type="text" onChange={(e) => {
                                     nama_sample[0] = e.target.value
 
                                 }} />
                             </div>
                             <div>
                                 <h2 className="text-lg font-semibold" >Jumlah sample</h2>
-                                <input placeholder='masukkan jumlah sample' className='input-style-lki' value={jumlah_sample[0]} name="jumlah_sample" type="number" onChange={(e) => {
+                                <input placeholder='masukkan jumlah sample' className='input-style-lki' defaultValue={jumlah_sample[0]} name="jumlah_sample" type="number" onChange={(e) => {
                                     jumlah_sample[0] = e.target.value
                                 }} />
                             </div>
