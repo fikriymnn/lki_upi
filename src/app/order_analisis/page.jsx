@@ -151,6 +151,7 @@ export default function Order_analisis() {
     e.preventDefault();
     setLoading(true)
     try {
+      const token = localStorage.getItem('access_token')
       for (let i = 0; i < jenis_pengujian.length; i++) {
         let obj = {};
         obj.jenis_pengujian = jenis_pengujian[i];
@@ -175,7 +176,7 @@ export default function Order_analisis() {
 
       if (arr.length == 1) {
         const data = await axios.post(
-          `${process.env.NEXT_PUBLIC_URL}/api/order`,
+          `${process.env.NEXT_PUBLIC_URL}/api/order/${token}`,
           arr,
           {
             withCredentials: true,
