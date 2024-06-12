@@ -69,7 +69,6 @@ export default function Tracking_admin({ params }) {
             obj.s8_date = date_format;
             return true;
           case "Order Dibatalkan":
-            obj.success = true;
             obj.s8_date = date_format;
             return true;
         }
