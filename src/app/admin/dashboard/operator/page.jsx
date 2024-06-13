@@ -203,7 +203,7 @@ export default function Order_Operator() {
                 Tanggal
               </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
-                Invoice
+                Nama Customer
               </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                 Jenis Pengujian
@@ -233,7 +233,7 @@ export default function Order_Operator() {
                     </Table.Cell>
 
                     <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
-                      {v.no_invoice}
+                      {v.id_user[0].nama_lengkap}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                       {v.jenis_pengujian}
