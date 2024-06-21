@@ -10,7 +10,7 @@ export default function CarouselCustom() {
           <img
             src="./carousel1.jpeg"
             alt="..."
-            className="h-56 sm:h-80 xl:h-[500px] 2xl:h-[500px] w-full opacity-70"
+            className="h-56 sm:h-85 xl:h-[500px] 2xl:h-[700px] w-full opacity-70"
           />
 
           <div className="flex absolute z-40 md:w-[900px] sm:w-[400px] w-[250px] flex-col translate-y-[13vw] sm:translate-y-[8vw] md:translate-y-[10vw] lg:translate-y-[7vw] ">
@@ -32,7 +32,7 @@ export default function CarouselCustom() {
           <img
             src="./images/labb.jpg"
             alt="..."
-            className="h-56 sm:h-80 xl:h-[500px] 2xl:h-[500px] w-full opacity-70"
+            className="h-56 sm:h-85 xl:h-[500px] 2xl:h-[700px] w-full opacity-70"
           />
           <div className="flex absolute z-50 md:w-[900px] sm:w-[400px] w-[250px] flex-col translate-y-[13vw] sm:translate-y-[8vw] md:translate-y-[10vw] lg:translate-y-[7vw]">
             <p className="drop-shadow-md md:ml-[112px] sm:mx-[50px] mx-[10px]   text-white font-bold md:text-6xl sm:text-3xl text-lg ">
