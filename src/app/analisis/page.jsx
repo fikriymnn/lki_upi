@@ -14,39 +14,33 @@ const Analisis = () => {
       jenisPengukuran: [
         {
           jenis: "a. Kalibrasi",
-          kimia: "a. 50.000",
-          nonKimia: "a. 100.000",
-          luarUpi: "a. 120.000",
-          tigaHariKimia: "a. 67.500",
-          tujuhHariKimia: "a. 62.500",
-          tigaHariNonKimia: "a. 135.000",
-          tujuhHariNonKimia: "a. 125.000",
-          tigaHariLuarUpi: "a. 162.000",
-          tujuhHariLuarUpi: "a. 150.000",
+          kimia: "a. 27.500",
+          nonKimia: "a. 50.000",
+          luarUpi: "a. 75.000",
+          tigaHariNonKimia: "a. 67.500",
+          tujuhHariNonKimia: "a. 62.500",
+          tigaHariLuarUpi: "a. 101.250",
+          tujuhHariLuarUpi: "a. 93.750",
         },
         {
           jenis: "b. Sampel",
-          kimia: "b. 30.000",
-          nonKimia: "b. 70.000",
-          luarUpi: "b. 100.000",
-          tigaHariKimia: "b. 40.500",
-          tujuhHariKimia: "b. 37.500",
-          tigaHariNonKimia: "b. 94.500",
-          tujuhHariNonKimia: "b. 87.500",
-          tigaHariLuarUpi: "b. 135.000",
-          tujuhHariLuarUpi: "b. 125.000",
+          kimia: "b. 17.500",
+          nonKimia: "b. 50.000",
+          luarUpi: "b. 70.000",
+          tigaHariNonKimia: "b. 67.500",
+          tujuhHariNonKimia: "b. 62.500",
+          tigaHariLuarUpi: "b. 94.500",
+          tujuhHariLuarUpi: "b. 87.500",
         },
         {
           jenis: "c. Scanning",
-          kimia: "c. 40.000",
-          nonKimia: "c. 60.000",
-          luarUpi: "c. 80.000",
-          tigaHariKimia: "c. 54.000",
-          tujuhHariKimia: "c. 50.000",
-          tigaHariNonKimia: "c. 81.000",
-          tujuhHariNonKimia: "c. 75.000",
-          tigaHariLuarUpi: "c. 108.000",
-          tujuhHariLuarUpi: "c. 100.000",
+          kimia: "c. 22.500",
+          nonKimia: "c. 30.000",
+          luarUpi: "c. 60.000",
+          tigaHariNonKimia: "c. 40.500",
+          tujuhHariNonKimia: "c. 37.500",
+          tigaHariLuarUpi: "c. 81.000",
+          tujuhHariLuarUpi: "c. 75.000",
         },
       ],
     },
@@ -58,8 +52,6 @@ const Analisis = () => {
           kimia: "a. 350.000",
           nonKimia: "a. 400.000",
           luarUpi: "a. 500.000",
-          tigaHariKimia: "a. 472.500",
-          tujuhHariKimia: "a. 437.500",
           tigaHariNonKimia: "a. 540.000",
           tujuhHariNonKimia: "a. 500.000",
           tigaHariLuarUpi: "a. 675.000",
@@ -68,14 +60,12 @@ const Analisis = () => {
         {
           jenis: "b. Sampel",
           kimia: "b. 250.000",
-          nonKimia: "b. 350.000",
-          luarUpi: "b. 400.000",
-          tigaHariKimia: "b. 337.500",
-          tujuhHariKimia: "b. 312.500",
-          tigaHariNonKimia: "b. 472.500",
-          tujuhHariNonKimia: "b. 437.500",
-          tigaHariLuarUpi: "b. 540.000",
-          tujuhHariLuarUpi: "b. 500.000",
+          nonKimia: "b. 300.000",
+          luarUpi: "b. 350.000",
+          tigaHariNonKimia: "b. 405.000",
+          tujuhHariNonKimia: "b. 375.000",
+          tigaHariLuarUpi: "b. 472.500",
+          tujuhHariLuarUpi: "b. 437.500",
         },
       ],
     },
@@ -88,8 +78,6 @@ const Analisis = () => {
           kimia: "a. 120.000",
           nonKimia: "a. 170.000",
           luarUpi: "a. 200.000",
-          tigaHariKimia: "a. 162.000",
-          tujuhHariKimia: "a. 150.000",
           tigaHariNonKimia: "a. 229.500",
           tujuhHariNonKimia: "a. 121.500",
           tigaHariLuarUpi: "a. 270.000",
@@ -100,8 +88,6 @@ const Analisis = () => {
           kimia: "b. 80.000",
           nonKimia: "b. 130.000",
           luarUpi: "b. 150.000",
-          tigaHariKimia: "b. 108.000",
-          tujuhHariKimia: "b. 100.000",
           tigaHariNonKimia: "b. 175.500",
           tujuhHariNonKimia: "b. 162.500",
           tigaHariLuarUpi: "b. 202.500",
@@ -114,25 +100,21 @@ const Analisis = () => {
       jenisPengukuran: [
         {
           jenis: "a. Kalibrasi",
-          kimia: "a. 1.000.000",
-          nonKimia: "a. 1.300.000",
-          luarUpi: "a. 1.400.000",
-          tigaHariKimia: "a. 1.350.000",
-          tujuhHariKimia: "a. 1.250.000",
-          tigaHariNonKimia: "a. 1.755.000",
-          tujuhHariNonKimia: "a. 1.625.000",
-          tigaHariLuarUpi: "a. 1.890.000",
-          tujuhHariLuarUpi: "a. 1.750.000",
+          kimia: "a. 800.000",
+          nonKimia: "a. 1.000.000",
+          luarUpi: "a. 1.200.000",
+          tigaHariNonKimia: "a. 1.350.000",
+          tujuhHariNonKimia: "a. 1.250.000",
+          tigaHariLuarUpi: "a. 1.620.000",
+          tujuhHariLuarUpi: "a. 1.500.000",
         },
         {
           jenis: "b. Sampel",
-          kimia: "b. 600.000",
-          nonKimia: "b. 650.000",
+          kimia: "b. 300.000",
+          nonKimia: "b. 500.000",
           luarUpi: "b. 700.000",
-          tigaHariKimia: "b. 810.000",
-          tujuhHariKimia: "b. 750.000",
-          tigaHariNonKimia: "b. 877.500",
-          tujuhHariNonKimia: "b. 812.500",
+          tigaHariNonKimia: "b. 675.000",
+          tujuhHariNonKimia: "b. 625.000",
           tigaHariLuarUpi: "b. 945.000",
           tujuhHariLuarUpi: "b. 875.000",
         },
@@ -143,27 +125,23 @@ const Analisis = () => {
       jenisPengukuran: [
         {
           jenis: "a. Kalibrasi",
-          kimia: "a. 260.000",
+          kimia: "a. 250.000",
           nonKimia: "a. 300.000",
-          luarUpi: "a. 500.000",
-          tigaHariKimia: "a. 351.000",
-          tujuhHariKimia: "a. 325.000",
+          luarUpi: "a. 450.000",
           tigaHariNonKimia: "a.405.000",
           tujuhHariNonKimia: "a. 375.000",
-          tigaHariLuarUpi: "a. 675.000",
-          tujuhHariLuarUpi: "a. 625.000",
+          tigaHariLuarUpi: "a. 607.500",
+          tujuhHariLuarUpi: "a. 562.500",
         },
         {
           jenis: "b. Sampel",
-          kimia: "b. 130.000",
+          kimia: "b. 100.000",
           nonKimia: "b. 150.000",
-          luarUpi: "b. 250.000",
-          tigaHariKimia: "b. 175.500",
-          tujuhHariKimia: "b. 162.500",
+          luarUpi: "b. 200.000",
           tigaHariNonKimia: "b. 202.500",
           tujuhHariNonKimia: "b. 187.500",
-          tigaHariLuarUpi: "b. 337.500",
-          tujuhHariLuarUpi: "b. 312.500",
+          tigaHariLuarUpi: "b. 270.000",
+          tujuhHariLuarUpi: "b. 250.500",
         },
       ],
     },
@@ -175,8 +153,6 @@ const Analisis = () => {
           kimia: "a. 100.000",
           nonKimia: "a. 150.000",
           luarUpi: "a. 250.000",
-          tigaHariKimia: "a. 135.000",
-          tujuhHariKimia: "a. 125.000",
           tigaHariNonKimia: "a. 202.500",
           tujuhHariNonKimia: "a. 187.500",
           tigaHariLuarUpi: "a. 337.500",
@@ -184,11 +160,9 @@ const Analisis = () => {
         },
         {
           jenis: "b.	Diatas Suhu 550 ℃",
-          kimia: "b. 170.000",
+          kimia: "b. 150.000",
           nonKimia: "b. 200.000",
           luarUpi: "b. 300.000",
-          tigaHariKimia: "b. 229.500",
-          tujuhHariKimia: "b. 212.500",
           tigaHariNonKimia: "b. 270.000",
           tujuhHariNonKimia: "b. 250.000",
           tigaHariLuarUpi: "b. 405.000",
@@ -204,8 +178,6 @@ const Analisis = () => {
           kimia: "a. 150.000",
           nonKimia: "a. 200.000",
           luarUpi: "a. 300.000",
-          tigaHariKimia: "a. 202.500",
-          tujuhHariKimia: "a. 187.500",
           tigaHariNonKimia: "a. 270.000",
           tujuhHariNonKimia: "a. 250.000",
           tigaHariLuarUpi: "a. 405.000",
@@ -216,8 +188,6 @@ const Analisis = () => {
           kimia: "b. 400.000",
           nonKimia: "b. 450.000",
           luarUpi: "b. 500.000",
-          tigaHariKimia: "b. 540.000",
-          tujuhHariKimia: "b. 500.000",
           tigaHariNonKimia: "b. 607.500",
           tujuhHariNonKimia: "b. 562.500",
           tigaHariLuarUpi: "b. 675.000",
@@ -228,8 +198,6 @@ const Analisis = () => {
           kimia: "c. 300.000",
           nonKimia: "c. 350.000",
           luarUpi: "c. 450.000",
-          tigaHariKimia: "c. 405.500",
-          tujuhHariKimia: "c. 375.000",
           tigaHariNonKimia: "c. 472.500",
           tujuhHariNonKimia: "c. 437.500",
           tigaHariLuarUpi: "c. 607.500",
@@ -242,15 +210,13 @@ const Analisis = () => {
       jenisPengukuran: [
         {
           jenis: "a. FTIR",
-          kimia: "a. 180.000",
-          nonKimia: "a. 250.000",
-          luarUpi: "a. 300.000",
-          tigaHariKimia: "a. 243.000",
-          tujuhHariKimia: "a. 225.000",
-          tigaHariNonKimia: "a. 337.500",
-          tujuhHariNonKimia: "a. 312.500",
-          tigaHariLuarUpi: "a. 405.000",
-          tujuhHariLuarUpi: "a. 375.000",
+          kimia: "a. 140.000",
+          nonKimia: "a. 180.000",
+          luarUpi: "a. 250.000",
+          tigaHariNonKimia: "a. 243.000",
+          tujuhHariNonKimia: "a. 225.000",
+          tigaHariLuarUpi: "a. 337.500",
+          tujuhHariLuarUpi: "a. 312.500",
         },
       ],
     },
@@ -259,15 +225,13 @@ const Analisis = () => {
       jenisPengukuran: [
         {
           jenis: "a. XRD",
-          kimia: "a. 400.000",
-          nonKimia: "a. 450.000",
-          luarUpi: "a. 500.000",
-          tigaHariKimia: "b. 540.000",
-          tujuhHariKimia: "b. 500.000",
-          tigaHariNonKimia: "b. 607.500",
-          tujuhHariNonKimia: "b. 562.500",
-          tigaHariLuarUpi: "b. 675.000",
-          tujuhHariLuarUpi: "b. 625.000",
+          kimia: "a. 250.000",
+          nonKimia: "a. 300.000",
+          luarUpi: "a. 400.000",
+          tigaHariNonKimia: "a. 405.000",
+          tujuhHariNonKimia: "a. 375.000",
+          tigaHariLuarUpi: "a. 540.000",
+          tujuhHariLuarUpi: "a. 500.000",
         },
       ],
     },
@@ -276,15 +240,13 @@ const Analisis = () => {
       jenisPengukuran: [
         {
           jenis: "a. GCMS",
-          kimia: "a. 350.000",
-          nonKimia: "a. 400.000",
-          luarUpi: "a. 500.000",
-          tigaHariKimia: "a. 472.500",
-          tujuhHariKimia: "a. 437.500",
-          tigaHariNonKimia: "a. 540.000",
-          tujuhHariNonKimia: "a. 500.000",
-          tigaHariLuarUpi: "a. 675.000",
-          tujuhHariLuarUpi: "a. 625.000",
+          kimia: "a. 250.000",
+          nonKimia: "a. 350.000",
+          luarUpi: "a. 400.000",
+          tigaHariNonKimia: "a. 472.500",
+          tujuhHariNonKimia: "a. 437.500",
+          tigaHariLuarUpi: "a. 540.000",
+          tujuhHariLuarUpi: "a. 500.000",
         },
       ],
     },
@@ -293,11 +255,9 @@ const Analisis = () => {
       jenisPengukuran: [
         {
           jenis: "a. Di atas 8 jam",
-          kimia: "a. 15.000",
+          kimia: "a. 10.000",
           nonKimia: "a. 20.000",
           luarUpi: "a. 25.000",
-          tigaHariKimia: "-",
-          tujuhHariKimia: "-",
           tigaHariNonKimia: "-",
           tujuhHariNonKimia: "-",
           tigaHariLuarUpi: "-",
@@ -305,11 +265,9 @@ const Analisis = () => {
         },
         {
           jenis: "b. Di bawah 8 jam",
-          kimia: "b. 30.000",
+          kimia: "b. 20.000",
           nonKimia: "b. 40.000",
           luarUpi: "b. 50.000",
-          tigaHariKimia: "-",
-          tujuhHariKimia: "-",
           tigaHariNonKimia: "-",
           tujuhHariNonKimia: "-",
           tigaHariLuarUpi: "-",
@@ -322,11 +280,9 @@ const Analisis = () => {
       jenisPengukuran: [
         {
           jenis: "a. PCR (Per Jam)",
-          kimia: "a. 100.000",
+          kimia: "a. 50.000",
           nonKimia: "a. 120.000",
           luarUpi: "a. 150.000",
-          tigaHariKimia: "-",
-          tujuhHariKimia: "-",
           tigaHariNonKimia: "-",
           tujuhHariNonKimia: "-",
           tigaHariLuarUpi: "-",
@@ -503,13 +459,6 @@ const Analisis = () => {
                   Jenis Alat Pengukuran
                 </p>
                 <div className="flex flex-col justify-center items-center w-[22%]">
-                  <p className="font-bold md:text-[14px] text-[7px] ">Kimia </p>
-                  <div className="grid grid-cols-2 gap-5 font-medium md:text-[14px] text-[7px] ">
-                    <p>3 Hari</p>
-                    <p>7 Hari</p>
-                  </div>
-                </div>
-                <div className="flex flex-col justify-center items-center w-[22%]">
                   <p className="font-bold md:text-[14px] text-[7px]">
                     Non Kimia{" "}
                   </p>
@@ -557,23 +506,7 @@ const Analisis = () => {
                             </p>
                           ))}
                         </div>
-                        <div className="w-[22%]">
-                          {data.jenisPengukuran.map((jenisPengukuran, i) => (
-                            <div
-                              key={i}
-                              className="flex flex-col justify-center items-center  "
-                            >
-                              <div className="grid grid-cols-2 md:gap-5 gap-1">
-                                <p className="font-medium md:text-[14px] text-[6px]">
-                                  {jenisPengukuran.tigaHariKimia}
-                                </p>
-                                <p className="font-medium md:text-[14px] text-[6px]">
-                                  {jenisPengukuran.tujuhHariKimia}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+
                         <div className="w-[22%]">
                           {data.jenisPengukuran.map((jenisPengukuran, i) => (
                             <div
