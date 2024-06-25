@@ -53,10 +53,10 @@ function FooterCustom() {
             <Link href="/layanan">
               <p>Layanan Analisis</p>
             </Link>
-            <Link href="/">
-              <p>Sertifikat</p>
+            <Link href="/sertifikasi">
+              <p>Sertifikasi</p>
             </Link>
-            <Link href="/">
+            <Link href="/pelatihan">
               <p>Pelatihan</p>
             </Link>
           </div>
