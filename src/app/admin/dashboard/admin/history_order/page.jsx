@@ -6,6 +6,7 @@ import axios from "axios";
 import ReactPaginate from "react-paginate";
 import { Pagination } from "flowbite-react";
 import Navigasi from "@/components/Navigasi";
+import { useRouter } from "next/navigation";
 
 const kode = [
   {
@@ -81,6 +82,7 @@ const monthOption = [
 ];
 
 export default function HHistory_order() {
+  const router = useRouter()
   const [invoice, setInvoice] = useState([]);
   const [year, setYear] = useState(0);
   const [month, setMonth] = useState(0);
@@ -97,15 +99,27 @@ export default function HHistory_order() {
       setYearOption(arr);
     }
 
+    const handleDelete = async (id)=>{
+      async function deleteHistory(){
+         try{
+            const data = await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`,{
+              hide: true
+            },{ withCredentials:true })
+            if(data){
+              alert('Data telah dihapus!')
+              router.refresh()
+            }
+         }catch(err){
+            alert(err.message)
+         }
+      }
+      deleteHistory()
+    }
+
     async function getInvoice() {
       try {
-        // const dataUser = await axios.get(
-        //   `${process.env.NEXT_PUBLIC_URL}/api/user`,
-        //   { withCredentials: true }
-        // );
-
           const data = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/invoice?success=true&skip=${
+            `${process.env.NEXT_PUBLIC_URL}/api/invoice?hide=false&success=true&skip=${
               page * 15
             }&limit=15${year ? `&year=${year}` : ""}${
               month ? `&month=${month}` : ""
@@ -127,10 +141,6 @@ export default function HHistory_order() {
     <>
       <div>
         <Navigasi text1={"admin"} text2={"history order"} />
-        {/* <p className='text-center text-4xl font-bold text-gray-800 mt-7'>MY ORDER</p>
-        <div className='flex justify-center'>
-          <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
-        </div> */}
         <div className="flex flex-wrap justify-center mb-10">
           <div className="flex p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 ml-3">
             <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">
@@ -227,6 +237,9 @@ export default function HHistory_order() {
                 <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                   Keterangan
                 </Table.HeadCell>
+                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+                  Action
+                </Table.HeadCell>
               </Table.Head>
               <Table.Body className="divide-y">
                 {invoice.map((value, i) => {
@@ -260,6 +273,14 @@ export default function HHistory_order() {
                           className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500"
                         >
                           Detail
+                        </a>
+                      </Table.Cell>
+                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                        <a
+                          onClick={(e)=>handleDelete(value._id)}
+                          className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500"
+                        >
+                          Delete
                         </a>
                       </Table.Cell>
                     </Table.Row>

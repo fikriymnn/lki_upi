@@ -26,7 +26,6 @@ export default function HAdetail({ params, searchParams }) {
         `${process.env.NEXT_PUBLIC_URL}/api/generate_invoice?no_invoice=${no_invoice}`,
         { withCredentials: true, responseType: "blob" }
       );
-      console.log(response.data);
 
       // Create a blob from the response data
       const blob = new Blob([response.data], {
@@ -118,7 +117,6 @@ export default function HAdetail({ params, searchParams }) {
           `${process.env.NEXT_PUBLIC_URL}/api/order?success=true&no_invoice=${no_invoice}&skip=0&limit=100`,
           { withCredentials: true }
         );
-        console.log(data);
         if (data.data.success) {
           setInvoice(data.data.data);
           setOrder(dataOrder.data.data);
@@ -180,7 +178,7 @@ export default function HAdetail({ params, searchParams }) {
           </div>
           <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
             <p className=" md:text-xl sm:text-xl  font-semibold">Kuitansi : </p>
-            {invoice?.status == "Selesai" ? (
+            {invoice?.status == "Selesai"&&invoice?.dana_penelitian == true ? (
               <Button
                 className="ml-5"
                 color="blue"

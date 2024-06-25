@@ -7,11 +7,11 @@ import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 import Router from "next/router";
 import Image from "next/image";
-import {Cantarell} from 'next/font/google'
-const inter = Cantarell({ subsets: ['latin'],weight: "700" });
+import { Cantarell } from 'next/font/google'
+const inter = Cantarell({ subsets: ['latin'], weight: "700" });
 
 export default function NavbarCustom() {
-  
+
   const [login, setLogin] = useState(false);
   const [role, setRole] = useState("");
   const path = usePathname();
@@ -61,193 +61,201 @@ export default function NavbarCustom() {
     <>
       <div className="fixed z-50 w-full">
         <div className={inter.className}>
-        <Navbar fluid className="  bg-[#202020]  ">
-          <Navbar.Brand href="/">
-            <img
-              src="/footer.png"
-              className="mt-[1vh] mr-3 h-6 sm:h-9"
-              alt="Flowbite React Logo"
-            />
-          </Navbar.Brand>
+          <Navbar fluid className="  bg-[#202020]  ">
+            <Navbar.Brand href="/">
+              <img
+                src="/footer.png"
+                className="mt-[1vh] mr-3 h-6 sm:h-9"
+                alt="Flowbite React Logo"
+              />
+            </Navbar.Brand>
 
-          <Navbar.Toggle className="bg-white" />
-          <Navbar.Collapse className="md:mr-20 ">
-            {/* ADMIN */}
-            {adminPath[2] == "dashboard" && role == "admin" ? (
-              <Navbar.Link
-                href="/admin/dashboard/admin"
-                className="mt-[2vh] font-extrabold text-white "
-              >
-                Content
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
-
-            {adminPath[2] == "dashboard" && role == "admin" ? (
-              <Navbar.Link
-                href="/admin/dashboard/admin/order"
-                className="mt-[2vh] font-extrabold text-white "
-              >
-                {" "}
-                Order{" "}
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
-
-            {adminPath[2] == "dashboard" && role == "admin" ? (
-              <Navbar.Link
-                href="/admin/dashboard/admin/history_order"
-                className="mt-[2vh] font-extrabold text-white "
-              >
-                {" "}
-                History Order
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
-
-            {adminPath[2] == "dashboard" && role == "admin" ? (
-              <Navbar.Link
-                href="/admin/dashboard/admin/user"
-                className="mt-[2vh] font-extrabold text-white "
-              >
-                {" "}
-                User{" "}
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
-
-            {adminPath[2] == "dashboard" && role == "admin" ? (
-              <Navbar.Link
-                href="/admin/dashboard/admin/report"
-                className="mt-[2vh] font-extrabold text-white "
-              >
-                Report
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
-
-            {adminPath[2] == "dashboard" ||
-            (adminPath[1] == "admin" && role) ? (
-              <Navbar.Link
-                onClick={handleLogout}
-                className="mt-[2vh] font-extrabold text-white "
-              >
-                Logout
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
-
-            {/* UMUM */}
-
-            {adminPath[2] !== "dashboard" ? (
-              <Navbar.Link
-                href="/"
-                className="mt-[2vh] font-extrabold text-white "
-              >
-                <h2>Home</h2>
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
-
-            {adminPath[2] !== "dashboard" ? (
-              <h2>
+            <Navbar.Toggle className="bg-white" />
+            <Navbar.Collapse className="md:mr-20 ">
+              {/* ADMIN */}
+              {adminPath[2] == "dashboard" && role == "admin" ? (
                 <Navbar.Link
-                  href="/about"
+                  href="/admin/dashboard/admin"
                   className="mt-[2vh] font-extrabold text-white "
                 >
-                  About
+                  Content
                 </Navbar.Link>
-              </h2>
-            ) : (
-              ""
-            )}
+              ) : (
+                ""
+              )}
 
-            {adminPath[2] !== "dashboard" ? (
-              <Navbar.Link
-                href="/contact"
-                className="mt-[2vh] font-extrabold text-white "
-              >
-                <h2>Contact</h2>
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
+              {adminPath[2] == "dashboard" && role == "admin" ? (
+                <Navbar.Link
+                  href="/admin/dashboard/admin/order"
+                  className="mt-[2vh] font-extrabold text-white "
+                >
+                  {" "}
+                  Order{" "}
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
 
-            {adminPath[2] !== "dashboard" ? (
-              <Navbar.Link
-                href="/layanan"
-                className="mt-[2vh] font-extrabold text-white "
-              >
-                <h2>Layanan</h2>
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
+              {adminPath[2] == "dashboard" && role == "admin" ? (
+                <Navbar.Link
+                  href="/admin/dashboard/admin/history_order"
+                  className="mt-[2vh] font-extrabold text-white "
+                >
+                  {" "}
+                  History Order
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
 
-            {!login && adminPath[2] !== "dashboard" ? (
-              <Navbar.Link
-                href={`/login?prevRoute=${path}`}
-                className="mt-[2vh] font-extrabold text-white "
-              >
-                Login
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
+              {adminPath[2] == "dashboard" && role == "admin" ? (
+                <Navbar.Link
+                  href="/admin/dashboard/admin/user"
+                  className="mt-[2vh] font-extrabold text-white "
+                >
+                  {" "}
+                  User{" "}
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
 
-            {/* LOGIN */}
+              {adminPath[2] == "dashboard" && role == "admin" ? (
+                <Navbar.Link
+                  href="/admin/dashboard/admin/report"
+                  className="mt-[2vh] font-extrabold text-white "
+                >
+                  Report
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
 
-            {login && adminPath[2] !== "dashboard" ? (
-              <Navbar.Link
-                href="/my_order"
-                className="mt-[2vh] font-extrabold text-white "
-              >
-                Order saya
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
+              {adminPath[2] == "dashboard" ||
+                (adminPath[1] == "admin" && role) ? (
+                <Navbar.Link
+                  onClick={handleLogout}
+                  className="mt-[2vh] font-extrabold text-white "
+                >
+                  Logout
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
 
-            {login && adminPath[2] !== "dashboard" ? (
-              <Navbar.Link
-                href="/history_order"
-                className="mt-[2vh] font-extrabold text-white "
-              >
-                History order{" "}
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
-            {login && adminPath[2] !== "dashboard" ? (
-              <Navbar.Link
-                href="/profil"
-                className="mt-[2vh] font-extrabold   text-white"
-              >
-                Profile
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
+              {/* UMUM */}
 
-            {login && adminPath[2] !== "dashboard" ? (
-              <Navbar.Link
-                onClick={handleLogout}
-                className="mt-[2vh] font-extrabold text-white  "
-              >
-                Logout
-              </Navbar.Link>
-            ) : (
-              ""
-            )}
+              {adminPath[2] !== "dashboard" ? (
+                <Navbar.Link
+                  href="/"
+                  className="mt-[2vh] font-extrabold text-white "
+                >
+                  <h2>Home</h2>
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
 
-            {/* <div className=''>
+              {adminPath[2] !== "dashboard" ? (
+                <Dropdown className="bg-[#202020] border-b-2 border-white" dismissOnClick={false} renderTrigger={() => <span className="mt-[2vh] font-extrabold text-white md:ml-0 sm:ml-0 ml-3">Layanan</span>}>
+                  <Dropdown.Item className="text-white flex justify-center"><Navbar.Link
+                    href="/layanan"
+         className="text-white flex justify-center"
+                  >Analisis</Navbar.Link></Dropdown.Item>
+                  <Dropdown.Item className="text-white flex justify-center"><Navbar.Link
+                    href="/pelatihan"
+         className="text-white flex justify-center"
+                  >Pelatihan</Navbar.Link></Dropdown.Item>
+                  <Dropdown.Item className="text-white flex justify-center"><Navbar.Link
+                    href="/sertifikasi"
+                   className="text-white flex justify-center"
+                  >Sertifikasi</Navbar.Link></Dropdown.Item>
+                </Dropdown>
+              ) : (
+                ""
+              )}
+
+              {adminPath[2] !== "dashboard" ? (
+                <h2>
+                  <Navbar.Link
+                    href="/about"
+                    className="mt-[2vh] font-extrabold text-white border-t border-white"
+                  >
+                    About
+                  </Navbar.Link>
+                </h2>
+              ) : (
+                ""
+              )}
+
+              {adminPath[2] !== "dashboard" ? (
+                <Navbar.Link
+                  href="/contact"
+                  className="mt-[2vh] font-extrabold text-white "
+                >
+                  <h2>Contact</h2>
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
+
+              {!login && adminPath[2] !== "dashboard" ? (
+                <Navbar.Link
+                  href={`/login?prevRoute=${path}`}
+                  className="mt-[2vh] font-extrabold text-white "
+                >
+                  Login
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
+
+              {/* LOGIN */}
+
+              {login && adminPath[2] !== "dashboard" ? (
+                <Navbar.Link
+                  href="/my_order"
+                  className="mt-[2vh] font-extrabold text-white "
+                >
+                  Order saya
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
+
+              {login && adminPath[2] !== "dashboard" ? (
+                <Navbar.Link
+                  href="/history_order"
+                  className="mt-[2vh] font-extrabold text-white "
+                >
+                  History order{" "}
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
+              {login && adminPath[2] !== "dashboard" ? (
+                <Navbar.Link
+                  href="/profil"
+                  className="mt-[2vh] font-extrabold   text-white"
+                >
+                  Profile
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
+
+              {login && adminPath[2] !== "dashboard" ? (
+                <Navbar.Link
+                  onClick={handleLogout}
+                  className="mt-[2vh] font-extrabold text-white  "
+                >
+                  Logout
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
+
+              {/* <div className=''>
 
               <button onClick={toggleNav} className='md:px-0 px-2'><Image src={"/images/profil.svg"} alt="" width={0} height={0} sizes='100vw' className='w-[50px] h-[50px] ' /></button>
               {comp == 0 ? (
@@ -258,11 +266,11 @@ export default function NavbarCustom() {
                 </>
               ) : ("")}
             </div> */}
-          </Navbar.Collapse>
-        </Navbar>
-        <div className="bg-red-700 w-full h-3"></div>
+            </Navbar.Collapse>
+          </Navbar>
+          <div className="bg-red-700 w-full h-3"></div>
         </div>
-      </div>
+      </div >
     </>
   );
 }

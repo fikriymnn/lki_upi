@@ -304,7 +304,7 @@ export default function Detail({ params, searchParams }) {
               <p className="md:text-xl sm:text-xl text-xs font-semibold ">
                 Kuitansi :{" "}
               </p>
-              {invoice?.status == "Selesai" ? (
+              {invoice?.status == "Selesai"&&invoice?.dana_penelitian == true ? (
                 <Button
                   className="ml-5"
                   color="blue"

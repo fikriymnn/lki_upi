@@ -41,6 +41,7 @@ export default function Order_analisis() {
   const [nama_pembimbing, setNama_pembimbing] = useState([]);
   const [lama_pengerjaan, setLama_pengerjaan] = useState([]);
   const [foto_sample, setFoto_sample] = useState([]);
+  const [dana_penelitian, setDana_penelitian] = useState([]);
   const [uuid, setUuid] = useState([uid]);
   const [verifikasi, setVerifikasi] = useState(false);
 
@@ -168,6 +169,7 @@ export default function Order_analisis() {
         obj.sample_dikembalikan = sample_dikembalikan[i];
         obj.nama_pembimbing = nama_pembimbing[i];
         obj.lama_pengerjaan = lama_pengerjaan[i];
+        obj.dana_penelitian = dana_penelitian[i];
 
         obj.uuid = uuid[i];
 
@@ -522,6 +524,23 @@ export default function Order_analisis() {
                 nama_pembimbing[i] = e.target.value;
               }}
             /> </div>:""}
+             { nonupi=="ya"?<div><h2 className="md:text-lg sm:text-lg text-sm font-semibold">Apakah anda memiliki dana penelitian</h2><select
+                required
+                name="dana_penelitian"
+                id="dana_penelitian"
+                className="input-style-lki"
+                onChange={(e) => {
+                  e.preventDefault();
+                  dana_penelitian[i] = e.target.value;
+                  console.log(dana_penelitian[i])
+                }}
+              >
+                <option value="" selected>
+                  Pilih
+                </option>
+                <option value={true}>Ya</option>
+                <option value={false}>Tidak</option>
+              </select></div>:""}
             <div>
               <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
                 Pilih lama pengerjaan
