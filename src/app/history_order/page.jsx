@@ -57,7 +57,7 @@ export default function History_order() {
         );
         if (dataUser.data.success) {
           const data = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/invoice?success=true&id_user=${
+            `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&success=true&id_user=${
               dataUser.data.data._id
             }&skip=${page * 15}&limit=15${year ? `&year=${year}` : ""}${
               month ? `&month=${month}` : ""

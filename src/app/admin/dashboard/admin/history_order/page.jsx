@@ -99,11 +99,11 @@ export default function HHistory_order() {
       setYearOption(arr);
     }
 
-    const handleDelete = async (id)=>{
+     async function handleDelete(id){
       async function deleteHistory(){
          try{
             const data = await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`,{
-              hide: true
+              status: 'Sembunyikan'
             },{ withCredentials:true })
             if(data){
               alert('Data telah dihapus!')
@@ -119,7 +119,7 @@ export default function HHistory_order() {
     async function getInvoice() {
       try {
           const data = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/invoice?hide=false&success=true&skip=${
+            `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&success=true&skip=${
               page * 15
             }&limit=15${year ? `&year=${year}` : ""}${
               month ? `&month=${month}` : ""
@@ -277,7 +277,23 @@ export default function HHistory_order() {
                       </Table.Cell>
                       <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
                         <a
-                          onClick={(e)=>handleDelete(value._id)}
+                          onClick={(e)=>{
+                            async function deleteHistory(id){
+                              try{
+                                console.log(id)
+                                 const data = await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`,{
+                                   status: 'Sembunyikan'
+                                 },{ withCredentials:true })
+                                 if(data){
+                                   alert('Data telah dihapus!')
+                                   router.refresh()
+                                 }
+                              }catch(err){
+                                 alert(err.message)
+                              }
+                           }
+                            deleteHistory(value._id)
+                          }}
                           className="font-medium text-white bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500"
                         >
                           Delete
