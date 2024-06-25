@@ -5,6 +5,29 @@ const Pelatihan = () => {
     return (
         <>
             <main>
+                <div className="flex md:h-[229px] h-40 w-full">
+                    <Image
+                        alt=""
+                        src={"/carousel.jpg"}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        className=" md:h-[229px] h-40 w-full"
+                    />
+                    <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[229px] h-40  absolute flex flex-col justify-center items-center">
+                        <p className="text-white md:text-5xl sm:text-xl text-lg font-bold uppercase">
+                            Layanan Pelatihan LKI UPI
+                        </p>
+                        <div className="flex justify-center mt-5">
+                            <a
+                                href="/about"
+                                className="px-10 py-2 bg-slate-900 text-white grad rounded-xl font-bold md:text-lg sm:text-base text-sm"
+                            >
+                                Tentang Kami
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 <div className="mb-16 md:h-screen w-full">
                     <div className="flex flex-col md:h-[100px] items-center mt-8 md:ml-10 md:mr-10">
                         <h2 className="text-center mb-3 font-bold md:text-3xl text-lg uppercase">
