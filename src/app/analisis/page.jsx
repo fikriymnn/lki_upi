@@ -25,7 +25,7 @@ const Analisis = () => {
         {
           jenis: "b. Sampel",
           kimia: "b. 17.500",
-          nonKimia: "b. 50.000",
+          nonKimia: "b. 40.000",
           luarUpi: "b. 70.000",
           tigaHariNonKimia: "b. 67.500",
           tujuhHariNonKimia: "b. 62.500",
