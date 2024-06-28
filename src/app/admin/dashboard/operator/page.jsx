@@ -196,25 +196,25 @@ export default function Order_Operator() {
         <div className=" overflow-scroll w-full">
           <Table>
             <Table.Head>
-              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 No
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Tanggal
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Nama Customer
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Jenis Pengujian
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Status
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Detail
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Konfirmasi
               </Table.HeadCell>
             </Table.Head>
@@ -225,34 +225,34 @@ export default function Order_Operator() {
                     key={i}
                     className="bg-white dark:border-gray-700 dark:bg-gray-800"
                   >
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                      {i + 1}
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white md:text-[11px] sm:text-[11px] text-[10px]">
+                      {(i + 1)+(page*15)}
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {v.date_format}
                     </Table.Cell>
 
-                    <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {v.id_user[0].nama_lengkap}
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {v.jenis_pengujian}
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       <p>{v.status}</p>
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       <a
                         href={`/admin/dashboard/operator/detail/${v._id}?no_invoice=${v.no_invoice}`}
-                        className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500"
+                        className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 md:text-[11px] sm:text-[11px] text-[10px]"
                       >
                         Keterangan
                       </a>
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       <a
                         href={`/admin/dashboard/operator/${v._id}`}
-                        className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500"
+                        className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 md:text-[11px] sm:text-[11px] text-[10px]"
                       >
                         Keterangan
                       </a>

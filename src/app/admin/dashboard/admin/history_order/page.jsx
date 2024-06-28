@@ -211,7 +211,7 @@ export default function HHistory_order() {
         </div>
         <div className="m-auto w-11/12">
           <div className=" overflow-scroll w-full">
-            <Table>
+            <Table border={1}>
               <Table.Head>
                 <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
                   No
@@ -249,7 +249,7 @@ export default function HHistory_order() {
                       className="bg-white dark:border-gray-700 dark:bg-gray-800"
                     >
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                        {i + 1}
+                        {(i + 1)+(page*15)}
                       </Table.Cell>
                       <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{`${value.date_format}`}</Table.Cell>
                       <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">

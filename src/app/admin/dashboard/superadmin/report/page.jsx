@@ -70,6 +70,12 @@ const stats = [
   {
     status: "Menunggu Konfirmasi Pembayaran",
   },
+  {
+    status: "Sembunyikan"
+  },
+  { status: "Selesai"
+
+  }
 ];
 
 const monthOption = [
@@ -98,7 +104,7 @@ const monthOption = [
   "Desember",
 ];
 
-export default function Order() {
+export default function OrderSuperAdmin() {
   const [invoice, setInvoice] = useState([]);
   const [page, setPage] = useState(0);
   const [length, setLength] = useState(0);
@@ -123,6 +129,42 @@ export default function Order() {
     }
   };
 
+  const handleArsip = async (id) => {
+    try {
+      const data = await axios.put(
+        `${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`,{
+            status: "Sembunyikan",
+            success: true
+        },
+        { withCredentials: true }
+      );
+      if (data.data.success) {
+        alert("Arsip successfully!");
+        window.location.reload();
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleShow = async (id) => {
+    try {
+      const data = await axios.put(
+        `${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`,{
+            status: "Selesai",
+            success: true
+        },
+        { withCredentials: true }
+      );
+      if (data.data.success) {
+        alert("Arsip successfully!");
+        window.location.reload();
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   useEffect(() => {
     let arr = [];
     const yearMax = new Date().getFullYear() - 2023;
@@ -133,7 +175,7 @@ export default function Order() {
     async function getInvoice() {
       try {
         const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/invoice?success=false&skip=${
+          `${process.env.NEXT_PUBLIC_URL}/api/invoice?${!status?"":`success=${status=="Selesai"||status=="Sembunyikan"?true:false}`}&skip=${
             page * 15
           }&limit=15${year ? `&year=${year}` : ""}${
             month ? `&month=${month}` : ""
@@ -281,10 +323,10 @@ export default function Order() {
                 Status
               </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
-                Edit
+                Hapus
               </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
-                Hapus
+                Sembunyikan
               </Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
@@ -317,7 +359,7 @@ export default function Order() {
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       <a
                         href={`/admin/dashboard/admin/order/${v._id}?no_invoice=${v.no_invoice}`}
-                        className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 md:text-[11px] sm:text-[11px] text-[10px]"
+                        className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500"
                       >
                         Keterangan
                       </a>
@@ -327,17 +369,9 @@ export default function Order() {
                       <br />
                       <a
                         href={`/admin/dashboard/admin/order/tracking/${v._id}`}
-                        className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 md:text-[11px] sm:text-[11px] text-[10px]"
+                        className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500"
                       >
                         Keterangan
-                      </a>
-                    </Table.Cell>
-                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
-                      <a
-                        href={`/admin/dashboard/admin/order/edit/a?no_invoice=${v.no_invoice}`}
-                        className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 w-24 md:text-[11px] sm:text-[11px] text-[10px]"
-                      >
-                        Edit
                       </a>
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
@@ -345,9 +379,20 @@ export default function Order() {
                         onClick={(e) => {
                           handleDelete(v.no_invoice);
                         }}
-                        className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 w-24 mt-5 md:text-[11px] sm:text-[11px] text-[10px]"
+                        className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 w-24 mt-5"
                       >
                         Delete
+                      </a>
+                    </Table.Cell>
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                      <a
+                        onClick={(e) => {
+                          v.status=="Sembunyikan"?handleShow(v._id):handleArsip(v._id)
+                          ;
+                        }}
+                        className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 w-24 mt-5"
+                      >
+                        {v.status=="Sembunyikan"?"Munculkan":"Arsipkan"}
                       </a>
                     </Table.Cell>
                   </Table.Row>

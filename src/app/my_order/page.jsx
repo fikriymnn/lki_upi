@@ -53,25 +53,25 @@ export default function My_order() {
           <div className=" overflow-scroll w-full">
             <Table className="">
               <Table.Head>
-                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs ">
+                <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px] ">
                   No
                 </Table.HeadCell>
-                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+                <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                   Tanggal
                 </Table.HeadCell>
-                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+                <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                   No Invoice
                 </Table.HeadCell>
-                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+                <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                   Jenis Pengujian
                 </Table.HeadCell>
-                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+                <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                   Harga
                 </Table.HeadCell>
-                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+                <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                   Keterangan
                 </Table.HeadCell>
-                <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">
+                <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                   Status
                 </Table.HeadCell>
               </Table.Head>
@@ -82,23 +82,23 @@ export default function My_order() {
                       key={i}
                       className="bg-white dark:border-gray-700 dark:bg-gray-800"
                     >
-                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white text-center">
-                        {i + 1}
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                        {(i + 1)+(page*15)}
                       </Table.Cell>
-                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">{`${value.date_format}`}</Table.Cell>
-                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                      <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">{`${value.date_format}`}</Table.Cell>
+                      <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                         {value.no_invoice}
                       </Table.Cell>
-                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                      <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                         {value.jenis_pengujian}
                       </Table.Cell>
-                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                      <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                         {value.total_harga !== 0 ? value.total_harga : "-"}
                       </Table.Cell>
-                      <Table.Cell className="text-center md:text-sm sm:text-sm text-xs">
+                      <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                         <a
                           href={`/my_order/detail/${value._id}?no_invoice=${value.no_invoice}`}
-                          className="font-medium text-white grad rounded-lg py-1 px-2 hover:underline dark:text-cyan-500"
+                          className="font-medium text-white grad rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 md:text-[11px] sm:text-[11px] text-[10px]"
                         >
                           Detail
                         </a>
@@ -108,7 +108,7 @@ export default function My_order() {
                         <br />
                         <a
                           href={`/my_order/tracking/${value._id}?no_invoice=${value.no_invoice}`}
-                          className="font-medium text-white grad rounded-lg py-1 px-2 hover:underline dark:text-cyan-500"
+                          className="font-medium text-white grad rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 md:text-[11px] sm:text-[11px] text-[10px]"
                         >
                           Detail
                         </a>

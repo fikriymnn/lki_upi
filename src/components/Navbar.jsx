@@ -70,8 +70,45 @@ export default function NavbarCustom() {
               />
             </Navbar.Brand>
 
+          
             <Navbar.Toggle className="bg-white" />
             <Navbar.Collapse className="md:mr-20 ">
+              {/* SUPER ADMIN */}
+              {adminPath[2] == "dashboard" && role == "superadmin" ? (
+                <Navbar.Link
+                  href="/admin/dashboard/superadmin/order"
+                  className="mt-[2vh] font-extrabold text-white "
+                >
+                  {" "}
+                  Order{" "}
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
+
+              {adminPath[2] == "dashboard" && role == "superadmin" ? (
+                <Navbar.Link
+                  href="/admin/dashboard/superadmin/report"
+                  className="mt-[2vh] font-extrabold text-white "
+                >
+                  {" "}
+                  Report{" "}
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
+
+              {adminPath[2] == "dashboard" ||
+                (adminPath[1] == "superadmin" && role) ? (
+                <Navbar.Link
+                  onClick={handleLogout}
+                  className="mt-[2vh] font-extrabold text-white "
+                >
+                  Logout
+                </Navbar.Link>
+              ) : (
+                ""
+              )}
               {/* ADMIN */}
               {adminPath[2] == "dashboard" && role == "admin" ? (
                 <Navbar.Link
