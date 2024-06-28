@@ -76,7 +76,7 @@ export default function NavbarCustom() {
               {/* SUPER ADMIN */}
               {adminPath[2] == "dashboard" && role == "superadmin" ? (
                 <Navbar.Link
-                  href="/admin/dashboard/superadmin/order"
+                  href="/admin/dashboard/superadmin"
                   className="mt-[2vh] font-extrabold text-white "
                 >
                   {" "}
