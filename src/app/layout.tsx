@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import NavbarCustom from "@/components/Navbar";
 import FooterCustom from "@/components/FooterCustom";
 import { UserProvider } from "@/context/userContext";
 
-const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-poppins',
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://lablkiupi.com"),
@@ -52,7 +57,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/logo.svg" sizes="any" />
       </head>
-      <body className={inter.className}>
+      <body className={poppins.className}>
         <UserProvider>
           <NavbarCustom />
           <div className="md:pt-[10vh] lg:pt-[10vh] pt-[9vh]">{children}</div>
