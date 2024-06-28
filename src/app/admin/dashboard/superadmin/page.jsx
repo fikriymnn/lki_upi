@@ -294,38 +294,38 @@ export default function OrderSuperAdmin() {
         </div>
       </div>
       <div className="m-auto  w-11/12">
-        <div className=" overflow-scroll w-full">
+        <div className=" overflow-x-scroll w-full">
           <Table>
             <Table.Head>
-              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 No
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Tanggal
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Invoice
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Nama Customer
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Jenis Pengujian
               </Table.HeadCell>
 
-              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Harga
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Keterangan
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Status
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Hapus
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Sembunyikan
               </Table.HeadCell>
             </Table.Head>
@@ -337,26 +337,26 @@ export default function OrderSuperAdmin() {
                     key={i}
                     className="bg-white dark:border-gray-700 dark:bg-gray-800"
                   >
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white md:text-[11px] sm:text-[11px] text-[10px]">
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white md:text-[11px] sm:text-[11px] text-xs">
                       {(i + 1)+(page*15)}
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       {v.date_format}
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       {v.no_invoice}
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       {v.id_user[0].nama_lengkap}
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       {v.jenis_pengujian}
                     </Table.Cell>
 
-                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       {v.total_harga}
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       <a
                         href={`/admin/dashboard/admin/order/${v._id}?no_invoice=${v.no_invoice}`}
                         className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500"
@@ -364,7 +364,7 @@ export default function OrderSuperAdmin() {
                         Keterangan
                       </a>
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       <p>{v.status}</p>
                       <br />
                       <a
@@ -374,7 +374,7 @@ export default function OrderSuperAdmin() {
                         Keterangan
                       </a>
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       <a
                         onClick={(e) => {
                           handleDelete(v.no_invoice);
@@ -384,7 +384,7 @@ export default function OrderSuperAdmin() {
                         Delete
                       </a>
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       <a
                         onClick={(e) => {
                           v.status=="Sembunyikan"?handleShow(v._id):handleArsip(v._id)

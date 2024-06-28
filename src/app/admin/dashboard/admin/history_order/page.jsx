@@ -210,7 +210,7 @@ export default function HHistory_order() {
           </div>
         </div>
         <div className="m-auto w-11/12">
-          <div className=" overflow-scroll w-full">
+          <div className=" overflow-x-scroll w-full">
             <Table border={1}>
               <Table.Head>
                 <Table.HeadCell className="text-center md:text-sm sm:text-sm text-xs">

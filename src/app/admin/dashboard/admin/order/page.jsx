@@ -252,7 +252,7 @@ export default function Order() {
         </div>
       </div>
       <div className="m-auto  w-11/12">
-        <div className=" overflow-scroll w-full">
+        <div className=" overflow-x-scroll w-full">
           <Table>
             <Table.Head>
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
