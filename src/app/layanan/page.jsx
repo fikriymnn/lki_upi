@@ -24,7 +24,7 @@ const Layanan = () => {
         {
           jenis: "b. Sampel",
           kimia: "b. 17.500",
-          nonKimia: "b. 50.000",
+          nonKimia: "b. 40.000",
           luarUpi: "b. 70.000",
           tigaHariNonKimia: "b. 67.500",
           tujuhHariNonKimia: "b. 62.500",
@@ -303,7 +303,7 @@ const Layanan = () => {
             className=" md:h-[229px] h-40 w-full"
           />
           <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[229px] h-40  absolute flex flex-col justify-center items-center">
-            <p className="text-white md:text-5xl sm:text-xl text-lg font-bold">
+            <p className="text-white md:text-5xl sm:text-xl text-lg font-bold uppercase">
               Layanan Jasa Analisis LKI UPI
             </p>
             <div className="flex justify-center mt-5">
