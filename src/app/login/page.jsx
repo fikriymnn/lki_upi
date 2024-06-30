@@ -83,7 +83,7 @@ export default function Login({ searchParams }) {
 
     return (
         <>
-            <div className="flex items-center justify-center text-2xl uppercase">
+            <div className="flex items-center justify-center text-2xl h-screen w-full uppercase">
                 Under Maintenance. Thank you for patience.
 
             </div>
