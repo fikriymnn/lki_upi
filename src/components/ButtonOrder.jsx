@@ -53,7 +53,9 @@ export default function ButtonOrder() {
 
                 <div className="flex justify-center md:mt-[20px] sm:mt-[56px] mt-5">
                     <div className="md:px-20 sm:px-10 px-10 py-4 bg-slate-900 text-white grad rounded-xl font-bold md:text-lg sm:text-lg text-sm" onClick={() => pesanLayanan()}>
-                        Pesan Sekarang
+                        <p className='text-white font-bold md:text-lg sm:text-lg text-sm'>
+                            Pesan Sekarang
+                        </p>
                     </div>
                 </div>
             </div>
