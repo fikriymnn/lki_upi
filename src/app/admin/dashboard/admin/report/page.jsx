@@ -140,7 +140,7 @@ export default function Report() {
         <div>
           <div className="flex mt-[-20px] md:justify-center sm:justify-center md:justify-items-center  sm:flex flex-wrap  ml-2 md:w-full sm:w-full gap-1 justify-center">
             <div className="md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:w-72 sm:w-64 w-52">
-              <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">
+              <p className="md:text-base sm:text-base text-xs font-semibold text-white p-2">
                 Tahun :{" "}
               </p>{" "}
               <select
@@ -163,7 +163,7 @@ export default function Report() {
             </div>
 
             <div className=" md:flex grid grid-cols-2 mt-2 p-1  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52 ">
-              <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">
+              <p className="md:text-base sm:text-base text-xs font-semibold text-white p-2">
                 Bulan :{" "}
               </p>
               <select
@@ -185,7 +185,7 @@ export default function Report() {
               </select>
             </div>
             <div className="md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52">
-              <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">
+              <p className="md:text-base sm:text-base text-xs font-semibold text-white p-2">
                 Jenis Pengujian :{" "}
               </p>{" "}
               <select
@@ -222,10 +222,10 @@ export default function Report() {
           </div>
           <br />
           <div className="flex justify-center items-center">
-            <div className="w-11/12 overflow-scroll md:h-96 h-56 m-auto">
+            <div className="w-11/12 overflow-scroll md:h-[600px] h-56 m-auto">
               <table ref={tableRef} className="m-auto table-auto">
                 <tbody>
-                  <tr>
+                  <tr className="sticky top-0 bg-white">
                     <th className="px-10 text-sm">No</th>
                     <th className="px-10 text-sm">Tanggal</th>
                     <th className="px-10 text-sm">No invoice</th>
