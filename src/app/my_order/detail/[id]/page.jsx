@@ -236,7 +236,7 @@ export default function Detail({ params, searchParams }) {
           <div className="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2">
             <div className="">
               <div className="border-2 rounded-lg p-2 border-b-2 grid grid-cols-2  ">
-                <p className="md:text-xl sm:text-xl text-sm font-semibold">
+                <p className="md:text-lg sm:text-lg text-sm font-semibold">
                   status :{" "}
                 </p>
                 <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto">
@@ -256,7 +256,7 @@ export default function Detail({ params, searchParams }) {
 
             <div>
               <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2">
-                <p className="md:text-xl sm:text-xl text-xs font-semibold">
+                <p className="md:text-lg sm:text-lg text-xs font-semibold">
                   Total Harga :{" "}
                 </p>
                 <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">
@@ -266,7 +266,7 @@ export default function Detail({ params, searchParams }) {
               {invoice?.status == "Form Dikonfirmasi" ? <p></p> : ""}
             </div>
             <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2">
-              <p className="md:text-xl sm:text-xl text-xs font-semibold ">
+              <p className="md:text-lg sm:text-lg text-xs font-semibold ">
                 Estimasi Selesai :{" "}
               </p>{" "}
               <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">
@@ -275,7 +275,7 @@ export default function Detail({ params, searchParams }) {
             </div>
 
             <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2">
-              <p className="md:text-xl sm:text-xl text-xs font-semibold">
+              <p className="md:text-lg sm:text-lg text-xs font-semibold">
                 Invoice :{" "}
               </p>
               {invoice.status == "Form Dikonfirmasi" ||
@@ -301,7 +301,7 @@ export default function Detail({ params, searchParams }) {
             </div>
 
             <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2">
-              <p className="md:text-xl sm:text-xl text-xs font-semibold ">
+              <p className="md:text-lg sm:text-lg text-xs font-semibold ">
                 Kuitansi :{" "}
               </p>
               {invoice?.status == "Selesai"&&invoice?.dana_penelitian == true ? (
@@ -319,7 +319,7 @@ export default function Detail({ params, searchParams }) {
             </div>
 
             <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2">
-              <p className="md:text-xl sm:text-xl text-xs font-semibold ">
+              <p className="md:text-lg sm:text-lg text-xs font-semibold ">
                 Bukti Pembayaran :{" "}
               </p>{" "}
               {invoice?.status == "Menunggu Pembayaran" ||
