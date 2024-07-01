@@ -80,13 +80,13 @@ export default function NavbarCustom() {
                   className="mt-[2vh] font-extrabold text-white "
                 >
                   {" "}
-                  Order{" "}
+                  Arsip{" "}
                 </Navbar.Link>
               ) : (
                 ""
               )}
 
-              {adminPath[2] == "dashboard" && role == "superadmin" ? (
+              {/* {adminPath[2] == "dashboard" && role == "superadmin" ? (
                 <Navbar.Link
                   href="/admin/dashboard/superadmin/report"
                   className="mt-[2vh] font-extrabold text-white "
@@ -96,7 +96,7 @@ export default function NavbarCustom() {
                 </Navbar.Link>
               ) : (
                 ""
-              )}
+              )} */}
 
               {adminPath[2] == "dashboard" ||
                 (adminPath[1] == "superadmin" && role) ? (

@@ -56,21 +56,6 @@ const kode = [
 
 const stats = [
   {
-    status: "Menunggu Form Dikonfirmasi",
-  },
-  {
-    status: "Sample Dikerjakan Operator",
-  },
-  {
-    status: "Menunggu Verifikasi",
-  },
-  {
-    status: "Menunggu Pembayaran",
-  },
-  {
-    status: "Menunggu Konfirmasi Pembayaran",
-  },
-  {
     status: "Sembunyikan"
   },
   { status: "Selesai"
@@ -197,7 +182,7 @@ export default function OrderSuperAdmin() {
   }, [page, month, year, jenis_pengujian, status]);
   return (
     <>
-      <Navigasi text1={"admin"} text2={"order"} />
+      <Navigasi text1={"super admin"} text2={"arsip history"} />
       <div className="flex flex-wrap justify-center gap-1 mb-10">
         <div className="md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52 ">
           <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2 ">

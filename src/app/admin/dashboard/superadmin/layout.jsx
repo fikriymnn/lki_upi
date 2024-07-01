@@ -15,9 +15,9 @@ useEffect(()=>{
                     withCredentials: true
                 })
                 setRole(data.data.data.role)
-                // if(data.data.data.role!=="superadmin"){
-                //     router.replace("/")
-                // }                
+                if(data.data.data.role!=="superadmin"){
+                    router.replace("/")
+                }                
             }catch(err){
                 router.replace("/")
             }  

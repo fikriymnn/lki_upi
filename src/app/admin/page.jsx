@@ -33,7 +33,9 @@ export default function Admin() {
         router.replace("/admin/dashboard/operator")
     } else if(data.data.success == "pj"){
         router.replace("/admin/dashboard/pj")
-    }
+    }else if(data.data.success == "superadmin"){
+      router.replace("/admin/dashboard/superadmin")
+  }
     }
     cek()
    
