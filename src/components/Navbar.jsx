@@ -97,18 +97,6 @@ export default function NavbarCustom() {
               ) : (
                 ""
               )} */}
-
-              {adminPath[2] == "dashboard" ||
-                (adminPath[1] == "superadmin" && role) ? (
-                <Navbar.Link
-                  onClick={handleLogout}
-                  className="mt-[2vh] font-extrabold text-white "
-                >
-                  Logout
-                </Navbar.Link>
-              ) : (
-                ""
-              )}
               {/* ADMIN */}
               {adminPath[2] == "dashboard" && role == "admin" ? (
                 <Navbar.Link

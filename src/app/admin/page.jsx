@@ -29,11 +29,11 @@ export default function Admin() {
       }
       else if(data.data.data.role == "admin"){
         router.replace("/admin/dashboard/admin")
-    } else if(data.data.success == "operator"){
+    } else if(data.data.data.role == "operator"){
         router.replace("/admin/dashboard/operator")
-    } else if(data.data.success == "pj"){
+    } else if(data.data.data.role == "pj"){
         router.replace("/admin/dashboard/pj")
-    }else if(data.data.success == "superadmin"){
+    }else if(data.data.data.role == "superadmin"){
       router.replace("/admin/dashboard/superadmin")
   }
     }
@@ -65,6 +65,8 @@ export default function Admin() {
             window.location.replace("/admin/dashboard/operator");
           } else if (dataUser.data.data.role == "pj") {
             window.location.replace("/admin/dashboard/pj");
+          }else if (dataUser.data.data.role == "superadmin") {
+            window.location.replace("/admin/dashboard/superadmin");
           } else {
             await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/logout`, {
               withCredentials: true,

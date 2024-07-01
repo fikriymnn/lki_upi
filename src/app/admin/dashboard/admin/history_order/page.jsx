@@ -143,7 +143,7 @@ export default function HHistory_order() {
         <Navigasi text1={"admin"} text2={"history order"} />
         <div className="flex flex-wrap justify-center mb-10">
           <div className="flex p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 ml-3">
-            <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">
+            <p className="md:text-sm sm:text-base text-xs font-semibold text-white p-2">
               Tahun :
             </p>{" "}
             <select
@@ -165,7 +165,7 @@ export default function HHistory_order() {
             </select>
           </div>
           <div className="flex p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 ml-3 ">
-            <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">
+            <p className="md:text-sm sm:text-base text-xs font-semibold text-white p-2">
               Bulan :
             </p>{" "}
             <select
@@ -187,7 +187,7 @@ export default function HHistory_order() {
             </select>
           </div>
           <div className="md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52">
-            <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2 ">
+            <p className="md:text-sm sm:text-base text-xs font-semibold text-white p-2 ">
               Jenis Pengujian :{" "}
             </p>{" "}
             <select

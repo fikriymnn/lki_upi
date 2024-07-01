@@ -160,12 +160,12 @@ export default function OrderSuperAdmin() {
     async function getInvoice() {
       try {
         const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/invoice?${!status?"":`success=${status=="Selesai"||status=="Sembunyikan"?true:false}`}&skip=${
+          `${process.env.NEXT_PUBLIC_URL}/api/invoice?success=true&skip=${
             page * 15
           }&limit=15${year ? `&year=${year}` : ""}${
             month ? `&month=${month}` : ""
           }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${
-            status ? `&status=${status}` : ""
+            status ? `&status=${status}` : "&status=Sembunyikan"
           }`,
           { withCredentials: true }
         );
@@ -265,9 +265,9 @@ export default function OrderSuperAdmin() {
             id="status"
             onChange={(e) => setStatus(e.target.value)}
           >
-            <option value="" className="input-style-lki" defaultChecked>
+            {/* <option value="" className="input-style-lki" defaultChecked>
               All
-            </option>
+            </option> */}
             {stats.map((v, i) => {
               return (
                 <option value={v.status} key={i}>
@@ -307,9 +307,9 @@ export default function OrderSuperAdmin() {
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Status
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
+              {/* <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Hapus
-              </Table.HeadCell>
+              </Table.HeadCell> */}
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Sembunyikan
               </Table.HeadCell>
@@ -359,7 +359,7 @@ export default function OrderSuperAdmin() {
                         Keterangan
                       </a>
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
+                    {/* <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       <a
                         onClick={(e) => {
                           handleDelete(v.no_invoice);
@@ -368,7 +368,7 @@ export default function OrderSuperAdmin() {
                       >
                         Delete
                       </a>
-                    </Table.Cell>
+                    </Table.Cell> */}
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       <a
                         onClick={(e) => {
