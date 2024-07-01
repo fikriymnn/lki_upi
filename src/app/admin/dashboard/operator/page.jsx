@@ -126,7 +126,7 @@ export default function Order_Operator() {
       <Navigasi text1={"operator"} text2={"order"} />
       <div className="flex flex-wrap justify-center mb-10">
         <div className="md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52 ">
-          <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">
+          <p className="md:text-base sm:text-base text-xs font-semibold text-white p-2">
             Tahun :
           </p>{" "}
           <select
@@ -148,7 +148,7 @@ export default function Order_Operator() {
           </select>
         </div>
         <div className="md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52  ml-3">
-          <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">
+          <p className="md:text-base sm:text-base text-xs font-semibold text-white p-2">
             Bulan :
           </p>{" "}
           <select
@@ -170,7 +170,7 @@ export default function Order_Operator() {
           </select>
         </div>
         <div className="md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52">
-          <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">
+          <p className="md:text-base sm:text-base text-xs font-semibold text-white p-2">
             Jenis Pengujian :{" "}
           </p>{" "}
           <select
