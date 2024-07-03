@@ -9,6 +9,7 @@ export default function Tracking_admin({ params }) {
   const { id } = params;
   const [form, setForm] = useState({
     status: "",
+    catatan: ""
   });
   const [invoice, setInvoice] = useState({});
   // const [invoice, setInvoice] = useState({ status: "menunggu verifikasi" })
@@ -16,7 +17,7 @@ export default function Tracking_admin({ params }) {
   const handleConfirm = async (e) => {
     e.preventDefault();
     setEdit((a) => !a);
-    let obj = { status: form.status };
+    let obj = { status: form.status,catatan: form.catatan };
     try {
       function timeNow() {
         var d = new Date(),
@@ -83,7 +84,8 @@ export default function Tracking_admin({ params }) {
         if (data.data.success) {
           const obj = data.data.data;
           setInvoice(obj);
-          setForm({ status: obj.status });
+          setForm({ status: obj.status,
+            catatan: obj.catatan });
         }
       } catch (err) {
         console.log(err.message);
@@ -136,6 +138,37 @@ export default function Tracking_admin({ params }) {
                 </p>
               </div>
             )}
+            {edit ? (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm grid grid-cols-2 font-semibold">
+                    Catatan :{" "}
+                    <textarea
+                      placeholder="Tuliskan catatan"
+                      className="input-style-lki-box"
+                      name="catatan"
+                      type="text"
+                      onChange={(e) =>
+                        setForm((a) => ({
+                          ...a,
+                          [e.target.name]: e.target.value,
+                        }))}
+                    />
+                    {/* <input
+                      type="text"
+                      name="catatan"
+                      onChange={handleChange}
+                      value={form.catatan}
+                    /> */}
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                    Catatan :{" "}
+                    <span className="font-normal md:text-lg sm:text-xs text-xs">{form.catatan}</span>{" "}
+                  </p>
+                </div>
+              )}
             <div className="mx-1 flex flex-col gap-3 md:w-6/12 w-full">
               {" "}
               {edit&&invoice.opTask ? (

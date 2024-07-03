@@ -163,6 +163,13 @@ export default function Hdetail({ params, searchParams }) {
               Rp.{invoice?.total_harga}
             </span>
           </p>
+          <p className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">
+            Catatan :{" "}
+            <span className="text-end md:text-xl sm:text-xl text-xs">
+              {" "}
+              Rp.{invoice?.catatan}
+            </span>
+          </p>
           <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
             <p className="md:text-xl sm:text-xl  font-semibold">Invoice : </p>
             {invoice.status == "Selesai" ? (

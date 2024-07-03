@@ -11,6 +11,7 @@ export default function Tracking_admin({ params }) {
     estimasi_date: "",
     total_harga: 0,
     status: "",
+    catatan: ""
   });
   const [invoice, setInvoice] = useState({});
   // const [invoice, setInvoice] = useState({ status: "menunggu verifikasi" })
@@ -27,6 +28,7 @@ export default function Tracking_admin({ params }) {
       status: form.status,
       estimasi_date: form.estimasi_date,
       total_harga: form.total_harga,
+      catatan: form.catatan
     };
     try {
       console.log(form);
@@ -104,7 +106,8 @@ export default function Tracking_admin({ params }) {
             estimasi_date: obj.estimasi_date,
             total_harga: obj.total_harga,
             status: obj.status,
-            user: obj.id_user
+            user: obj.id_user,
+            catatan: obj.catatan
           });
         }
       } catch (err) {
@@ -133,16 +136,16 @@ export default function Tracking_admin({ params }) {
                 </p>
               </div>
               <div>
-                    <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
-                      Jenis Institusi :  {form.user ? <span className="font-normal md:text-lg sm:text-xs text-xs">{form.user.jenis_institusi}</span> : ""}
-                    </p>
+                <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                  Jenis Institusi :  {form.user ? <span className="font-normal md:text-lg sm:text-xs text-xs">{form.user.jenis_institusi}</span> : ""}
+                </p>
               </div>
               {
                 form?.user?.jenis_institusi == "Perusahaan" ? <div>
-                    <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
-                      Nama Institusi :  {form.user ? <span className="font-normal md:text-lg sm:text-xs text-xs">{form.user.nama_institusi}</span> : ""}
-                    </p>
-                  </div>: <>
+                  <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                    Nama Institusi :  {form.user ? <span className="font-normal md:text-lg sm:text-xs text-xs">{form.user.nama_institusi}</span> : ""}
+                  </p>
+                </div> : <>
                   <div>
                     <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
                       Nama Institusi :  {form.user ? <span className="font-normal md:text-lg sm:text-xs text-xs">{form.user.nama_institusi}</span> : ""}
@@ -240,6 +243,33 @@ export default function Tracking_admin({ params }) {
                   <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
                     Tanggal estimasi selesai :{" "}
                     <span className="font-normal md:text-lg sm:text-xs text-xs">{form.estimasi_date}</span>{" "}
+                  </p>
+                </div>
+              )}
+              {edit ? (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm grid grid-cols-2 font-semibold">
+                    Catatan :{" "}
+                    <textarea
+                      placeholder="Tuliskan catatan"
+                      className="input-style-lki-box"
+                      name="catatan"
+                      type="text"
+                      onChange={handleChange}
+                    />
+                    {/* <input
+                      type="text"
+                      name="catatan"
+                      onChange={handleChange}
+                      value={form.catatan}
+                    /> */}
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                    Catatan :{" "}
+                    <span className="font-normal md:text-lg sm:text-xs text-xs">{form.catatan}</span>{" "}
                   </p>
                 </div>
               )}

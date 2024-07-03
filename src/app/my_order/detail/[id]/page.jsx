@@ -273,6 +273,14 @@ export default function Detail({ params, searchParams }) {
                 {invoice.estimasi_date ? invoice.estimasi_date : ""}
               </p>
             </div>
+            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2">
+              <p className="md:text-lg sm:text-lg text-xs font-semibold ">
+                Catatan :{" "}
+              </p>{" "}
+              <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">
+                {invoice.catatan ? invoice.catatan : ""}
+              </p>
+            </div>
 
             <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2">
               <p className="md:text-lg sm:text-lg text-xs font-semibold">
