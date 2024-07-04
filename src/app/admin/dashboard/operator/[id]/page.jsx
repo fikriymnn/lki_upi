@@ -17,7 +17,7 @@ export default function Tracking_admin({ params }) {
   const handleConfirm = async (e) => {
     e.preventDefault();
     setEdit((a) => !a);
-    let obj = { status: form.status,catatan: form.catatan };
+    let obj = { status: form.status, catatan: form.catatan };
     try {
       function timeNow() {
         var d = new Date(),
@@ -44,7 +44,7 @@ export default function Tracking_admin({ params }) {
             obj.s4_date = date_format;
             return true;
           case "Menunggu Verifikasi":
-            obj.s5_date = date_format;        
+            obj.s5_date = date_format;
             return true;
           case "Menunggu Pembayaran":
             obj.s6_date = date_format;
@@ -84,8 +84,10 @@ export default function Tracking_admin({ params }) {
         if (data.data.success) {
           const obj = data.data.data;
           setInvoice(obj);
-          setForm({ status: obj.status,
-            catatan: obj.catatan });
+          setForm({
+            status: obj.status,
+            catatan: obj.catatan
+          });
         }
       } catch (err) {
         console.log(err.message);
@@ -107,7 +109,7 @@ export default function Tracking_admin({ params }) {
             <br />
             <br />
             <p className="md:text-base sm:text-base text-xs text-red-600">*Upload hasil analisis terlebih dahulu sebelum verifikasi</p>
-            {edit&&invoice.opTask? (
+            {edit && invoice.opTask ? (
               <div>
                 <p className="text-lg flex font-semibold gap-5">
                   Status :{" "}
@@ -139,39 +141,40 @@ export default function Tracking_admin({ params }) {
               </div>
             )}
             {edit ? (
-                <div>
-                  <p className="md:text-lg sm:text-xs text-sm grid grid-cols-2 font-semibold">
-                    Catatan :{" "}
-                    <textarea
-                      placeholder="Tuliskan catatan"
-                      className="input-style-lki-box"
-                      name="catatan"
-                      type="text"
-                      onChange={(e) =>
-                        setForm((a) => ({
-                          ...a,
-                          [e.target.name]: e.target.value,
-                        }))}
-                    />
-                    {/* <input
+              <div>
+                <p className="md:text-lg sm:text-xs text-sm grid grid-cols-2 font-semibold">
+                  Catatan :{" "}
+                  <textarea
+                    placeholder="Tuliskan catatan"
+                    className="input-style-lki-box"
+                    name="catatan"
+                    type="text"
+                    onChange={(e) =>
+                      setForm((a) => ({
+                        ...a,
+                        [e.target.name]: e.target.value,
+                      }))}
+                    value={form.catatan}
+                  />
+                  {/* <input
                       type="text"
                       name="catatan"
                       onChange={handleChange}
                       value={form.catatan}
                     /> */}
-                  </p>
-                </div>
-              ) : (
-                <div>
-                  <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
-                    Catatan :{" "}
-                    <span className="font-normal md:text-lg sm:text-xs text-xs">{form.catatan}</span>{" "}
-                  </p>
-                </div>
-              )}
+                </p>
+              </div>
+            ) : (
+              <div>
+                <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                  Catatan :{" "}
+                  <span className="font-normal md:text-lg sm:text-xs text-xs">{form.catatan}</span>{" "}
+                </p>
+              </div>
+            )}
             <div className="mx-1 flex flex-col gap-3 md:w-6/12 w-full">
               {" "}
-              {edit&&invoice.opTask ? (
+              {edit && invoice.opTask ? (
                 <div className="flex gap-5 mt-5">
                   <button
                     onClick={handleConfirm}
@@ -205,13 +208,13 @@ export default function Tracking_admin({ params }) {
               </p>
               <div className="flex gap-5 w-62 mx-5  mt-10">
                 {invoice.status == "Menunggu Form Dikonfirmasi" ||
-                invoice.status == "Form Dikonfirmasi" ||
-                invoice.status == "Sample Diterima Admin" ||
-                invoice.status == "Sample Dikerjakan Operator" ||
-                invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
+                  invoice.status == "Form Dikonfirmasi" ||
+                  invoice.status == "Sample Diterima Admin" ||
+                  invoice.status == "Sample Dikerjakan Operator" ||
+                  invoice.status == "Menunggu Verifikasi" ||
+                  invoice.status == "Menunggu Pembayaran" ||
+                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                  invoice.status == "Selesai" ? (
                   <Image
                     alt=""
                     width={0}
@@ -232,13 +235,13 @@ export default function Tracking_admin({ params }) {
                 )}
                 <div>
                   {invoice.status == "Menunggu Form Dikonfirmasi" ||
-                  invoice.status == "Form Dikonfirmasi" ||
-                  invoice.status == "Sample Diterima Admin" ||
-                  invoice.status == "Sample Dikerjakan Operator" ||
-                  invoice.status == "Menunggu Verifikasi" ||
-                  invoice.status == "Menunggu Pembayaran" ||
-                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Form Dikonfirmasi" ||
+                    invoice.status == "Sample Diterima Admin" ||
+                    invoice.status == "Sample Dikerjakan Operator" ||
+                    invoice.status == "Menunggu Verifikasi" ||
+                    invoice.status == "Menunggu Pembayaran" ||
+                    invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Form Dikirim
@@ -252,13 +255,13 @@ export default function Tracking_admin({ params }) {
                     </div>
                   )}
                   {invoice.status == "Menunggu Form Dikonfirmasi" ||
-                  invoice.status == "Form Dikonfirmasi" ||
-                  invoice.status == "Sample Diterima Admin" ||
-                  invoice.status == "Sample Dikerjakan Operator" ||
-                  invoice.status == "Menunggu Verifikasi" ||
-                  invoice.status == "Menunggu Pembayaran" ||
-                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Form Dikonfirmasi" ||
+                    invoice.status == "Sample Diterima Admin" ||
+                    invoice.status == "Sample Dikerjakan Operator" ||
+                    invoice.status == "Menunggu Verifikasi" ||
+                    invoice.status == "Menunggu Pembayaran" ||
+                    invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Menunggu Acc
@@ -277,12 +280,12 @@ export default function Tracking_admin({ params }) {
 
               <div className="flex gap-5 w-62 mx-5 ">
                 {invoice.status == "Form Dikonfirmasi" ||
-                invoice.status == "Sample Diterima Admin" ||
-                invoice.status == "Sample Dikerjakan Operator" ||
-                invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
+                  invoice.status == "Sample Diterima Admin" ||
+                  invoice.status == "Sample Dikerjakan Operator" ||
+                  invoice.status == "Menunggu Verifikasi" ||
+                  invoice.status == "Menunggu Pembayaran" ||
+                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                  invoice.status == "Selesai" ? (
                   <Image
                     alt=""
                     width={0}
@@ -303,12 +306,12 @@ export default function Tracking_admin({ params }) {
                 )}
                 <div>
                   {invoice.status == "Form Dikonfirmasi" ||
-                  invoice.status == "Sample Diterima Admin" ||
-                  invoice.status == "Sample Dikerjakan Operator" ||
-                  invoice.status == "Menunggu Verifikasi" ||
-                  invoice.status == "Menunggu Pembayaran" ||
-                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Sample Diterima Admin" ||
+                    invoice.status == "Sample Dikerjakan Operator" ||
+                    invoice.status == "Menunggu Verifikasi" ||
+                    invoice.status == "Menunggu Pembayaran" ||
+                    invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Form Diterima
@@ -322,12 +325,12 @@ export default function Tracking_admin({ params }) {
                     </div>
                   )}
                   {invoice.status == "Form Dikonfirmasi" ||
-                  invoice.status == "Sample Diterima Admin" ||
-                  invoice.status == "Sample Dikerjakan Operator" ||
-                  invoice.status == "Menunggu Verifikasi" ||
-                  invoice.status == "Menunggu Pembayaran" ||
-                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Sample Diterima Admin" ||
+                    invoice.status == "Sample Dikerjakan Operator" ||
+                    invoice.status == "Menunggu Verifikasi" ||
+                    invoice.status == "Menunggu Pembayaran" ||
+                    invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Menunggu Sample Diterima oleh Admin
@@ -345,11 +348,11 @@ export default function Tracking_admin({ params }) {
               </div>
               <div className="flex gap-5 w-62 mx-5">
                 {invoice.status == "Sample Diterima Admin" ||
-                invoice.status == "Sample Dikerjakan Operator" ||
-                invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
+                  invoice.status == "Sample Dikerjakan Operator" ||
+                  invoice.status == "Menunggu Verifikasi" ||
+                  invoice.status == "Menunggu Pembayaran" ||
+                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                  invoice.status == "Selesai" ? (
                   <Image
                     alt=""
                     width={0}
@@ -370,11 +373,11 @@ export default function Tracking_admin({ params }) {
                 )}
                 <div>
                   {invoice.status == "Sample Diterima Admin" ||
-                  invoice.status == "Sample Dikerjakan Operator" ||
-                  invoice.status == "Menunggu Verifikasi" ||
-                  invoice.status == "Menunggu Pembayaran" ||
-                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Sample Dikerjakan Operator" ||
+                    invoice.status == "Menunggu Verifikasi" ||
+                    invoice.status == "Menunggu Pembayaran" ||
+                    invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Sample Diterima oleh Admin
@@ -388,11 +391,11 @@ export default function Tracking_admin({ params }) {
                     </div>
                   )}
                   {invoice.status == "Sample Diterima Admin" ||
-                  invoice.status == "Sample Dikerjakan Operator" ||
-                  invoice.status == "Menunggu Verifikasi" ||
-                  invoice.status == "Menunggu Pembayaran" ||
-                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Sample Dikerjakan Operator" ||
+                    invoice.status == "Menunggu Verifikasi" ||
+                    invoice.status == "Menunggu Pembayaran" ||
+                    invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Sample Sedang Dikirim ke Operator
@@ -411,10 +414,10 @@ export default function Tracking_admin({ params }) {
 
               <div className="flex gap-5 w-62 mx-5  ">
                 {invoice.status == "Sample Dikerjakan Operator" ||
-                invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
+                  invoice.status == "Menunggu Verifikasi" ||
+                  invoice.status == "Menunggu Pembayaran" ||
+                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                  invoice.status == "Selesai" ? (
                   <Image
                     alt=""
                     width={0}
@@ -435,10 +438,10 @@ export default function Tracking_admin({ params }) {
                 )}
                 <div>
                   {invoice.status == "Sample Dikerjakan Operator" ||
-                  invoice.status == "Menunggu Verifikasi" ||
-                  invoice.status == "Menunggu Pembayaran" ||
-                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Menunggu Verifikasi" ||
+                    invoice.status == "Menunggu Pembayaran" ||
+                    invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Sample Diterima oleh Operator
@@ -452,10 +455,10 @@ export default function Tracking_admin({ params }) {
                     </div>
                   )}
                   {invoice.status == "Sample Dikerjakan Operator" ||
-                  invoice.status == "Menunggu Verifikasi" ||
-                  invoice.status == "Menunggu Pembayaran" ||
-                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Menunggu Verifikasi" ||
+                    invoice.status == "Menunggu Pembayaran" ||
+                    invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Sedang Dikerjakan oleh Operator
@@ -473,9 +476,9 @@ export default function Tracking_admin({ params }) {
               </div>
               <div className="flex gap-5 w-62 mx-5  ">
                 {invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
+                  invoice.status == "Menunggu Pembayaran" ||
+                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                  invoice.status == "Selesai" ? (
                   <Image
                     alt=""
                     width={0}
@@ -496,9 +499,9 @@ export default function Tracking_admin({ params }) {
                 )}
                 <div>
                   {invoice.status == "Menunggu Verifikasi" ||
-                  invoice.status == "Menunggu Pembayaran" ||
-                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Menunggu Pembayaran" ||
+                    invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Selesai Dikerjakan oleh Operator
@@ -512,9 +515,9 @@ export default function Tracking_admin({ params }) {
                     </div>
                   )}
                   {invoice.status == "Menunggu Verifikasi" ||
-                  invoice.status == "Menunggu Pembayaran" ||
-                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Menunggu Pembayaran" ||
+                    invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Menunggu Verifikasi
@@ -532,8 +535,8 @@ export default function Tracking_admin({ params }) {
               </div>
               <div className="flex gap-5 w-62 mx-5  ">
                 {invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
+                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                  invoice.status == "Selesai" ? (
                   <Image
                     alt=""
                     width={0}
@@ -554,8 +557,8 @@ export default function Tracking_admin({ params }) {
                 )}
                 <div>
                   {invoice.status == "Menunggu Pembayaran" ||
-                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Selesai Verifikasi
@@ -569,8 +572,8 @@ export default function Tracking_admin({ params }) {
                     </div>
                   )}
                   {invoice.status == "Menunggu Pembayaran" ||
-                  invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Menunggu Pembayaran
@@ -588,7 +591,7 @@ export default function Tracking_admin({ params }) {
               </div>
               <div className="flex gap-5 w-62 mx-5  ">
                 {invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
+                  invoice.status == "Selesai" ? (
                   <Image
                     alt=""
                     width={0}
@@ -609,7 +612,7 @@ export default function Tracking_admin({ params }) {
                 )}
                 <div>
                   {invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Pembayaran Selesai
@@ -623,7 +626,7 @@ export default function Tracking_admin({ params }) {
                     </div>
                   )}
                   {invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                  invoice.status == "Selesai" ? (
+                    invoice.status == "Selesai" ? (
                     <div className="">
                       <p className="text-red-600 md:text-2xl sm:text-xl text-base font-semibold">
                         Menunggu Pembayaran Dikonfirmasi
