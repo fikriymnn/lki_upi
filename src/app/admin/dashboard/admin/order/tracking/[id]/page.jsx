@@ -256,6 +256,7 @@ export default function Tracking_admin({ params }) {
                       name="catatan"
                       type="text"
                       onChange={handleChange}
+                      value={form.catatan}
                     />
                     {/* <input
                       type="text"

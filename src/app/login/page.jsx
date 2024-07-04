@@ -87,7 +87,7 @@ export default function Login({ searchParams }) {
                 Under Maintenance. Thank you for patience.
 
             </div> */}
-             <div className="md:grid grid-cols-2">
+            <div className="md:grid grid-cols-2">
                 <div className="bg-neutral-900 flex">
                     <Image alt="" src={"/images/gedung.jpg"} width={0} height={0} sizes="100vw" className="w-[800px] md:h-[807px] h-[300px] opacity-50" />
                     <div className="text-white absolute flex flex-col justify-center items-center md:w-6/12 w-full md:h-[807px] h-[300px]">
@@ -98,7 +98,7 @@ export default function Login({ searchParams }) {
                 <div className="w-11/12 flex flex-col mx-auto mt-10 md:mt-0">
                     <div className="flex flex-col justify-center items-center">
                         <div className="flex mt-4 gap-5">
-                            <Image src={"/footer.png"} width={0} height={0} sizes="100vw" className="w-[123px] h-[34px] my-auto bg-red-700 rounded-full" />
+                            <Image src={"/footer.png"} alt="image" width={0} height={0} sizes="100vw" className="w-[123px] h-[34px] my-auto bg-red-700 rounded-full" />
                             <h1 className="font-medium text-[30px] ">Layanan <span className="font-bold">LKI UPI</span></h1>
                         </div>
                         <hr className='text-red-700 bg-gradient-to-r from-red-700 via-red-700 to-rose-950 h-2 mb-8 mt-5 w-10/12 text-center rounded-full' />
