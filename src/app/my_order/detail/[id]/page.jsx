@@ -312,7 +312,7 @@ export default function Detail({ params, searchParams }) {
               <p className="md:text-lg sm:text-lg text-xs font-semibold ">
                 Kuitansi :{" "}
               </p>
-              {invoice?.status == "Selesai"&&invoice?.dana_penelitian == true ? (
+              {invoice?.status == "Selesai"&& (order[0]?.dana_penelitian == true || !order[0]?.nama_pembimbing ) ? (
                 <Button
                   className="ml-5"
                   color="blue"

@@ -187,7 +187,7 @@ export default function Hdetail({ params, searchParams }) {
           </div>
           <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
             <p className=" md:text-xl sm:text-xl  font-semibold">Kuitansi : </p>
-            {invoice?.status == "Selesai"&&invoice?.dana_penelitian == true ? (
+            {invoice?.status == "Selesai"&&(order[0]?.dana_penelitian == true || !order[0]?.nama_pembimbing ) ? (
               <Button
                 className="ml-5"
                 color="blue"
