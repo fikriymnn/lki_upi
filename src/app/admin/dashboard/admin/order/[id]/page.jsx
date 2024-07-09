@@ -128,7 +128,7 @@ export default function DetailOrderAdmin({ params, searchParams }) {
 
                     <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold">Invoice : </p>{invoice.status == "Form Dikonfirmasi" || invoice.status == "Sample Diterima Admin" || invoice.status == "Sample Dikerjakan Operator" || invoice.status == "Menunggu Verifikasi" || invoice.status == "Menunggu Pembayaran" || invoice.status == "Menunggu Konfirmasi Pembayaran" || invoice.status == "Selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download</Button> : <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">-</p>}</div>
 
-                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Kuitansi : </p>{invoice?.status == "Selesai" && invoice?.dana_penelitian == true ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download</Button> : <p className="ml-5">-</p>}</div>
+                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Kuitansi : </p>{invoice?.status == "Selesai"? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download</Button> : <p className="ml-5">-</p>}</div>
 
                     <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Bukti pembayaran : </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} href={invoice?.bukti_pembayaran}>download</Button> : ""} </div>
                 </div>
