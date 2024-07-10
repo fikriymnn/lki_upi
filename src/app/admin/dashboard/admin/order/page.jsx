@@ -283,9 +283,9 @@ export default function Order() {
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Edit
               </Table.HeadCell>
-              {/* <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Hapus
-              </Table.HeadCell> */}
+              </Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
               {invoice.map((v, i) => {
@@ -340,7 +340,7 @@ export default function Order() {
                         Edit
                       </a>
                     </Table.Cell>
-                    {/* <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       <a
                         onClick={(e) => {
                           handleDelete(v.no_invoice);
@@ -349,7 +349,7 @@ export default function Order() {
                       >
                         Delete
                       </a>
-                    </Table.Cell> */}
+                    </Table.Cell>
                   </Table.Row>
                 );
               })}

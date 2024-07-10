@@ -167,14 +167,14 @@ export default function Hdetail({ params, searchParams }) {
             Catatan :{" "}
             <span className="text-end md:text-xl sm:text-xl text-xs">
               {" "}
-              Rp.{invoice?.catatan}
+              {invoice?.catatan}
             </span>
           </p>
           <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
             <p className="md:text-xl sm:text-xl  font-semibold">Invoice : </p>
             {invoice.status == "Selesai" ? (
               <Button
-                className="ml-5 "
+                className={`ml-5 h-7`}
                 color="blue"
                 size={5}
                 onClick={downloadInvoice}
@@ -187,7 +187,7 @@ export default function Hdetail({ params, searchParams }) {
           </div>
           <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
             <p className=" md:text-xl sm:text-xl  font-semibold">Kuitansi : </p>
-            {invoice?.status == "Selesai"&&(order[0]?.dana_penelitian == true || !order[0]?.nama_pembimbing ) ? (
+            {invoice?.status == "Selesai"&&(order?.dana_penelitian == true || !order?.nama_pembimbing ) ? (
               <Button
                 className="ml-5"
                 color="blue"

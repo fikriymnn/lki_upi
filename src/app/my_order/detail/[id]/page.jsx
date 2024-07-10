@@ -220,6 +220,7 @@ export default function Detail({ params, searchParams }) {
         if (dataOrder.data.success) {
           setOrder(dataOrder.data.data);
         }
+        console.log(order)
       } catch (err) {
         console.log(err.message);
       }
@@ -312,7 +313,7 @@ export default function Detail({ params, searchParams }) {
               <p className="md:text-lg sm:text-lg text-xs font-semibold ">
                 Kuitansi :{" "}
               </p>
-              {invoice?.status == "Selesai"&& (order[0]?.dana_penelitian == true || !order[0]?.nama_pembimbing ) ? (
+              {invoice?.status == "Selesai"&& (order?.dana_penelitian == true || !order?.nama_pembimbing ) ? (
                 <Button
                   className="ml-5"
                   color="blue"
@@ -331,7 +332,7 @@ export default function Detail({ params, searchParams }) {
                 Bukti Pembayaran :{" "}
               </p>{" "}
               {invoice?.status == "Menunggu Pembayaran" ||
-              invoice?.status == "Menunggu Konfirmasi Pembayaran" ||
+              invoice?.status == "menunggu konfirmasi pembayaran" ||
               invoice?.status == "Selesai" ? (
                 invoice.bukti_pembayaran ? (
                   <Button

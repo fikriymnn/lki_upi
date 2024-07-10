@@ -300,12 +300,13 @@ export default function Order_analisis() {
                 name="jenis_pengujian"
                 id="jenis_pengujian"
                 className="input-style-lki"
+                defaultValue={""}
                 onChange={(e) => {
                   jenis_pengujian[0][0] = kode[e.target.value].jenis_pengujian;
                   kode_pengujian[0][0] = kode[e.target.value].kode_pengujian;
                 }}
               >
-                <option value="" defaultValue>
+                <option value="">
                   Pilih
                 </option>
                 {kode.map((v, i) => {
@@ -480,12 +481,13 @@ export default function Order_analisis() {
                 name="sample_dikembalikan"
                 id="sample_dikembalikan"
                 className="input-style-lki"
+                defaultValue={""}
                 onChange={(e) => {
                   e.preventDefault();
                   sample_dikembalikan[i] = e.target.value;
                 }}
               >
-                <option value="" selected>
+                <option value="" >
                   Pilih
                 </option>
                 <option value="ya">Ya</option>
