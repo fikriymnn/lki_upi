@@ -240,6 +240,7 @@ export default function Report() {
                     <th className="px-10 text-sm">No invoice</th>
                     <th className="px-10 text-sm">Kode Pengujian</th>
                     <th className="px-10 text-sm">Harga</th>
+                    <th className="px-10 text-sm">Catatan</th>
                     <th className="px-10 text-sm">Lama Pengerjaan</th>
                     <th className="px-10 text-sm">Operator</th>
                     <th className="px-10 text-sm">PJ</th>
@@ -264,8 +265,7 @@ export default function Report() {
                     <th className="px-10 text-sm">Sample dikembalikan</th>
                     <th className="px-10 text-sm">Deskripsi</th>
                     <th className="px-10 text-sm">Riwayat pengujian</th>
-                    <th className="px-10 text-sm">Catatan</th>
-                    <th className="px-10 text-sm">No Invoice</th>
+                   
                   </tr>
                   {loading ? (
                     <p className="text-center mt-10">loading</p>
@@ -285,6 +285,9 @@ export default function Report() {
                           </td>
                           <td className="text-center text-xs">
                             {a.total_harga}
+                          </td>
+                          <td className="text-center text-xs">
+                            {invoice[i]?.catatan}
                           </td>
                           <td className="text-center text-xs">
                             {a.lama_pengerjaan}
@@ -354,12 +357,7 @@ export default function Report() {
                           <td className="text-center text-xs">
                             {a.riwayat_pengujian}
                           </td>
-                          <td className="text-center text-xs">
-                            {invoice[i]?.catatan}
-                          </td>
-                          <td className="text-center text-xs">
-                            {invoice[i]?.no_invoice}
-                          </td>
+                          
                         </tr>
                       );
                     })
