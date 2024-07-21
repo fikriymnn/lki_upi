@@ -115,8 +115,17 @@ export default function Report() {
           }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`,
           { withCredentials: true }
         );
-        if (data.data.success) {
+        const data2 = await axios.get(
+          `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&success=true&skip=${
+            page * 100
+          }&limit=100${year ? `&year=${year}` : ""}${
+            month ? `&month=${month}` : ""
+          }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`,
+          { withCredentials: true }
+        );
+        if (data.data.success&&data2.data) {
           setOrder(data.data.data);
+          setInvoice(data2.data.data)
           setLength(data.data.length_total);
           console.log(order);
           setLoading(false);
@@ -255,6 +264,8 @@ export default function Report() {
                     <th className="px-10 text-sm">Sample dikembalikan</th>
                     <th className="px-10 text-sm">Deskripsi</th>
                     <th className="px-10 text-sm">Riwayat pengujian</th>
+                    <th className="px-10 text-sm">Catatan</th>
+                    <th className="px-10 text-sm">No Invoice</th>
                   </tr>
                   {loading ? (
                     <p className="text-center mt-10">loading</p>
@@ -342,6 +353,12 @@ export default function Report() {
                           </td>
                           <td className="text-center text-xs">
                             {a.riwayat_pengujian}
+                          </td>
+                          <td className="text-center text-xs">
+                            {invoice[i]?.catatan}
+                          </td>
+                          <td className="text-center text-xs">
+                            {invoice[i]?.no_invoice}
                           </td>
                         </tr>
                       );
