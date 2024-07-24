@@ -68,7 +68,7 @@ const stats = [
     status: "Menunggu Pembayaran",
   },
   {
-    status: "Menunggu Konfirmasi Pembayaran",
+    status: "menunggu konfirmasi pembayaran",
   },
 ];
 
