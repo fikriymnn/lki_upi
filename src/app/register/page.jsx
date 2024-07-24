@@ -9,6 +9,7 @@ import { Button, Checkbox, Label, input } from "flowbite-react";
 export default function Register({ searchParams }) {
   const { prevRoute } = searchParams;
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   const [userForm, setUserForm] = useState({
     nama_lengkap: "",
@@ -155,15 +156,19 @@ export default function Register({ searchParams }) {
               <div>
                 <div className="mb-2 block">
                   <Label htmlFor="password" value="Password" />
+                  
                 </div>
                 <input
                   className="input-style-lki"
                   name="password"
                   required
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   onChange={handleChange}
                   placeholder="Masukkan Password"
                 />
+                <button className="text-xs text-red-600" onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? 'hide password' : 'show password'}
+                              </button>
               </div>
               </div>
             </div>

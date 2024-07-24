@@ -10,6 +10,7 @@ export default function Admin() {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -114,12 +115,14 @@ export default function Admin() {
             </div>
             <TextInput
               id="password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               name="password"
               required
               placeholder="password"
               onChange={handleChange}
-            />
+            /><button className="text-xs text-red-600" onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? 'hide password' : 'show password'}
+          </button>
           </div>
 
           <Button type="submit" color="failure" className="md:w-full sm:w-full w-6/12 m-auto">

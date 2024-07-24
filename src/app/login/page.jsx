@@ -16,6 +16,7 @@ export default function Login({ searchParams }) {
         email: "",
         password: ""
     })
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         console.log(process.env.NEXT_PUBLIC_URL)
@@ -123,16 +124,18 @@ export default function Login({ searchParams }) {
                         <div className=" w-full  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[0px] mb-[20px]">
                             <div className=" w-full flex-col justify-start items-start gap-2 flex">
                                 <div className="text-neutral-700 md:text-lg text-sm font-medium  tracking-wide">
-                                    PASSWORD
+                                    PASSWORD 
                                 </div>
                                 <input
                                     id="password" required
                                     onChange={handleChange}
-                                    type="password"
+                                    type={showPassword ? 'text' : 'password'}
                                     name="password"
                                     placeholder="Masukan Password di sini"
                                     className="input-style-lki"
-                                />
+                                /> <button className="text-xs text-red-600" onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? 'hide password' : 'show password'}
+                              </button>
                             </div>
                         </div>
                         {/* <div className="md:my-8 my-3">
