@@ -50,6 +50,10 @@ export default function Login({ searchParams }) {
 
     }
 
+    const handleLupaPassword = (e)=>{
+        router.push('/lupapassword')
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
         const get_user = async () => {
@@ -134,14 +138,16 @@ export default function Login({ searchParams }) {
                                     placeholder="Masukan Password di sini"
                                     className="input-style-lki"
                                 /> <button className="text-xs text-red-600" onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? 'hide password' : 'show password'}
+                                {showPassword ? 'hide' : 'show'}
                               </button>
                             </div>
                         </div>
-                        {/* <div className="md:my-8 my-3">
-                            <input type="checkbox" id="check" /> <label htmlFor="check">Ingat Saya</label>
-                        </div> */}
-                        <div className="flex justify-between mt-5 sm:mt-8 md:mt-14 mb-8">
+                        <div className="md:my-1 my-1 flex justify-center">
+                        <button className="text-xs text-blue-600 font-semibold hover:text-blue-400 m-auto" onClick={handleLupaPassword}>
+                                lupa password ?
+                              </button>
+                        </div>
+                        <div className="flex justify-between mt-4 sm:mt-6 md:mt-8 mb-8">
                             <button type="submit" className="md:w-[238px] w-[200px] h-[56px] bg-gradient-to-r from-red-700 via-red-700 to-rose-950 text-2xl font-bold text-white flex justify-center items-center rounded-full">
                                 Masuk
                             </button>

@@ -167,7 +167,7 @@ export default function Register({ searchParams }) {
                   placeholder="Masukkan Password"
                 />
                 <button className="text-xs text-red-600" onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? 'hide password' : 'show password'}
+                                {showPassword ? 'hide' : 'show'}
                               </button>
               </div>
               </div>
