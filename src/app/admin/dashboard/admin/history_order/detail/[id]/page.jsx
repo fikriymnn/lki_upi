@@ -140,9 +140,9 @@ export default function HAdetail({ params, searchParams }) {
         </div>
         <div className="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 md:mx-20 mx-5">
           <p className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">
-            Status :{" "}
+            Status {" "}
             <span className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto ">
-              {invoice?.status}
+              : {invoice?.status}
             </span>{" "}
           </p>
           {invoice?.status == "Form Dikonfirmasi" ? (
@@ -155,20 +155,20 @@ export default function HAdetail({ params, searchParams }) {
             ""
           )}
           <p className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">
-            Total harga :{" "}
+            Total harga {" "}
             <span className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto ">
               {" "}
-              Rp.{invoice?.total_harga}
+              : Rp.{invoice?.total_harga}
             </span>
           </p>
           <p className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">
-            Catatan :{" "}
+            Catatan {" "}
             <span className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto ">
-              {invoice?.catatan}
+              : {invoice?.catatan}
             </span>{" "}
           </p>
           <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
-            <p className="md:text-xl sm:text-xl  font-semibold">Invoice : </p>
+            <p className="md:text-xl sm:text-xl  font-semibold">Invoice </p>
             {invoice.status == "Selesai" ? (
               <Button
                 className="ml-5 "
@@ -183,7 +183,7 @@ export default function HAdetail({ params, searchParams }) {
             )}
           </div>
           <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
-            <p className=" md:text-xl sm:text-xl  font-semibold">Kuitansi : </p>
+            <p className=" md:text-xl sm:text-xl  font-semibold">Kuitansi </p>
             {invoice?.status == "Selesai" ? (
               <Button
                 className="ml-5"
@@ -199,7 +199,7 @@ export default function HAdetail({ params, searchParams }) {
           </div>
           <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
             <p className="md:text-xl sm:text-xl  font-semibold">
-              Bukti Pembayaran :{" "}
+              Bukti Pembayaran {" "}
             </p>{" "}
             {invoice?.bukti_pembayaran ? (
               <Button

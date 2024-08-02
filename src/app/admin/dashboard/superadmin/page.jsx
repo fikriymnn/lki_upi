@@ -301,12 +301,12 @@ export default function OrderSuperAdmin() {
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Harga
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
+              {/* <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Keterangan
               </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Status
-              </Table.HeadCell>
+              </Table.HeadCell> */}
               {/* <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Hapus
               </Table.HeadCell> */}
@@ -341,7 +341,7 @@ export default function OrderSuperAdmin() {
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       {v.total_harga}
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
+                    {/* <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       <a
                         href={`/admin/dashboard/admin/order/${v._id}?no_invoice=${v.no_invoice}`}
                         className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500"
@@ -358,7 +358,7 @@ export default function OrderSuperAdmin() {
                       >
                         Keterangan
                       </a>
-                    </Table.Cell>
+                    </Table.Cell> */}
                     {/* <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       <a
                         onClick={(e) => {
