@@ -3,10 +3,12 @@ import AdminOrderCard from "@/components/AdminOrderCard"
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { Button } from 'flowbite-react';
+import month_bahasa from "@/utils/month_bahasa";
 
 
 export default function DetailOrderAdmin({ params, searchParams }) {
     const { id } = params
+    const [edit,setEdit] = useState(false)
     const { no_invoice } = searchParams
     const [order, setOrder] = useState([])
     const [invoice, setInvoice] = useState({ id_user: {} })
@@ -71,6 +73,80 @@ export default function DetailOrderAdmin({ params, searchParams }) {
         }
     };
 
+    const handleChange = async (e) => {
+        const { value, name } = e.target;
+        setInvoice((e) => ({ ...e, [name]: value }));
+      };
+
+      const handleConfirm = async (e) => {
+        e.preventDefault();
+        setEdit((a) => !a);
+        let obj = {
+          status: invoice?.status,
+          estimasi_date: invoice?.estimasi_date,
+          total_harga: invoice?.total_harga,
+          catatan: invoice?.catatan
+        };
+        try {
+          function timeNow() {
+            var d = new Date(),
+              h = (d.getHours() < 10 ? "0" : "") + d.getHours(),
+              m = (d.getMinutes() < 10 ? "0" : "") + d.getMinutes();
+            return h + ":" + m;
+          }
+          const date_format = `${timeNow()} ${new Date().getDate()} ${month_bahasa(
+            new Date().getMonth()
+          )} ${new Date().getFullYear()}`;
+          function selection() {
+            switch (invoice?.status) {
+              case "Menunggu Form Dikonfirmasi":
+                obj.s1_date = date_format;
+                return true;
+              case "Form Dikonfirmasi":
+                obj.s2_date = date_format;
+    
+                return true;
+              case "Sample Diterima Admin":
+                obj.s3_date = date_format;
+                return true;
+              case "Sample Dikerjakan Operator":
+                obj.s3_date = date_format;
+                obj.s4_date = date_format;
+                return true;
+              case "Menunggu Verifikasi":
+                obj.s5_date = date_format;
+                return true;
+              case "Menunggu Pembayaran":
+                obj.s6_date = date_format;
+                return true;
+              case "Menunggu Konfirmasi Pembayaran":
+                obj.s7_date = date_format;
+                return true;
+              case "Selesai":
+                obj.success = true;
+                obj.s8_date = date_format;
+                return true;
+              case "Order Dibatalkan":
+                obj.s8_date = date_format;
+                return true;
+            }
+          }
+          if (selection() == true) {
+            const data = await axios.put(
+              `${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`,
+              obj,
+              { withCredentials: true }
+            );
+            alert("update successfully");
+            if (data.data.success) {
+              window.location.reload();
+            }
+          }
+        } catch (err) {
+          alert(err.message);
+        }
+      };
+
     useEffect(() => {
         async function getnvoice() {
             try {
@@ -116,23 +192,169 @@ export default function DetailOrderAdmin({ params, searchParams }) {
 
                 </div>
                 <br />
-                <div className="flex flex-col gap-4">
-
-                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Estimasi selesai : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.estimasi_date ? invoice.estimasi_date : ""}</p></div>
-                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">No invoice : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.no_invoice ? invoice.no_invoice : ""}</p></div>
-
-                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Status : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.status ? invoice.status : ""}</p></div>
-                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Total harga : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.total_harga ? invoice.total_harga : ""}</p></div>
-
-                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Catatan : </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">{invoice.catatan ? invoice.catatan : ""}</p></div>
-
-                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold">Invoice : </p>{invoice.status == "Form Dikonfirmasi" || invoice.status == "Sample Diterima Admin" || invoice.status == "Sample Dikerjakan Operator" || invoice.status == "Menunggu Verifikasi" || invoice.status == "Menunggu Pembayaran" || invoice.status == "Menunggu Konfirmasi Pembayaran" || invoice.status == "Selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download</Button> : <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">-</p>}</div>
-
-                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Kuitansi : </p>{invoice?.status == "Selesai"? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download</Button> : <p className="ml-5">-</p>}</div>
-
-                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Bukti pembayaran : </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} href={invoice?.bukti_pembayaran}>download</Button> : ""} </div>
+                {edit ? (
+                <div className="flex gap-5 mt-5">
+                  <button
+                    onClick={handleConfirm}
+                    className="grad text-white px-2 py-1 rounded-lg"
+                  >
+                    Konfirmasi
+                  </button>
+                  <button
+                    onClick={() => setEdit((a) => !a)}
+                    className="grad text-white px-2 py-1 rounded-lg"
+                  >
+                    Cancel
+                  </button>
                 </div>
+              ) : (
+                <button
+                  onClick={() => setEdit((a) => !a)}
+                  className="grad text-white px-2 py-1 rounded-lg w-40"
+                >
+                  Edit
+                </button>
+              )}
+              <br />
+              <br />
+                {
+                    !edit ?<div className="flex flex-col gap-4">
+
+                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Estimasi selesai </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">: {invoice.estimasi_date ? invoice.estimasi_date : ""}</p></div>
+                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">No invoice </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">: {invoice.no_invoice ? invoice.no_invoice : ""}</p></div>
+
+                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Status </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">: {invoice.status ? invoice.status : ""}</p></div>
+                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Total harga </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">: {invoice.total_harga ? invoice.total_harga : ""}</p></div>
+
+                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Catatan </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">: {invoice.catatan ? invoice.catatan : ""}</p></div>
+
+                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold">Invoice </p>{invoice.status == "Form Dikonfirmasi" || invoice.status == "Sample Diterima Admin" || invoice.status == "Sample Dikerjakan Operator" || invoice.status == "Menunggu Verifikasi" || invoice.status == "Menunggu Pembayaran" || invoice.status == "Menunggu Konfirmasi Pembayaran" || invoice.status == "Selesai" ? <Button className="ml-5 " color="blue" size={5} onClick={downloadInvoice}>download</Button> : <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">-</p>}</div>
+
+                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Kuitansi </p>{invoice?.status == "Selesai"? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download</Button> : <p className="ml-5">-</p>}</div>
+
+                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Bukti pembayaran </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} href={invoice?.bukti_pembayaran}>download</Button> : ""} </div>
+                </div>: <div className="m-auto  w-11/12 border-2 rounded-lg">
+            <br />
+            <br />
+            <div className="md:mx-10 mx-5 flex flex-col gap-3 md:w-6/12 ">
+              {edit ? (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm grid grid-cols-2 font-semibold">
+                    Status 
+                    <select
+                      name="status"
+                      className="font-normal md:text-lg sm:text-xs text-xs"
+                      onChange={(e) =>
+                        setInvoice((a) => ({
+                          ...a,
+                          [e.target.name]: e.target.value,
+                        }))
+                      }
+                      value={invoice?.status}
+                    >
+                      <option value="">pilih</option>
+                      <option value="Order Dibatalkan">Batalkan Order</option>
+                      <option value="Form Dikonfirmasi">
+                        Form Dikonfirmasi
+                      </option>
+                      {/* <option value="sample diterima admin">sample diterima admin</option> */}
+                      <option value="Sample Dikerjakan Operator">
+                        Sample Diterima Admin dan Diproses
+                      </option>
+                      <option value="Menunggu Verifikasi">Menunggu verifikasi</option>
+                      <option value="Menunggu Pembayaran">
+                        Menunggu Pembayaran
+                      </option>
+                      <option value="Selesai">
+                        Konfirmasi Pembayaran dan Selesai
+                      </option>
+                    </select>
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                    Status  <span className="font-normal md:text-lg sm:text-xs text-xs">{invoice?.status}</span>{" "}
+                  </p>
+                </div>
+              )}
+
+              {edit ? (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm grid grid-cols-2 font-semibold">
+                    Total harga {" "}
+                    <input
+                      type="number"
+                      name="total_harga"
+                      onChange={handleChange}
+                      value={invoice?.total_harga}
+                    />
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                    Total harga {" "}
+                    <span className="font-normal md:text-lg sm:text-xs text-xs">Rp.{invoice?.total_harga}</span>
+                  </p>
+                </div>
+              )}
+              {edit ? (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm grid grid-cols-2 font-semibold">
+                    Tanggal estimasi selesai {" "}
+                    <input
+                      type="text"
+                      name="estimasi_date"
+                      onChange={handleChange}
+                      value={invoice?.estimasi_date}
+                    />
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                    Tanggal estimasi selesai {" "}
+                    <span className="font-normal md:text-lg sm:text-xs text-xs">{invoice?.estimasi_date}</span>{" "}
+                  </p>
+                </div>
+              )}
+              {edit ? (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm grid grid-cols-2 font-semibold">
+                    Catatan {" "}
+                    <textarea
+                      placeholder="Tuliskan catatan"
+                      className=""
+                      name="catatan"
+                      type="text"
+                      onChange={handleChange}
+                      value={invoice?.catatan}
+                    />
+                    {/* <input
+                      type="text"
+                      name="catatan"
+                      onChange={handleChange}
+                      value={invoice?.catatan}
+                    /> */}
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="md:text-lg sm:text-xs text-sm font-semibold md:grid grid-cols-2 gap-5 flex">
+                    Catatan {" "}
+                    <span className="font-normal md:text-lg sm:text-xs text-xs">{invoice?.catatan}</span>{" "}
+                  </p>
+                </div>
+              )}
             </div>
+            <br />
+            <br />
+          </div>
+                }
+                
+            </div>
+           
             <br />
             <div className="md:mx-20 mx-5">
                 {
