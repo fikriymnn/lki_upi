@@ -107,6 +107,27 @@ export default function Order() {
   const [jenis_pengujian, setJenis_pengujian] = useState("");
   const [status, setStatus] = useState("");
   const [yearOption, setYearOption] = useState([]);
+  const [search,setSearch] = useState("")
+
+  const handleSearch = async ()=>{
+    try {
+      const data = await axios.get(
+        `${process.env.NEXT_PUBLIC_URL}/api/invoice?success=false&skip=${page * 15
+        }&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
+        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : ""
+        }${search?`&nama_lengkap=${search}`:""}`,
+        { withCredentials: true }
+      );
+      console.log(data.data);
+      if (data.data.success) {
+        setInvoice(data.data.data);
+        setLength(data.data.length_total);
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+  
 
   const handleDelete = async (no_invoice) => {
     try {
@@ -133,13 +154,10 @@ export default function Order() {
     async function getInvoice() {
       try {
         const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/invoice?success=false&skip=${
-            page * 15
-          }&limit=15${year ? `&year=${year}` : ""}${
-            month ? `&month=${month}` : ""
-          }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${
-            status ? `&status=${status}` : ""
-          }`,
+          `${process.env.NEXT_PUBLIC_URL}/api/invoice?success=false&skip=${page * 15
+          }&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
+          }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : ""
+          }${search?`&nama_lengkap=${search}`:""}`,
           { withCredentials: true }
         );
         console.log(data.data);
@@ -157,6 +175,22 @@ export default function Order() {
     <>
       <Navigasi text1={"admin"} text2={"order"} />
       <div className="flex flex-wrap justify-center gap-1 mb-10">
+        <div className="md:flex grid grid-cols-3 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-80 sm:w-64 w-52">
+          <p className="md:text-sm sm:text-base text-xs font-semibold text-white pt-2">
+            Search :
+          </p>{" "}
+          <input
+            placeholder="cari nama..."
+            type="text"
+            name="nama_lengkap"
+            onChange={(e)=>{
+              setSearch(e.target.value)
+            }}
+            value={search}
+          />
+          <button onClick={(a)=>handleSearch()} className="bg-red-700 md:text-base sm:text-sm text-xs text-white rounded-lg md:p-2 md:ml-1 sm:p-2">Cari</button>
+        </div>
+
         <div className="md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52 ">
           <p className="md:text-sm sm:text-base text-xs font-semibold text-white p-2 ">
             Tahun :
@@ -296,7 +330,7 @@ export default function Order() {
                     className="bg-white dark:border-gray-700 dark:bg-gray-800"
                   >
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white md:text-[11px] sm:text-[11px] text-[10px]">
-                      {(i + 1)+(page*15)}
+                      {(i + 1) + (page * 15)}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {v.date_format}
