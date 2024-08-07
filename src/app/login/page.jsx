@@ -143,7 +143,7 @@ export default function Login({ searchParams }) {
                             </div>
                         </div>
                         <div className="md:my-1 my-1 flex justify-center">
-                        <button className="text-xs text-blue-600 font-semibold hover:text-blue-400 m-auto" onClick={handleLupaPassword}>
+                        <button className="text-xs sm:text-sm md:text-lg text-blue-600 font-semibold hover:text-blue-400 m-auto" onClick={handleLupaPassword}>
                                 lupa password ?
                               </button>
                         </div>
