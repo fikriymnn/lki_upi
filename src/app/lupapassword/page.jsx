@@ -12,9 +12,8 @@ export default function Lupapassword() {
             if (!email) {
                 alert('email kosong!')
             } else {
-                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/lupaPassword/${email}`, {
-                    withCredentials: true,
-                })
+                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/lupaPassword/${email}`)
+                console.log(data)
                 if (data.data.success) {
                     setMessage('sukses')
                 } else {
@@ -23,7 +22,7 @@ export default function Lupapassword() {
             }
 
         } catch (err) {
-            alert(err.message)
+            alert('email tidak valid')
         }
     }
     return (
