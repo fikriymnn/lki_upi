@@ -234,7 +234,7 @@ export default function Order_Pj() {
                     </Table.Cell>
 
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
-                      {v.id_user[0].nama_lengkap}
+                      {v.nama_lengkap}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       {v.jenis_pengujian}

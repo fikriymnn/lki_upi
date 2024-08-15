@@ -339,7 +339,7 @@ export default function Order() {
                       {v.no_invoice}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
-                      {v.id_user[0].nama_lengkap}
+                      {v.nama_lengkap}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {v.jenis_pengujian}

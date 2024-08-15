@@ -178,7 +178,7 @@ export default function DetailOrderAdmin({ params, searchParams }) {
             </div>
             <div className="md:mx-20 mx-5">
                 <div className=" grid md:grid-cols-2 gap-5">
-                    <div className="flex input-style-lki"><p className="md:text-lg sm:text-lg text-xs ">Nama lengkap : {invoice.id_user?.nama_lengkap}</p> </div>
+                    <div className="flex input-style-lki"><p className="md:text-lg sm:text-lg text-xs ">Nama lengkap : {invoice.nama_lengkap}</p> </div>
                     <div className="flex input-style-lki"><p className="md:text-lg sm:text-lg text-xs ">Email : {invoice.id_user?.email}</p> </div>
                     <div className="flex input-style-lki"><p className="md:text-lg sm:text-lg text-xs ">No whatsapp : {invoice.id_user?.no_whatsapp}</p> </div>
                     <div className="flex input-style-lki"><p className="md:text-lg sm:text-lg text-xs ">No telepon : {invoice.id_user?.no_telp}</p> </div>

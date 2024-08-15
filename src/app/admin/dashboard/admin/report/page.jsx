@@ -300,7 +300,7 @@ export default function Report() {
                             {a.admin_date}
                           </td>
                           <td className="text-center text-xs">
-                            {a.id_user[0].nama_lengkap}
+                            {a.nama_lengkap}
                           </td>
                           <td className="text-center text-xs">
                             {a.id_user[0].jenis_institusi}
