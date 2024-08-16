@@ -15,7 +15,7 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   metadataBase: new URL("https://lablkiupi.com"),
   icons: {
-    icon: '/logo.svg',
+    icon: '/public/logo.svg',
   },
   title: {
     default: "LABORATORIUM KIMIA INSTRUMEN UPI",
