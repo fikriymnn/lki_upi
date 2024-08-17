@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   },
   description: "Layanan Laboratorium Kimia Instrumen Universitas Pendidikan Indonesia (UPI)",
   openGraph: {
+    title: "LABORATORIUM KIMIA INSTRUMEN UPI",
     description: "Layanan Laboratorium Kimia Instrumen Universitas Pendidikan Indonesia (UPI)",
     images: [''],
   },
