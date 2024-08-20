@@ -108,7 +108,7 @@ export default function Report() {
         const data = await axios.get(
           `${
             process.env.NEXT_PUBLIC_URL
-          }/api/order?report=true&status_report=success&skip=${
+          }/api/order?report=true&status_report=success&status_pengujian=success&status_pengujian=prasuccess&skip=${
             page * 100
           }&limit=100${month ? `&month=${month}` : ""}${
             year ? `&year=${year}` : ""
@@ -116,7 +116,7 @@ export default function Report() {
           { withCredentials: true }
         );
         const data2 = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&success=true&skip=${
+          `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&status=Menunggu Pembayaran&success=true&skip=${
             page * 100
           }&limit=100${year ? `&year=${year}` : ""}${
             month ? `&month=${month}` : ""

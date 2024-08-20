@@ -22,6 +22,7 @@ export default function Detail({ params, searchParams }) {
   const [order, setOrder] = useState([]);
   const [invoice, setInvoice] = useState({});
   const [buktiPembayaran, setBuktiPembayaran] = useState([]);
+  const [kirim,setKirim] = useState(true)
 
   function timeNow() {
     var d = new Date(),
@@ -334,17 +335,27 @@ export default function Detail({ params, searchParams }) {
               {invoice?.status == "Menunggu Pembayaran" ||
               invoice?.status == "menunggu konfirmasi pembayaran" ||
               invoice?.status == "Selesai" ? (
-                invoice.bukti_pembayaran ? (
+                invoice.bukti_pembayaran && kirim==true ? (
+                  <div className="grid grid-cols-2 items-stretch">
                   <Button
-                    className="ml-5"
+                    className="ml-5 text-xs"
                     color="blue"
                     size={5}
                     href={invoice.bukti_pembayaran}
                   >
                     download{" "}
                   </Button>
+                  <Button
+                    className="ml-2"
+                    color="blue"
+                    size={5}
+                    onClick={(a)=>setKirim(false)}
+                  >
+                    edit{" "}
+                  </Button>
+                  </div>
                 ) : (
-                  <div className="flex">
+                  <div className="flex justify-center">
                     <input
                       className="ml-5 w-11/12 h-10/12"
                       type="file"
