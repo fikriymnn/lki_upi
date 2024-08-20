@@ -15,7 +15,7 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   metadataBase: new URL("https://lablkiupi.com"),
   icons: {
-    icon: '/logo.svg',
+    icon: '/public/logo.svg',
   },
   title: {
     default: "LABORATORIUM KIMIA INSTRUMEN UPI",
@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   },
   description: "Layanan Laboratorium Kimia Instrumen Universitas Pendidikan Indonesia (UPI)",
   openGraph: {
+    title: "LABORATORIUM KIMIA INSTRUMEN UPI",
     description: "Layanan Laboratorium Kimia Instrumen Universitas Pendidikan Indonesia (UPI)",
     images: [''],
   },
