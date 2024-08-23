@@ -265,7 +265,7 @@ export default function Report() {
                     <th className="px-10 text-sm">Sample dikembalikan</th>
                     <th className="px-10 text-sm">Deskripsi</th>
                     <th className="px-10 text-sm">Riwayat pengujian</th>
-                   
+                    <th className="px-10 text-sm">Status</th>
                   </tr>
                   {loading ? (
                     <p className="text-center mt-10">loading</p>
@@ -356,6 +356,9 @@ export default function Report() {
                           </td>
                           <td className="text-center text-xs">
                             {a.riwayat_pengujian}
+                          </td>
+                          <td className="text-center text-xs">
+                            {invoice[i]?.status}
                           </td>
                           
                         </tr>
