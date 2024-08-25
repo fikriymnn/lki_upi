@@ -165,7 +165,7 @@ export default function OrderSuperAdmin() {
           }&limit=15${year ? `&year=${year}` : ""}${
             month ? `&month=${month}` : ""
           }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${
-            status ? `&status=${status}` : "&status=Sembunyikan"
+            status ? `&status=${status}` : "&status=Sembunyikan&status=Selesai"
           }`,
           { withCredentials: true }
         );

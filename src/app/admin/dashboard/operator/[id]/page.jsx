@@ -47,13 +47,16 @@ export default function Tracking_admin({ params }) {
             obj.s5_date = date_format;
             return true;
           case "Menunggu Pembayaran":
+            obj.success = true;
             obj.s6_date = date_format;
             return true;
           case "Menunggu Konfirmasi Pembayaran":
             obj.s7_date = date_format;
+            obj.success = true;
             return true;
           case "Selesai":
             obj.s8_date = date_format;
+            obj.success = true;
             return true;
         }
       }

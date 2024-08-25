@@ -108,7 +108,7 @@ export default function Report() {
         const data = await axios.get(
           `${
             process.env.NEXT_PUBLIC_URL
-          }/api/order?report=true&status_report=success&status_pengujian=success&status_pengujian=prasuccess&skip=${
+          }/api/order?status_pengujian=success&status_report=success&skip=${
             page * 100
           }&limit=100${month ? `&month=${month}` : ""}${
             year ? `&year=${year}` : ""
@@ -116,18 +116,17 @@ export default function Report() {
           { withCredentials: true }
         );
         const data2 = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&status=Menunggu Pembayaran&success=true&skip=${
+          `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&success=true&skip=${
             page * 100
-          }&limit=100${year ? `&year=${year}` : ""}${
-            month ? `&month=${month}` : ""
-          }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`,
+          }&limit=100`,
           { withCredentials: true }
         );
+        console.log(data)
         if (data.data.success&&data2.data) {
           setOrder(data.data.data);
           setInvoice(data2.data.data)
           setLength(data.data.length_total);
-          console.log(order);
+          console.log(data2);
           setLoading(false);
         }
       } catch (err) {
@@ -273,7 +272,7 @@ export default function Report() {
                     order.map((a, i) => {
                       return (
                         <tr key={i}>
-                          <td className="text-center text-xs">{i + 1}</td>
+                          <td className="text-center text-xs">{(100*page)+ i + 1}</td>
                           <td className="text-center text-xs">
                             {a.date_format}
                           </td>
@@ -303,28 +302,28 @@ export default function Report() {
                             {a.nama_lengkap}
                           </td>
                           <td className="text-center text-xs">
-                            {a.id_user[0].jenis_institusi}
+                            {a.id_user[0]?.jenis_institusi}
                           </td>
                           <td className="text-center text-xs">
-                            {a.id_user[0].nama_institusi}
+                            {a.id_user[0]?.nama_institusi}
                           </td>
                           <td className="text-center text-xs">
-                            {a.id_user[0].fakultas}
+                            {a.id_user[0]?.fakultas}
                           </td>
                           <td className="text-center text-xs">
-                            {a.id_user[0].program_studi}
+                            {a.id_user[0]?.program_studi}
                           </td>
                           <td className="text-center text-xs">
                             {a.nama_pembimbing}
                           </td>
                           <td className="text-center text-xs">
-                            {a.id_user[0].email}
+                            {a.id_user[0]?.email}
                           </td>
                           <td className="text-center text-xs">
-                            {a.id_user[0].no_telp}
+                            {a.id_user[0]?.no_telp}
                           </td>
                           <td className="text-center text-xs">
-                            {a.id_user[0].no_whatsapp}
+                            {a.id_user[0]?.no_whatsapp}
                           </td>
                           <td className="text-center text-xs">
                             {a.nama_sample}
@@ -378,9 +377,8 @@ export default function Report() {
         <div className="flex overflow-x-auto sm:justify-center">
           <Pagination
             currentPage={page}
-            totalPages={parseInt(Math.ceil(length / 50).toFixed())}
+            totalPages={parseInt(Math.ceil(length / 100).toFixed())}
             onPageChange={(a) => {
-              console.log(a);
               setPage(a - 1);
             }}
           />

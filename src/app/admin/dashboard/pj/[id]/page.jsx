@@ -48,11 +48,14 @@ export default function Tracking_Pj({ params }) {
             return true;
           case "Menunggu Pembayaran":
             obj.s6_date = date_format;
+            obj.success = true;
             return true;
           case "Menunggu Konfirmasi Pembayaran":
             obj.s7_date = date_format;
+            obj.success = true;
             return true;
           case "Selesai":
+            obj.success = true;
             obj.s8_date = date_format;
             return true;
         }

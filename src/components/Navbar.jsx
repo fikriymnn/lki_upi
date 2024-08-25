@@ -121,7 +121,7 @@ export default function NavbarCustom() {
                 ""
               )}
 
-              {adminPath[2] == "dashboard" && role == "admin" ? (
+              {/* {adminPath[2] == "dashboard" && role == "admin" ? (
                 <Navbar.Link
                   href="/admin/dashboard/admin/history_order"
                   className="mt-[2vh] font-extrabold text-white "
@@ -131,7 +131,7 @@ export default function NavbarCustom() {
                 </Navbar.Link>
               ) : (
                 ""
-              )}
+              )} */}
 
               {adminPath[2] == "dashboard" && role == "admin" ? (
                 <Navbar.Link

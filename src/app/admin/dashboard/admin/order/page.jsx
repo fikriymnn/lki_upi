@@ -68,7 +68,10 @@ const stats = [
     status: "Menunggu Pembayaran",
   },
   {
-    status: "menunggu konfirmasi pembayaran",
+    status: "Menunggu Konfirmasi Pembayaran",
+  },
+  {
+    status: "Selesai",
   },
 ];
 
@@ -112,13 +115,12 @@ export default function Order() {
   const handleSearch = async () => {
     try {
       const data = await axios.get(
-        `${process.env.NEXT_PUBLIC_URL}/api/invoice?success=false&skip=${page * 15
+        `${process.env.NEXT_PUBLIC_URL}/api/invoice?skip=${page * 15
         }&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
-        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : ""
+        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : "status=menunggu form dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
         }${search ? `&nama_lengkap=${search}` : ""}`,
         { withCredentials: true }
       );
-      console.log(data.data);
       if (data.data.success) {
         setInvoice(data.data.data);
         setLength(data.data.length_total);
@@ -154,13 +156,12 @@ export default function Order() {
     async function getInvoice() {
       try {
         const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/invoice?success=false&skip=${page * 15
+          `${process.env.NEXT_PUBLIC_URL}/api/invoice?&skip=${page * 15
           }&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
-          }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : ""
+          }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : "status=menunggu form dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
           }${search ? `&nama_lengkap=${search}` : ""}`,
           { withCredentials: true }
         );
-        console.log(data.data);
         if (data.data.success) {
           setInvoice(data.data.data);
           setLength(data.data.length_total);

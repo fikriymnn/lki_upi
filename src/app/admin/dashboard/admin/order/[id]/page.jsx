@@ -117,9 +117,11 @@ export default function DetailOrderAdmin({ params, searchParams }) {
                 obj.s5_date = date_format;
                 return true;
               case "Menunggu Pembayaran":
+                obj.success = true;
                 obj.s6_date = date_format;
                 return true;
               case "Menunggu Konfirmasi Pembayaran":
+                obj.success = true;
                 obj.s7_date = date_format;
                 return true;
               case "Selesai":
