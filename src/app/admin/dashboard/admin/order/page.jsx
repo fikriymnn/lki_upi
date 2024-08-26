@@ -126,7 +126,7 @@ export default function Order() {
         setLength(data.data.length_total);
       }
     } catch (err) {
-      alert(err.message);
+      alert("user tidak ditemukan")
     }
   }
 
