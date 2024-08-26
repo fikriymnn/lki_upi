@@ -172,6 +172,17 @@ export default function DetailOrderAdmin({ params, searchParams }) {
         getnvoice()
     }, [])
 
+    const convertRupiah = (angka)=>{
+      // Konversi angka menjadi string
+      let angkaString = angka.toString();
+    
+      // Bagi angka menjadi array per 3 digit dari belakang
+      let bagianAngka = angkaString.split('').reverse().join('').match(/\d{1,3}/g);
+    
+      // Gabungkan kembali dengan titik sebagai pemisah
+      return bagianAngka.join('.').split('').reverse().join('');
+    }
+
     return (
         <>
             <p className='text-center md:text-4xl sm:text-3xl text-xl font-bold text-gray-800 mt-7'>EDIT ORDER</p>
@@ -226,7 +237,7 @@ export default function DetailOrderAdmin({ params, searchParams }) {
                     <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">No invoice </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">: {invoice.no_invoice ? invoice.no_invoice : ""}</p></div>
 
                     <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Status </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">: {invoice.status ? invoice.status : ""}</p></div>
-                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Total harga </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">: {invoice.total_harga ? invoice.total_harga : ""}</p></div>
+                    <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Total harga </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">: {invoice.total_harga ? `Rp ${convertRupiah(invoice.total_harga)}` : ""}</p></div>
 
                     <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Catatan </p> <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">: {invoice.catatan ? invoice.catatan : ""}</p></div>
 

@@ -21,6 +21,17 @@ export default function Hdetail({ params, searchParams }) {
     return h + ":" + m;
   }
 
+  const convertRupiah = (angka)=>{
+    // Konversi angka menjadi string
+    let angkaString = angka.toString();
+  
+    // Bagi angka menjadi array per 3 digit dari belakang
+    let bagianAngka = angkaString.split('').reverse().join('').match(/\d{1,3}/g);
+  
+    // Gabungkan kembali dengan titik sebagai pemisah
+    return bagianAngka.join('.').split('').reverse().join('');
+  }
+
   const downloadInvoice = async (e) => {
     try {
       const response = await axios.get(
@@ -160,7 +171,7 @@ export default function Hdetail({ params, searchParams }) {
             Total Harga {" "}
             <span className="text-end md:text-xl sm:text-xl text-xs">
               {" "}
-              : Rp.{invoice?.total_harga}
+              : Rp {convertRupiah(invoice?.total_harga)}
             </span>
           </p>
           <p className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">

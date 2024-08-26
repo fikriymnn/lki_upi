@@ -31,6 +31,17 @@ export default function Detail({ params, searchParams }) {
     return h + ":" + m;
   }
 
+  const convertRupiah = (angka)=>{
+    // Konversi angka menjadi string
+    let angkaString = angka.toString();
+  
+    // Bagi angka menjadi array per 3 digit dari belakang
+    let bagianAngka = angkaString.split('').reverse().join('').match(/\d{1,3}/g);
+  
+    // Gabungkan kembali dengan titik sebagai pemisah
+    return bagianAngka.join('.').split('').reverse().join('');
+  }
+
   const handleBukti = async (e) => {
     e.preventDefault();
     try {
@@ -262,7 +273,7 @@ export default function Detail({ params, searchParams }) {
                   Total Harga {" "}
                 </p>
                 <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">
-                  : Rp.{invoice?.total_harga}
+                  : Rp {convertRupiah(invoice?.total_harga)}
                 </p>
               </div>
               {invoice?.status == "Form Dikonfirmasi" ? <p></p> : ""}

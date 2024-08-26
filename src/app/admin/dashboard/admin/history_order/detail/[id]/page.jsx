@@ -13,6 +13,16 @@ export default function HAdetail({ params, searchParams }) {
   const [invoice, setInvoice] = useState({});
   const [buktiPembayaran, setBuktiPembayaran] = useState("");
 
+  const convertRupiah = (angka)=>{
+    // Konversi angka menjadi string
+    let angkaString = angka.toString();
+  
+    // Bagi angka menjadi array per 3 digit dari belakang
+    let bagianAngka = angkaString.split('').reverse().join('').match(/\d{1,3}/g);
+  
+    // Gabungkan kembali dengan titik sebagai pemisah
+    return bagianAngka.join('.').split('').reverse().join('');
+  }
   function timeNow() {
     var d = new Date(),
       h = (d.getHours() < 10 ? "0" : "") + d.getHours(),
@@ -158,7 +168,7 @@ export default function HAdetail({ params, searchParams }) {
             Total harga {" "}
             <span className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto ">
               {" "}
-              : Rp.{invoice?.total_harga}
+              : Rp {convertRupiah(invoice?.total_harga)}
             </span>
           </p>
           <p className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">

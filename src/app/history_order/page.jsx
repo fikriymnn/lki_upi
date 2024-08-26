@@ -75,6 +75,17 @@ export default function History_order() {
     }
     getInvoice();
   }, [year, month, page]);
+
+  const convertRupiah = (angka)=>{
+    // Konversi angka menjadi string
+    let angkaString = angka.toString();
+  
+    // Bagi angka menjadi array per 3 digit dari belakang
+    let bagianAngka = angkaString.split('').reverse().join('').match(/\d{1,3}/g);
+  
+    // Gabungkan kembali dengan titik sebagai pemisah
+    return bagianAngka.join('.').split('').reverse().join('');
+  }
   return (
     <>
       <div>
@@ -169,7 +180,7 @@ export default function History_order() {
                         {value.jenis_pengujian}
                       </Table.Cell>
                       <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
-                        {value.total_harga !== 0 ? value.total_harga : "-"}
+                        {value.total_harga !== 0 ? `${convertRupiah(value.total_harga)}` : "-"}
                       </Table.Cell>
 
                       <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
