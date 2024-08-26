@@ -117,13 +117,13 @@ export default function Order() {
       const data = await axios.get(
         `${process.env.NEXT_PUBLIC_URL}/api/invoice?skip=${page * 15
         }&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
-        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : "status=menunggu form dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
+        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
         }${search ? `&nama_lengkap=${search}` : ""}`,
         { withCredentials: true }
       );
+      console.log(data)
       if (data.data.success) {
-        setInvoice(data.data.data);
-        setLength(data.data.length_total);
+        getInvoice()
       }
     } catch (err) {
       alert("user tidak ditemukan")
@@ -157,6 +157,25 @@ export default function Order() {
     return bagianAngka.join('.').split('').reverse().join('');
   }
 
+  async function getInvoice() {
+    try {
+      const data = await axios.get(
+        `${process.env.NEXT_PUBLIC_URL}/api/invoice?&skip=${page * 15
+        }&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
+        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
+        }${search ? `&nama_lengkap=${search}` : ""}`,
+        { withCredentials: true }
+      );
+      console.log(data)
+      if (data.data.success) {
+        setInvoice(data.data.data);
+        setLength(data.data.length_total);
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
   useEffect(() => {
     let arr = [];
     const yearMax = new Date().getFullYear() - 2023;
@@ -164,23 +183,7 @@ export default function Order() {
       arr.push(2024 + i);
       setYearOption(arr);
     }
-    async function getInvoice() {
-      try {
-        const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/invoice?&skip=${page * 15
-          }&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
-          }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : "status=menunggu form dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
-          }${search ? `&nama_lengkap=${search}` : ""}`,
-          { withCredentials: true }
-        );
-        if (data.data.success) {
-          setInvoice(data.data.data);
-          setLength(data.data.length_total);
-        }
-      } catch (err) {
-        alert(err.message);
-      }
-    }
+    
     getInvoice();
   }, [page, month, year, jenis_pengujian, status]);
   return (
