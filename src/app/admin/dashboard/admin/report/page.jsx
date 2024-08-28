@@ -118,7 +118,9 @@ export default function Report() {
         const data2 = await axios.get(
           `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&success=true&skip=${
             page * 100
-          }&limit=100`,
+          }&limit=100${month ? `&month=${month}` : ""}${
+            year ? `&year=${year}` : ""
+          }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`,
           { withCredentials: true }
         );
         console.log(data)
