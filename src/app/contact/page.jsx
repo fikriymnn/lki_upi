@@ -146,7 +146,7 @@ export default function Contact() {
                   </button>
                 </div>
               </form>
-              <div className="mx-auto flex justify-center">
+              {/* <div className="mx-auto flex justify-center">
                 <div>
                   <p className="text-center my-5 md:text-base text-sm">
                     Atau hubungi kami di
@@ -155,7 +155,7 @@ export default function Contact() {
                     <a href="https://wa.me/+6285795101010">Whatsapp</a>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
