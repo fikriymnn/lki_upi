@@ -27,14 +27,14 @@ function FooterCustom() {
         <div className="md:mx-0 mx-3">
           <h2 className="mb-5 font-bold md:text-xl text-xl">Kontak Kami</h2>
           <div className="flex gap-3 mb-6">
-            <Image
+            {/* <Image
               src={"/images/wa.svg"}
               alt=""
               width={0}
               height={0}
               className="w-6"
             />
-            <a href="https://wa.me/+6285795101010">+6285795101010</a>
+            <a href="https://wa.me/+6285795101010">+6285795101010</a> */}
           </div>
           <div className="flex gap-3">
             <Image
@@ -44,7 +44,7 @@ function FooterCustom() {
               height={0}
               className="w-6"
             />
-            <p>lkiupi2022@gmail.com</p>
+            <a href="mailto:lkiupi2022@gmail.com">lkiupi2022@gmail.com</a>
           </div>
         </div>
         <div className="md:mx-0 mx-3">
