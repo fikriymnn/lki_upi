@@ -146,13 +146,13 @@ export default function Order() {
     }
   };
 
-  const convertRupiah = (angka)=>{
+  const convertRupiah = (angka) => {
     // Konversi angka menjadi string
     let angkaString = angka.toString();
-  
+
     // Bagi angka menjadi array per 3 digit dari belakang
     let bagianAngka = angkaString.split('').reverse().join('').match(/\d{1,3}/g);
-  
+
     // Gabungkan kembali dengan titik sebagai pemisah
     return bagianAngka.join('.').split('').reverse().join('');
   }
@@ -183,7 +183,7 @@ export default function Order() {
       arr.push(2024 + i);
       setYearOption(arr);
     }
-    
+
     getInvoice();
   }, [page, month, year, jenis_pengujian, status]);
   return (
