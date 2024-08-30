@@ -22,7 +22,7 @@ export default function Detail({ params, searchParams }) {
   const [order, setOrder] = useState([]);
   const [invoice, setInvoice] = useState({});
   const [buktiPembayaran, setBuktiPembayaran] = useState([]);
-  const [kirim,setKirim] = useState(true)
+  const [kirim, setKirim] = useState(true)
 
   function timeNow() {
     var d = new Date(),
@@ -31,7 +31,7 @@ export default function Detail({ params, searchParams }) {
     return h + ":" + m;
   }
 
-  const convertRupiah = (angka)=>{
+  /* const convertRupiah = (angka)=>{
     // Konversi angka menjadi string
     let angkaString = angka.toString();
   
@@ -40,7 +40,7 @@ export default function Detail({ params, searchParams }) {
   
     // Gabungkan kembali dengan titik sebagai pemisah
     return bagianAngka.join('.').split('').reverse().join('');
-  }
+  } */
 
   const handleBukti = async (e) => {
     e.preventDefault();
@@ -101,9 +101,8 @@ export default function Detail({ params, searchParams }) {
       link.download = `${invoice?.id_user?.nama_lengkap.replace(
         " ",
         "_"
-      )}_${new Date().getDate()}-${
-        new Date().getMonth() + 1
-      }-${new Date().getFullYear()}_invoice.pdf`;
+      )}_${new Date().getDate()}-${new Date().getMonth() + 1
+        }-${new Date().getFullYear()}_invoice.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -129,9 +128,8 @@ export default function Detail({ params, searchParams }) {
       link.download = `${invoice?.id_user?.nama_lengkap.replace(
         " ",
         "_"
-      )}_${new Date().getDate()}-${
-        new Date().getMonth() + 1
-      }-${new Date().getFullYear()}_kuitansi.pdf`;
+      )}_${new Date().getDate()}-${new Date().getMonth() + 1
+        }-${new Date().getFullYear()}_kuitansi.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -273,7 +271,7 @@ export default function Detail({ params, searchParams }) {
                   Total Harga {" "}
                 </p>
                 <p className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs">
-                  : Rp {convertRupiah(invoice?.total_harga)}
+                  : Rp {invoice?.total_harga}
                 </p>
               </div>
               {invoice?.status == "Form Dikonfirmasi" ? <p></p> : ""}
@@ -300,12 +298,12 @@ export default function Detail({ params, searchParams }) {
                 Invoice {" "}
               </p>
               {invoice.status == "Form Dikonfirmasi" ||
-              invoice.status == "Sample Diterima Admin" ||
-              invoice.status == "Sample Dikerjakan Operator" ||
-              invoice.status == "Menunggu Verifikasi" ||
-              invoice.status == "Menunggu Pembayaran" ||
-              invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-              invoice.status == "Selesai" ? (
+                invoice.status == "Sample Diterima Admin" ||
+                invoice.status == "Sample Dikerjakan Operator" ||
+                invoice.status == "Menunggu Verifikasi" ||
+                invoice.status == "Menunggu Pembayaran" ||
+                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
+                invoice.status == "Selesai" ? (
                 <Button
                   className="ml-5 "
                   color="blue"
@@ -325,7 +323,7 @@ export default function Detail({ params, searchParams }) {
               <p className="md:text-lg sm:text-lg text-xs font-semibold ">
                 Kuitansi {" "}
               </p>
-              {invoice?.status == "Selesai"&& (order?.dana_penelitian == true || !order?.nama_pembimbing ) ? (
+              {invoice?.status == "Selesai" && (order?.dana_penelitian == true || !order?.nama_pembimbing) ? (
                 <Button
                   className="ml-5"
                   color="blue"
@@ -344,26 +342,26 @@ export default function Detail({ params, searchParams }) {
                 Bukti Pembayaran {" "}
               </p>{" "}
               {invoice?.status == "Menunggu Pembayaran" ||
-              invoice?.status == "menunggu konfirmasi pembayaran" ||
-              invoice?.status == "Selesai" ? (
-                invoice.bukti_pembayaran && kirim==true ? (
+                invoice?.status == "menunggu konfirmasi pembayaran" ||
+                invoice?.status == "Selesai" ? (
+                invoice.bukti_pembayaran && kirim == true ? (
                   <div className="grid grid-cols-2 items-stretch">
-                  <Button
-                    className="ml-5 text-xs"
-                    color="blue"
-                    size={5}
-                    href={invoice.bukti_pembayaran}
-                  >
-                    download{" "}
-                  </Button>
-                  <Button
-                    className="ml-2"
-                    color="blue"
-                    size={5}
-                    onClick={(a)=>setKirim(false)}
-                  >
-                    edit{" "}
-                  </Button>
+                    <Button
+                      className="ml-5 text-xs"
+                      color="blue"
+                      size={5}
+                      href={invoice.bukti_pembayaran}
+                    >
+                      download{" "}
+                    </Button>
+                    <Button
+                      className="ml-2"
+                      color="blue"
+                      size={5}
+                      onClick={(a) => setKirim(false)}
+                    >
+                      edit{" "}
+                    </Button>
                   </div>
                 ) : (
                   <div className="flex justify-center">
@@ -419,7 +417,7 @@ export default function Detail({ params, searchParams }) {
                 foto_sample={e.foto_sample}
                 lama_pengerjaan={e.lama_pengerjaan}
                 nama_pembimbing={e.nama_pembimbing}
-                
+
               />
             );
           })}

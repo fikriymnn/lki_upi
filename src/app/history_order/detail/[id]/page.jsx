@@ -21,7 +21,7 @@ export default function Hdetail({ params, searchParams }) {
     return h + ":" + m;
   }
 
-  const convertRupiah = (angka)=>{
+  /* const convertRupiah = (angka)=>{
     // Konversi angka menjadi string
     let angkaString = angka.toString();
   
@@ -30,7 +30,7 @@ export default function Hdetail({ params, searchParams }) {
   
     // Gabungkan kembali dengan titik sebagai pemisah
     return bagianAngka.join('.').split('').reverse().join('');
-  }
+  } */
 
   const downloadInvoice = async (e) => {
     try {
@@ -51,9 +51,8 @@ export default function Hdetail({ params, searchParams }) {
       link.download = `${invoice?.id_user?.nama_lengkap.replace(
         " ",
         "_"
-      )}_${new Date().getDate()}-${
-        new Date().getMonth() + 1
-      }-${new Date().getFullYear()}_invoice.pdf`;
+      )}_${new Date().getDate()}-${new Date().getMonth() + 1
+        }-${new Date().getFullYear()}_invoice.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -81,9 +80,8 @@ export default function Hdetail({ params, searchParams }) {
       link.download = `${invoice?.id_user?.nama_lengkap.replace(
         " ",
         "_"
-      )}_${new Date().getDate()}-${
-        new Date().getMonth() + 1
-      }-${new Date().getFullYear()}_kuitansi.pdf`;
+      )}_${new Date().getDate()}-${new Date().getMonth() + 1
+        }-${new Date().getFullYear()}_kuitansi.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -171,7 +169,7 @@ export default function Hdetail({ params, searchParams }) {
             Total Harga {" "}
             <span className="text-end md:text-xl sm:text-xl text-xs">
               {" "}
-              : Rp {convertRupiah(invoice?.total_harga)}
+              : Rp {invoice?.total_harga}
             </span>
           </p>
           <p className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">
@@ -198,7 +196,7 @@ export default function Hdetail({ params, searchParams }) {
           </div>
           <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
             <p className=" md:text-xl sm:text-xl  font-semibold">Kuitansi </p>
-            {invoice?.status == "Selesai"&&(order?.dana_penelitian == true || !order?.nama_pembimbing ) ? (
+            {invoice?.status == "Selesai" && (order?.dana_penelitian == true || !order?.nama_pembimbing) ? (
               <Button
                 className="ml-5"
                 color="blue"
