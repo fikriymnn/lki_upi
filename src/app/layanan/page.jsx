@@ -340,7 +340,7 @@ const Layanan = () => {
             <p className="font-medium md:text-xl text-sm">
               Catatan: Sampel akan dimusnahkan dalam waktu 7 hari setelah
               pesanan selesai Komplain hasil pengujian dapat dilakukan maksimal
-              7 hari setelah pesanan selesai melalui menu kontak kami
+              7 hari setelah pesanan selesai melalui menu kontak kami.
             </p>
           </div>
           <div className="mt-24 mb-10">
