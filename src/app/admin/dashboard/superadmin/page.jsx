@@ -265,6 +265,9 @@ export default function OrderSuperAdmin() {
             id="status"
             onChange={(e) => setStatus(e.target.value)}
           >
+             <option value={""} >
+                  All
+                </option>
             {/* <option value="" className="input-style-lki" defaultChecked>
               All
             </option> */}
