@@ -25,20 +25,20 @@ const Analisis = () => {
         {
           jenis: "b. Sampel",
           kimia: "b. 17.500",
-          nonKimia: "b. 40.000",
-          luarUpi: "b. 70.000",
-          tigaHariNonKimia: "b. 67.500",
-          tujuhHariNonKimia: "b. 62.500",
-          tigaHariLuarUpi: "b. 94.500",
-          tujuhHariLuarUpi: "b. 87.500",
+          nonKimia: "b. 30.000",
+          luarUpi: "b. 50.000",
+          tigaHariNonKimia: "b. 40.500",
+          tujuhHariNonKimia: "b. 37.500",
+          tigaHariLuarUpi: "b. 67.500",
+          tujuhHariLuarUpi: "b. 62.500",
         },
         {
           jenis: "c. Scanning",
           kimia: "c. 22.500",
-          nonKimia: "c. 30.000",
+          nonKimia: "c. 40.000",
           luarUpi: "c. 60.000",
-          tigaHariNonKimia: "c. 40.500",
-          tujuhHariNonKimia: "c. 37.500",
+          tigaHariNonKimia: "c. 54.000",
+          tujuhHariNonKimia: "c. 50.000",
           tigaHariLuarUpi: "c. 81.000",
           tujuhHariLuarUpi: "c. 75.000",
         },
@@ -251,7 +251,7 @@ const Analisis = () => {
       ],
     },
     {
-      alatPengukuran: "Freeze Dry",
+      alatPengukuran: "*Freeze Dry",
       jenisPengukuran: [
         {
           jenis: "a. Di atas 8 jam",
@@ -276,7 +276,7 @@ const Analisis = () => {
       ],
     },
     {
-      alatPengukuran: "PCR (Per Jam)",
+      alatPengukuran: "*PCR",
       jenisPengukuran: [
         {
           jenis: "a. PCR (Per Jam)",
@@ -440,7 +440,7 @@ const Analisis = () => {
               ))}
             </div>
           </div>
-          <p className="text-red-700 md:font-bold font-semibold text-end md:mx-28 mx-0 md:text-[14px] text-sm mt-5">
+          <p className="text-black-700 md:font-bold font-semibold text-end md:mx-28 mx-0 md:text-[14px] text-sm mt-5">
             *Biaya per Jam
           </p>
           <div className="lg:mx-16 md:-mx-8 -mx-8 ">
@@ -548,7 +548,7 @@ const Analisis = () => {
               ))}
             </div>
           </div>
-          <p className="text-red-700 md:font-bold font-semibold text-end md:mx-28 mx-0 md:text-[14px] text-sm mt-5">
+          <p className="text-black-700 md:font-bold font-semibold text-end md:mx-28 mx-0 md:text-[14px] text-sm mt-5">
             *Biaya per Jam
           </p>
           <div className="mb-24">
