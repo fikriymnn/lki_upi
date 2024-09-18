@@ -307,9 +307,9 @@ export default function OrderSuperAdmin() {
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Status
               </Table.HeadCell> */}
-              {/* <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
-                Hapus
-              </Table.HeadCell> */}
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
+                Detail
+              </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                 Sembunyikan
               </Table.HeadCell>
@@ -369,6 +369,14 @@ export default function OrderSuperAdmin() {
                         Delete
                       </a>
                     </Table.Cell> */}
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                      <a
+                        href={`/admin/dashboard/superadmin/${v._id}?no_invoice=${v.no_invoice}`}
+                        className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 md:text-[11px] sm:text-[11px] text-[10px]"
+                      >
+                        Keterangan
+                      </a>
+                    </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
                       <a
                         onClick={(e) => {
