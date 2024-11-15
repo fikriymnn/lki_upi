@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import month_bahasa from "@/utils/month_bahasa";
 import Image from "next/image";
-
+import { usePathname } from "next/navigation";
 export default function Tracking_admin({ params }) {
+  const path = usePathname()
   const [edit, setEdit] = useState(false);
   const { id } = params;
   const [form, setForm] = useState({
@@ -69,7 +70,7 @@ export default function Tracking_admin({ params }) {
         alert("update successfully");
 
         if (data.data.success) {
-          window.location.reload();
+          window.location.replace(`/notifikasi?url=${path}`);
         }
       }
     } catch (err) {

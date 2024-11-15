@@ -190,11 +190,12 @@ export default function Order() {
     <>
       <Navigasi text1={"admin"} text2={"order"} />
       <div className="flex flex-wrap justify-center gap-1 mb-10">
-        <div className="md:flex grid grid-cols-3 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-80 sm:w-64 w-52">
+        <div className="md:flex grid grid-cols-3 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-96 sm:w-64 w-52">
           <p className="md:text-sm sm:text-base text-xs font-semibold text-white pt-2">
             Search :
           </p>{" "}
           <input
+
             placeholder="cari nama..."
             type="text"
             name="nama_lengkap"
@@ -203,7 +204,7 @@ export default function Order() {
             }}
             value={search}
           />
-          <button onClick={(a) => handleSearch()} className="bg-red-700 md:text-base sm:text-sm text-xs text-white rounded-lg md:p-2 md:ml-1 sm:p-2">Cari</button>
+          <button onClick={(a) => handleSearch()} className="bg-red-700 md:text-base sm:text-sm text-xs text-white rounded-lg md:p-2 md:ml-1 sm:p-1">Cari</button>
         </div>
 
         <div className="md:flex grid grid-cols-2 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-72 sm:w-64 w-52 ">

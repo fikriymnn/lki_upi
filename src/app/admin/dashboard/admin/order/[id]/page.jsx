@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 import { Button } from 'flowbite-react';
 import month_bahasa from "@/utils/month_bahasa";
+import { usePathname } from "next/navigation";
 
 
 export default function DetailOrderAdmin({ params, searchParams }) {
@@ -12,6 +13,7 @@ export default function DetailOrderAdmin({ params, searchParams }) {
     const { no_invoice } = searchParams
     const [order, setOrder] = useState([])
     const [invoice, setInvoice] = useState({ id_user: {} })
+    const path = usePathname()
 
     const downloadInvoice = async (e) => {
         try {
@@ -145,7 +147,7 @@ export default function DetailOrderAdmin({ params, searchParams }) {
             );
             alert("update successfully");
             if (data.data.success) {
-              window.location.reload();
+              window.location.replace(`/notifikasi?url=${path}`);
             }
           }
         } catch (err) {
