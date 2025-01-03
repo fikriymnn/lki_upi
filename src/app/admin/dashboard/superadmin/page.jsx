@@ -59,7 +59,9 @@ const stats = [
     status: "Sembunyikan"
   },
   { status: "Selesai"
-
+  },
+  {
+    status: "Order Dibatalkan"
   }
 ];
 
@@ -165,7 +167,7 @@ export default function OrderSuperAdmin() {
           }&limit=15${year ? `&year=${year}` : ""}${
             month ? `&month=${month}` : ""
           }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${
-            status ? `&status=${status}` : "&status=Sembunyikan&status=Selesai"
+            status ? `&status=${status}` : "&status=Sembunyikan&status=Selesai&status=Order Dibatalkan"
           }`,
           { withCredentials: true }
         );
@@ -381,6 +383,7 @@ export default function OrderSuperAdmin() {
                       </a>
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-xs">
+                      {v.status=="Order Dibatalkan"?"-":
                       <a
                         onClick={(e) => {
                           v.status=="Sembunyikan"?handleShow(v._id):handleArsip(v._id)
@@ -389,7 +392,7 @@ export default function OrderSuperAdmin() {
                         className="font-medium text-white  bg-red-600 rounded-lg py-1 px-2 hover:underline dark:text-cyan-500 w-24 mt-5"
                       >
                         {v.status=="Sembunyikan"?"Munculkan":"Arsipkan"}
-                      </a>
+                      </a>}
                     </Table.Cell>
                   </Table.Row>
                 );
