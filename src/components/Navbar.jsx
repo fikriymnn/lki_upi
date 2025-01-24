@@ -7,11 +7,10 @@ import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 import Router from "next/router";
 import Image from "next/image";
-import { Cantarell } from 'next/font/google'
-const inter = Cantarell({ subsets: ['latin'], weight: "700" });
+import { Cantarell } from "next/font/google";
+const inter = Cantarell({ subsets: ["latin"], weight: "700" });
 
 export default function NavbarCustom() {
-
   const [login, setLogin] = useState(false);
   const [role, setRole] = useState("");
   const path = usePathname();
@@ -70,7 +69,6 @@ export default function NavbarCustom() {
               />
             </Navbar.Brand>
 
-          
             <Navbar.Toggle className="bg-white" />
             <Navbar.Collapse className="md:mr-20 ">
               {/* SUPER ADMIN */}
@@ -157,7 +155,7 @@ export default function NavbarCustom() {
               )}
 
               {adminPath[2] == "dashboard" ||
-                (adminPath[1] == "admin" && role) ? (
+              (adminPath[1] == "admin" && role) ? (
                 <Navbar.Link
                   onClick={handleLogout}
                   className="mt-[2vh] font-extrabold text-white "
@@ -182,19 +180,39 @@ export default function NavbarCustom() {
               )}
 
               {adminPath[2] !== "dashboard" ? (
-                <Dropdown className="bg-[#202020] border-b-2 border-white" dismissOnClick={false} renderTrigger={() => <span className="mt-[2vh] font-extrabold text-white md:ml-0 sm:ml-0 ml-3">Layanan</span>}>
-                  <Dropdown.Item className="text-white flex justify-center"><Navbar.Link
-                    href="/layanan"
-         className="text-white flex justify-center"
-                  >Analisis</Navbar.Link></Dropdown.Item>
-                  <Dropdown.Item className="text-white flex justify-center"><Navbar.Link
-                    href="/pelatihan"
-         className="text-white flex justify-center"
-                  >Pelatihan</Navbar.Link></Dropdown.Item>
-                  <Dropdown.Item className="text-white flex justify-center"><Navbar.Link
-                    href="/sertifikasi"
-                   className="text-white flex justify-center"
-                  >Sertifikasi</Navbar.Link></Dropdown.Item>
+                <Dropdown
+                  className="bg-[#202020] border-b-2 border-white"
+                  dismissOnClick={false}
+                  renderTrigger={() => (
+                    <span className="mt-[2vh] font-extrabold text-white md:ml-0 sm:ml-0 ml-3">
+                      Layanan
+                    </span>
+                  )}
+                >
+                  <Dropdown.Item className="text-white flex justify-center">
+                    <Navbar.Link
+                      href="/layanan"
+                      className="text-white flex justify-center"
+                    >
+                      Analisis
+                    </Navbar.Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item className="text-white flex justify-center">
+                    <Navbar.Link
+                      href="/pelatihan"
+                      className="text-white flex justify-center"
+                    >
+                      Pelatihan
+                    </Navbar.Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item className="text-white flex justify-center">
+                    <Navbar.Link
+                      href="/sertifikasi"
+                      className="text-white flex justify-center"
+                    >
+                      Sertifikasi
+                    </Navbar.Link>
+                  </Dropdown.Item>
                 </Dropdown>
               ) : (
                 ""
@@ -206,7 +224,7 @@ export default function NavbarCustom() {
                     href="/about"
                     className="mt-[2vh] font-extrabold text-white border-t border-white"
                   >
-                    About
+                    Tentang Kami
                   </Navbar.Link>
                 </h2>
               ) : (
@@ -295,7 +313,7 @@ export default function NavbarCustom() {
           </Navbar>
           <div className="bg-red-700 w-full h-3"></div>
         </div>
-      </div >
+      </div>
     </>
   );
 }
