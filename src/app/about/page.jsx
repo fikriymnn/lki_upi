@@ -1,6 +1,6 @@
 import Image from "next/image";
 export const metadata = {
-  title: "About",
+  title: "Tentang Kami",
   description:
     "Laboratorium Kimia Instrumen (LKI) merupakan salah satu unit kerja di Prodi Kimia Universitas Pendidikan Indonesia. LKI membuka layanan untuk pengujian untuk dosen, mahasiswa, instansi, dan juga masyarakat umum.",
 };
@@ -41,12 +41,12 @@ export default function About() {
             />
           </div>
           <div className="flex justify-center">
-              <p className="text-justify font-medium md:text-[24px] text-[16px] md:leading-[48px] leading-10 tracking-wide text-neutral-900 text-opacity-90 w-9/12 p-2">
-                Laboratorium Kimia Instrumen &#40;LKI&#41; merupakan salah satu
-                unit kerja di Prodi Kimia Universitas Pendidikan Indonesia. LKI
-                membuka layanan untuk pengujian untuk dosen, mahasiswa,
-                instansi, dan juga masyarakat umum.
-              </p>
+            <p className="text-justify font-medium md:text-[24px] text-[16px] md:leading-[48px] leading-10 tracking-wide text-neutral-900 text-opacity-90 w-9/12 p-2">
+              Laboratorium Kimia Instrumen &#40;LKI&#41; merupakan salah satu
+              unit kerja di Prodi Kimia Universitas Pendidikan Indonesia. LKI
+              membuka layanan untuk pengujian untuk dosen, mahasiswa, instansi,
+              dan juga masyarakat umum.
+            </p>
           </div>
         </div>
       </div>
