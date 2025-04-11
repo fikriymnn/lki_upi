@@ -358,10 +358,10 @@ export default function Order() {
                       {v.date_format}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
-                      {v.s5_date}
+                      {v.s5_date?v.s5_date:"belum dikerjakan operator"}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
-                      {v.s6_date}
+                      {v.s6_date?v.s6_date:"belum dikerjakan PJ"}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {v.no_invoice}
