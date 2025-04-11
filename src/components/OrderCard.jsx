@@ -53,7 +53,7 @@ export default function OrderCard({
   //     }
   // }
 
-  const handleDownloadHA = async () => {
+  /* const handleDownloadHA = async () => {
     try {
       try {
         const response = await axios.get(
@@ -82,9 +82,9 @@ export default function OrderCard({
     } catch (err) {
       alert(err.message);
     }
-  };
+  }; */
 
-  const handleDownloadJP = async () => {
+  /* const handleDownloadJP = async () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_URL}/api/download_jurnal_pendukung/${uuid}`,
@@ -109,9 +109,9 @@ export default function OrderCard({
     } catch (error) {
       console.error("Error downloading file:", error);
     }
-  };
+  }; */
 
-  const handleDownloadFS = async () => {
+  /* const handleDownloadFS = async () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_URL}/api/download_foto_sample/${uuid}`,
@@ -136,7 +136,7 @@ export default function OrderCard({
     } catch (error) {
       console.error("Error downloading file:", error);
     }
-  };
+  }; */
 
   return (
     <>
