@@ -43,6 +43,7 @@ export default function Order_analisis() {
   const [foto_sample, setFoto_sample] = useState([]);
   const [dana_penelitian, setDana_penelitian] = useState([]);
   const [uuid, setUuid] = useState([uid]);
+  const [user,setUser] = useState({})
   const [verifikasi, setVerifikasi] = useState(false);
 
   const kode = [
@@ -275,6 +276,26 @@ export default function Order_analisis() {
       alert(err.message);
     }
   };
+
+  useEffect(()=>{
+    async function getData(){
+      try{
+        const token = localStorage.getItem("access_token");
+        const data = await axios(
+          `${process.env.NEXT_PUBLIC_URL}/api/user/${token}`,
+          { withCredentials: true }
+        );
+
+        if (data.data.success == true) {
+          setUser(data.data.data);
+        }
+      }catch(err){
+        console.log(err.message)
+      }
+    }
+
+    getData()
+  })
 
   
   return (
@@ -515,7 +536,7 @@ export default function Order_analisis() {
                 <option value="tidak">Tidak</option>
               </select>
             </div>
-            { nonupi=="ya"?<div><h2 className="md:text-lg sm:text-lg text-sm font-semibold">Nama Pembimbing</h2><input
+            { user.jenis_institusi!=="Perusahaan"?<div><h2 className="md:text-lg sm:text-lg text-sm font-semibold">Nama Pembimbing</h2><input
               className="input-style-lki"
               placeholder="Tuliskan nama pembimbing"
               name="nama_pembimbing"
@@ -537,6 +558,7 @@ export default function Order_analisis() {
                   console.log(dana_penelitian[i])
                 }}
               >
+                
                 <option value="" selected>
                   Pilih
                 </option>

@@ -108,17 +108,13 @@ export default function Report() {
         const data = await axios.get(
           `${
             process.env.NEXT_PUBLIC_URL
-          }/api/order?status_pengujian=success&status_report=success&skip=${
-            page * 100
-          }&limit=100${month ? `&month=${month}` : ""}${
+          }/api/order?status_pengujian=success&status_report=success${month ? `&month=${month}` : ""}${
             year ? `&year=${year}` : ""
           }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`,
           { withCredentials: true }
         );
         const data2 = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&success=true&skip=${
-            page * 100
-          }&limit=100${month ? `&month=${month}` : ""}${
+          `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&status=Menunggu Pembayaran${month ? `&month=${month}` : ""}${
             year ? `&year=${year}` : ""
           }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`,
           { withCredentials: true }
@@ -239,7 +235,7 @@ export default function Report() {
                     <th className="px-10 text-sm">No</th>
                     <th className="px-10 text-sm">Tanggal</th>
                     <th className="px-10 text-sm">No invoice</th>
-                    {/* <th className="px-10 text-sm">cek</th> */}
+
                     <th className="px-10 text-sm">Kode Pengujian</th>
                     <th className="px-10 text-sm">Harga</th>
                     <th className="px-10 text-sm">Catatan</th>
@@ -366,9 +362,10 @@ export default function Report() {
                             {invoice[i]?.status}
                           </td>
                           
+                          
                         </tr>
                       );
-                    })
+})
                   )}
                 </tbody>
               </table>
@@ -378,7 +375,7 @@ export default function Report() {
         </div>
       </div>
       <br />
-      <p className=" text-center mb-2 text-red-600">Page : {page + 1}</p>
+      {/* <p className=" text-center mb-2 text-red-600">Page : {page + 1}</p>
       <div className="m-auto flex items-center justify-center">
         <div className="flex overflow-x-auto sm:justify-center">
           <Pagination
@@ -389,7 +386,7 @@ export default function Report() {
             }}
           />
         </div>
-      </div>
+      </div> */}
 
       <br />
       <br />
