@@ -381,10 +381,10 @@ export default function Order() {
                       {`${convertRupiah(v.total_harga)}`}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
-                      {v.operator_date}
+                      {order[i].operator_date}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
-                      {v.pj_date}
+                      {order[i].pj_date}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       <a
