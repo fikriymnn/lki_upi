@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios"
 import { Button } from 'flowbite-react';
-import { imagefrombuffer } from "imagefrombuffer";
 import { ref, deleteObject, getStorage, getDownloadURL, uploadBytesResumable, getMetadata } from "firebase/storage"
 import { storage } from '../firebase/firebase'
 

@@ -312,6 +312,12 @@ export default function Order() {
                 Tanggal
               </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                Operator
+              </Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                PJ
+              </Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Invoice
               </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
@@ -350,6 +356,12 @@ export default function Order() {
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {v.date_format}
+                    </Table.Cell>
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                      {v.s5_date}
+                    </Table.Cell>
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                      {v.s6_date}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {v.no_invoice}
