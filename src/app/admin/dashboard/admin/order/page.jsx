@@ -103,6 +103,7 @@ const monthOption = [
 
 export default function Order() {
   const [invoice, setInvoice] = useState([]);
+  const [order, setOrder] = useState([]);
   const [page, setPage] = useState(0);
   const [length, setLength] = useState(0);
   const [year, setYear] = useState(0);
@@ -166,9 +167,18 @@ export default function Order() {
         }${search ? `&nama_lengkap=${search}` : ""}`,
         { withCredentials: true }
       );
+      const data2 = await axios.get(
+        `${
+          process.env.NEXT_PUBLIC_URL
+        }/api/order?status_pengujian=${jenis_pengujian}${month ? `&month=${month}` : ""}${
+          year ? `&year=${year}` : ""
+        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`,
+        { withCredentials: true }
+      );
       console.log(data)
-      if (data.data.success) {
+      if (data.data.success&&data2.data) {
         setInvoice(data.data.data);
+        setOrder(data2.data.data)
         setLength(data.data.length_total);
       }
     } catch (err) {
