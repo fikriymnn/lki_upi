@@ -324,6 +324,12 @@ export default function Order() {
                 Harga (Rp)
               </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                Operator
+              </Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                Pj
+              </Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Keterangan
               </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
@@ -362,6 +368,12 @@ export default function Order() {
 
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {`${convertRupiah(v.total_harga)}`}
+                    </Table.Cell>
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                      {v.operator_date}
+                    </Table.Cell>
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                      {v.pj_date}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       <a
