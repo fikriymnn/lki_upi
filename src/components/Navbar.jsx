@@ -191,7 +191,7 @@ export default function NavbarCustom() {
                 >
                   <Dropdown.Item className="text-white flex justify-center">
                     <Navbar.Link
-                      href="/layanan"
+                      href="/analisis"
                       className="text-white flex justify-center"
                     >
                       Analisis
