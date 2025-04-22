@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import AnalisisComponent from "/src/components/AnalisisComponent";
-
+import ButtonOrder from "@/components/ButtonOrder";
 export const metadata = {
   title: "Layanan Analisis",
   description: "Layanan Pengujian Laboratorium Kimia Instrumen LKI UPI",
@@ -318,33 +318,15 @@ const Analisis = () => {
           </div>
         </div>
         <div className="md:mx-[60px] sm:mx-[40px] mx-4">
-          <AnalisisComponent />
-          <div className="my-10">
-            <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
-              Alur Pengujian Laboratorium Kimia Instrumen UPI
-            </p>
-            <div className="flex justify-center">
-              <hr className="grad h-2 mb-8 mt-5 w-8/12 text-center" />
-            </div>
-          </div>
-          <div className="flex justify-center items-center translate-x-10">
-            <Image
-              src={"/images/diagram.png"}
-              alt=""
-              width={0}
-              height={0}
-              sizes="100vw"
-              className="md:w-[600px] sm:w-[550px] w-[240px] md:h-[900px] h-full"
-            />
-          </div>
-          <div className="my-10 ">
-            <p className="font-medium md:text-xl text-sm">
-              Catatan: Sampel akan dimusnahkan dalam waktu 7 hari setelah
-              pesanan selesai Komplain hasil pengujian dapat dilakukan maksimal
-              7 hari setelah pesanan selesai melalui menu kontak kami
-            </p>
-          </div>
-          <div className="mt-24 mb-10">
+        <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
+        Layanan Pengujian Laboratorium Kimia Instrumen LKI UPI
+      </p>
+      <div className="flex justify-center">
+        <hr className="grad h-2 mb-8 mt-5 w-56 text-center" />
+      </div>
+      <ButtonOrder />
+      <br />
+        <div className="mt-24 mb-10">
             <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
               Daftar Harga Pengujian Laboratorium Kimia Instrumen UPI
             </p>
@@ -566,6 +548,32 @@ const Analisis = () => {
               />
             </div>
           </div>
+          <div className="my-10">
+            <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
+              Alur Pengujian Laboratorium Kimia Instrumen UPI
+            </p>
+            <div className="flex justify-center">
+              <hr className="grad h-2 mb-8 mt-5 w-8/12 text-center" />
+            </div>
+          </div>
+          <div className="flex justify-center items-center translate-x-10">
+            <Image
+              src={"/images/diagram.png"}
+              alt=""
+              width={0}
+              height={0}
+              sizes="100vw"
+              className="md:w-[600px] sm:w-[550px] w-[240px] md:h-[900px] h-full"
+            />
+          </div>
+          <div className="my-10 ">
+            <p className="font-medium md:text-xl text-sm">
+              Catatan: Sampel akan dimusnahkan dalam waktu 7 hari setelah
+              pesanan selesai. Komplain hasil pengujian dapat dilakukan maksimal
+              7 hari setelah pesanan selesai melalui email: <a href="mailto:lkiupi2022@gmail.com" className="hover:text-blue-600 font-bold text-red-700 underline">lkiupi2022@gmail.com</a>
+            </p>
+          </div>
+          <AnalisisComponent />
         </div>
       </main>
     </>
