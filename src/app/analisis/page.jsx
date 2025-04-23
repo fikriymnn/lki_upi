@@ -558,12 +558,12 @@ const Analisis = () => {
           </div>
           <div className="flex justify-center items-center translate-x-10">
             <Image
-              src={"/images/diagram.png"}
+              src={"/images/alur_penerimaan_sampel.png"}
               alt=""
               width={0}
               height={0}
               sizes="100vw"
-              className="md:w-[600px] sm:w-[550px] w-[240px] md:h-[900px] h-full"
+              className="md:w-[600px] sm:w-[550px] w-[240px] sm:h-[800px] md:h-[1080px] object-contain"
             />
           </div>
           <div className="my-10 ">
@@ -572,6 +572,24 @@ const Analisis = () => {
               pesanan selesai. Komplain hasil pengujian dapat dilakukan maksimal
               7 hari setelah pesanan selesai melalui email: <a href="mailto:lkiupi2022@gmail.com" className="hover:text-blue-600 font-bold text-red-700 underline">lkiupi2022@gmail.com</a>
             </p>
+          </div>
+          <div className="my-10">
+            <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
+              Alur Keluhan Laboratorium Kimia Instrumen UPI
+            </p>
+            <div className="flex justify-center">
+              <hr className="grad h-2 mb-8 mt-5 w-8/12 text-center" />
+            </div>
+          </div>
+          <div className="flex justify-center items-center translate-x-10">
+            <Image
+              src={"/images/alur_keluhan.png"}
+              alt=""
+              width={0}
+              height={0}
+              sizes="100vw"
+              className="md:w-[600px] sm:w-[550px] w-[240px] h-[700px] object-contain"
+            />
           </div>
           <AnalisisComponent />
         </div>
