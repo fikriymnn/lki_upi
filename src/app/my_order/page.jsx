@@ -92,9 +92,6 @@ export default function My_order() {
     <>
       <div>
         <Navigasi text1={"user"} text2={"my order"} />
-        <div className="flex justify-center">
-          <hr className="text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center" />
-        </div>
         <div className="flex justify-center mb-10">
           <div className="flex p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 ml-3">
             <p className="md:text-lg sm:text-base text-xs font-semibold text-white p-2">

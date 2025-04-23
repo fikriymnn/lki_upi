@@ -185,7 +185,7 @@ export default function Order_analisis() {
             withCredentials: true,
           }
         );
-
+       
         if (data.data.success) {
           if (jurnal_pendukung) {
             async function cek() {
@@ -269,7 +269,7 @@ export default function Order_analisis() {
             alert("success");
             setLoading(false)
             router.replace("/success");
-          }, 1500);
+          }, 4000);
         }
       }
     } catch (err) {
