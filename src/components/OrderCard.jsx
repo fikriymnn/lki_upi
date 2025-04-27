@@ -35,23 +35,53 @@ export default function OrderCard({
   lama_pengerjaan,
   nama_pembimbing,
 }) {
-  const [foto, setFoto] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // const download = ()=>{
-  //     try{
-  //         const storageRef = storage()
+  const handleJurnal = async (e) => {
+    e.preventDefault();
+    setLoading(true)
+    try {
+      const directory = "jurnalpendukung/";
+      const fileName = `${e.target.files[0].name}`;
 
-  //         // Mendapatkan metadata file
-  //         const metadata = await storageRef.getMetadata();
+      const storageRef = ref(storage, directory + fileName);
 
-  //         // Mengambil nama file dari metadata
-  //         const fileName = metadata.name;
+      // Create file metadata including the content type
+      const metadata = {
+        contentType: e.target.files[0].type,
+      };
 
-  //         return fileName;
-  //     }catch(err){
-  //         console.log(err.message)
-  //     }
-  // }
+      // Upload the file in the bucket storage
+      const snapshot = await uploadBytesResumable(
+        storageRef,
+        e.target.files[0],
+        metadata
+      );
+      //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
+
+      // Grab the public url
+      const downloadURL = await getDownloadURL(snapshot.ref);
+
+      if (downloadURL) {
+        console.log(downloadURL)
+        const cek = await axios.post(
+          `${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${uuid}`,
+          { jurnal_pendukung: downloadURL },
+          {
+            withCredentials: true,
+          }
+        );
+        if (cek) {
+          setLoading(false)
+          window.location.reload()
+        }
+      }
+    } catch (err) {
+      setLoading(true)
+      console.log(err.message);
+    }
+  };
+
 
   const handleDownloadHA = async () => {
     try {
@@ -289,17 +319,42 @@ export default function OrderCard({
                       jurnal pendukung :{" "}
                     </h1>
                     <div className="">
-                      {jurnal_pendukung ? (
-                        <Button
-                          className="grad"
-                          color="failure"
-                          size={5}
-                          href={jurnal_pendukung}
-                        >
-                          download
-                        </Button>
+                      {loading ?
+                        <center className="pt-2">
+                          <div className=" md:p-5 sm:p-5 p-2 w-full bg-white rounded-lg">
+                            <p className="md:text-xl sm:text-2xl text-sm ">Loading</p>
+                            <marquee className="w-6/12 border-2 border-black rounded-lg">====================</marquee>
+                          </div>
+                        </center> : jurnal_pendukung ? (
+                        <div className="">
+                          <Button
+                            className="grad"
+                            color="failure"
+                            size={5}
+                            href={jurnal_pendukung}
+                          >
+                            download
+                          </Button>
+                          <p className="my-3 md:text-lg text-xs sm:text-sm font-semibold text-grey-600">edit jurnal pendukung :</p>
+                          <input
+                            className="ml-5 w-11/12 h-10/12"
+                            type="file"
+                            placeholder="Edit Jurnal Pendukung"
+                            name="bukti_pembayaran"
+                            onChange={handleJurnal}
+                          />
+                        </div>
+
                       ) : (
-                        <p>-</p>
+                        <div className="flex justify-center">
+                          <input
+                            className=" w-11/12 h-10/12"
+                            type="file"
+                            placeholder="Edit Jurnal Pendukung"
+                            name="bukti_pembayaran"
+                            onChange={handleJurnal}
+                          />
+                        </div>
                       )}
                     </div>
                   </div>
