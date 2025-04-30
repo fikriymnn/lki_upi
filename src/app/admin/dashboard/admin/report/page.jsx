@@ -235,7 +235,7 @@ export default function Report() {
                     <th className="px-10 text-sm">No</th>
                     <th className="px-10 text-sm">Tanggal</th>
                     <th className="px-10 text-sm">No invoice</th>
-                    <th className="px-10 text-sm">cek invoice</th>
+                    {/* <th className="px-10 text-sm">cek invoice</th> */}
                     <th className="px-10 text-sm">Kode Pengujian</th>
                     <th className="px-10 text-sm">Harga</th>
                     <th className="px-10 text-sm">Catatan</th>
@@ -278,9 +278,9 @@ export default function Report() {
                           <td className="text-center text-xs">
                             {a.no_invoice}
                           </td>
-                          <td className="text-center text-xs">
+                          {/* <td className="text-center text-xs">
                             {invoice[i]?.no_invoice}
-                          </td>
+                          </td> */}
                           <td className="text-center text-xs">
                             {a.kode_pengujian}
                           </td>
