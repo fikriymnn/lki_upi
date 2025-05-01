@@ -114,7 +114,7 @@ export default function Report() {
           { withCredentials: true }
         );
         const data2 = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&status=Menunggu Pembayaran${month ? `&month=${month}` : ""}${
+          `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&status=Menunggu Konfirmasi Pembayaran&status=Menunggu Pembayaran${month ? `&month=${month}` : ""}${
             year ? `&year=${year}` : ""
           }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`,
           { withCredentials: true }
