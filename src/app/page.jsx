@@ -3,9 +3,9 @@ import CarouselCustom from "@/components/CarouselCustom";
 import LayananCard from "@/components/LayananCard";
 import ButtonOrder from "@/components/ButtonOrder";
 import { Microscope,FileText,FlaskConical } from "lucide-react";
-import dynamic from 'next/dynamic';
+import Hero from "@/components/section/Hero";
 
-const Hero = dynamic(() => import('@/components/section/Hero'), { ssr: false });
+
 
 // const inter = Noto_Sans({ subsets: ["latin"], weight: "500" });
 

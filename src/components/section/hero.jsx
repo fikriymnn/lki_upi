@@ -3,7 +3,6 @@
 
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import clsx from 'clsx';
 
 const images = [
   'https://images.pexels.com/photos/2280549/pexels-photo-2280549.jpeg?auto=compress&cs=tinysrgb&w=1600',
@@ -15,11 +14,11 @@ export default function Hero() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
   };
 
   useEffect(() => {
@@ -33,10 +32,9 @@ export default function Hero() {
       {images.map((src, index) => (
         <div
           key={index}
-          className={clsx(
-            'absolute inset-0 transition-opacity duration-1000',
+          className={`absolute inset-0 transition-opacity duration-1000 ${
             index === currentIndex ? 'opacity-100' : 'opacity-0'
-          )}
+          }`}
         >
           <img
             src={src}
@@ -56,7 +54,7 @@ export default function Hero() {
           Laboratorium Kimia Instrumen UPI membuka layanan pengujian untuk dosen, mahasiswa, dan umum.
         </p>
         <a
-          href="/analisis"
+          href="/layanan"
           className="rounded-md bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           Jelajahi Layanan
@@ -85,10 +83,9 @@ export default function Hero() {
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
-            className={clsx(
-              'h-2 w-8 rounded-full transition-colors',
+            className={`h-2 w-8 rounded-full transition-colors ${
               index === currentIndex ? 'bg-white' : 'bg-white/50'
-            )}
+            }`}
             aria-label={`Go to slide ${index + 1}`}
           />
         ))}
