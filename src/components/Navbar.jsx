@@ -7,8 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 import Router from "next/router";
 import Image from "next/image";
-import { Cantarell } from "next/font/google";
-const inter = Cantarell({ subsets: ["latin"], weight: "700" });
+
 
 export default function NavbarCustom() {
   const [login, setLogin] = useState(false);
@@ -58,8 +57,8 @@ export default function NavbarCustom() {
 
   return (
     <>
-      <div className="fixed z-50 w-full">
-        <div className={inter.className}>
+      <div className="fixed z-50 w-full h-[108px] text-xs">
+        <div>
           <Navbar fluid className="  bg-[#202020]  ">
             <Navbar.Brand href="/">
               <img
