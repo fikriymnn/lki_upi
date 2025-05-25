@@ -1,9 +1,9 @@
+// File: components/Hero.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-// Helper cn (jika '@/lib/utils' tidak ketemu, bisa bikin manual)
 function cn(...classes) {
   return classes.filter(Boolean).join(' ');
 }
@@ -32,7 +32,6 @@ export default function Hero() {
 
   return (
     <div className="relative h-[80vh] w-full overflow-hidden">
-      {/* Image slider */}
       {images.map((image, index) => (
         <div
           key={index}
@@ -48,10 +47,8 @@ export default function Hero() {
         />
       ))}
 
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black/50" />
 
-      {/* Content */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="container mx-auto px-4 text-center text-white">
           <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
@@ -60,7 +57,6 @@ export default function Hero() {
           <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-200 sm:text-xl">
             Laboratorium Kimia Instrumen UPI membuka layanan pengujian untuk dosen, mahasiswa, dan umum.
           </p>
-          {/* Gunakan <a> langsung tanpa <button> */}
           <a
             href="/analisis"
             className="inline-block rounded-md bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700"
@@ -70,7 +66,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Navigation arrows */}
       <button
         type="button"
         onClick={prevImage}
@@ -88,7 +83,6 @@ export default function Hero() {
         <ChevronRight className="h-6 w-6" />
       </button>
 
-      {/* Indicators */}
       <div className="absolute bottom-6 left-0 right-0 flex justify-center space-x-2">
         {images.map((_, index) => (
           <button
