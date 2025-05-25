@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+
 const images = [
   'https://images.pexels.com/photos/2280549/pexels-photo-2280549.jpeg?auto=compress&cs=tinysrgb&w=1600',
   'https://images.pexels.com/photos/5726706/pexels-photo-5726706.jpeg?auto=compress&cs=tinysrgb&w=1600',
   'https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=1600',
 ];
+
+
 
 export default function Hero() {
   const [currentImage, setCurrentImage] = useState(0);
@@ -17,6 +19,10 @@ export default function Hero() {
   const prevImage = () => {
     setCurrentImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
+
+  function cn(...classes) {
+    return classes.filter(Boolean).join(' ');
+  }
 
   useEffect(() => {
     const interval = setInterval(nextImage, 5000);
