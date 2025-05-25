@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
 
 const images = [
   'https://images.pexels.com/photos/2280549/pexels-photo-2280549.jpeg?auto=compress&cs=tinysrgb&w=1600',
@@ -13,7 +12,6 @@ const images = [
 
 export default function Hero() {
   const [currentImage, setCurrentImage] = useState(0);
-
   const nextImage = () => {
     setCurrentImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
@@ -57,11 +55,11 @@ export default function Hero() {
           <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-200 sm:text-xl">
             Laboratorium Kimia Instrumen UPI membuka layanan pengujian untuk dosen, mahasiswa, dan umum.
           </p>
-          <Link href="/analisis">
+          <a href="/analisis">
           <button className="rounded-md bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700">
             Jelajahi Layanan
           </button>
-          </Link>
+          </a>
         </div>
       </div>
       
