@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
-
 const images = [
   'https://images.pexels.com/photos/2280549/pexels-photo-2280549.jpeg?auto=compress&cs=tinysrgb&w=1600',
   'https://images.pexels.com/photos/5726706/pexels-photo-5726706.jpeg?auto=compress&cs=tinysrgb&w=1600',
@@ -11,7 +9,6 @@ const images = [
 
 export default function Hero() {
   const [currentImage, setCurrentImage] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
 
   const nextImage = () => {
     setCurrentImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
@@ -38,16 +35,13 @@ export default function Hero() {
             "transition-opacity duration-1000"
           )}
         >
-          <Image
-            src={image}
-            alt={`Laboratory image ${index + 1}`}
-            fill
-            priority={index === 0}
-            quality={75}
-            sizes="100vw"
-            style={{ objectFit: 'cover' }}
-            onLoadingComplete={() => setIsLoading(false)}
-          />
+          <div className="relative h-full w-full">
+          <img
+  src={image}
+  alt={`Laboratory image ${index + 1}`}
+  className="absolute inset-0 h-full w-full object-cover transition-opacity duration-1000"
+/>
+          </div>
         </div>
       ))}
       
