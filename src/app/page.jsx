@@ -2,16 +2,17 @@ import Image from "next/image";
 import CarouselCustom from "@/components/CarouselCustom";
 import LayananCard from "@/components/LayananCard";
 import ButtonOrder from "@/components/ButtonOrder";
-// import Hero from "@/components/section/Hero";
 import { Microscope,FileText,FlaskConical } from "lucide-react";
+import dynamic from 'next/dynamic';
 
+const Hero = dynamic(() => import('@/components/section/Hero'), { ssr: false });
 
 // const inter = Noto_Sans({ subsets: ["latin"], weight: "500" });
 
 export default function Home() {
   return (
     <>
-      {/* <Hero /> */}
+      <Hero />
       <div className=" ">
         <br className="md:mb-20 sm:mb-14 mb-10" />
         <p className="md:text-3xl sm:text-2xl text-2xl font-bold md:mb-2 sm:mb-8 mb-2  md:mt-6 sm:mt-6 mt-3 text-center">
