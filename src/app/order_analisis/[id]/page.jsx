@@ -27,7 +27,8 @@ export default function Order_analisis_next({ params }) {
         let reader = new FileReader();
         const imageFile = event.target.files[0];
         const imageFilname = event.target.files[0].name;
-        reader.onload = (e) => {
+        reader.onload = async(e) => {
+            setLoading2(true)
             const img = new Image();
             img.onload = () => {
                 //------------- Resize img code ----------------------------------
@@ -56,13 +57,48 @@ export default function Order_analisis_next({ params }) {
                 var ctx = canvas.getContext("2d");
                 ctx.drawImage(img, 0, 0, width, height);
                 ctx.canvas.toBlob(
-                    (blob) => {
+                    async (blob) => {
                         const file = new File([blob], imageFilname, {
                             type: imageFile.type,
                             lastModified: Date.now(),
                         });
-
-                        foto_sample[0] = file;
+if(file){
+                        try {
+                            const directory = "fotosample/";
+                            const fileName = `${file.name}`;
+        
+                            const storageRef = ref(storage, directory + fileName);
+        
+                            // Create file metadata including the content type
+                            const metadata = {
+                                contentType: file.type,
+                            };
+        
+                            // Upload the file in the bucket storage
+                            const snapshot = await uploadBytesResumable(
+                                storageRef,
+                                file,
+                                metadata
+                            );
+                            //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
+        
+                            // Grab the public url
+                            const downloadURL = await getDownloadURL(snapshot.ref);
+                            if (downloadURL) {
+                                await axios.post(
+                                    `${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${id}`,
+                                    { foto_sample: downloadURL },
+                                    {
+                                        withCredentials: true,
+                                    }
+                                );
+                                setLoading2(false)
+        
+                            }
+                        } catch (err) {
+                            console.log(err.message);
+                        }
+                    }
                     },
                     imageFile.type,
                     1
@@ -127,44 +163,11 @@ export default function Order_analisis_next({ params }) {
 
     const onUploadFS = async (e) => {
         handleFS(e);
-        if (foto_sample[0]) {
+        if (file) {
+            setLoading2(true)
             async function cek2() {
-                setLoading(true)
-                try {
-                    const directory = "fotosample/";
-                    const fileName = `${foto_sample[0].name}`;
-
-                    const storageRef = ref(storage, directory + fileName);
-
-                    // Create file metadata including the content type
-                    const metadata = {
-                        contentType: foto_sample[0].type,
-                    };
-
-                    // Upload the file in the bucket storage
-                    const snapshot = await uploadBytesResumable(
-                        storageRef,
-                        foto_sample[0],
-                        metadata
-                    );
-                    //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
-
-                    // Grab the public url
-                    const downloadURL = await getDownloadURL(snapshot.ref);
-                    if (downloadURL) {
-                        await axios.post(
-                            `${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${id}`,
-                            { foto_sample: downloadURL },
-                            {
-                                withCredentials: true,
-                            }
-                        );
-                        setLoading(false)
-
-                    }
-                } catch (err) {
-                    console.log(err.message);
-                }
+                
+                
             }
             cek2();
         }
@@ -198,8 +201,15 @@ export default function Order_analisis_next({ params }) {
 
     return (
         <>
-
-            <div>
+ {
+                                loading2 ? (
+                                    <div className="fixed inset-0 top-[4rem] z-40 flex items-center justify-center backdrop-blur-sm bg-black/30">
+                                    {/* Spinner atau loader */}
+                                    <div className="w-16 h-16 border-4 border-t-transparent border-black rounded-full animate-spin"></div>
+                                  </div>
+                                ) : ""
+                            }
+            <div className="">
                 {/* <button onClick={() => { console.log(jenis_pengujian); console.log(nama_sample) }}>asd</button> */}
                 <p className="md:mt-14 sm:mt-14 mt-10 text-center md:text-3xl sm:text-2xl text-sm font-bold text-gray-800">
                     Layanan Analisis Laboratorium Kimia Instrumen &#40;LKI&#41; UPI
@@ -219,24 +229,13 @@ export default function Order_analisis_next({ params }) {
                                 Foto Sample (*format file yang diupload berupa png, jpg atau
                                 jpeg)
                             </h2>
-                            {
-                                loading ? (
-                                    <center className="pt-2">
-                                        <div className=" md:p-5 sm:p-5 p-2 w-full bg-white rounded-lg">
-                                            <div className="inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white">
-                                                <div className="w-16 h-16 border-4 border-t-transparent border-black rounded-full animate-spin"></div>
-                                            </div>
-                                        </div>
-                                    </center>
-                                ) : ""
-                            }
+                           
                             <div>
 
                                 <input
-                                    className={loading2 ? "hidden" : ""}
                                     name="foto_sample"
                                     type="file"
-                                    onChange={onUploadFS}
+                                    onChange={handleFS}
                                 />
                             </div>
 
@@ -248,21 +247,8 @@ export default function Order_analisis_next({ params }) {
                                         Jurnal Pendukung (*format file yang diupload berupa docx atau
                                         pdf, ukuran file dibawah 10mb)
                                     </h2>
-                                    {
-                                        loading2 ? (
-                                            <center className="pt-2">
-                                                <div className=" md:p-5 sm:p-5 p-2 w-full bg-white rounded-lg">
-                                                    <div className="inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white">
-                                                        <div className="w-16 h-16 border-4 border-t-transparent border-black rounded-full animate-spin"></div>
-                                                    </div>
-                                                </div>
-                                            </center>
-                                        ) : ""
-
-                                    }
                                     <div>
                                         <input
-                                            className={loading2 ? "hidden" : ""}
                                             name="jurnal_pendukung"
                                             type="file"
                                             onChange={onUploadJurnal}

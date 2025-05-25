@@ -115,9 +115,8 @@ export default function Order() {
   const handleSearch = async () => {
     try {
       const data = await axios.get(
-        `${process.env.NEXT_PUBLIC_URL}/api/invoice?skip=${page * 15
-        }&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
-        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
+        `${process.env.NEXT_PUBLIC_URL}/api/invoice?skip=0&limit=30${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
+        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status!=="" ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
         }${search ? `&nama_lengkap=${search}` : ""}`,
         { withCredentials: true }
       );
@@ -126,25 +125,9 @@ export default function Order() {
         getInvoice()
       }
     } catch (err) {
-      alert("user tidak ditemukan")
+      alert(err.message)
     }
   }
-
-
-  const handleDelete = async (no_invoice) => {
-    try {
-      const data = await axios.delete(
-        `${process.env.NEXT_PUBLIC_URL}/api/invoice?no_invoice=${no_invoice}`,
-        { withCredentials: true }
-      );
-      if (data.data.success) {
-        alert("Delete successfully!");
-        window.location.reload();
-      }
-    } catch (err) {
-      alert(err.message);
-    }
-  };
 
   const convertRupiah = (angka) => {
     // Konversi angka menjadi string
