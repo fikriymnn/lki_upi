@@ -10,8 +10,8 @@ const images = [
   'https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=1600',
 ];
 
-export default function Hero() {
-    
+export default function Heroo() {
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextSlide = () => {
