@@ -3,7 +3,7 @@ import CarouselCustom from "@/components/CarouselCustom";
 import LayananCard from "@/components/LayananCard";
 import ButtonOrder from "@/components/ButtonOrder";
 import { Microscope,FileText,FlaskConical } from "lucide-react";
-import Hero from "@/components/section/Hero";
+import Hero from "../components/section/Hero";
 
 
 
