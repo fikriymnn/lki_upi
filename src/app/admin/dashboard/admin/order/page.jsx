@@ -129,15 +129,15 @@ export default function Order() {
     }
   }
 
-  const convertRupiah = (angka) => {
+  const convertRupiah = (angka=0) => {
     // Konversi angka menjadi string
-    let angkaString = angka.toString();
+    let angkaString = angka?.toString();
 
     // Bagi angka menjadi array per 3 digit dari belakang
-    let bagianAngka = angkaString.split('').reverse().join('').match(/\d{1,3}/g);
+    let bagianAngka = angkaString?.split('').reverse().join('').match(/\d{1,3}/g);
 
     // Gabungkan kembali dengan titik sebagai pemisah
-    return bagianAngka.join('.').split('').reverse().join('');
+    return bagianAngka?.join('.').split('').reverse().join('');
   }
 
   async function getInvoice() {
@@ -172,7 +172,7 @@ export default function Order() {
   return (
     <>
       <Navigasi text1={"admin"} text2={"order"} />
-      <div className="flex flex-wrap justify-center gap-1 mb-10">
+      <div className="flex flex-wrap justify-center gap-1 mb-10 min-h-screen">
         <div className="md:flex grid grid-cols-3 p-1 mt-2  justify-between grad rounded-lg md:ml-3 sm:ml-3 md:w-96 sm:w-64 w-52">
           <p className="md:text-sm sm:text-base text-xs font-semibold text-white pt-2">
             Search :

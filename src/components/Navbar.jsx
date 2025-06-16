@@ -57,7 +57,7 @@ export default function NavbarCustom() {
 
   return (
     <>
-      <div className="fixed z-50 w-full h-[108px] text-xs">
+      <div className="fixed z-50 w-full text-xs">
         <div>
           <Navbar fluid className="  bg-[#202020]  ">
             <Navbar.Brand href="/">
@@ -312,6 +312,9 @@ export default function NavbarCustom() {
           </Navbar>
           <div className="bg-red-700 w-full h-3"></div>
         </div>
+      </div>
+      <div className="h-20">
+
       </div>
     </>
   );
