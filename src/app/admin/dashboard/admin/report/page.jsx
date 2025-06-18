@@ -298,7 +298,7 @@ export default function Report() {
                           </td>
                           <td className="text-center text-xs">{a.pj_date}</td>
                           <td className="text-center text-xs">
-                            {a.admin_date}
+                            {invoice[i]?.s8_date}
                           </td>
                           <td className="text-center text-xs">
                             {a.nama_lengkap}
