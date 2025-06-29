@@ -188,6 +188,7 @@ export default function DetailOrderAdmin({ params, searchParams }) {
 
         if (data.data.success) {
           setInvoice(data.data.data)
+          setHargaSatuan(data.data.data.harga_satuan)
           console.log(data.data.data)
 
         }
