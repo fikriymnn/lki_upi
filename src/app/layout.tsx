@@ -61,7 +61,7 @@ export default function RootLayout({
       <body className={poppins.className}>
         <UserProvider>
           <NavbarCustom />
-          <div className="">{children}</div>
+          <div className="mt-[-10px]">{children}</div>
 
           <FooterCustom />
         </UserProvider>
