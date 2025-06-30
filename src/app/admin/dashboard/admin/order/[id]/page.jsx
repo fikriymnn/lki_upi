@@ -109,7 +109,6 @@ export default function DetailOrderAdmin({ params, searchParams }) {
     let obj = {
       status: invoice?.status,
       estimasi_date: invoice?.estimasi_date,
-      total_harga: invoice?.total_harga,
       catatan: invoice?.catatan,
       harga_satuan: hargaSatuan,
     };
@@ -171,7 +170,7 @@ export default function DetailOrderAdmin({ params, searchParams }) {
         );
         alert("update successfully");
         if (data.data.success) {
-          window.location.replace(`/notifikasi?url=${path}`);
+          window.location.replace(`/notifikasi?url=${path}?no_invoice=${no_invoice}`);
         }
       }
     } catch (err) {
