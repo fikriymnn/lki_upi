@@ -116,9 +116,8 @@ export default function Order() {
   const handleSearch = async () => {
     try {
       const data = await axios.get(
-        `${process.env.NEXT_PUBLIC_URL}/api/invoice?skip=${page * 15
-        }&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
-        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
+        `${process.env.NEXT_PUBLIC_URL}/api/invoice?skip=0&limit=30${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
+        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status!=="" ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
         }${search ? `&nama_lengkap=${search}` : ""}`,
         { withCredentials: true }
       );
@@ -127,35 +126,19 @@ export default function Order() {
         getInvoice()
       }
     } catch (err) {
-      alert("user tidak ditemukan")
+      alert(err.message)
     }
   }
 
-
-  const handleDelete = async (no_invoice) => {
-    try {
-      const data = await axios.delete(
-        `${process.env.NEXT_PUBLIC_URL}/api/invoice?no_invoice=${no_invoice}`,
-        { withCredentials: true }
-      );
-      if (data.data.success) {
-        alert("Delete successfully!");
-        window.location.reload();
-      }
-    } catch (err) {
-      alert(err.message);
-    }
-  };
-
-  const convertRupiah = (angka) => {
+  const convertRupiah = (angka=0) => {
     // Konversi angka menjadi string
-    let angkaString = angka.toString();
+    let angkaString = angka?.toString();
 
     // Bagi angka menjadi array per 3 digit dari belakang
-    let bagianAngka = angkaString.split('').reverse().join('').match(/\d{1,3}/g);
+    let bagianAngka = angkaString?.split('').reverse().join('').match(/\d{1,3}/g);
 
     // Gabungkan kembali dengan titik sebagai pemisah
-    return bagianAngka.join('.').split('').reverse().join('');
+    return bagianAngka?.join('.').split('').reverse().join('');
   }
 
   async function getInvoice() {
@@ -322,6 +305,12 @@ export default function Order() {
                 Tanggal
               </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                Operator
+              </Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                PJ
+              </Table.HeadCell>
+              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Invoice
               </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
@@ -366,6 +355,12 @@ export default function Order() {
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {v.date_format}
+                    </Table.Cell>
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                      {v.s5_date?v.s5_date:"belum dikerjakan operator"}
+                    </Table.Cell>
+                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                      {v.s6_date?v.s6_date:"belum diverifikasi PJ"}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {v.no_invoice}

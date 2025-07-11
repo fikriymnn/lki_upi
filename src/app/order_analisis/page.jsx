@@ -18,7 +18,7 @@ export default function Order_analisis() {
   const router = useRouter();
   const uid = uuidv4();
   const i = 0;
-  const [loading,setLoading] = useState('')
+  const [loading,setLoading] = useState(false)
   const [countForm, setCountForm] = useState(1);
   // const [duplicate, setDuplicate] = useState([
   //   <CustomForm i={0} key={0} uuid={uid} />,
@@ -94,60 +94,6 @@ export default function Order_analisis() {
   ];
 
 
-  const handleFS = (event) => {
-    let reader = new FileReader();
-    const imageFile = event.target.files[0];
-    const imageFilname = event.target.files[0].name;
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        //------------- Resize img code ----------------------------------
-        var canvas = document.createElement("canvas");
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-
-        var MAX_WIDTH = 700;
-        var MAX_HEIGHT = 700;
-        var width = img.width;
-        var height = img.height;
-
-        if (width > height) {
-          if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
-            width = MAX_WIDTH;
-          }
-        } else {
-          if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height;
-            height = MAX_HEIGHT;
-          }
-        }
-        canvas.width = width;
-        canvas.height = height;
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, width, height);
-        ctx.canvas.toBlob(
-          (blob) => {
-            const file = new File([blob], imageFilname, {
-              type: imageFile.type,
-              lastModified: Date.now(),
-            });
-
-            foto_sample[0] = file;
-          },
-          imageFile.type,
-          1
-        );
-      };
-      img.onerror = () => {
-        alert("invalid image content");
-      };
-      //debugger
-      img.src = e.target.result;
-    };
-
-    reader.readAsDataURL(imageFile);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -185,91 +131,12 @@ export default function Order_analisis() {
             withCredentials: true,
           }
         );
-
-        if (data.data.success) {
-          if (jurnal_pendukung) {
-            async function cek() {
-              try {
-                const directory = "jurnalpendukung/";
-                const fileName = `${jurnal_pendukung[0].name}`;
-
-                const storageRef = ref(storage, directory + fileName);
-
-                // Create file metadata including the content type
-                const metadata = {
-                  contentType: jurnal_pendukung[0].type,
-                };
-
-                // Upload the file in the bucket storage
-                const snapshot = await uploadBytesResumable(
-                  storageRef,
-                  jurnal_pendukung[0],
-                  metadata
-                );
-                //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
-
-                // Grab the public url
-                const downloadURL = await getDownloadURL(snapshot.ref);
-
-                if (downloadURL) {
-                  console.log(downloadURL)
-                  await axios.post(
-                    `${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${uuid[0]}`,
-                    { jurnal_pendukung: downloadURL },
-                    {
-                      withCredentials: true,
-                    }
-                  );
-                }
-              } catch (err) {
-                console.log(err.message);
-              }
-            }
-            cek();
-          }
-          if (foto_sample) {
-            async function cek2() {
-              try {
-                const directory = "fotosample/";
-                const fileName = `${foto_sample[0].name}`;
-
-                const storageRef = ref(storage, directory + fileName);
-
-                // Create file metadata including the content type
-                const metadata = {
-                  contentType: foto_sample[0].type,
-                };
-
-                // Upload the file in the bucket storage
-                const snapshot = await uploadBytesResumable(
-                  storageRef,
-                  foto_sample[0],
-                  metadata
-                );
-                //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
-
-                // Grab the public url
-                const downloadURL = await getDownloadURL(snapshot.ref);
-                if (downloadURL) {
-                  await axios.post(
-                    `${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${uuid[0]}`,
-                    { foto_sample: downloadURL },
-                    {
-                      withCredentials: true,
-                    }
-                  );
-                }
-              } catch (err) {
-                console.log(err.message);
-              }
-            }
-            cek2();
-          }
+       
+        if(data.data.success == true){
           setTimeout(() => {
-            alert("success");
             setLoading(false)
-            router.replace("/success");
-          }, 1500);
+            router.replace(`/order_analisis/${uuid[0]}`);
+          }, 500);
         }
       }
     } catch (err) {
@@ -588,35 +455,6 @@ export default function Order_analisis() {
                 <option value="normal">normal</option>
               </select>
             </div>
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-10">
-              <div>
-                <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
-                  Foto Sample (*format file yang diupload berupa png, jpg atau
-                  jpeg)
-                </h2>
-                <input
-                  className=""
-                  name="foto_sample"
-                  type="file"
-                  onChange={handleFS}
-                />
-              </div>
-              <div>
-                <h2 className="md:text-lg sm:text-lg text-sm font-semibold">
-                  Jurnal Pendukung (*format file yang diupload berupa docx atau
-                  pdf, ukuran file dibawah 10mb)
-                </h2>
-                <input
-                  className=""
-                  name="jurnal_pendukung"
-                  type="file"
-                  onChange={(e) => {
-                    e.preventDefault();
-                    jurnal_pendukung[0]= e.target.files[0];
-                  }}
-                />
-              </div>
-            </div>
             <div>
               <h2 className="md:text-lg sm:text-lg text-sm font-semibold">Deskripsi Sample</h2>
               <textarea
@@ -650,19 +488,6 @@ export default function Order_analisis() {
         </div>
           <br />
           <div className="flex md:mx-20 sm:mx-20 mx-4 gap-2">
-            <input
-              className="my-auto"
-              type="checkbox"
-              id="verifikasi"
-              name="verifikasi"
-              required
-              onChange={(e) => setVerifikasi(true)}
-            />
-            <h2 htmlFor="verifikasi" className="md:text-xl sm:text-lg text-xs">
-              Saya telah memahami proses pengujian yang akan dilakukan dan
-              memahami syarat dan ketentuan yang telah dijelaskan oleh
-              staff/pengelola laboratorium
-            </h2>
             <br />
           </div>
           <br />
@@ -671,16 +496,10 @@ export default function Order_analisis() {
               type="submit"
               className="grad  text-white rounded-lg m-auto text-[24px] font-bold px-6 py-3"
             >
-              Kirim
+              Next
             </button>
           </div>
         </form>
-        {/* <div className='grid grid-cols-1 justify-items-center'>
-                    <button onClick={increment} className='bg-blue-800 p-3 text-white rounded-lg'>Tambah order</button>
-                    <br />
-                    <br />
-                   
-                </div> */}
       </div>
      
     </>

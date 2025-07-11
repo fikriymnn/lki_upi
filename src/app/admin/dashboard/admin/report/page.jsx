@@ -114,7 +114,7 @@ export default function Report() {
           { withCredentials: true }
         );
         const data2 = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&status=Menunggu Pembayaran${month ? `&month=${month}` : ""}${
+          `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&status=Menunggu Konfirmasi Pembayaran&status=Menunggu Pembayaran${month ? `&month=${month}` : ""}${
             year ? `&year=${year}` : ""
           }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`,
           { withCredentials: true }
@@ -235,7 +235,7 @@ export default function Report() {
                     <th className="px-10 text-sm">No</th>
                     <th className="px-10 text-sm">Tanggal</th>
                     <th className="px-10 text-sm">No invoice</th>
-
+                    {/* <th className="px-10 text-sm">cek invoice</th> */}
                     <th className="px-10 text-sm">Kode Pengujian</th>
                     <th className="px-10 text-sm">Harga</th>
                     <th className="px-10 text-sm">Catatan</th>
@@ -298,7 +298,7 @@ export default function Report() {
                           </td>
                           <td className="text-center text-xs">{a.pj_date}</td>
                           <td className="text-center text-xs">
-                            {a.admin_date}
+                            {invoice[i]?.s8_date}
                           </td>
                           <td className="text-center text-xs">
                             {a.nama_lengkap}

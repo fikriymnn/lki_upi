@@ -35,108 +35,153 @@ export default function OrderCard({
   lama_pengerjaan,
   nama_pembimbing,
 }) {
-  const [foto, setFoto] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
 
-  // const download = ()=>{
-  //     try{
-  //         const storageRef = storage()
 
-  //         // Mendapatkan metadata file
-  //         const metadata = await storageRef.getMetadata();
+  const handleFS = async (event) => {
+    let reader = new FileReader();
+    const imageFile = event.target.files[0];
+    const imageFilname = event.target.files[0].name;
+    reader.onload = async (e) => {
+      setLoading2(true)
+      const img = new Image();
+      img.onload = () => {
+        //------------- Resize img code ----------------------------------
+        var canvas = document.createElement("canvas");
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
 
-  //         // Mengambil nama file dari metadata
-  //         const fileName = metadata.name;
+        var MAX_WIDTH = 700;
+        var MAX_HEIGHT = 700;
+        var width = img.width;
+        var height = img.height;
 
-  //         return fileName;
-  //     }catch(err){
-  //         console.log(err.message)
-  //     }
-  // }
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        ctx.canvas.toBlob(
+          async (blob) => {
+            const file = new File([blob], imageFilname, {
+              type: imageFile.type,
+              lastModified: Date.now(),
+            });
+            if (file) {
+              try {
+                const directory = "fotosample/";
+                const fileName = `${file.name}`;
 
-  /* const handleDownloadHA = async () => {
+                const storageRef = ref(storage, directory + fileName);
+
+                // Create file metadata including the content type
+                const metadata = {
+                  contentType: file.type,
+                };
+
+                // Upload the file in the bucket storage
+                const snapshot = await uploadBytesResumable(
+                  storageRef,
+                  file,
+                  metadata
+                );
+                //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
+
+                // Grab the public url
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                if (downloadURL) {
+                  const cek = await axios.post(
+                    `${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${uuid}`,
+                    { foto_sample: downloadURL },
+                    {
+                      withCredentials: true,
+                    }
+                  );
+                  if (cek) {
+                    setLoading2(false)
+                    alert("Foto Sample Berhasil Diubah");
+                    window.location.reload();
+                  }
+
+
+                }
+              } catch (err) {
+                setLoading2(false)
+                alert(err.message);
+              }
+            }
+          },
+          imageFile.type,
+          1
+        );
+      };
+      img.onerror = () => {
+        alert("invalid image content");
+      };
+      //debugger
+      img.src = e.target.result;
+    };
+
+    reader.readAsDataURL(imageFile);
+  };
+
+  const handleJurnal = async (e) => {
+    e.preventDefault();
+    setLoading(true)
     try {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/download_hasil_analisis/${id}`,
+      const directory = "jurnalpendukung/";
+      const fileName = `${e.target.files[0].name}`;
+
+      const storageRef = ref(storage, directory + fileName);
+
+      // Create file metadata including the content type
+      const metadata = {
+        contentType: e.target.files[0].type,
+      };
+
+      // Upload the file in the bucket storage
+      const snapshot = await uploadBytesResumable(
+        storageRef,
+        e.target.files[0],
+        metadata
+      );
+      //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
+
+      // Grab the public url
+      const downloadURL = await getDownloadURL(snapshot.ref);
+
+      if (downloadURL) {
+        const cek = await axios.post(
+          `${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${uuid}`,
+          { jurnal_pendukung: downloadURL },
           {
-            responseType: "arraybuffer",
-            withCredentials: true, // Important for receiving binary data
+            withCredentials: true,
           }
         );
-
-        const blob = new Blob([response.data], {
-          type: "application/octet-stream",
-        });
-
-        // Create a link element and click it to trigger the download
-
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        link.download = hasil_analisis;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (error) {
-        console.error("Error downloading file:", error);
+        if (cek) {
+          setLoading(false)
+          alert("Jurnal Pendukung Berhasil Diubah");
+          window.location.reload();
+        }
       }
     } catch (err) {
+      setLoading(false)
       alert(err.message);
     }
   }; */
 
-  /* const handleDownloadJP = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_URL}/api/download_jurnal_pendukung/${uuid}`,
-        {
-          responseType: "arraybuffer",
-          withCredentials: true, // Important for receiving binary data
-        }
-      );
 
-      const blob = new Blob([response.data], {
-        type: "application/octet-stream",
-      });
-
-      // Create a link element and click it to trigger the download
-
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = jurnal_pendukung;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error("Error downloading file:", error);
-    }
-  }; */
-
-  /* const handleDownloadFS = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_URL}/api/download_foto_sample/${uuid}`,
-        {
-          responseType: "arraybuffer",
-          withCredentials: true, // Important for receiving binary data
-        }
-      );
-
-      const blob = new Blob([response.data], {
-        type: "application/octet-stream",
-      });
-
-      // Create a link element and click it to trigger the download
-
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = foto_sample;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error("Error downloading file:", error);
-    }
-  }; */
 
   return (
     <>
@@ -269,17 +314,39 @@ export default function OrderCard({
                     foto sample :{" "}
                   </h1>
                   <div className="">
-                    {foto_sample ? (
-                      <Button
-                        className="grad"
-                        color="failure"
-                        size={5}
-                        href={foto_sample}
-                      >
-                        download
-                      </Button>
+                    {loading2 ? <center className="pt-2">
+                      <div className="inset-0 flex items-center justify-center backdrop-blur-sm bg-white">
+                        <div className="w-16 h-16 border-4 border-t-transparent border-black rounded-full animate-spin"></div>
+                      </div>
+                    </center> : foto_sample ? (
+                      <div>
+                        <Button
+                          className="grad"
+                          color="failure"
+                          size={5}
+                          href={foto_sample}
+                        >
+                          download
+                        </Button>
+                        <p className="my-3 md:text-lg text-xs sm:text-sm font-semibold text-grey-600">edit foto sample :</p>
+                        <input
+                          className="ml-5 w-11/12 h-10/12"
+                          type="file"
+                          placeholder="Edit Foto Sample"
+                          name="foto_sample"
+                          onChange={handleFS}
+                        />
+                      </div>
                     ) : (
-                      <p>-</p>
+                      <div className="flex justify-center">
+                        <input
+                          className="ml-5 w-11/12 h-10/12"
+                          type="file"
+                          placeholder="Edit Foto Sample"
+                          name="foto_sample"
+                          onChange={handleFS}
+                        />
+                      </div>
                     )}
                   </div>
                 </div>
@@ -289,18 +356,40 @@ export default function OrderCard({
                       jurnal pendukung :{" "}
                     </h1>
                     <div className="">
-                      {jurnal_pendukung ? (
-                        <Button
-                          className="grad"
-                          color="failure"
-                          size={5}
-                          href={jurnal_pendukung}
-                        >
-                          download
-                        </Button>
-                      ) : (
-                        <p>-</p>
-                      )}
+                      {loading ?
+                        <div className="inset-0 flex items-center justify-center backdrop-blur-sm bg-white">
+                          <div className="w-16 h-16 border-4 border-t-transparent border-black rounded-full animate-spin"></div>
+                        </div> : jurnal_pendukung ? (
+                          <div className="">
+                            <Button
+                              className="grad"
+                              color="failure"
+                              size={5}
+                              href={jurnal_pendukung}
+                            >
+                              download
+                            </Button>
+                            <p className="my-3 md:text-lg text-xs sm:text-sm font-semibold text-grey-600">edit jurnal pendukung :</p>
+                            <input
+                              className="ml-5 w-11/12 h-10/12"
+                              type="file"
+                              placeholder="Edit Jurnal Pendukung"
+                              name="bukti_pembayaran"
+                              onChange={handleJurnal}
+                            />
+                          </div>
+
+                        ) : (
+                          <div className="flex justify-center">
+                            <input
+                              className=" w-11/12 h-10/12"
+                              type="file"
+                              placeholder="Edit Jurnal Pendukung"
+                              name="bukti_pembayaran"
+                              onChange={handleJurnal}
+                            />
+                          </div>
+                        )}
                     </div>
                   </div>
 
