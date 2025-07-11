@@ -179,7 +179,7 @@ export default function OrderCard({
       setLoading(false)
       alert(err.message);
     }
-  }; */
+  };
 
 
 
