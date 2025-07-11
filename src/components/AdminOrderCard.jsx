@@ -52,7 +52,7 @@ export default function AdminOrderCard({ riwayat_pengujian, sample_dikembalikan,
         }
     }
 
-    const handleDownloadHA = async () => {
+    /* const handleDownloadHA = async () => {
         try {
             try {
                 const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/download_hasil_analisis/${id}`, {
@@ -126,7 +126,7 @@ export default function AdminOrderCard({ riwayat_pengujian, sample_dikembalikan,
             console.error('Error downloading file:', error);
         }
 
-    }
+    } */
 
     // const download_foto = async ()=>{
 

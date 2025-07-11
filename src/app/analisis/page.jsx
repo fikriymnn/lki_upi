@@ -146,27 +146,27 @@ const Analisis = () => {
       ],
     },
     {
-      alatPengukuran: "TG DTA",
+      alatPengukuran: "TGA",
       jenisPengukuran: [
         {
           jenis: "a.	Sampai Suhu 550 ℃",
-          kimia: "a. 100.000",
-          nonKimia: "a. 150.000",
-          luarUpi: "a. 250.000",
-          tigaHariNonKimia: "a. 202.500",
-          tujuhHariNonKimia: "a. 187.500",
-          tigaHariLuarUpi: "a. 337.500",
-          tujuhHariLuarUpi: "a. 312.500",
+          kimia: "a. 50.000",
+          nonKimia: "a. 100.000",
+          luarUpi: "a. 200.000",
+          tigaHariNonKimia: "a. 152.500",
+          tujuhHariNonKimia: "a. 137.500",
+          tigaHariLuarUpi: "a. 287.500",
+          tujuhHariLuarUpi: "a. 262.500",
         },
         {
           jenis: "b.	Diatas Suhu 550 ℃",
-          kimia: "b. 150.000",
-          nonKimia: "b. 200.000",
-          luarUpi: "b. 300.000",
-          tigaHariNonKimia: "b. 270.000",
-          tujuhHariNonKimia: "b. 250.000",
-          tigaHariLuarUpi: "b. 405.000",
-          tujuhHariLuarUpi: "b. 375.000",
+          kimia: "b. 100.000",
+          nonKimia: "b. 150.000",
+          luarUpi: "b. 250.000",
+          tigaHariNonKimia: "b. 220.000",
+          tujuhHariNonKimia: "b. 200.000",
+          tigaHariLuarUpi: "b. 355.000",
+          tujuhHariLuarUpi: "b. 325.000",
         },
       ],
     },
@@ -318,15 +318,15 @@ const Analisis = () => {
           </div>
         </div>
         <div className="md:mx-[60px] sm:mx-[40px] mx-4">
-        <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
-        Layanan Pengujian Laboratorium Kimia Instrumen LKI UPI
-      </p>
-      <div className="flex justify-center">
-        <hr className="grad h-2 mb-8 mt-5 w-56 text-center" />
-      </div>
-      <ButtonOrder />
-      <br />
-        <div className="mt-24 mb-10">
+          <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
+            Layanan Pengujian Laboratorium Kimia Instrumen LKI UPI
+          </p>
+          <div className="flex justify-center">
+            <hr className="grad h-2 mb-8 mt-5 w-56 text-center" />
+          </div>
+          <ButtonOrder />
+          <br />
+          <div className="mt-24 mb-10">
             <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
               Daftar Harga Pengujian Laboratorium Kimia Instrumen UPI
             </p>

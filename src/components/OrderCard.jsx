@@ -108,12 +108,12 @@ export default function OrderCard({
                       withCredentials: true,
                     }
                   );
-                  if(cek){
+                  if (cek) {
                     setLoading2(false)
                     alert("Foto Sample Berhasil Diubah");
                     window.location.reload();
                   }
-                 
+
 
                 }
               } catch (err) {
@@ -179,7 +179,7 @@ export default function OrderCard({
       setLoading(false)
       alert(err.message);
     }
-  };
+  }; */
 
 
 
@@ -316,8 +316,8 @@ export default function OrderCard({
                   <div className="">
                     {loading2 ? <center className="pt-2">
                       <div className="inset-0 flex items-center justify-center backdrop-blur-sm bg-white">
-      <div className="w-16 h-16 border-4 border-t-transparent border-black rounded-full animate-spin"></div>
-    </div>
+                        <div className="w-16 h-16 border-4 border-t-transparent border-black rounded-full animate-spin"></div>
+                      </div>
                     </center> : foto_sample ? (
                       <div>
                         <Button
@@ -358,8 +358,8 @@ export default function OrderCard({
                     <div className="">
                       {loading ?
                         <div className="inset-0 flex items-center justify-center backdrop-blur-sm bg-white">
-                        <div className="w-16 h-16 border-4 border-t-transparent border-black rounded-full animate-spin"></div>
-                      </div> : jurnal_pendukung ? (
+                          <div className="w-16 h-16 border-4 border-t-transparent border-black rounded-full animate-spin"></div>
+                        </div> : jurnal_pendukung ? (
                           <div className="">
                             <Button
                               className="grad"
