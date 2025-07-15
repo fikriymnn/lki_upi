@@ -121,7 +121,6 @@ export default function Order() {
         }${search ? `&nama_lengkap=${search}` : ""}`,
         { withCredentials: true }
       );
-      console.log(data)
       if (data.data.success) {
         getInvoice()
       }
@@ -376,10 +375,10 @@ export default function Order() {
                       {`${convertRupiah(v.total_harga)}`}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
-                      {order[i].operator_date}
+                      {order[i]?.operator_date}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
-                      {order[i].pj_date}
+                      {order[i]?.pj_date}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       <a
