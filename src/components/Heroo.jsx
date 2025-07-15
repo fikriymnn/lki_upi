@@ -37,6 +37,7 @@ export default function Heroo() {
             index === currentIndex ? 'opacity-100' : 'opacity-0'
           }`}
         >
+          
           <img
             src={src}
             alt={`Slide ${index + 1}`}

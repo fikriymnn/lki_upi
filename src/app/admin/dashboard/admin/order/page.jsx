@@ -353,7 +353,7 @@ export default function Order() {
                       {v.nama_lengkap}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
-                      {v.jenis_pengujian}
+                      {v?.jenis_pengujian}
                     </Table.Cell>
 
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
@@ -418,7 +418,6 @@ export default function Order() {
           </div>
         </div>
       </div>
-
       <br />
       <br />
       <br />
