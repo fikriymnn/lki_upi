@@ -322,12 +322,12 @@ export default function Order() {
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Harga (Rp)
               </Table.HeadCell>
-              <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+              {/* <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Operator
               </Table.HeadCell>
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Pj
-              </Table.HeadCell>
+              </Table.HeadCell> */}
               <Table.HeadCell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                 Keterangan
               </Table.HeadCell>
@@ -374,12 +374,12 @@ export default function Order() {
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {`${convertRupiah(v.total_harga)}`}
                     </Table.Cell>
-                    <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
+                    {/* <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {order[i]?.operator_date}
                     </Table.Cell>
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       {order[i]?.pj_date}
-                    </Table.Cell>
+                    </Table.Cell> */}
                     <Table.Cell className="text-center md:text-[11px] sm:text-[11px] text-[10px]">
                       <a
                         href={`/admin/dashboard/admin/order/${v._id}?no_invoice=${v.no_invoice}`}
