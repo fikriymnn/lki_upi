@@ -285,7 +285,7 @@ export default function Report() {
                             {a.kode_pengujian}
                           </td>
                           <td className="text-center text-xs">
-                            {a.total_harga}
+                            {invoice[i]?.total_harga}
                           </td>
                           <td className="text-center text-xs">
                             {invoice[i]?.catatan}

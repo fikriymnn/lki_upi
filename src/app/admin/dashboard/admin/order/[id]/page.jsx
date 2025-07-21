@@ -122,6 +122,8 @@ export default function DetailOrderAdmin({ params, searchParams }) {
       const date_format = `${timeNow()} ${new Date().getDate()} ${month_bahasa(
         new Date().getMonth()
       )} ${new Date().getFullYear()}`;
+
+      console.log(date_format)
       function selection() {
         switch (invoice?.status) {
           case "Menunggu Form Dikonfirmasi":
