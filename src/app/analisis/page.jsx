@@ -533,7 +533,7 @@ const Analisis = () => {
                 </div>
                 <div className="flex flex-col justify-center items-center w-[22%]">
                   <p className="font-bold md:text-[14px] text-[7px]">
-                    Luar Upi (Dosen/Mahasiswa){" "}
+                    Luar UPI (Dosen/Mahasiswa){" "}
                   </p>
                   <div className="grid grid-cols-2 gap-5 font-medium md:text-[14px] text-[7px]">
                     <p>3 Hari</p>
@@ -542,7 +542,7 @@ const Analisis = () => {
                 </div>
                 <div className="flex flex-col justify-center items-center w-[22%]">
                   <p className="font-bold md:text-[14px] text-[7px]">
-                    Luar Upi (Perusahaan){" "}
+                    Luar UPI (Perusahaan){" "}
                   </p>
                   <div className="grid grid-cols-2 gap-5 font-medium md:text-[14px] text-[7px]">
                     <p>3 Hari</p>
