@@ -360,7 +360,7 @@ const Layanan = () => {
               <p className="text-center mb-5 font-bold md:text-[14px] text-[7px] underline">
                 Harga Dosen/Mahasiswa UPI
               </p>
-              <div className="grid grid-cols-5 ">
+              <div className="grid grid-cols-6 text-center">
                 <p className="font-bold md:text-[14px] text-[7px] text-center">
                   No
                 </p>
@@ -371,7 +371,8 @@ const Layanan = () => {
                 <p className="font-bold md:text-[14px] text-[7px]">
                   Non Kimia{" "}
                 </p>
-                <p className="font-bold md:text-[14px] text-[7px]">Luar UPI</p>
+                <p className="font-bold md:text-[14px] text-[7px]">Luar UPI (Dosen/Mahasiswa)</p>
+                <p className="font-bold md:text-[14px] text-[7px]">Luar UPI<br />(Perusahaan)</p>
               </div>
             </div>
 
@@ -379,7 +380,7 @@ const Layanan = () => {
               {dataPengukur.map((data, i) => (
                 <div key={i}>
                   <div className="bg-white border shadow-[rgba(0,0,10,0.3)_1px_2px_2px_1px] rounded-lg py-2">
-                    <div className="grid grid-cols-5 ">
+                    <div className="grid grid-cols-6 ">
                       <p className="font-medium md:text-[14px] text-[7px] text-center ">
                         {i + 1}
                       </p>
@@ -388,7 +389,7 @@ const Layanan = () => {
                       </p>
                     </div>
                     <div className="md:ml-3">
-                      <div className="grid grid-cols-5 gap-1 ">
+                      <div className="grid grid-cols-6 gap-1 text-center">
                         <p className="font-medium md:text-[14px] text-[7px]">
                           {""}
                         </p>
