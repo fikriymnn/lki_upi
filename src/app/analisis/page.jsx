@@ -22,7 +22,8 @@ const Analisis = () => {
           tujuhHariNonKimia: "a. 62.500",
           tigaHariLuarUpi: "a. 101.250",
           tujuhHariLuarUpi: "a. 93.750",
-          tigaHariPerusahaan: "a. 202.500"
+          tigaHariPerusahaan: "a. 202.500",
+          tujuhHariPerusahaan: "a. 187.500"
         },
         {
           jenis: "b. Sampel",
@@ -625,7 +626,7 @@ const Analisis = () => {
                                   {jenisPengukuran.tigaHariPerusahaan}
                                 </p>
                                 <p className="font-medium md:text-[14px] text-[6px]">
-                                  {jenisPengukuran.tigaHariPerusahaan}
+                                  {jenisPengukuran.tujuhHariPerusahaan}
                                 </p>
                               </div>
                             </div>
