@@ -172,7 +172,7 @@ const Analisis = () => {
           tigaHariNonKimia: "b. 202.500",
           tujuhHariNonKimia: "b. 187.500",
           tigaHariLuarUpi: "b. 270.000",
-          tujuhHariLuarUpi: "b. 250.500",
+          tujuhHariLuarUpi: "b. 250.000",
           tigaHariPerusahaan: "b. 337.500",
           tujuhHariPerusahaan: "b. 312.500",
         },
