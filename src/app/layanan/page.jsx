@@ -195,7 +195,7 @@ const Layanan = () => {
           tujuhHariPerusahaan: "a. 500.000",
         },
         {
-          jenis: "b.	Suhu 550℃ - 950℃",
+          jenis: "b.	Suhu 25℃ - 950℃",
           kimia: "b. 300.000",
           nonKimia: "b. 350.000",
           luarUpi: "b. 400.000",
