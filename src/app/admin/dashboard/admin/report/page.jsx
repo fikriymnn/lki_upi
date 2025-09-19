@@ -294,11 +294,11 @@ export default function Report() {
                             {a.lama_pengerjaan}
                           </td>
                           <td className="text-center text-xs">
-                            {`${(a.operator_date?a.operator_date:a.pj_date).split(" ").slice(1).join(" ").format("DD MMMM YYYY")}`}
+                            {`${(a.operator_date?`${a.operator_date.getDate()} ${month_bahasa(a.operator_date.getMonth())} ${a.operator_date.getFullYear()}`:`${a.pj_date.getDate()} ${month_bahasa(a.pj_date.getMonth())} ${a.pj_date.getFullYear()}`)}`}
                           </td>
-                          <td className="text-center text-xs">{`${(a.pj_date?a.pj_date:a.operator_date).split(" ").slice(1).join(" ").format("DD MMMM YYYY")}`}</td>
+                          <td className="text-center text-xs">{`${(a.pj_date?`${a.pj_date.getDate()} ${month_bahasa(a.pj_date.getMonth())} ${a.pj_date.getFullYear()}`:`${a.operator_date.getDate()} ${month_bahasa(a.operator_date.getMonth())} ${a.operator_date.getFullYear()}`).split(" ").slice(1).join(" ")}`}</td>
                           <td className="text-center text-xs">
-                            {`${(invoice[i]?.s8_date?invoice[i]?.s8_date:a.pj_date?a.pj_date:a.operator_date).split(" ").slice(1).join(" ").format("DD MMMM YYYY")}`}
+                            {`${(invoice[i]?.s8_date?`${a.invoice[i]?.s8_date.getDate()} ${month_bahasa(a.invoice[i]?.s8_date.getMonth())} ${a.invoice[i]?.s8_date.getFullYear()}`:a.pj_date?`${a.pj_date.getDate()} ${month_bahasa(a.pj_date.getMonth())} ${a.pj_date.getFullYear()}`:`${a.operator_date.getDate()} ${month_bahasa(a.operator_date.getMonth())} ${a.operator_date.getFullYear()}`).split(" ").slice(1).join(" ")}`}
                           </td>
                           <td className="text-center text-xs">
                             {a.nama_lengkap}
