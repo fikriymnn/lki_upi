@@ -294,11 +294,11 @@ export default function Report() {
                             {a.lama_pengerjaan}
                           </td>
                           <td className="text-center text-xs">
-                            {`${a.operator_date}`}
+                            {`${a.operator_date?a.operator_date:a.pj_date}`}
                           </td>
-                          <td className="text-center text-xs">{`${a.pj_date}`}</td>
+                          <td className="text-center text-xs">{`${a.pj_date?a.pj_date:a.operator_date}`}</td>
                           <td className="text-center text-xs">
-                            {`${invoice[i]?.s8_date}`}
+                            {`${invoice[i]?.s8_date?invoice[i]?.s8_date:a.pj_date?a.pj_date:a.operator_date}`}
                           </td>
                           <td className="text-center text-xs">
                             {a.nama_lengkap}
