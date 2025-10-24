@@ -123,7 +123,7 @@ export default function Order() {
     try {
       const data = await axios.get(
         `${process.env.NEXT_PUBLIC_URL}/api/invoice?skip=0&limit=30${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
-        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status!=="" ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
+        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status!=="" ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Form Dikonfirmasi&status=sample diterima admin&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
         }${search ? `&nama_lengkap=${search}` : ""}`,
         { withCredentials: true }
       );
@@ -151,7 +151,7 @@ export default function Order() {
       const data = await axios.get(
         `${process.env.NEXT_PUBLIC_URL}/api/invoice?&skip=${page * 15
         }&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
-        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Form Dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=sample diterima admin&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
+        }${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Form Dikonfirmasi&status=sample diterima admin&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=sample diterima admin&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"
         }${search ? `&nama_lengkap=${search}` : ""}`,
         { withCredentials: true }
       );
