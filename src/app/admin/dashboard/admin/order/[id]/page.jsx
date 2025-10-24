@@ -135,6 +135,7 @@ export default function DetailOrderAdmin({ params, searchParams }) {
             obj.success = false;
             return true;
           case "Sample Diterima Admin":
+            obj.s2_date = date_format
             obj.s3_date = date_format;
             obj.success = false;
             return true;
@@ -302,7 +303,7 @@ export default function DetailOrderAdmin({ params, searchParams }) {
                       <option value="Form Dikonfirmasi">
                         Form Dikonfirmasi
                       </option>
-                      {/* <option value="sample diterima admin">sample diterima admin</option> */}
+                      <option value="sample diterima admin">sample diterima admin</option>
                       <option value="Sample Dikerjakan Operator">
                         Sample Diterima Admin dan Diproses
                       </option>
