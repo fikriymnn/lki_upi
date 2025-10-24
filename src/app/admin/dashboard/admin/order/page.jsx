@@ -58,15 +58,16 @@ const stats = [
   {
     status: "menunggu form dikonfirmasi",
   },
-  {
-    status: "Sample Dikerjakan Operator",
-  },
-  {
+    {
     status:"Form Dikonfirmasi"
   },
   {
     status:"sample diterima admin"
   },
+  {
+    status: "Sample Dikerjakan Operator",
+  },
+
   {
     status: "Menunggu Verifikasi",
   },
