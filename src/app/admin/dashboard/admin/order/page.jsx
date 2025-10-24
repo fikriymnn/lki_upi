@@ -62,7 +62,7 @@ const stats = [
     status:"Form Dikonfirmasi"
   },
   {
-    status:"sample diterima admin"
+    status:"Sample Diterima Admin"
   },
   {
     status: "Sample Dikerjakan Operator",

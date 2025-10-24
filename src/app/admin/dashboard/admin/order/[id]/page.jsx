@@ -135,7 +135,6 @@ export default function DetailOrderAdmin({ params, searchParams }) {
             obj.success = false;
             return true;
           case "Sample Diterima Admin":
-            obj.s2_date = date_format
             obj.s3_date = date_format;
             obj.success = false;
             return true;

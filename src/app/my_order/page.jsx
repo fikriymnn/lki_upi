@@ -72,7 +72,7 @@ export default function My_order() {
         );
         if (dataUser.data.success) {
           const data = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Menunggu Verifikasi&status=menunggu form dikonfirmasi&status=sample diterima admin&status=Form Dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&id_user=${dataUser.data.data._id
+            `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Menunggu Verifikasi&status=menunggu form dikonfirmasi&status=Sample Diterima Admin&status=Form Dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&id_user=${dataUser.data.data._id
             }&skip=${page * 15}&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""
             }`,
             { withCredentials: true }

@@ -66,7 +66,7 @@ export default function Tracking({ params }) {
                 />
               )}
               <div>
-                {invoice.status == "Menunggu Form Dikonfirmasi" ||
+                {invoice.status == "menunggu form dikonfirmasi" ||
                 invoice.status == "Form Dikonfirmasi" ||
                 invoice.status == "Sample Diterima Admin" ||
                 invoice.status == "Sample Dikerjakan Operator" ||
