@@ -357,10 +357,16 @@ const Analisis = () => {
       ],
     },
   ];
+
+  const data = [
+    { no: 1, alat: "FTIR", pendidikan: "Rp. 500.000", industri: "Rp. 1.000.000", satuan: "Per Spectra" },
+    { no: 2, alat: "GC-MS", pendidikan: "Rp. 750.000", industri: "Rp. 1.250.000", satuan: "Per Spectra" },
+    { no: 3, alat: "NMR", pendidikan: "Rp. 3.000.000", industri: "Rp. 5.000.000", satuan: "Per Senyawa" },
+  ];
   return (
     <>
-      <main>
-        <div className="flex md:h-[229px] h-40 w-full">
+      <main className="pb-16">
+        <div className="flex md:h-[229px] h-40 w-full ">
           <Image
             alt=""
             src={"/carousel.jpg"}
@@ -371,305 +377,266 @@ const Analisis = () => {
           />
           <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[229px] h-40  absolute flex flex-col justify-center items-center">
             <p className="text-white md:text-5xl sm:text-xl text-lg font-bold uppercase">
-              Layanan Jasa Analisis LKI UPI
+              Layanan Jasa Analisis
             </p>
-            <div className="flex justify-center mt-5">
-              <a
-                href="/about"
-                className="px-10 py-2 bg-slate-900 text-white grad rounded-xl font-bold md:text-lg sm:text-base text-sm"
-              >
-                Tentang Kami
-              </a>
-            </div>
           </div>
         </div>
-        <div className="md:mx-[60px] sm:mx-[40px] mx-4">
-          <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
-            Layanan Pengujian Laboratorium Kimia Instrumen LKI UPI
+
+        <div className="max-w-6xl mx-auto">
+          <p className="max-w-2xl px-8 md:text-3xl sm:text-2xl text-xl font-semibold text-gray-800 mt-12 mb-8 text-center mx-auto">
+            Pengujian Laboratorium Kimia Instrumen LKI UPI
           </p>
-          <div className="flex justify-center">
-            <hr className="grad h-2 mb-8 mt-5 w-56 text-center" />
+          <p className="mx-auto text-justify max-w-6xl px-8 mb-8">
+            Laboratorium Kimia Instrumen (LKI) Universitas Pendidikan Indonesia menyediakan layanan pengujian sampel berbasis teknologi instrumen modern dengan standar kualitas tinggi. Kami melayani kebutuhan penelitian, akademik, industri, dan komersial dengan hasil yang presisi, terverifikasi, dan dapat dipertanggungjawabkan secara ilmiah.
+          </p>
+          <div className="max-w-6xl flex px-8 justify-center">
+            <ButtonOrder />
           </div>
-          <ButtonOrder />
+
           <br />
-          <div className="mt-24 mb-10">
-            <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
+          <div className="mt-8 mb-8 max-w-6xl mx-auto">
+            <p className="md:text-3xl sm:text-2xl text-xl font-semibold text-gray-800 mt-7 max-w-3xl px-8 text-center mx-auto">
               Daftar Harga Pengujian Laboratorium Kimia Instrumen UPI
             </p>
-            <div className="flex justify-center">
-              <hr className="grad h-2 mb-8 mt-5 w-8/12 text-center" />
-            </div>
           </div>
-          <p className="font-semibold text-xl md:ml-32 ml-0 my-3">Pengukuran</p>
-          <div className="lg:mx-16 md:-mx-8 -mx-8 ">
-            <p className="text-center font-bold md:text-lg sm:text-lg text-sm mb-5">
-              Paket Harga Normal (14 Hari kerja)
-            </p>
-            <div className="bg-[#EDECECD4] md:py-5 py-2 rounded-lg shadow-[rgba(0,0,0,0.3)_1px_2px_2px_1px] mb-3">
-              <p className="text-center mb-5 font-bold md:text-[14px] text-[7px] underline">
+
+          {/* TABLE BARU */}
+          <div className="max-w-6xl mx-auto px-8 pb-4">
+            <div className="bg-gray-300 w-full max-w-6xl px-8 mx-auto py-4 rounded-t-xl mt-8">
+              <p className="text-center font-semibold text-lg">
+                Paket Harga Normal (14 Hari kerja)
+              </p>
+              <p className="text-center font-semibold md:text-[14px] text-[7px] underline">
                 Harga Dosen/Mahasiswa UPI
               </p>
-              <div className="grid grid-cols-6">
-                <p className="font-bold md:text-[14px] text-[7px] text-center">
-                  No
-                </p>
-                <p className="font-bold md:text-[14px] text-[7px]">
-                  Jenis Alat Pengukuran
-                </p>
-                <p className="font-bold md:text-[14px] text-[7px]">Kimia </p>
-                <p className="font-bold md:text-[14px] text-[7px]">
-                  Non Kimia{" "}
-                </p>
-                <p className="font-bold md:text-[14px] text-[7px]">Luar UPI (Dosen/Mahasiswa)</p>
-                <p className="font-bold md:text-[14px] text-[7px]">Luar UPI<br />(Perusahaan)</p>
-              </div>
             </div>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse overflow-hidden px-4">
 
-            <div className="grid md:gap-3 sm:gap-3 gap-1">
-              {dataPengukur.map((data, i) => (
-                <div key={i}>
-                  <div className="bg-white border shadow-[rgba(0,0,10,0.3)_1px_2px_2px_1px] rounded-lg py-2">
-                    <div className="grid grid-cols-6 ">
-                      <p className="font-medium md:text-[14px] text-[7px] text-center ">
-                        {i + 1}
-                      </p>
-                      <p className="font-bold md:text-[14px] text-[7px]">
+                {/* HEADER */}
+                <thead>
+                  <tr className="bg-gray-100 text-gray-800">
+                    <th className="p-3 border text-left font-semibold w-10">No</th>
+                    <th className="p-3 border text-left font-semibold w-64">
+                      Jenis Alat Pengukuran
+                    </th>
+                    <th className="p-3 border text-center align-bottom font-semibold">
+                      Kimia
+                    </th>
+                    <th className="p-3 border text-center align-bottom font-semibold">
+                      Non Kimia
+                    </th>
+                    <th className="p-3 border text-center align-bottom font-semibold">
+                      Luar UPI <br />(Dosen/Mahasiswa)
+                    </th>
+                    <th className="p-3 border text-center align-bottom font-semibold">
+                      Luar UPI <br />(Perusahaan)
+                    </th>
+                  </tr>
+                </thead>
+
+                {/* BODY */}
+                <tbody>
+                  {/* ROW 1 */}
+                  {dataPengukur.map((data, i) => (
+                    <tr className="border-t" key={i}>
+                      <td className="p-3 border font-medium text-center align-top">{i + 1}</td>
+                      <td className="p-3 border font-semibold">
                         {data.alatPengukuran}
-                      </p>
-                    </div>
-                    <div className="md:ml-3">
-                      <div className="grid grid-cols-6 gap-1">
-                        <p className="font-medium md:text-[14px] text-[7px]">
-                          {""}
-                        </p>
-                        <div>
-                          {data.jenisPengukuran.map((jenisPengukuran, i) => (
-                            <p
-                              key={i}
-                              className="font-medium md:text-[14px] text-[7px]"
-                            >
-                              {jenisPengukuran.jenis}
-                            </p>
-                          ))}
-                        </div>
-                        <div>
-                          {data.jenisPengukuran.map((jenisPengukuran, i) => (
-                            <p
-                              key={i}
-                              className="font-medium md:text-[14px] text-[7px]"
-                            >
-                              {jenisPengukuran.kimia}
-                            </p>
-                          ))}
-                        </div>
-                        <div>
-                          {data.jenisPengukuran.map((jenisPengukuran, i) => (
-                            <p
-                              key={i}
-                              className="font-medium md:text-[14px] text-[7px]"
-                            >
-                              {jenisPengukuran.nonKimia}
-                            </p>
-                          ))}
-                        </div>
-                        <div>
-                          {data.jenisPengukuran.map((jenisPengukuran, i) => (
-                            <p
-                              key={i}
-                              className="font-medium md:text-[14px] text-[7px]"
-                            >
-                              {jenisPengukuran.luarUpi}
-                            </p>
-                          ))}
-                        </div>
-                        <div>
-                          {data.jenisPengukuran.map((jenisPengukuran, i) => (
-                            <p
-                              key={i}
-                              className="font-medium md:text-[14px] text-[7px]"
-                            >
-                              {jenisPengukuran.perusahaan}
-                            </p>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                        <ul className="mt-2 text-sm font-normal text-gray-700 leading-6">
+                          {
+                            data.jenisPengukuran.map((v, i) => (
+                              <li key={i}>{v.jenis}</li>
+                            ))
+                          }
+                        </ul>
+                      </td>
+
+                      <td className="p-3 border text-center align-bottom align-bottom">
+                        <ul className="text-sm leading-6">
+                          {
+                            data.jenisPengukuran.map((v, i) => (
+                              <li key={i}>{v.kimia}</li>
+                            ))
+                          }
+                        </ul>
+                      </td>
+                      <td className="p-3 border text-center align-bottom align-bottom">
+                        <ul className="text-sm leading-6">
+                          {
+                            data.jenisPengukuran.map((v, i) => (
+                              <li key={i}>{v.nonKimia}</li>
+                            ))
+                          }
+                        </ul>
+                      </td>
+                      <td className="p-3 border text-center align-bottom align-bottom">
+                        <ul className="text-sm leading-6">
+                          {
+                            data.jenisPengukuran.map((v, i) => (
+                              <li key={i}>{v.luarUpi}</li>
+                            ))
+                          }
+                        </ul>
+                      </td>
+
+                      <td className="p-3 border text-center align-bottom align-bottom">
+                        <ul className="text-sm leading-6">
+                          {
+                            data.jenisPengukuran.map((v, i) => (
+                              <li key={i}>{v.perusahaan}</li>
+                            ))
+                          }
+                        </ul>
+                      </td>
+
+
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
-          <p className="text-black-700 md:font-bold font-semibold text-end md:mx-28 mx-0 md:text-[14px] text-sm mt-5">
-            *Biaya per Jam
-          </p>
-          <p className="text-black-700 md:font-bold font-semibold md:mx-28 mx-0 md:text-[14px] text-sm mt-5">
-            Syarat dan Ketentuan: <br />
-            - Pelarut NMR-Kloroform: Rp100.000/ml. <br />
-            - Pelarut NMR-Metanol: Rp80.000/ml. <br />
-            - Pengenceran sampel lebih dari 25ml dikenakan biaya tambahan seeuai pemakaian.
-          </p>
-          <div className="lg:mx-16 md:-mx-8 -mx-8 ">
-            <p className="text-center font-bold text-lg mb-5 mt-10">
-              Paket Harga Fast Track
+          <div className="flex max-w-6xl mx-auto justify-between px-8">
+            <p className="text-black-700 md:font-semibold font-semibold md:text-[14px] text-sm">
+              Syarat dan Ketentuan: <br />
+              - Pelarut NMR-Kloroform: Rp100.000/ml. <br />
+              - Pelarut NMR-Metanol: Rp80.000/ml. <br />
+              - Pengenceran sampel lebih dari 25ml dikenakan biaya tambahan seeuai pemakaian.
             </p>
-            <div className="bg-[#EDECECD4] md:py-5 py-2 rounded-lg shadow-[rgba(0,0,0,0.3)_1px_2px_2px_1px] mb-3">
-              <p className="text-center mb-5 font-bold md:text-[14px] text-[7px] underline">
+            <p className="text-black-700 md:font-semibold font-semibold text-end md:text-[14px] text-sm">
+              *Biaya per Jam
+            </p>
+          </div>
+
+          <div className="max-w-6xl px-8 mx-auto mt-16">
+            <div className="bg-gray-300 w-full max-w-6xl px-8 mx-auto py-4 rounded-t-xl mt-8">
+              <p className="text-center font-semibold text-lg">
+                Paket Harga Fast Track
+              </p>
+              <p className="text-center font-semibold md:text-[14px] text-[7px] underline">
                 Harga Dosen/Mahasiswa UPI
               </p>
-              <div className="flex md:gap-3 gap-2">
-                <p className="font-bold md:text-[14px] text-[7px] text-center md:w-[8%] w-[3%]">
-                  No
-                </p>
-                <p className="font-bold md:text-[14px] text-[7px] w-[15%]">
-                  Jenis Alat Pengukuran
-                </p>
-                <div className="flex flex-col justify-center items-center w-[22%]">
-                  <p className="font-bold md:text-[14px] text-[7px]">
-                    Non Kimia{" "}
-                  </p>
-                  <div className="grid grid-cols-2 gap-5 font-medium md:text-[14px] text-[7px]">
-                    <p>3 Hari</p>
-                    <p>7 Hari</p>
-                  </div>
-                </div>
-                <div className="flex flex-col justify-center items-center w-[22%]">
-                  <p className="font-bold md:text-[14px] text-[7px]">
-                    Luar UPI (Dosen/Mahasiswa){" "}
-                  </p>
-                  <div className="grid grid-cols-2 gap-5 font-medium md:text-[14px] text-[7px]">
-                    <p>3 Hari</p>
-                    <p>7 Hari</p>
-                  </div>
-                </div>
-                <div className="flex flex-col justify-center items-center w-[22%]">
-                  <p className="font-bold md:text-[14px] text-[7px]">
-                    Luar UPI (Perusahaan){" "}
-                  </p>
-                  <div className="grid grid-cols-2 gap-5 font-medium md:text-[14px] text-[7px]">
-                    <p>3 Hari</p>
-                    <p>7 Hari</p>
-                  </div>
-                </div>
-              </div>
             </div>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse shadow rounded-b-xl overflow-hidden">
+                <thead>
+                  <tr className="bg-gray-200 text-center">
+                    <th className="p-3 border font-semibold">No</th>
+                    <th className="p-3 border font-semibold">Jenis Alat Pengukuran</th>
+                    <th className="p-3 border font-semibold">
+                      Non Kimia<br />3 Hari | 7 Hari
+                    </th>
+                    <th className="p-3 border font-semibold">
+                      Luar UPI (Dosen/Mhs)<br />3 Hari | 7 Hari
+                    </th>
+                    <th className="p-3 border font-semibold">
+                      Perusahaan<br />3 Hari | 7 Hari
+                    </th>
+                  </tr>
+                </thead>
 
-            <div className="grid md:gap-3 sm:gap-3 gap-1">
-              {dataPengukur.map((data, i) => (
-                <div key={i}>
-                  <div className="bg-white border shadow-[rgba(0,0,10,0.3)_1px_2px_2px_1px] rounded-lg py-2">
-                    <div className="flex md:gap-20 gap-4 grid-cols-5 ">
-                      <p className="font-medium md:text-[14px] text-[6px] text-center md:ml-5 ml-0">
-                        {i + 1}
-                      </p>
-                      <p className="font-bold md:text-[14px] text-[6px] ">
-                        {data.alatPengukuran}
-                      </p>
-                    </div>
-                    <div className="md:ml-3">
-                      <div className="flex  w-full gap-3 ">
-                        <p className="font-medium md:text-[14px] text-[6px]  md:w-[8%] w-[3%]">
-                          {""}
-                        </p>
-                        <div className="w-[15%]">
-                          {data.jenisPengukuran.map((jenisPengukuran, i) => (
-                            <p
-                              key={i}
-                              className=" font-medium md:text-[14px] text-[6px] "
-                            >
-                              {jenisPengukuran.jenis}
-                            </p>
-                          ))}
-                        </div>
+                <tbody>
+                  {dataPengukur.map((item, index) => (
+                    <tr key={index} className="bg-white border-b align-top">
+                      {/* NO */}
+                      <td className="p-3 border text-center font-semibold">
+                        {index + 1}
+                      </td>
 
-                        <div className="w-[22%]">
-                          {data.jenisPengukuran.map((jenisPengukuran, i) => (
-                            <div
-                              key={i}
-                              className="flex flex-col justify-center items-center  "
-                            >
-                              <div className="grid grid-cols-2 md:gap-5 gap-1">
-                                <p className="font-medium md:text-[14px] text-[6px]">
-                                  {jenisPengukuran.tigaHariNonKimia}
-                                </p>
-                                <p className="font-medium md:text-[14px] text-[6px]">
-                                  {jenisPengukuran.tujuhHariNonKimia}
-                                </p>
-                              </div>
-                            </div>
+                      {/* JENIS ALAT + SUB ITEM */}
+                      <td className="p-3 border font-semibold">
+                        {item.alatPengukuran}
+                        <div className="mt-1 text-sm font-normal">
+                          {item.jenisPengukuran.map((jenis, i) => (
+                            <div key={i}>{jenis.jenis}</div>
                           ))}
                         </div>
-                        <div className="w-[22%]">
-                          {data.jenisPengukuran.map((jenisPengukuran, i) => (
-                            <div
-                              key={i}
-                              className="flex flex-col justify-center items-center  "
-                            >
-                              <div className="grid grid-cols-2 md:gap-5 gap-1">
-                                <p className="font-medium md:text-[14px] text-[6px]">
-                                  {jenisPengukuran.tigaHariLuarUpi}
-                                </p>
-                                <p className="font-medium md:text-[14px] text-[6px]">
-                                  {jenisPengukuran.tujuhHariLuarUpi}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="w-[22%]">
-                          {data.jenisPengukuran.map((jenisPengukuran, i) => (
-                            <div
-                              key={i}
-                              className="flex flex-col justify-center items-center  "
-                            >
-                              <div className="grid grid-cols-2 md:gap-5 gap-1">
-                                <p className="font-medium md:text-[14px] text-[6px]">
-                                  {jenisPengukuran.tigaHariPerusahaan}
-                                </p>
-                                <p className="font-medium md:text-[14px] text-[6px]">
-                                  {jenisPengukuran.tujuhHariPerusahaan}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                      </td>
+
+                      {/* NON KIMIA */}
+                      <td className="p-3 border text-center align-bottom text-sm">
+                        {item.jenisPengukuran.map((jenis, i) => (
+                          <div key={i}>
+                            {jenis.tigaHariNonKimia} | {jenis.tujuhHariNonKimia}
+                          </div>
+                        ))}
+                      </td>
+
+                      {/* LUAR UPI DOSEN/MHS */}
+                      <td className="p-3 border text-center align-bottom text-sm">
+                        {item.jenisPengukuran.map((jenis, i) => (
+                          <div key={i}>
+                            {jenis.tigaHariLuarUpi} | {jenis.tujuhHariLuarUpi}
+                          </div>
+                        ))}
+                      </td>
+
+                      {/* PERUSAHAAN */}
+                      <td className="p-3 border text-center align-bottom text-sm">
+                        {item.jenisPengukuran.map((jenis, i) => (
+                          <div key={i}>
+                            {jenis.tigaHariPerusahaan} | {jenis.tujuhHariPerusahaan}
+                          </div>
+                        ))}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
-          <p className="text-black-700 md:font-bold font-semibold text-end md:mx-28 mx-0 md:text-[14px] text-sm mt-5">
-            *Biaya per Jam
-          </p>
-          <p className="text-black-700 md:font-bold font-semibold md:mx-28 mx-0 md:text-[14px] text-sm mt-5">
-            Syarat dan Ketentuan: <br />
-            - Pelarut NMR-Kloroform: Rp100.000/ml. <br />
-            - Pelarut NMR-Metanol: Rp80.000/ml. <br />
-            - Pengenceran sampel lebih dari 25ml dikenakan biaya tambahan seeuai pemakaian.
-          </p>
-          <div className="mb-24">
-            <p className="md:text-[29px] text-xl font-bold md:mx-16 mx-0 mt-20 mb-5">
-              PENGUKURAN DAN ANALISIS LANJUTAN
+          <div className="flex max-w-6xl mx-auto justify-between px-8 mt-4">
+            <p className="text-black-700 md:font-semibold font-semibold md:text-[14px] text-sm">
+              Syarat dan Ketentuan: <br />
+              - Pelarut NMR-Kloroform: Rp100.000/ml. <br />
+              - Pelarut NMR-Metanol: Rp80.000/ml. <br />
+              - Pengenceran sampel lebih dari 25ml dikenakan biaya tambahan seeuai pemakaian.
             </p>
-            <div className="flex justify-center items-center">
-              <Image
-                src={"/images/tabel2.png"}
-                alt=""
-                width={0}
-                height={0}
-                sizes="108vw"
-                className="w-[1000px] h-full"
-              />
-            </div>
+            <p className="text-black-700 md:font-semibold font-semibold text-end md:text-[14px] text-sm">
+              *Biaya per Jam
+            </p>
           </div>
-          <div className="my-10">
-            <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
+
+          <div className="mt-8 mb-8 max-w-6xl mx-auto mt-16">
+            <p className="md:text-3xl sm:text-2xl text-xl font-semibold text-gray-800 mt-7 max-w-3xl px-8 text-center mx-auto">
+              Pengukuran Dan Analisis Lanjutan
+            </p>
+          </div>
+          <div className="mb-24 ">
+            <table className="w-full border-collapse text-[16px]rounded-t-xl ">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="pt-2 px-2 text-center" rowSpan={2}>No</th>
+                  <th className="pt-2 px-2 text-center" rowSpan={2}>Jenis Alat</th>
+                  <th className="pt-2 px-2 text-center" colSpan={2}>Paket Harga</th>
+                  <th className="pt-2 px-2 text-center" rowSpan={2}>Satuan</th>
+                </tr>
+
+                <tr className="bg-gray-100">
+                  <th className="pb-2 px-2 text-center">Pendidikan</th>
+                  <th className="pb-2 px-2 text-center">Industri</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {data.map((row) => (
+                  <tr key={row.no} className="border-b">
+                    <td className="p-4 text-center border">{row.no}</td>
+                    <td className="p-4 text-center border">{row.alat}</td>
+                    <td className="p-4 text-center border">{row.pendidikan}</td>
+                    <td className="p-4 text-center border">{row.industri}</td>
+                    <td className="p-4 text-center border">{row.satuan}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-8 mb-8 max-w-6xl mx-auto mt-16">
+            <p className="md:text-3xl sm:text-2xl text-xl font-semibold text-gray-800 mt-7 max-w-2xl px-8 text-center mx-auto">
               Alur Pengujian Laboratorium Kimia Instrumen UPI
             </p>
-            <div className="flex justify-center">
-              <hr className="grad h-2 mb-8 mt-5 w-8/12 text-center" />
-            </div>
           </div>
           <div className="flex justify-center items-center translate-x-10">
             <Image
@@ -706,7 +673,7 @@ const Analisis = () => {
               className="md:w-[600px] sm:w-[550px] w-[240px] h-[700px] object-contain"
             />
           </div>
-          <AnalisisComponent />
+
         </div>
       </main>
     </>

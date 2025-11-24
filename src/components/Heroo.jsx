@@ -28,7 +28,7 @@ export default function Heroo() {
   }, []);
 
   return (
-    <div className="relative h-[80vh] w-full overflow-hidden">
+    <div className="relative h-[90vh] w-full overflow-hidden">
       {/* Slides */}
       {images.map((src, index) => (
         <div

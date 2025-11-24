@@ -1,124 +1,163 @@
+"use client";
+
 import Image from "next/image";
-import CarouselCustom from "@/components/CarouselCustom";
-import LayananCard from "@/components/LayananCard";
-import ButtonOrder from "@/components/ButtonOrder";
-import { Microscope,FileText,FlaskConical } from "lucide-react";
+import { motion } from "framer-motion";
+import { Microscope, FileText, FlaskConical } from "lucide-react";
 import Heroo from "../components/Heroo";
-
-
-
-// const inter = Noto_Sans({ subsets: ["latin"], weight: "500" });
 
 export default function Home() {
   return (
     <>
-      <Heroo />
-      <div className=" ">
-        <br className="md:mb-20 sm:mb-14 mb-10" />
-        <p className="md:text-3xl sm:text-2xl text-2xl font-bold md:mb-2 sm:mb-8 mb-2  md:mt-6 sm:mt-6 mt-3 text-center">
-          LAYANAN
-        </p>
-        <div className="flex justify-center ">
-          <hr className="text-red-700 bg-gradient-to-r from-red-700 via-red-700 to-rose-950 h-2 mb-10 w-56 text-center" />
+      {/* HERO SECTION */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        <Heroo />
+      </motion.div>
+
+      {/* INTRO TEXT */}
+      <section className="mx-auto pt-20 pb-14 bg-gray-50 text-center">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-5xl font-semibold text-slate-800 tracking-tight"
+        >
+          Layanan Kami
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-gray-600 mt-4 max-w-2xl mx-auto text-lg"
+        >
+          Mendukung pendidikan, penelitian, dan pengembangan kompetensi melalui layanan profesional.
+        </motion.p>
+      </section>
+
+      {/* LAYANAN GRID */}
+      <section className="mx-auto pb-28 bg-gray-50">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 md:px-16 ">
+          {[
+            {
+              icon: <Microscope className="text-red-600 w-14 h-14" />,
+              title: "Layanan Analisis",
+              desc: "Pengujian sampel dengan instrumen laboratorium bersertifikasi.",
+              link: "/analisis"
+            },
+            {
+              icon: <FileText className="text-red-600 w-14 h-14" />,
+              title: "Sertifikasi",
+              desc: "Pelatihan dan sertifikasi resmi berbasis kompetensi.",
+              link: "/sertifikasi"
+            },
+            {
+              icon: <FlaskConical className="text-red-600 w-14 h-14" />,
+              title: "Pelatihan",
+              desc: "Workshop dan pelatihan penggunaan instrumen kimia.",
+              link: "/pelatihan"
+            }
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.15 }}
+              className="rounded-lg transition bg-white flex flex-col items-center text-center px-6 py-8 shadow-sm border border-gray-100 hover:shadow-xl"
+            >
+              {item.icon}
+              <h3 className="font-semibold text-xl mt-6 mb-3 text-slate-800">{item.title}</h3>
+              <p className="text-gray-600 text-sm mb-6 max-w-xs">{item.desc}</p>
+              <a href={item.link} className="w-full">
+                <button className="w-full text-red-600 font-semibold text-sm py-3 rounded-lg">
+                  Selengkapnya
+                </button>
+              </a>
+            </motion.div>
+          ))}
         </div>
-        <div className="md:px-16 sm:px-16 px-10">
-          <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 justify-items-center gap-6">
+      </section>
 
-            <div className="rounded-xl shadow-md p-6 flex flex-col gap-2 border">
-              <div className="flex">
-                <Microscope className="text-gray-400 w-14 h-14" />
-              </div>
-              <h3 className="font-semibold text-lg my-2">Layanan Analisis</h3>
-              <p className="text-xs text-center text-gray-600 text-justify">
-              Layanan analisis ataupun pengujian sampel Laboratorium Kimia Instrumen UPI.
-              </p>
-              <div className="flex justify-center w-full items-end h-full">
-                <a href="/analisis" className="w-full"><button className="w-full bg-red-700 text-xs mt-4 text-white px-4 py-2 rounded hover:bg-red-600 transition">
-                  Selengkapnya
-                </button></a>
-              </div>
-            </div>
-            <div className="rounded-xl shadow-md p-6 flex flex-col gap-2 border">
-              <div className="flex ">
-                <FileText className="text-orange-500 w-14 h-14" />
-              </div>
-              <h3 className="font-semibold text-lg my-2">Sertifikasi</h3>
-              <p className="text-xs text-center text-gray-600 text-justify">
-                Laboratorium Kimia Instrumen UPI sebagai wadah pelatihan sertifikasi.
-                Semua Laboratorium Bengkel FPTK/UPI untuk Layanan Sertifikasi.
-              </p>
-              <div className="flex justify-center w-full items-end h-full">
-                <a href="" className="w-full"><button className="w-full bg-red-700 text-xs mt-4 text-white px-4 py-2 rounded hover:bg-red-600 transition">
-                  Selengkapnya
-                </button></a>
-              </div>
-            </div>
-
-
-            <div className="rounded-xl shadow-md p-6 flex flex-col gap-2 border">
-              <div className="flex ">
-                <FlaskConical className="text-green-600 w-14 h-14" />
-              </div>
-              <h3 className="font-semibold text-lg my-2">Pelatihan</h3>
-              <p className="text-xs text-center text-gray-600 text-justify">
-              Laboratorium Kimia Instrumen UPI menyediakan Layanan Pelatihan.
-              </p>
-              <div className="flex justify-center w-full items-end h-full">
-                <a href="" className="w-full"><button className="w-full bg-red-700 text-xs mt-4 text-white px-4 py-2 rounded hover:bg-red-600 transition">
-                  Selengkapnya
-                </button></a>
-              </div>
-            </div>
-          </div>
-          <br className="md:mb-14 sm:mb-18 mb-14" />
-        </div>
-      </div>
-      <section className="py-16 bg-white">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 gap-12 items-center md:grid-cols-2">
-          <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
-            <Image 
+      {/* TENTANG KAMI */}
+      <section className="mx-auto py-28 bg-white">
+        <div className="container max-w-7xl mx-auto px-8 md:px-20 grid md:grid-cols-2 gap-20 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative h-[420px] rounded-md overflow-hidden shadow-2xl"
+          >
+            <Image
               src="https://images.pexels.com/photos/2280568/pexels-photo-2280568.jpeg?auto=compress&cs=tinysrgb&w=1600"
-              alt="Chemistry laboratory with colorful flasks"
+              alt="Laboratorium Kimia"
               fill
-              style={{ objectFit: 'cover' }}
-              className="transition-transform duration-500 hover:scale-105"
+              style={{ objectFit: "cover" }}
+              className="hover:scale-105 transition duration-700"
             />
-          </div>
-          
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-6">Tentang Kami</h2>
-            <div className="w-24 h-1 bg-red-600 mb-6"></div>
-            
-            <p className="text-gray-700 mb-8 leading-relaxed">
-              Laboratorium Kimia Instrumen (LKI) merupakan salah satu unit kerja di Prodi Kimia Universitas Pendidikan Indonesia. LKI membuka layanan untuk pengujian untuk dosen, mahasiswa, instansi, dan juga masyarakat umum.
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-5xl font-semibold text-slate-800 mb-6">Tentang Kami</h2>
+            <p className="text-gray-700 leading-relaxed mb-8 ">
+              Laboratorium Kimia Instrumen (LKI) merupakan unit akademik di Prodi Kimia Universitas Pendidikan Indonesia yang
+              menyediakan layanan pengujian, pelatihan, dan sertifikasi bagi civitas akademika dan masyarakat umum.
             </p>
-            
-            <ul className="mb-8 space-y-2">
-              <li className="flex items-center">
-                <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-blue-100 text-blue-800 mr-3">✓</span>
-                <span>Analisis sampel profesional</span>
-              </li>
-              <li className="flex items-center">
-                <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-blue-100 text-blue-800 mr-3">✓</span>
-                <span>Pelatihan penggunaan instrumen kimia</span>
-              </li>
-              <li className="flex items-center">
-                <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-blue-100 text-blue-800 mr-3">✓</span>
-                <span>Program sertifikasi resmi</span>
-              </li>
+
+            <ul className="space-y-4">
+              {[
+                "Analisis sampel profesional dan akurat",
+                "Pelatihan instrumen laboratorium berbasis praktik",
+                "Program sertifikasi kompetensi resmi"
+              ].map((point, i) => (
+                <motion.li
+                  key={i}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.15 }}
+                  className="flex items-center"
+                >
+                  <span className="inline-flex items-center justify-center h-7 w-7 rounded-full bg-blue-100 text-blue-800 mr-3 text-xs">✓</span>
+                  {point}
+                </motion.li>
+              ))}
             </ul>
-            
-            {/* <Button variant="destructive" size="lg">
-              Pesan Sekarang
-            </Button> */}
-          </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Contact CTA */}
+      <div className="bg-red-700 py-8 md:p-16 text-center text-white shadow-2xl">
+        <h3 className="text-3xl md:text-3xl font-bold mb-4">Coba Layanan Pengujian?</h3>
+        <p className="text-gray-100 mb-8 max-w-2xl mx-auto">
+          Tim kami siap membantu Anda mendapatkan hasil analisis terbaik
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/analisis"
+            className="bg-white text-red-600 px-8 py-4 rounded-sm font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+          >
+            Pesan Sekarang
+          </a>
+          <a
+            href="/contact"
+            className="bg-red-800 text-white px-8 py-4 rounded-sm font-bold text-lg shadow-lg transition-all duration-300"
+          >
+            Konsultasi Gratis
+          </a>
         </div>
       </div>
-    </section>
-      <br className="md:h-40 sm:mb-14 mb-10" />
-      <br />
-      <br />
     </>
   );
 }

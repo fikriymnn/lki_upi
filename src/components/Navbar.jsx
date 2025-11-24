@@ -57,9 +57,9 @@ export default function NavbarCustom() {
 
   return (
     <>
-      <div className="fixed z-50 w-full text-xs">
+      <div className="fixed z-50 w-full text-xs bg-[#202020]">
         <div>
-          <Navbar fluid className="  bg-[#202020]  ">
+          <Navbar fluid className="bg-[#202020] max-w-7xl mx-auto">
             <Navbar.Brand href="/">
               <img
                 src="/footer.png"
@@ -69,12 +69,12 @@ export default function NavbarCustom() {
             </Navbar.Brand>
 
             <Navbar.Toggle className="bg-white" />
-            <Navbar.Collapse className="md:mr-20 ">
+            <Navbar.Collapse className="md:mr-20 flex items-center h-full">
               {/* SUPER ADMIN */}
               {adminPath[2] == "dashboard" && role == "superadmin" ? (
                 <Navbar.Link
                   href="/admin/dashboard/superadmin"
-                  className="mt-[2vh] font-extrabold text-white "
+                  className="mt-[2vh] font-semibold text-white "
                 >
                   {" "}
                   Arsip{" "}
@@ -86,7 +86,7 @@ export default function NavbarCustom() {
               {/* {adminPath[2] == "dashboard" && role == "superadmin" ? (
                 <Navbar.Link
                   href="/admin/dashboard/superadmin/report"
-                  className="mt-[2vh] font-extrabold text-white "
+                  className="mt-[2vh] font-semibold text-white "
                 >
                   {" "}
                   Report{" "}
@@ -98,7 +98,7 @@ export default function NavbarCustom() {
               {adminPath[2] == "dashboard" && role == "admin" ? (
                 <Navbar.Link
                   href="/admin/dashboard/admin"
-                  className="mt-[2vh] font-extrabold text-white "
+                  className="mt-[2vh] font-semibold text-white "
                 >
                   Content
                 </Navbar.Link>
@@ -109,7 +109,7 @@ export default function NavbarCustom() {
               {adminPath[2] == "dashboard" && role == "admin" ? (
                 <Navbar.Link
                   href="/admin/dashboard/admin/order"
-                  className="mt-[2vh] font-extrabold text-white "
+                  className="mt-[2vh] font-semibold text-white "
                 >
                   {" "}
                   Order{" "}
@@ -121,7 +121,7 @@ export default function NavbarCustom() {
               {/* {adminPath[2] == "dashboard" && role == "admin" ? (
                 <Navbar.Link
                   href="/admin/dashboard/admin/history_order"
-                  className="mt-[2vh] font-extrabold text-white "
+                  className="mt-[2vh] font-semibold text-white "
                 >
                   {" "}
                   History Order
@@ -133,7 +133,7 @@ export default function NavbarCustom() {
               {adminPath[2] == "dashboard" && role == "admin" ? (
                 <Navbar.Link
                   href="/admin/dashboard/admin/user"
-                  className="mt-[2vh] font-extrabold text-white "
+                  className="mt-[2vh] font-semibold text-white "
                 >
                   {" "}
                   User{" "}
@@ -145,7 +145,7 @@ export default function NavbarCustom() {
               {adminPath[2] == "dashboard" && role == "admin" ? (
                 <Navbar.Link
                   href="/admin/dashboard/admin/report"
-                  className="mt-[2vh] font-extrabold text-white "
+                  className="mt-[2vh] font-semibold text-white "
                 >
                   Report
                 </Navbar.Link>
@@ -154,10 +154,10 @@ export default function NavbarCustom() {
               )}
 
               {adminPath[2] == "dashboard" ||
-              (adminPath[1] == "admin" && role) ? (
+                (adminPath[1] == "admin" && role) ? (
                 <Navbar.Link
                   onClick={handleLogout}
-                  className="mt-[2vh] font-extrabold text-white "
+                  className="mt-[2vh] font-semibold text-white "
                 >
                   Logout
                 </Navbar.Link>
@@ -170,7 +170,7 @@ export default function NavbarCustom() {
               {adminPath[2] !== "dashboard" ? (
                 <Navbar.Link
                   href="/"
-                  className="mt-[2vh] font-extrabold text-white "
+                  className="mt-[2vh] font-semibold text-white "
                 >
                   <h2>Home</h2>
                 </Navbar.Link>
@@ -183,7 +183,7 @@ export default function NavbarCustom() {
                   className="bg-[#202020] border-b-2 border-white"
                   dismissOnClick={false}
                   renderTrigger={() => (
-                    <span className="mt-[2vh] font-extrabold text-white md:ml-0 sm:ml-0 ml-3">
+                    <span className="mt-[2vh] font-semibold text-white md:ml-0 sm:ml-0 ml-3">
                       Layanan
                     </span>
                   )}
@@ -221,7 +221,7 @@ export default function NavbarCustom() {
                 <h2>
                   <Navbar.Link
                     href="/about"
-                    className="mt-[2vh] font-extrabold text-white border-t border-white"
+                    className="mt-[2vh] font-semibold text-white border-t border-white"
                   >
                     Tentang Kami
                   </Navbar.Link>
@@ -233,7 +233,7 @@ export default function NavbarCustom() {
               {adminPath[2] !== "dashboard" ? (
                 <Navbar.Link
                   href="/contact"
-                  className="mt-[2vh] font-extrabold text-white "
+                  className="mt-[2vh] font-semibold text-white "
                 >
                   <h2>Contact</h2>
                 </Navbar.Link>
@@ -244,7 +244,7 @@ export default function NavbarCustom() {
               {!login && adminPath[2] !== "dashboard" ? (
                 <Navbar.Link
                   href={`/login?prevRoute=${path}`}
-                  className="mt-[2vh] font-extrabold text-white "
+                  className="mt-[2vh] font-semibold text-white "
                 >
                   Login
                 </Navbar.Link>
@@ -257,7 +257,7 @@ export default function NavbarCustom() {
               {login && adminPath[2] !== "dashboard" ? (
                 <Navbar.Link
                   href="/my_order"
-                  className="mt-[2vh] font-extrabold text-white "
+                  className="mt-[2vh] font-semibold text-white "
                 >
                   Order saya
                 </Navbar.Link>
@@ -268,7 +268,7 @@ export default function NavbarCustom() {
               {login && adminPath[2] !== "dashboard" ? (
                 <Navbar.Link
                   href="/history_order"
-                  className="mt-[2vh] font-extrabold text-white "
+                  className="mt-[2vh] font-semibold text-white "
                 >
                   History order{" "}
                 </Navbar.Link>
@@ -278,7 +278,7 @@ export default function NavbarCustom() {
               {login && adminPath[2] !== "dashboard" ? (
                 <Navbar.Link
                   href="/profil"
-                  className="mt-[2vh] font-extrabold   text-white"
+                  className="mt-[2vh] font-semibold   text-white"
                 >
                   Profile
                 </Navbar.Link>
@@ -289,7 +289,7 @@ export default function NavbarCustom() {
               {login && adminPath[2] !== "dashboard" ? (
                 <Navbar.Link
                   onClick={handleLogout}
-                  className="mt-[2vh] font-extrabold text-white  "
+                  className="mt-[2vh] font-semibold text-white  "
                 >
                   Logout
                 </Navbar.Link>
