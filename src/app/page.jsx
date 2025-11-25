@@ -18,13 +18,13 @@ export default function Home() {
       </motion.div>
 
       {/* INTRO TEXT */}
-      <section className="mx-auto pt-20 pb-14 bg-gray-50 text-center">
+      <section className="mx-auto md:pt-16 pt-16 pb-14 bg-gray-50 text-center">
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-5xl font-semibold text-slate-800 tracking-tight"
+          className="md:text-4xl text-3xl font-bold text-slate-800 tracking-tight"
         >
           Layanan Kami
         </motion.h2>
@@ -33,15 +33,15 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-gray-600 mt-4 max-w-2xl mx-auto text-lg"
+          className="text-gray-600 mt-4 max-w-2xl mx-auto md:text-lg text-sm"
         >
           Mendukung pendidikan, penelitian, dan pengembangan kompetensi melalui layanan profesional.
         </motion.p>
       </section>
 
       {/* LAYANAN GRID */}
-      <section className="mx-auto pb-28 bg-gray-50">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 md:px-16 ">
+      <section className="mx-auto md:pb-24 pb-16 bg-gray-50">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 md:px-16 px-4">
           {[
             {
               icon: <Microscope className="text-red-600 w-14 h-14" />,
@@ -84,14 +84,14 @@ export default function Home() {
       </section>
 
       {/* TENTANG KAMI */}
-      <section className="mx-auto py-28 bg-white">
-        <div className="container max-w-7xl mx-auto px-8 md:px-20 grid md:grid-cols-2 gap-20 items-center">
+      <section className="mx-auto md:py-24 py-16 bg-white">
+        <div className="container max-w-7xl mx-auto px-4 md:px-20 grid md:grid-cols-2 md:gap-20 gap-8 items-center">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative h-[420px] rounded-md overflow-hidden shadow-2xl"
+            className="relative md:h-[420px] h-[360px] rounded-md overflow-hidden shadow-xl"
           >
             <Image
               src="https://images.pexels.com/photos/2280568/pexels-photo-2280568.jpeg?auto=compress&cs=tinysrgb&w=1600"
@@ -108,8 +108,8 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-5xl font-semibold text-slate-800 mb-6">Tentang Kami</h2>
-            <p className="text-gray-700 leading-relaxed mb-8 ">
+            <h2 className="md:text-4xl text-3xl md:text-left text-center font-bold text-slate-800 mb-6">Tentang Kami</h2>
+            <p className="text-gray-700 leading-relaxed mb-8 text-justify md:text-base text-sm">
               Laboratorium Kimia Instrumen (LKI) merupakan unit akademik di Prodi Kimia Universitas Pendidikan Indonesia yang
               menyediakan layanan pengujian, pelatihan, dan sertifikasi bagi civitas akademika dan masyarakat umum.
             </p>
@@ -129,7 +129,8 @@ export default function Home() {
                   className="flex items-center"
                 >
                   <span className="inline-flex items-center justify-center h-7 w-7 rounded-full bg-blue-100 text-blue-800 mr-3 text-xs">✓</span>
-                  {point}
+                  <span className="md:text-base text-xs">{point}</span>
+                  
                 </motion.li>
               ))}
             </ul>
@@ -137,7 +138,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact CTA */}
+      {/* Contact CTA
       <div className="bg-red-700 py-8 md:p-16 text-center text-white shadow-2xl">
         <h3 className="text-3xl md:text-3xl font-bold mb-4">Coba Layanan Pengujian?</h3>
         <p className="text-gray-100 mb-8 max-w-2xl mx-auto">
@@ -157,7 +158,7 @@ export default function Home() {
             Konsultasi Gratis
           </a>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

@@ -373,37 +373,36 @@ const Analisis = () => {
             width={0}
             height={0}
             sizes="100vw"
-            className=" md:h-[229px] h-40 w-full"
+            className=" md:h-[229px] h-40 w-full object-cover object-center"
           />
           <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[229px] h-40  absolute flex flex-col justify-center items-center">
             <p className="text-white md:text-5xl sm:text-xl text-lg font-bold uppercase">
-              Layanan Jasa Analisis
+              Layanan Analisis
             </p>
           </div>
         </div>
 
         <div className="max-w-6xl mx-auto">
-          <p className="max-w-2xl px-8 md:text-3xl sm:text-2xl text-xl font-semibold text-gray-800 mt-12 mb-8 text-center mx-auto">
+          <p className="max-w-2xl md:px-8 px-4 md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-12 md:mb-8 mb-4 text-center mx-auto">
             Pengujian Laboratorium Kimia Instrumen LKI UPI
           </p>
-          <p className="mx-auto text-justify max-w-6xl px-8 mb-8">
+          <p className="md:text-lg text-sm text-gray-700 mx-auto text-justify md:px-8 px-4 px-4 md:mb-8 bg-white">
             Laboratorium Kimia Instrumen (LKI) Universitas Pendidikan Indonesia menyediakan layanan pengujian sampel berbasis teknologi instrumen modern dengan standar kualitas tinggi. Kami melayani kebutuhan penelitian, akademik, industri, dan komersial dengan hasil yang presisi, terverifikasi, dan dapat dipertanggungjawabkan secara ilmiah.
           </p>
-          <div className="max-w-6xl flex px-8 justify-center">
+          <div className="max-w-6xl flex md:px-8 px-4 justify-center mb-8">
             <ButtonOrder />
           </div>
 
-          <br />
-          <div className="mt-8 mb-8 max-w-6xl mx-auto">
-            <p className="md:text-3xl sm:text-2xl text-xl font-semibold text-gray-800 mt-7 max-w-3xl px-8 text-center mx-auto">
+          <div className="md:mb-8 mb-4 mx-auto">
+            <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-3xl md:px-8 px-4 text-center mx-auto">
               Daftar Harga Pengujian Laboratorium Kimia Instrumen UPI
             </p>
           </div>
 
           {/* TABLE BARU */}
-          <div className="max-w-6xl mx-auto px-8 pb-4">
-            <div className="bg-gray-300 w-full max-w-6xl px-8 mx-auto py-4 rounded-t-xl mt-8">
-              <p className="text-center font-semibold text-lg">
+          <div className="mx-auto md:px-8 px-4">
+            <div className="bg-gray-300 w-full md:px-8 px-4 mx-auto py-4">
+              <p className="text-center font-semibold md:text-lg text-sm">
                 Paket Harga Normal (14 Hari kerja)
               </p>
               <p className="text-center font-semibold md:text-[14px] text-[7px] underline">
@@ -411,25 +410,25 @@ const Analisis = () => {
               </p>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse overflow-hidden px-4">
+              <table className="md:w-full w-[300%] border-collapse overflow-hidden px-4">
 
                 {/* HEADER */}
                 <thead>
                   <tr className="bg-gray-100 text-gray-800">
-                    <th className="p-3 border text-left font-semibold w-10">No</th>
-                    <th className="p-3 border text-left font-semibold w-64">
+                    <th className="p-3 border md:text-base text-sm text-left font-semibold w-10">No</th>
+                    <th className="p-3 border md:text-base text-sm text-left font-semibold w-64">
                       Jenis Alat Pengukuran
                     </th>
-                    <th className="p-3 border text-center align-bottom font-semibold">
+                    <th className="p-3 border md:text-base text-sm text-center font-semibold">
                       Kimia
                     </th>
-                    <th className="p-3 border text-center align-bottom font-semibold">
+                    <th className="p-3 border md:text-base text-sm text-center font-semibold">
                       Non Kimia
                     </th>
-                    <th className="p-3 border text-center align-bottom font-semibold">
+                    <th className="p-3 border md:text-base text-sm text-center align-bottom font-semibold">
                       Luar UPI <br />(Dosen/Mahasiswa)
                     </th>
-                    <th className="p-3 border text-center align-bottom font-semibold">
+                    <th className="p-3 border md:text-base text-sm text-center align-bottom font-semibold">
                       Luar UPI <br />(Perusahaan)
                     </th>
                   </tr>
@@ -497,21 +496,21 @@ const Analisis = () => {
               </table>
             </div>
           </div>
-          <div className="flex max-w-6xl mx-auto justify-between px-8">
-            <p className="text-black-700 md:font-semibold font-semibold md:text-[14px] text-sm">
+          <div className="flex max-w-6xl mx-auto justify-between md:px-8 px-4 mt-8">
+            <p className="text-black-700 md:font-semibold font-semibold md:text-[14px] text-xs">
               Syarat dan Ketentuan: <br />
               - Pelarut NMR-Kloroform: Rp100.000/ml. <br />
               - Pelarut NMR-Metanol: Rp80.000/ml. <br />
               - Pengenceran sampel lebih dari 25ml dikenakan biaya tambahan seeuai pemakaian.
             </p>
-            <p className="text-black-700 md:font-semibold font-semibold text-end md:text-[14px] text-sm">
+            <p className="text-black-700 md:font-semibold font-semibold text-end md:text-[14px] text-xs">
               *Biaya per Jam
             </p>
           </div>
 
-          <div className="max-w-6xl px-8 mx-auto mt-16">
-            <div className="bg-gray-300 w-full max-w-6xl px-8 mx-auto py-4 rounded-t-xl mt-8">
-              <p className="text-center font-semibold text-lg">
+          <div className="max-w-6xl md:px-8 px-4 mx-auto mt-16">
+            <div className="bg-gray-300 w-full max-w-6xl md:px-8 px-4 mx-auto py-4 mt-8">
+              <p className="text-center font-semibold md:text-lg text-sm">
                 Paket Harga Fast Track
               </p>
               <p className="text-center font-semibold md:text-[14px] text-[7px] underline">
@@ -519,18 +518,18 @@ const Analisis = () => {
               </p>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse shadow rounded-b-xl overflow-hidden">
+              <table className="md:w-full w-[300%] border-collapse shadow rounded-b-xl overflow-hidden">
                 <thead>
                   <tr className="bg-gray-200 text-center">
-                    <th className="p-3 border font-semibold">No</th>
-                    <th className="p-3 border font-semibold">Jenis Alat Pengukuran</th>
-                    <th className="p-3 border font-semibold">
+                    <th className="p-3 border md:text-base text-sm font-semibold">No</th>
+                    <th className="p-3 border md:text-base text-sm font-semibold">Jenis Alat Pengukuran</th>
+                    <th className="p-3 border md:text-base text-sm font-semibold">
                       Non Kimia<br />3 Hari | 7 Hari
                     </th>
-                    <th className="p-3 border font-semibold">
+                    <th className="p-3 border md:text-base text-sm font-semibold">
                       Luar UPI (Dosen/Mhs)<br />3 Hari | 7 Hari
                     </th>
-                    <th className="p-3 border font-semibold">
+                    <th className="p-3 border md:text-base text-sm font-semibold">
                       Perusahaan<br />3 Hari | 7 Hari
                     </th>
                   </tr>
@@ -586,25 +585,26 @@ const Analisis = () => {
               </table>
             </div>
           </div>
-          <div className="flex max-w-6xl mx-auto justify-between px-8 mt-4">
-            <p className="text-black-700 md:font-semibold font-semibold md:text-[14px] text-sm">
+          <div className="flex max-w-6xl mx-auto justify-between md:px-8 px-4 mt-8">
+            <p className="text-black-700 md:font-semibold font-semibold md:text-[14px] text-xs">
               Syarat dan Ketentuan: <br />
               - Pelarut NMR-Kloroform: Rp100.000/ml. <br />
               - Pelarut NMR-Metanol: Rp80.000/ml. <br />
               - Pengenceran sampel lebih dari 25ml dikenakan biaya tambahan seeuai pemakaian.
             </p>
-            <p className="text-black-700 md:font-semibold font-semibold text-end md:text-[14px] text-sm">
+            <p className="text-black-700 md:font-semibold font-semibold text-end md:text-[14px] text-xs">
               *Biaya per Jam
             </p>
           </div>
 
-          <div className="mt-8 mb-8 max-w-6xl mx-auto mt-16">
-            <p className="md:text-3xl sm:text-2xl text-xl font-semibold text-gray-800 mt-7 max-w-3xl px-8 text-center mx-auto">
+          <div className="md:mb-8 mb-4 max-w-6xl mx-auto mt-16">
+            <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-3xl md:px-8 px-4 text-center mx-auto">
               Pengukuran Dan Analisis Lanjutan
             </p>
           </div>
-          <div className="mb-24 ">
-            <table className="w-full border-collapse text-[16px]rounded-t-xl ">
+          <div className="">
+          <div className="overflow-x-auto md:px-8 px-4">
+            <table className="md:w-full w-[300%] border-collapse text-[16px] max-w-6xl mx-auto">
               <thead>
                 <tr className="bg-gray-100">
                   <th className="pt-2 px-2 text-center" rowSpan={2}>No</th>
@@ -622,55 +622,52 @@ const Analisis = () => {
               <tbody>
                 {data.map((row) => (
                   <tr key={row.no} className="border-b">
-                    <td className="p-4 text-center border">{row.no}</td>
-                    <td className="p-4 text-center border">{row.alat}</td>
-                    <td className="p-4 text-center border">{row.pendidikan}</td>
-                    <td className="p-4 text-center border">{row.industri}</td>
-                    <td className="p-4 text-center border">{row.satuan}</td>
+                    <td className="p-4 text-center border text-sm">{row.no}</td>
+                    <td className="p-4 text-center border text-sm">{row.alat}</td>
+                    <td className="p-4 text-center border text-sm">{row.pendidikan}</td>
+                    <td className="p-4 text-center border text-sm">{row.industri}</td>
+                    <td className="p-4 text-center border text-sm">{row.satuan}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          </div>
 
-          <div className="mt-8 mb-8 max-w-6xl mx-auto mt-16">
-            <p className="md:text-3xl sm:text-2xl text-xl font-semibold text-gray-800 mt-7 max-w-2xl px-8 text-center mx-auto">
+          <div className="md:mb-8 mb-4 max-w-6xl mx-auto mt-16">
+            <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-2xl md:px-8 px-4 text-center mx-auto">
               Alur Pengujian Laboratorium Kimia Instrumen UPI
             </p>
           </div>
-          <div className="flex justify-center items-center translate-x-10">
+          <p className="md:text-lg text-sm text-gray-700 mx-auto text-justify md:px-8 px-4 px-4 mb-8">
+             Catatan: Sampel akan dimusnahkan dalam waktu 7 hari setelah
+              pesanan selesai. Komplain hasil pengujian dapat dilakukan maksimal
+              7 hari setelah pesanan selesai melalui email: <a href="mailto:lkiupi2022@gmail.com" className="hover:text-blue-600 font-bold text-red-700 underline">lkiupi2022@gmail.com</a>
+          </p>
+          <div className="flex justify-center items-center">
             <Image
               src={"/images/alur_penerimaan_sampel.png"}
               alt=""
               width={0}
               height={0}
               sizes="100vw"
-              className="md:w-[600px] sm:w-[550px] w-[240px] sm:h-[800px] md:h-[1080px] object-contain"
+              className="md:w-[400px] sm:w-[350px] w-[250px] h-auto object-cover"
             />
           </div>
-          <div className="my-10 ">
-            <p className="font-medium md:text-xl text-sm">
-              Catatan: Sampel akan dimusnahkan dalam waktu 7 hari setelah
-              pesanan selesai. Komplain hasil pengujian dapat dilakukan maksimal
-              7 hari setelah pesanan selesai melalui email: <a href="mailto:lkiupi2022@gmail.com" className="hover:text-blue-600 font-bold text-red-700 underline">lkiupi2022@gmail.com</a>
-            </p>
-          </div>
-          <div className="my-10">
-            <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
+
+          <div className="mb-8 max-w-6xl mx-auto mt-16">
+            <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-2xl md:px-8 px-4 text-center mx-auto">
               Alur Keluhan Laboratorium Kimia Instrumen UPI
             </p>
-            <div className="flex justify-center">
-              <hr className="grad h-2 mb-8 mt-5 w-8/12 text-center" />
-            </div>
           </div>
-          <div className="flex justify-center items-center translate-x-10">
+          <div className="flex justify-center items-center ">
             <Image
               src={"/images/alur_keluhan.png"}
               alt=""
               width={0}
               height={0}
               sizes="100vw"
-              className="md:w-[600px] sm:w-[550px] w-[240px] h-[700px] object-contain"
+              className="md:w-[340px] sm:w-[240px] w-[180px] h-auto object-cover"
             />
           </div>
 

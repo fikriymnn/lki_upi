@@ -28,7 +28,7 @@ export default function Heroo() {
   }, []);
 
   return (
-    <div className="relative h-[90vh] w-full overflow-hidden">
+    <div className="relative md:h-[90vh] h-[60vh] w-full overflow-hidden">
       {/* Slides */}
       {images.map((src, index) => (
         <div
@@ -49,10 +49,10 @@ export default function Heroo() {
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4">
-        <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+        <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-5xl md:text-6xl">
           Laboratorium Kimia<br />Instrumen UPI
         </h1>
-        <p className="mb-8 max-w-2xl text-lg text-gray-200 sm:text-xl">
+        <p className="mb-8 max-w-2xl text-base text-gray-200 sm:text-xl">
           Laboratorium Kimia Instrumen UPI membuka layanan pengujian untuk dosen, mahasiswa, dan umum.
         </p>
         <a

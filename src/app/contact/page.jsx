@@ -41,23 +41,17 @@ export default function Contact() {
           width={0}
           height={0}
           sizes="100vw"
-          className=" md:h-[229px] h-40 w-full"
+          className=" md:h-[229px] h-40 w-full object-cover"
         />
         <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[229px] h-40  absolute flex justify-center items-center">
-          <p className="text-white md:text-5xl sm:text-xl text-lg font-bold">
-            Layanan Jasa Analisis LKI UPI
+          <p className="text-white md:text-5xl sm:text-xl text-lg font-bold uppercase">
+            Informasi Kontak
           </p>
         </div>
       </div>
-      <div className="md:grid grid-cols-2 lg:grid-cols-2 sm:grid-cols-1 mt-[37px]">
+      <div className="md:grid grid-cols-2 lg:grid-cols-2 sm:grid-cols-1 md:mt-16 mt-8">
         <div>
-          <p className="text-center md:text-3xl text-xl font-bold text-gray-800 mt-7">
-            Temui Kami
-          </p>
-          <div className="flex justify-center">
-            <hr className="md:w-[400px] w-[150px] mt-[13px] h-2.5 bg-gradient-to-r from-red-700 via-red-600 to-rose-950 rounded-lg shadow" />
-          </div>
-          <div className="flex flex-col justify-center items-center mt-[46px] ">
+          <div className="flex flex-col justify-center items-center ">
             <Iframe
               url="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.2422146955596!2d107.58918557499594!3d-6.861548593136972!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6bb891ffe73%3A0xcf17e168e0ad1c63!2sGedung%20JICA%20%2F%20FPMIPA%20A%20UPI!5e0!3m2!1sen!2sid!4v1705992932891!5m2!1sen!2sid
             width="
@@ -67,7 +61,7 @@ export default function Contact() {
               display="block"
               position=""
             />
-            <p className="md:w-[493px] w-[300px] text-center text-neutral-700 md:text-lg text-base md:font-semibold leading-6 mt-[50px]">
+            <p className="md:w-[493px] w-[300px] text-center text-neutral-700 md:text-lg text-base md:font-semibold leading-6 mt-8">
               Laboratorium Kimia Instrumen
               <br />
               Universitas Pendidikan Indonesia
@@ -79,16 +73,10 @@ export default function Contact() {
           <div></div>
         </div>
         <div>
-          <p className="text-center md:text-3xl text-xl md:mt-7 mt-20 font-bold text-gray-800 ">
-            Kontak Kami
-          </p>
-          <div className="flex justify-center">
-            <hr className="md:w-[400px] w-[150px] mt-[13px] h-2.5 bg-gradient-to-r from-red-700 via-red-600 to-rose-950 rounded-lg shadow" />
-          </div>
-          <div className="flex items-center justify-center mt-[29px]">
+          <div className="flex items-center justify-center">
             <div className=" md:w-[574px] w-[330px] ">
               <form onSubmit={handleSubmit}>
-                <div className="md:w-[574px] w-[330px]  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px] ">
+                <div className="md:w-[574px] w-[330px] flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px] ">
                   <div className="md:w-[574px] w-[330px] flex-col justify-start items-start gap-2 flex">
                     <div className="text-neutral-700 md:text-lg text-sm font-medium  tracking-wide">
                       NAMA
