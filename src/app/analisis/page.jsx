@@ -384,7 +384,7 @@ const Analisis = () => {
 
         <div className="max-w-6xl mx-auto">
           <p className="max-w-2xl md:px-8 px-4 md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-12 md:mb-8 mb-4 text-center mx-auto">
-            Pengujian Laboratorium Kimia Instrumen LKI UPI
+            Pengujian Laboratorium Kimia Instrumen <span className="text-red-700">( LKI UPI )</span>
           </p>
           <p className="md:text-lg text-sm text-gray-700 mx-auto text-justify md:px-8 px-4 px-4 md:mb-8 bg-white">
             Laboratorium Kimia Instrumen (LKI) Universitas Pendidikan Indonesia menyediakan layanan pengujian sampel berbasis teknologi instrumen modern dengan standar kualitas tinggi. Kami melayani kebutuhan penelitian, akademik, industri, dan komersial dengan hasil yang presisi, terverifikasi, dan dapat dipertanggungjawabkan secara ilmiah.
@@ -395,7 +395,7 @@ const Analisis = () => {
 
           <div className="md:mb-8 mb-4 mx-auto">
             <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-3xl md:px-8 px-4 text-center mx-auto">
-              Daftar Harga Pengujian Laboratorium Kimia Instrumen UPI
+              Daftar Harga Pengujian
             </p>
           </div>
 
@@ -636,7 +636,7 @@ const Analisis = () => {
 
           <div className="md:mb-8 mb-4 max-w-6xl mx-auto mt-16">
             <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-2xl md:px-8 px-4 text-center mx-auto">
-              Alur Pengujian Laboratorium Kimia Instrumen UPI
+              Alur Pengujian
             </p>
           </div>
           <p className="md:text-lg text-sm text-gray-700 mx-auto text-justify md:px-8 px-4 px-4 mb-8">
@@ -657,7 +657,7 @@ const Analisis = () => {
 
           <div className="mb-8 max-w-6xl mx-auto mt-16">
             <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-2xl md:px-8 px-4 text-center mx-auto">
-              Alur Keluhan Laboratorium Kimia Instrumen UPI
+              Alur Keluhan
             </p>
           </div>
           <div className="flex justify-center items-center ">

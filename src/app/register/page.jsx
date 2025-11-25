@@ -1,15 +1,14 @@
 "use client";
-import { useState, useContext, useEffect } from "react";
-import { UserContext } from "@/context/userContext";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Image from "next/image";
-import { Button, Checkbox, Label, input } from "flowbite-react";
 
 export default function Register({ searchParams }) {
   const { prevRoute } = searchParams;
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [userForm, setUserForm] = useState({
     nama_lengkap: "",
@@ -24,281 +23,282 @@ export default function Register({ searchParams }) {
   });
 
   const handleChange = (e) => {
-    e.preventDefault();
     const { name, value } = e.target;
     setUserForm((prev) => ({ ...prev, [name]: value }));
   };
 
   useEffect(() => {
-    async function user() {
+    async function checkUser() {
       try {
         const data = await axios.get(
           `${process.env.NEXT_PUBLIC_URL}/api/user`,
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
 
         if (data.data.success) {
-          if (prevRoute) {
-            router.push(prevRoute);
-          } else {
-            router.push("/");
-          }
+          router.push(prevRoute || "/");
         }
       } catch (err) {
         console.log(err.message);
       }
     }
-    user();
-  }, []);
+    checkUser();
+  }, [prevRoute, router]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    async function submit() {
-      try {
-        const data = await axios.post(
-          `${process.env.NEXT_PUBLIC_URL}/api/register`,
-          userForm,
-          {
-            withCredentials: true,
-          }
-        );
-        if (data.data.status == 400) {
-          alert(data.data.message);
-        }
+    setIsLoading(true);
 
-        if (data.data.success == true) {
-          localStorage.setItem('access_token', data.data.token);
-          if (prevRoute) {
-            window.location.replace(prevRoute);
-          } else {
-            window.location.replace("/");
-          }
-        }
-      } catch (err) {
-        alert(err.message);
+    try {
+      const data = await axios.post(
+        `${process.env.NEXT_PUBLIC_URL}/api/register`,
+        userForm,
+        { withCredentials: true }
+      );
+
+      if (data.data.status === 400) {
+        alert(data.data.message);
       }
+
+      if (data.data.success) {
+        localStorage.setItem("access_token", data.data.token);
+        window.location.replace(prevRoute || "/");
+      }
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setIsLoading(false);
     }
-    submit();
   };
 
   return (
-    <>
-      <div className="">
-        <div className="flex flex-col justify-center items-center">
-          <div className="flex mt-4 gap-5">
-            <Image
-              src={"/footer.png"}
-              width={0}
-              height={0}
-              sizes="100vw"
-              className="w-[123px] h-[34px] my-auto bg-red-700 rounded-full"
-            />
-            <h1 className="font-medium text-[30px] ">
-              Registrasi Layanan <span className="font-bold">LKI UPI</span>
-            </h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-10">
+          <div className="flex items-center justify-center gap-4 mb-6">
           </div>
-          <hr className="text-red-700 bg-gradient-to-r from-red-700 via-red-700 to-rose-950 h-2 mb-8 mt-5 w-96 text-center rounded-full" />
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+            Registrasi Layanan <span className="text-red-700">LKI UPI</span>
+          </h1>
+          <p className="text-gray-600">Lengkapi formulir pendaftaran di bawah ini</p>
         </div>
-        <form onSubmit={handleSubmit} className=" w-10/12 m-auto">
-          <div className="grid md:grid-cols-2 gap-4 grid-cols-1   m-auto">
-            <div className="flex flex-col gap-4">
-              <div>
-              <div>
-                <div className="mb-2 block">
-                  <Label htmlFor="nama_lengkap" value="Nama Lengkap" />
-                </div>
-                <input
-                  name="nama_lengkap"
-                  type="text"
-                  required
-                  onChange={handleChange}
-                  placeholder="Masukkan Nama Lengkap"
-                  className="input-style-lki"
-                />
-              </div>
-              <div>
-                <div className="mb-2 block">
-                  <Label
-                    htmlFor="jenis_institusi"
-                    value="Jenis Institusi"
-                    className="w-96"
+
+        {/* Form Card */}
+        <div className="bg-white rounded-2xl shadow-md p-8 md:p-10">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Grid Layout */}
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Left Column */}
+              <div className="space-y-6">
+                {/* Nama Lengkap */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Nama Lengkap <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    name="nama_lengkap"
+                    type="text"
+                    required
+                    value={userForm.nama_lengkap}
+                    onChange={handleChange}
+                    placeholder="Masukkan nama lengkap"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent transition-all outline-none"
                   />
                 </div>
-                <select
-                  name="jenis_institusi"
-                  placeholder="Pilih jenis institusi"
-                  className="input-style-lki"
-                  required
-                  onChange={handleChange}
-                >
-                  <option value="" selected disabled hidden>
-                    Pilih Jenis Institusi
-                  </option>
-                  <option value="Perguruan Tinggi">Perguruan Tinggi</option>
-                  <option value="Perusahaan">Perusahaan</option>
-                </select>
-              </div>
-              <div>
-                <div className="mb-2 block">
-                  <Label htmlFor="no_telp" value="No Telepon" />
-                </div>
-                <input
-                  className="input-style-lki"
-                  name="no_telp"
-                  required
-                  type="text"
-                  onChange={handleChange}
-                  placeholder="Masukkan no Telepon"
-                />
-              </div>
-              <div>
-                <div className="mb-2 block">
-                  <Label htmlFor="password" value="Password" />
-                  
-                </div>
-                <input
-                  className="input-style-lki"
-                  name="password"
-                  required
-                  type={showPassword ? 'text' : 'password'}
-                  onChange={handleChange}
-                  placeholder="Masukkan Password"
-                />
-                <button className="text-xs text-red-600" onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? 'hide' : 'show'}
-                              </button>
-              </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-4">
-              {userForm.jenis_institusi ? (
+
+                {/* Jenis Institusi */}
                 <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Jenis Institusi <span className="text-red-600">*</span>
+                  </label>
+                  <select
+                    name="jenis_institusi"
+                    required
+                    value={userForm.jenis_institusi}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent transition-all outline-none bg-white"
+                  >
+                    <option value="" disabled>
+                      Pilih jenis institusi
+                    </option>
+                    <option value="Perguruan Tinggi">Perguruan Tinggi</option>
+                    <option value="Perusahaan">Perusahaan</option>
+                  </select>
+                </div>
+
+                {/* No Telepon */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    No Telepon <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    name="no_telp"
+                    type="tel"
+                    required
+                    value={userForm.no_telp}
+                    onChange={handleChange}
+                    placeholder="08xxxxxxxxxx"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent transition-all outline-none"
+                  />
+                </div>
+
+                {/* No WhatsApp */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    No WhatsApp <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    name="no_whatsapp"
+                    type="tel"
+                    required
+                    value={userForm.no_whatsapp}
+                    onChange={handleChange}
+                    placeholder="08xxxxxxxxxx"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent transition-all outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div className="space-y-6">
+                {/* Conditional Fields based on Institution Type */}
+                {userForm.jenis_institusi === "Perusahaan" && (
                   <div>
-                    {userForm.jenis_institusi == "Perusahaan" ? (
-                      <div className="">
-                        <div className="mb-2 block">
-                          <Label
-                            htmlFor="nama_institusi"
-                            value="Nama Perusahaan"
-                          />
-                        </div>
-                        <input
-                          className="input-style-lki"
-                          name="nama_institusi"
-                          placeholder="Masukkan nama perusahaan"
-                          required
-                          type="text"
-                          onChange={handleChange}
-                        />
-                      </div>
-                    ) : (
-                      <>
-                        <div className="flex flex-col gap-4">
-                          <div className="">
-                            <div className="mb-2 block">
-                              <Label
-                                htmlFor="nama_institusi"
-                                value="Nama Perguruan Tinggi"
-                              />
-                            </div>
-                            <input
-                              className="input-style-lki"
-                              name="nama_institusi"
-                              placeholder="Masukkan nama perguruan tinggi"
-                              required
-                              type="text"
-                              onChange={handleChange}
-                            />
-                          </div>
-                          <div>
-                            <div className="mb-2 block">
-                              <Label htmlFor="fakultas" value="Nama Fakultas" />
-                            </div>
-                            <input
-                              className="input-style-lki"
-                              name="fakultas"
-                              placeholder="Masukkan nama fakultas"
-                              required
-                              type="text"
-                              onChange={handleChange}
-                            />
-                          </div>
-                          <div>
-                            <div className="mb-2 block">
-                              <Label
-                                htmlFor="program_studi"
-                                value="Nama Program Studi"
-                              />
-                            </div>
-                            <input
-                              className="input-style-lki"
-                              name="program_studi"
-                              placeholder="Masukkan nama program studi"
-                              required
-                              type="text"
-                              onChange={handleChange}
-                            />
-                          </div>
-                        </div>
-                      </>
-                    )}
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Nama Perusahaan <span className="text-red-600">*</span>
+                    </label>
+                    <input
+                      name="nama_institusi"
+                      type="text"
+                      required
+                      value={userForm.nama_institusi}
+                      onChange={handleChange}
+                      placeholder="Masukkan nama perusahaan"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent transition-all outline-none"
+                    />
+                  </div>
+                )}
+
+                {userForm.jenis_institusi === "Perguruan Tinggi" && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Nama Perguruan Tinggi <span className="text-red-600">*</span>
+                      </label>
+                      <input
+                        name="nama_institusi"
+                        type="text"
+                        required
+                        value={userForm.nama_institusi}
+                        onChange={handleChange}
+                        placeholder="Masukkan nama perguruan tinggi"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent transition-all outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Nama Fakultas <span className="text-red-600">*</span>
+                      </label>
+                      <input
+                        name="fakultas"
+                        type="text"
+                        required
+                        value={userForm.fakultas}
+                        onChange={handleChange}
+                        placeholder="Masukkan nama fakultas"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent transition-all outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Program Studi <span className="text-red-600">*</span>
+                      </label>
+                      <input
+                        name="program_studi"
+                        type="text"
+                        required
+                        value={userForm.program_studi}
+                        onChange={handleChange}
+                        placeholder="Masukkan nama program studi"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent transition-all outline-none"
+                      />
+                    </div>
+                  </>
+                )}
+
+                {/* Email */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Email <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    name="email"
+                    type="email"
+                    required
+                    value={userForm.email}
+                    onChange={handleChange}
+                    placeholder="contoh@email.com"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent transition-all outline-none"
+                  />
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Password <span className="text-red-600">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={userForm.password}
+                      onChange={handleChange}
+                      placeholder="Minimal 8 karakter"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent transition-all outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-red-600 hover:text-red-700 uppercase"
+                    >
+                      {showPassword ? "Sembunyikan" : "Tampilkan"}
+                    </button>
                   </div>
                 </div>
-              ) : (
-                ""
-              )}
-              <div>
-              <div>
-                <div className="mb-2 block">
-                  <Label htmlFor="no_whatsapp" value="No Whatsapp" />
-                </div>
-                <input
-                  className="input-style-lki"
-                  name="no_whatsapp"
-                  placeholder="Masukkan No WhatsApp"
-                  required
-                  type="text"
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <div className="mb-2 block">
-                  <Label htmlFor="email" value="Email" />
-                </div>
-                <input
-                  className="input-style-lki"
-                  name="email"
-                  required
-                  type="text"
-                  placeholder="Masukkan Email"
-                  onChange={handleChange}
-                />
               </div>
             </div>
-          </div>
-          </div>
-          <div className=" mx-auto w-full mt-10">
-            <Button
-              type="submit"
-              color=""
-              className="mx-auto px-10 py-1 text-2xl font-bold bg-gradient-to-r from-red-700 via-red-600 to-rose-300 text-white"
-            >
-              Submit
-            </Button>
-            <br />
-          </div>
-        </form>
-        <div className="w-full flex justify-center items-center mb-10">
-          <a
-            href={`/login?prevRoute=${prevRoute}`}
-            className="text-center text-red-600 mx-auto"
-          >
-            Login
-          </a>
+
+            {/* Submit Button */}
+            <div className="flex flex-col items-center space-y-4 pt-6">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full max-w-md py-4 bg-gradient-to-r from-red-700 via-red-700 to-rose-950 text-white font-bold text-xl rounded-full hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                {isLoading ? "Memproses..." : "Daftar Sekarang"}
+              </button>
+
+              {/* Login Link */}
+              <div className="text-center">
+                <span className="text-gray-600">Sudah punya akun? </span>
+                <a
+                  href={`/login?prevRoute=${prevRoute || ""}`}
+                  className="text-red-700 font-semibold hover:text-red-800 transition-colors"
+                >
+                  Login di sini
+                </a>
+              </div>
+            </div>
+          </form>
         </div>
+
+        {/* Footer Note */}
+        <p className="text-center text-sm text-gray-500 mt-8">
+          Dengan mendaftar, Anda menyetujui syarat dan ketentuan layanan LKI UPI
+        </p>
       </div>
-    </>
+    </div>
   );
 }

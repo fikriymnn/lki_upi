@@ -1,169 +1,198 @@
 'use client'
-import { useState, useContext, useEffect } from "react"
-import { UserContext } from "@/context/userContext"
+import { useState, useEffect } from "react"
 import { useRouter } from 'next/navigation'
-import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
-import axios from "axios";
-import Router from "next/router";
-import Image from "next/image";
-
+import axios from "axios"
+import Image from "next/image"
 
 export default function Login({ searchParams }) {
     const router = useRouter()
-
     const { prevRoute } = searchParams
+    
     const [userForm, setUserForm] = useState({
         email: "",
         password: ""
     })
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
-        console.log(process.env.NEXT_PUBLIC_URL)
-        async function user() {
+        async function checkUser() {
             try {
                 const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`, {
                     withCredentials: true
                 })
 
-                if (data.data.success) {
-
-                    if (prevRoute) {
-
-                        router.replace(prevRoute)
-                    } else {
-
-                        // router.replace("/")
-                    }
+                if (data.data.success && prevRoute) {
+                    router.replace(prevRoute)
                 }
             } catch (err) {
                 console.log(err.message)
             }
-
         }
-        user()
-    }, [])
+        checkUser()
+    }, [prevRoute, router])
 
     const handleChange = (e) => {
         const { name, value } = e.target
         setUserForm(prev => ({ ...prev, [name]: value }))
-
     }
 
-    const handleLupaPassword = (e)=>{
+    const handleLupaPassword = (e) => {
+        e.preventDefault()
         router.push('/lupapassword')
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        const get_user = async () => {
-            try {
-                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/login`, userForm, { withCredentials: true })
+        setIsLoading(true)
+        
+        try {
+            const data = await axios.post(
+                `${process.env.NEXT_PUBLIC_URL}/api/login`, 
+                userForm, 
+                { withCredentials: true }
+            )
 
-                if (data.data.success == true) {
-                    localStorage.setItem('access_token', data.data.token);
-
-
-                    alert("login sukses")
-
-                    if (prevRoute) {
-                        window.location.replace(prevRoute)
-
-                    } else {
-                        window.location.replace("/")
-
-                    }
-
-
-                } else {
-                    alert(data.data.message)
-                }
-            } catch (err) {
-                alert(err.message)
+            if (data.data.success) {
+                localStorage.setItem('access_token', data.data.token)
+                alert("Login sukses")
+                window.location.replace(prevRoute || "/")
+            } else {
+                alert(data.data.message)
             }
-
+        } catch (err) {
+            alert(err.message)
+        } finally {
+            setIsLoading(false)
         }
-        get_user()
     }
 
     return (
-        <>
-            {/* <div className="flex items-center justify-center text-2xl h-screen w-full uppercase">
-                Under Maintenance. Thank you for patience.
-
-            </div> */}
-            <div className="md:grid grid-cols-2">
-                <div className="bg-neutral-900 flex">
-                    <Image alt="" src={"/images/gedung.jpg"} width={0} height={0} sizes="100vw" className="w-[800px] md:h-[807px] h-[300px] opacity-50" />
-                    <div className="text-white absolute flex flex-col justify-center items-center md:w-6/12 w-full md:h-[807px] h-[300px]">
-                        <h1 className="md:text-4xl text-2xl font-bold w-[300px] text-center mb-10">Masuk atau Daftar</h1>
-                        <p className="md:text-2xl text-base font-semibold md:w-10/12 w-11/12 text-justify">Laboratorium Kimia Instrumen UPI pengujian dan analisis sampel.</p>
-                    </div>
+        <div className="min-h-screen grid lg:grid-cols-2">
+            {/* Left Side - Image with Overlay */}
+            <div className="relative bg-neutral-900 lg:flex hidden">
+                <Image 
+                    alt="Gedung Laboratorium" 
+                    src="/images/gedung.jpg" 
+                    fill
+                    className="object-cover opacity-50"
+                    priority
+                />
+                <div className="absolute inset-0 flex flex-col justify-center items-center px-8 text-white">
+                    <h1 className="text-5xl font-bold text-center mb-6">
+                        Masuk atau Daftar
+                    </h1>
+                    <p className="text-xl text-center max-w-md leading-relaxed">
+                        Laboratorium Kimia Instrumen UPI pengujian dan analisis sampel.
+                    </p>
                 </div>
-                <div className="w-11/12 flex flex-col mx-auto mt-10 md:mt-0">
-                    <div className="flex flex-col justify-center items-center">
-                        <div className="flex mt-4 gap-5">
-                            <Image src={"/footer.png"} alt="image" width={0} height={0} sizes="100vw" className="w-[123px] h-[34px] my-auto bg-red-700 rounded-full" />
-                            <h1 className="font-medium text-[30px] ">Layanan <span className="font-bold">LKI UPI</span></h1>
-                        </div>
-                        <hr className='text-red-700 bg-gradient-to-r from-red-700 via-red-700 to-rose-950 h-2 mb-8 mt-5 w-10/12 text-center rounded-full' />
+            </div>
+
+            {/* Right Side - Login Form */}
+            <div className="flex items-center justify-center p-6 lg:p-12 bg-gray-50">
+                <div className="w-full max-w-md space-y-8">
+                    {/* Mobile Header */}
+                    <div className="lg:hidden text-center mb-8">
+                        <h1 className="text-3xl font-bold text-gray-900 mb-3">
+                            Masuk atau Daftar
+                        </h1>
+                        <p className="text-sm text-gray-600">
+                            Laboratorium Kimia Instrumen UPI
+                        </p>
                     </div>
-                    <form onSubmit={handleSubmit}>
 
+                    {/* Login Header */}
+                    <div className="text-center">
+                        <h2 className="text-4xl font-bold text-gray-900">Login <span className="text-red-700">LKI UPI</span></h2>
+                        <p className="mt-2 text-gray-600">Selamat datang kembali</p>
+                    </div>
 
-                        <div className=" w-full  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[26px] mb-[20px]">
-                            <div className=" w-full flex-col justify-start items-start gap-2 flex">
-                                <div className="text-neutral-700 md:text-lg text-sm fon t-medium  tracking-wide">
-                                    EMAIL
-                                </div>
-                                <input
-                                    id="email1" name="email" required
-                                    onChange={handleChange}
-                                    type="text"
-                                    placeholder="Masukan email di sini"
-                                    className="input-style-lki"
-                                />
-                            </div>
+                    {/* Login Form */}
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Email Field */}
+                        <div className="space-y-2">
+                            <label 
+                                htmlFor="email" 
+                                className="block text-sm font-semibold text-gray-700 uppercase tracking-wide"
+                            >
+                                Email
+                            </label>
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                required
+                                onChange={handleChange}
+                                value={userForm.email}
+                                placeholder="contoh@email.com"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent transition-all outline-none"
+                            />
                         </div>
-                        <div className=" w-full  flex-col justify-start items-start gap-[33px] inline-flex md:mb-[0px] mb-[20px]">
-                            <div className=" w-full flex-col justify-start items-start gap-2 flex">
-                                <div className="text-neutral-700 md:text-lg text-sm font-medium  tracking-wide">
-                                    PASSWORD 
-                                </div>
+
+                        {/* Password Field */}
+                        <div className="space-y-2">
+                            <label 
+                                htmlFor="password" 
+                                className="block text-sm font-semibold text-gray-700 uppercase tracking-wide"
+                            >
+                                Password
+                            </label>
+                            <div className="relative">
                                 <input
-                                    id="password" required
-                                    onChange={handleChange}
-                                    type={showPassword ? 'text' : 'password'}
+                                    id="password"
                                     name="password"
-                                    placeholder="Masukan Password di sini"
-                                    className="input-style-lki"
-                                /> <button className="text-xs text-red-600" onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? 'hide' : 'show'}
-                              </button>
+                                    type={showPassword ? 'text' : 'password'}
+                                    required
+                                    onChange={handleChange}
+                                    value={userForm.password}
+                                    placeholder="Masukkan password"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent transition-all outline-none"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-red-600 hover:text-red-700 uppercase"
+                                >
+                                    {showPassword ? 'Sembunyikan' : 'Tampilkan'}
+                                </button>
                             </div>
                         </div>
-                        <div className="md:my-1 my-1 flex justify-center">
-                        <button className="text-xs sm:text-sm md:text-lg text-blue-600 font-semibold hover:text-blue-400 m-auto" onClick={handleLupaPassword}>
-                                lupa password ?
-                              </button>
-                        </div>
-                        <div className="flex justify-between mt-4 sm:mt-6 md:mt-8 mb-8">
-                            <button type="submit" className="md:w-[238px] w-[200px] h-[56px] bg-gradient-to-r from-red-700 via-red-700 to-rose-950 text-2xl font-bold text-white flex justify-center items-center rounded-full">
-                                Masuk
+
+                        {/* Forgot Password Link */}
+                        <div className="text-center">
+                            <button
+                                type="button"
+                                onClick={handleLupaPassword}
+                                className="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                            >
+                                Lupa password?
                             </button>
-                            <a href={`/register?prevRoute=${prevRoute}`} className="md:w-[238px] w-[200px] h-[56px] bg-gradient-to-r from-red-700 via-red-700 to-rose-950 text-2xl font-bold text-white flex justify-center items-center rounded-full">
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="grid grid-cols-2 gap-4 pt-2">
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="py-3 px-6 bg-gradient-to-r from-red-700 via-red-700 to-rose-950 text-white font-bold text-lg rounded-full hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {isLoading ? 'Memproses...' : 'Masuk'}
+                            </button>
+                            <a
+                                href={`/register?prevRoute=${prevRoute || ''}`}
+                                className="py-3 px-6 bg-gradient-to-r from-red-700 via-red-700 to-rose-950 text-white font-bold text-lg rounded-full hover:shadow-lg transform hover:scale-105 transition-all text-center flex items-center justify-center"
+                            >
                                 Daftar
                             </a>
                         </div>
                     </form>
-                    {/* <div className="flex justify-center mt-5 mb-20 font-medium ">
-                        <a href="/">Lupa Password?</a>
-                    </div> */}
 
-
-
+                    {/* Footer Text */}
+                    <p className="text-center text-sm text-gray-500">
+                        Dengan masuk, Anda menyetujui syarat dan ketentuan kami
+                    </p>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
