@@ -384,12 +384,13 @@ const Analisis = () => {
             >
               Universitas Pendidikan Indonesia
             </p>
+            
           </div>
         </div>
 
         <div className="max-w-7xl mx-auto">
 
-          <p className="max-w-lg md:px-8 px-4 md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-8 md:mb-4 mb-4">
+          <p className="max-w-lg md:px-8 px-4 md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-8 md:mt-16 md:mb-4 mb-4">
             Pengujian Laboratorium Kimia Instrumen <span className="text-red-700">( LKI UPI )</span>
           </p>
           <p className="md:text-lg text-sm text-gray-700 mx-auto text-justify md:px-8 px-4 md:mb-8 bg-white">
@@ -641,8 +642,8 @@ const Analisis = () => {
             </div>
           </div>
 
-          <div className="md:mb-8 mb-4 max-w-7xl mx-auto mt-16">
-            <p className="md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-2xl md:px-8 px-4">
+          <div className="md:mb-4 mb-4 max-w-7xl mx-auto mt-16">
+            <p className="md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-8 max-w-2xl md:px-8 px-4">
               Alur Pengujian
             </p>
           </div>

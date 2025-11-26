@@ -43,10 +43,15 @@ export default function Contact() {
           sizes="100vw"
           className=" md:h-[70vh] h-40 w-full object-cover"
         />
-        <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[70vh] h-40  absolute flex justify-center items-center">
+        <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[70vh] h-40  absolute flex flex-col justify-center items-center">
           <p className="text-white md:text-5xl sm:text-xl text-lg font-bold uppercase">
             Informasi Kontak
           </p>
+          <p
+              className="mt-2 px-8 py-2 text-white rounded-xl font-semibold text-sm sm:text-base md:text-lg"
+            >
+              Universitas Pendidikan Indonesia
+            </p>
         </div>
       </div>
       <div className="md:grid grid-cols-2 lg:grid-cols-2 sm:grid-cols-1 md:mt-16 mt-8">

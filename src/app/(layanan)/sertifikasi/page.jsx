@@ -25,14 +25,14 @@ const Sertifikasi = () => {
             </div>
 
             {/* Content */}
-            <section className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-8">
+            <section className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-16">
 
-                <div className="grid md:grid-cols-2 gap-8 items-start">
+                <div className="grid md:grid-cols-2 gap-8 items-center">
                     <div>
                         <p className="max-w-xl md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 md:mb-4 mb-4">
                             Layanan Sertifikasi Laboratorium Kimia Instrumen <span className="text-red-700">( LKI UPI )</span>
                         </p>
-                        <p className="text-neutral-900 text-opacity-90 font-medium text-sm md:text-lg leading-8 md:leading-[40px] text-justify">
+                        <p className="text-gray-800 text-opacity-90 font-medium text-sm md:text-base leading-8 md:leading-[40px] text-justify">
                             Laboratorium Kimia Instrumen UPI bekerja sama dengan Lembaga Tenaga
                             Laboratorium Penguji (TELAPI) untuk Layanan Sertifikasi.
                         </p>

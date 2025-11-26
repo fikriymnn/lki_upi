@@ -11,33 +11,38 @@ export default function About() {
     <div className="min-h-screen">
 
       <div className="flex md:h-[70vh] h-40 w-full ">
-                <Image
-                  alt=""
-                  src={"/images/gedung.jpg"}
-                  width={1000}
-                  height={1000}
-                
-                  className=" md:h-[70vh] h-40 w-full object-cover object-center"
-                />
-                <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[70vh] h-40  absolute flex flex-col justify-center items-center">
-                  <p className="text-white md:text-6xl sm:text-xl text-lg font-bold">
-                    Tentang Kami
-                  </p>
-                </div>
-              </div>
+        <Image
+          alt=""
+          src={"/images/gedung.jpg"}
+          width={1000}
+          height={1000}
+
+          className=" md:h-[70vh] h-40 w-full object-cover object-center"
+        />
+        <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[70vh] h-40 absolute flex flex-col justify-center items-center">
+          <p className="text-white md:text-6xl sm:text-xl text-lg font-bold">
+            Tentang Kami
+          </p>
+          <p
+            className="mt-2 px-8 py-2 text-white rounded-xl font-semibold text-sm sm:text-base md:text-lg"
+          >
+            Universitas Pendidikan Indonesia
+          </p>
+        </div>
+      </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
-        
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-16">
+
         {/* Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
 
           {/* Text */}
           <div className="bg-white">
             {/* Header */}
-                <p className="max-w-2xl md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mb-4">
-                    Laboratorium Kimia Instrumen
-                </p>
+            <p className="max-w-2xl md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mb-4">
+              Laboratorium Kimia Instrumen
+            </p>
             <p className="text-gray-700 text-lg leading-relaxed mb-4">
               <span className="font-semibold text-red-700">
                 Laboratorium Kimia Instrumen (LKI)
