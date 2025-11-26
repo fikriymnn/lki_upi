@@ -63,7 +63,7 @@ export default function NavbarCustom() {
     <Navbar.Link
       href={href}
       onClick={onClick}
-      className="text-xs font-semibold text-white hover:text-red-500 transition-colors duration-200 py-2 md:py-0"
+      className="text-sm font-semibold text-white hover:text-red-500 transition-colors duration-200 py-2 md:py-0"
     >
       {children}
     </Navbar.Link>
@@ -76,14 +76,14 @@ export default function NavbarCustom() {
           <Navbar.Brand href="/">
             <img
               src="/footer.png"
-              className="h-8 sm:h-10 md:px-8"
+              className="h-8 sm:h-10 md:px-4"
               alt="Logo"
             />
           </Navbar.Brand>
 
           <Navbar.Toggle className="bg-white hover:bg-gray-200 transition-colors" />
           
-          <Navbar.Collapse className="md:flex md:items-center md:gap-1 md:px-8">{/* Super Admin Navigation */}
+          <Navbar.Collapse className="md:flex md:items-center md:gap-1 md:px-4">{/* Super Admin Navigation */}
             {isDashboard && isSuperAdmin && (
               <>
                 <NavLink href="/admin/dashboard/superadmin">Arsip</NavLink>
@@ -114,24 +114,24 @@ export default function NavbarCustom() {
                   label=""
                   dismissOnClick={false}
                   renderTrigger={() => (
-                    <button className="text-xs font-semibold text-white transition-colors duration-200 md:py-0 py-2 md:text-center w-full md:w-auto text-left px-3  md:border-0 border-b border-white">
+                    <button className="text-sm font-semibold text-white transition-colors duration-200 md:py-0 py-2 md:text-center w-full md:w-auto text-left px-3  md:border-0 border-b border-white">
                       Layanan
                     </button>
                   )}
                   className="bg-[#202020] border border-gray-700 rounded-sm mt-2"
                 >
-                  <Dropdown.Item className="hover:bg-gray-800">
-                    <a href="/analisis" className="text-white hover:text-red-600 px-12 text-xs block w-full">
+                  <Dropdown.Item className="hover:bg-gray-100">
+                    <a href="/analisis" className="text-white px-12 text-xs block w-full">
                       Analisis
                     </a>
                   </Dropdown.Item>
                   <Dropdown.Item className="hover:bg-gray-800">
-                    <a href="/pelatihan" className="text-white hover:text-red-600 px-12 text-xs block w-full">
+                    <a href="/pelatihan" className="text-white px-12 text-xs block w-full">
                       Pelatihan
                     </a>
                   </Dropdown.Item>
                   <Dropdown.Item className="hover:bg-gray-800">
-                    <a href="/sertifikasi" className="text-white hover:text-red-600 px-12 text-xs block w-full">
+                    <a href="/sertifikasi" className="text-white px-12 text-xs block w-full">
                       Sertifikasi
                     </a>
                   </Dropdown.Item>

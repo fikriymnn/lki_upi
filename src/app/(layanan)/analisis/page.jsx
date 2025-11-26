@@ -366,35 +366,42 @@ const Analisis = () => {
   return (
     <>
       <main className="pb-16">
-        <div className="flex md:h-[229px] h-40 w-full ">
+        <div className="flex md:h-[70vh] h-[40vh] w-full ">
           <Image
             alt=""
             src={"/carousel.jpg"}
             width={0}
             height={0}
             sizes="100vw"
-            className=" md:h-[229px] h-40 w-full object-cover object-center"
+            className=" md:h-[70vh] h-[40vh] w-full object-cover object-center"
           />
-          <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[229px] h-40  absolute flex flex-col justify-center items-center">
-            <p className="text-white md:text-5xl sm:text-xl text-lg font-bold uppercase">
+          <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[70vh] h-[40vh]  absolute flex flex-col justify-center items-center">
+            <p className="text-white md:text-6xl text-3xl font-bold">
               Layanan Analisis
+            </p>
+            <p
+              className="mt-2 px-8 py-2 text-white rounded-xl font-semibold text-sm sm:text-base md:text-lg"
+            >
+              Universitas Pendidikan Indonesia
             </p>
           </div>
         </div>
 
-        <div className="max-w-6xl mx-auto">
-          <p className="max-w-2xl md:px-8 px-4 md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-12 md:mb-8 mb-4 text-center mx-auto">
+        <div className="max-w-7xl mx-auto">
+
+          <p className="max-w-lg md:px-8 px-4 md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-8 md:mb-4 mb-4">
             Pengujian Laboratorium Kimia Instrumen <span className="text-red-700">( LKI UPI )</span>
           </p>
-          <p className="md:text-lg text-sm text-gray-700 mx-auto text-justify md:px-8 px-4 px-4 md:mb-8 bg-white">
+          <p className="md:text-lg text-sm text-gray-700 mx-auto text-justify md:px-8 px-4 md:mb-8 bg-white">
             Laboratorium Kimia Instrumen (LKI) Universitas Pendidikan Indonesia menyediakan layanan pengujian sampel berbasis teknologi instrumen modern dengan standar kualitas tinggi. Kami melayani kebutuhan penelitian, akademik, industri, dan komersial dengan hasil yang presisi, terverifikasi, dan dapat dipertanggungjawabkan secara ilmiah.
           </p>
-          <div className="max-w-6xl flex md:px-8 px-4 justify-center mb-8">
+
+          <div className="max-w-7xl flex md:px-8 px-4 mb-8 justify-center mx-auto">
             <ButtonOrder />
           </div>
 
-          <div className="md:mb-8 mb-4 mx-auto">
-            <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-3xl md:px-8 px-4 text-center mx-auto">
+          <div className="md:mb-4 mb-4 mx-auto">
+            <p className="md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-3xl md:px-8 px-4 ">
               Daftar Harga Pengujian
             </p>
           </div>
@@ -496,7 +503,7 @@ const Analisis = () => {
               </table>
             </div>
           </div>
-          <div className="flex max-w-6xl mx-auto justify-between md:px-8 px-4 mt-8">
+          <div className="flex max-w-7xl mx-auto justify-between md:px-8 px-4 mt-8">
             <p className="text-black-700 md:font-semibold font-semibold md:text-[14px] text-xs">
               Syarat dan Ketentuan: <br />
               - Pelarut NMR-Kloroform: Rp100.000/ml. <br />
@@ -508,8 +515,8 @@ const Analisis = () => {
             </p>
           </div>
 
-          <div className="max-w-6xl md:px-8 px-4 mx-auto mt-16">
-            <div className="bg-gray-300 w-full max-w-6xl md:px-8 px-4 mx-auto py-4 mt-8">
+          <div className="max-w-7xl md:px-8 px-4 mx-auto mt-16">
+            <div className="bg-gray-300 w-full max-w-7xl md:px-8 px-4 mx-auto py-4 mt-8">
               <p className="text-center font-semibold md:text-lg text-sm">
                 Paket Harga Fast Track
               </p>
@@ -585,7 +592,7 @@ const Analisis = () => {
               </table>
             </div>
           </div>
-          <div className="flex max-w-6xl mx-auto justify-between md:px-8 px-4 mt-8">
+          <div className="flex max-w-7xl mx-auto justify-between md:px-8 px-4 mt-8">
             <p className="text-black-700 md:font-semibold font-semibold md:text-[14px] text-xs">
               Syarat dan Ketentuan: <br />
               - Pelarut NMR-Kloroform: Rp100.000/ml. <br />
@@ -597,52 +604,52 @@ const Analisis = () => {
             </p>
           </div>
 
-          <div className="md:mb-8 mb-4 max-w-6xl mx-auto mt-16">
-            <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-3xl md:px-8 px-4 text-center mx-auto">
+          <div className="md:mb-4 mb-4 max-w-7xl mx-auto mt-16">
+            <p className="md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-3xl md:px-8 px-4 ">
               Pengukuran Dan Analisis Lanjutan
             </p>
           </div>
           <div className="">
-          <div className="overflow-x-auto md:px-8 px-4">
-            <table className="md:w-full w-[300%] border-collapse text-[16px] max-w-6xl mx-auto">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="pt-2 px-2 text-center" rowSpan={2}>No</th>
-                  <th className="pt-2 px-2 text-center" rowSpan={2}>Jenis Alat</th>
-                  <th className="pt-2 px-2 text-center" colSpan={2}>Paket Harga</th>
-                  <th className="pt-2 px-2 text-center" rowSpan={2}>Satuan</th>
-                </tr>
-
-                <tr className="bg-gray-100">
-                  <th className="pb-2 px-2 text-center">Pendidikan</th>
-                  <th className="pb-2 px-2 text-center">Industri</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {data.map((row) => (
-                  <tr key={row.no} className="border-b">
-                    <td className="p-4 text-center border text-sm">{row.no}</td>
-                    <td className="p-4 text-center border text-sm">{row.alat}</td>
-                    <td className="p-4 text-center border text-sm">{row.pendidikan}</td>
-                    <td className="p-4 text-center border text-sm">{row.industri}</td>
-                    <td className="p-4 text-center border text-sm">{row.satuan}</td>
+            <div className="overflow-x-auto md:px-8 px-4">
+              <table className="md:w-full w-[300%] border-collapse text-[16px] max-w-7xl mx-auto">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="pt-2 px-2 text-center" rowSpan={2}>No</th>
+                    <th className="pt-2 px-2 text-center" rowSpan={2}>Jenis Alat</th>
+                    <th className="pt-2 px-2 text-center" colSpan={2}>Paket Harga</th>
+                    <th className="pt-2 px-2 text-center" rowSpan={2}>Satuan</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+
+                  <tr className="bg-gray-100">
+                    <th className="pb-2 px-2 text-center">Pendidikan</th>
+                    <th className="pb-2 px-2 text-center">Industri</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {data.map((row) => (
+                    <tr key={row.no} className="border-b">
+                      <td className="p-4 text-center border text-sm">{row.no}</td>
+                      <td className="p-4 text-center border text-sm">{row.alat}</td>
+                      <td className="p-4 text-center border text-sm">{row.pendidikan}</td>
+                      <td className="p-4 text-center border text-sm">{row.industri}</td>
+                      <td className="p-4 text-center border text-sm">{row.satuan}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div className="md:mb-8 mb-4 max-w-6xl mx-auto mt-16">
-            <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-2xl md:px-8 px-4 text-center mx-auto">
+          <div className="md:mb-8 mb-4 max-w-7xl mx-auto mt-16">
+            <p className="md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-2xl md:px-8 px-4">
               Alur Pengujian
             </p>
           </div>
           <p className="md:text-lg text-sm text-gray-700 mx-auto text-justify md:px-8 px-4 px-4 mb-8">
-             Catatan: Sampel akan dimusnahkan dalam waktu 7 hari setelah
-              pesanan selesai. Komplain hasil pengujian dapat dilakukan maksimal
-              7 hari setelah pesanan selesai melalui email: <a href="mailto:lkiupi2022@gmail.com" className="hover:text-blue-600 font-bold text-red-700 underline">lkiupi2022@gmail.com</a>
+            Catatan: Sampel akan dimusnahkan dalam waktu 7 hari setelah
+            pesanan selesai. Komplain hasil pengujian dapat dilakukan maksimal
+            7 hari setelah pesanan selesai melalui email: <a href="mailto:lkiupi2022@gmail.com" className="hover:text-blue-600 font-bold text-red-700 underline">lkiupi2022@gmail.com</a>
           </p>
           <div className="flex justify-center items-center">
             <Image
@@ -655,8 +662,8 @@ const Analisis = () => {
             />
           </div>
 
-          <div className="mb-8 max-w-6xl mx-auto mt-16">
-            <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-2xl md:px-8 px-4 text-center mx-auto">
+          <div className="mb-8 max-w-7xl mx-auto mt-16">
+            <p className="md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-2xl md:px-8 px-4">
               Alur Keluhan
             </p>
           </div>

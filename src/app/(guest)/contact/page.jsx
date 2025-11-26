@@ -34,16 +34,16 @@ export default function Contact() {
 
   return (
     <div className="mb-16">
-      <div className=" flex md:h-[229px] h-40 w-full  ">
+      <div className=" flex md:h-[70vh] h-40 w-full  ">
         <Image
           alt=""
           src={"/images/banner_contact.jpg"}
           width={0}
           height={0}
           sizes="100vw"
-          className=" md:h-[229px] h-40 w-full object-cover"
+          className=" md:h-[70vh] h-40 w-full object-cover"
         />
-        <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[229px] h-40  absolute flex justify-center items-center">
+        <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[70vh] h-40  absolute flex justify-center items-center">
           <p className="text-white md:text-5xl sm:text-xl text-lg font-bold uppercase">
             Informasi Kontak
           </p>

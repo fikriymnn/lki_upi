@@ -28,7 +28,7 @@ export default function Heroo() {
   }, []);
 
   return (
-    <div className="relative md:h-[90vh] h-[60vh] w-full overflow-hidden">
+    <div className="relative md:h-[100vh] h-[60vh] w-full overflow-hidden">
       {/* Slides */}
       {images.map((src, index) => (
         <div
@@ -43,13 +43,13 @@ export default function Heroo() {
             alt={`Slide ${index + 1}`}
             className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-black/60" />
         </div>
       ))}
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4">
-        <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+        <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-5xl md:text-7xl">
           Laboratorium Kimia<br />Instrumen UPI
         </h1>
         <p className="mb-8 max-w-2xl text-base text-gray-200 sm:text-xl">
@@ -57,7 +57,7 @@ export default function Heroo() {
         </p>
         <a
           href="/analisis"
-          className="rounded-md bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="rounded-sm bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           Jelajahi Layanan
         </a>

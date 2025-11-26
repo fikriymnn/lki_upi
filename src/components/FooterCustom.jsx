@@ -4,7 +4,8 @@ import Link from "next/link";
 function FooterCustom() {
   return (
     <div>
-      <div className="mx-auto grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-5 bg-[#202020] text-white  py-9 ">
+      <div className="bg-[#202020]">
+      <div className="max-w-7xl md:px-8 px-4 mx-auto grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-5  text-white py-9 ">
         <Image
           alt=""
           src={"/footer.png"}
@@ -62,6 +63,7 @@ function FooterCustom() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

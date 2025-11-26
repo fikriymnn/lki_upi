@@ -41,7 +41,7 @@ export default function Home() {
 
       {/* LAYANAN GRID */}
       <section className="mx-auto md:pb-24 pb-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 md:px-16 px-4">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 md:px-16 px-4">
           {[
             {
               icon: <Microscope className="text-red-600 w-14 h-14" />,
@@ -91,7 +91,7 @@ export default function Home() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative md:h-[420px] h-[360px] rounded-md overflow-hidden shadow-xl"
+            className="relative md:h-[420px] h-[360px] rounded-sm overflow-hidden shadow-xl"
           >
             <Image
               src="https://images.pexels.com/photos/2280568/pexels-photo-2280568.jpeg?auto=compress&cs=tinysrgb&w=1600"
