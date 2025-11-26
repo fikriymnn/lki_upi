@@ -14,7 +14,7 @@ import {
   uploadBytesResumable,
   getMetadata,
 } from "firebase/storage";
-import { storage } from "../../../../firebase/firebase";
+import { storage } from "../../../../firebase/firebase"
 
 export default function Detail({ params, searchParams }) {
   const { id } = params;
