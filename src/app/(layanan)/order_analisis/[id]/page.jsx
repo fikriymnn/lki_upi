@@ -11,7 +11,7 @@ import {
     getDownloadURL,
     uploadBytesResumable,
 } from "firebase/storage";
-import { storage } from "../../../firebase/firebase";
+import { storage } from "../../../../firebase/firebase";
 
 export default function Order_analisis_next({ params }) {
     const { id } = params;
