@@ -9,47 +9,59 @@ import axios from "axios";
 
 export default function AnalisisComponent() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getData() {
       try {
-        const data = await axios.get(
+        const response = await axios.get(
           `${process.env.NEXT_PUBLIC_URL}/api/content?resize=true`,
           { withCredentials: true }
         );
-        if (data.data.success) {
-          setData(data.data.data);
+        if (response.data.success) {
+          setData(response.data.data);
         }
       } catch (err) {
         alert(err.message);
+      } finally {
+        setLoading(false);
       }
     }
     getData();
   }, []);
 
   return (
-    <>
-      
-      <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
-        Daftar Alat Laboratorium Kimia Instrumen UPI
-      </p>
-      <div className="flex justify-center">
-        <hr className="grad h-2 mb-8 mt-5 w-56 text-center" />
-      </div>
-      <div className="grid md:grid-cols-3 grid-cols-1 md:gap-10 gap-0">
-        {data.map((v, i) => (
-          <>
-            <CardPenguji key={i} id={v._id} nama={v.title} foto={v.foto} />
-          </>
-        ))}
-      </div>
+    <div>
+      {/* Hero Section */}
+      <div className="max-w-7xl mx-auto md:px-8 px-4 py-12 md:pt-16">
+        {/* Title Section */}
+        <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-8 mb-8 text-red-700">
+          Daftar Alat Laboratorium
+        </p>
 
-      <br />
-      <p className="text-center md:text-4xl sm:text-2xl text-xl font-bold text-gray-800 mt-7">
-        Ingin Menggunakan Layanan Kami?
-      </p>
-      <ButtonOrder />
-      <br />
-    </>
+        {/* Cards Grid */}
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 max-w-7xl mx-auto">
+            {data.map((v, i) => (
+              <div key={i} className="transform transition-all duration-300 hover:scale-105">
+                <CardPenguji id={v._id} nama={v.title} foto={v.foto} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && data.length === 0 && (
+          <div className="text-center py-20">
+            <div className="text-gray-400 text-6xl mb-4">📦</div>
+            <p className="text-gray-600 text-lg">Belum ada alat laboratorium tersedia</p>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

@@ -366,32 +366,44 @@ const Analisis = () => {
   return (
     <>
       <main className="pb-16">
-        <div className="flex md:h-[70vh] h-[40vh] w-full ">
+        <div className="flex md:h-[60vh] h-[40vh] w-full ">
           <Image
             alt=""
             src={"/carousel.jpg"}
             width={0}
             height={0}
             sizes="100vw"
-            className=" md:h-[70vh] h-[40vh] w-full object-cover object-center"
+            className=" md:h-[60vh] h-[40vh] w-full object-cover object-center"
           />
-          <div className="bg-neutral-900 bg-opacity-70 w-full md:h-[70vh] h-[40vh]  absolute flex flex-col justify-center items-center">
-            <p className="text-white md:text-6xl text-3xl font-bold">
+          <div className="bg-neutral-900 bg-opacity-80 w-full md:h-[60vh] h-[40vh]  absolute flex flex-col justify-center items-center">
+            <p className="text-white md:text-7xl text-3xl font-bold">
               Layanan Analisis
             </p>
-            <p
-              className="mt-2 px-8 py-2 text-white rounded-xl font-semibold text-sm sm:text-base md:text-lg"
-            >
-              Universitas Pendidikan Indonesia
-            </p>
-            
           </div>
         </div>
 
+        <div class="flex py-4 bg-neutral-secondary-medium rounded-base shadow-sm" aria-label="Breadcrumb">
+          <div className="max-w-7xl md:px-8 px-4 mx-auto w-full">
+            <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+              <li class="inline-flex items-center">
+                <a href="#" class="inline-flex items-center text-sm text-gray-600 font-medium text-body hover:text-fg-brand">
+                  Home
+                </a>
+              </li>
+              <li>
+                <div class="flex items-center space-x-1.5">
+                  <svg class="w-3.5 h-3.5 rtl:rotate-180 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" /></svg>
+                  <a href="#" class="inline-flex items-center text-sm text-gray-600 font-medium text-body hover:text-fg-brand">Analisis</a>
+                </div>
+              </li>
+
+            </ol>
+          </div>
+        </div>
         <div className="max-w-7xl mx-auto">
 
-          <p className="max-w-lg md:px-8 px-4 md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-8 md:mt-16 md:mb-4 mb-4">
-            Pengujian Laboratorium Kimia Instrumen <span className="text-red-700">( LKI UPI )</span>
+          <p className="max-w-2xl md:px-8 px-4 md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-8 md:mt-16 md:mb-4 mb-4 text-red-700">
+            Pengujian Laboratorium Kimia Instrumen
           </p>
           <p className="md:text-lg text-sm text-gray-700 mx-auto text-justify md:px-8 px-4 md:mb-8 bg-white">
             Laboratorium Kimia Instrumen (LKI) Universitas Pendidikan Indonesia menyediakan layanan pengujian sampel berbasis teknologi instrumen modern dengan standar kualitas tinggi. Kami melayani kebutuhan penelitian, akademik, industri, dan komersial dengan hasil yang presisi, terverifikasi, dan dapat dipertanggungjawabkan secara ilmiah.
@@ -402,7 +414,7 @@ const Analisis = () => {
           </div>
 
           <div className="md:mb-4 mb-4 mx-auto">
-            <p className="md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-3xl md:px-8 px-4 ">
+            <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-3xl md:px-8 px-4 text-red-700">
               Daftar Harga Pengujian
             </p>
           </div>
@@ -606,7 +618,7 @@ const Analisis = () => {
           </div>
 
           <div className="md:mb-4 mb-4 max-w-7xl mx-auto mt-16">
-            <p className="md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-3xl md:px-8 px-4 ">
+            <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-3xl md:px-8 px-4 text-red-700">
               Pengukuran Dan Analisis Lanjutan
             </p>
           </div>
@@ -643,7 +655,7 @@ const Analisis = () => {
           </div>
 
           <div className="md:mb-4 mb-4 max-w-7xl mx-auto mt-16">
-            <p className="md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-8 max-w-2xl md:px-8 px-4">
+            <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-8 max-w-2xl md:px-8 px-4 text-red-700">
               Alur Pengujian
             </p>
           </div>
@@ -664,7 +676,7 @@ const Analisis = () => {
           </div>
 
           <div className="mb-8 max-w-7xl mx-auto mt-16">
-            <p className="md:text-2xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-2xl md:px-8 px-4">
+            <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-2xl md:px-8 px-4 text-red-700">
               Alur Keluhan
             </p>
           </div>
@@ -679,6 +691,10 @@ const Analisis = () => {
             />
           </div>
 
+        </div>
+
+        <div className="mx-auto">
+          <AnalisisComponent />
         </div>
       </main>
     </>
