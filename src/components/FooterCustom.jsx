@@ -28,24 +28,13 @@ function FooterCustom() {
         <div className="md:mx-0 mx-3">
           <h2 className="mb-5 font-bold md:text-xl text-xl">Kontak Kami</h2>
           <div className="flex gap-3 mb-6">
-            {/* <Image
-              src={"/images/wa.svg"}
-              alt=""
-              width={0}
-              height={0}
-              className="w-6"
-            />
-            <a href="https://wa.me/+6285795101010">+6285795101010</a> */}
+           No : 0851-6885-1789
           </div>
-          <div className="flex gap-3">
-            <Image
-              src={"/images/email.svg"}
-              alt=""
-              width={0}
-              height={0}
-              className="w-6"
-            />
-            <a href="mailto:lkiupi2022@gmail.com">lkiupi2022@gmail.com</a>
+          <div className="flex gap-3 mb-6">
+            <a href="mailto:lkiupi2022@gmail.com"> Email : lkiupi2022@gmail.com</a>
+          </div>
+          <div className="flex gap-3 mb-6">
+           IG : @lki_upi
           </div>
         </div>
         <div className="md:mx-0 mx-3">

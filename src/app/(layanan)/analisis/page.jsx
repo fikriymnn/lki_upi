@@ -520,7 +520,7 @@ const Analisis = () => {
             <p className="text-black-700 md:font-semibold font-semibold md:text-[14px] text-xs">
               Syarat dan Ketentuan: <br />
               - Pelarut NMR-Kloroform: Rp100.000/ml. <br />
-              - Pelarut NMR-Metanol: Rp80.000/ml. <br />
+              - Pelarut NMR-Metanol: Rp200.000/ml. <br />
               - Pengenceran sampel lebih dari 25ml dikenakan biaya tambahan seeuai pemakaian.
             </p>
             <p className="text-black-700 md:font-semibold font-semibold text-end md:text-[14px] text-xs">
@@ -609,7 +609,7 @@ const Analisis = () => {
             <p className="text-black-700 md:font-semibold font-semibold md:text-[14px] text-xs">
               Syarat dan Ketentuan: <br />
               - Pelarut NMR-Kloroform: Rp100.000/ml. <br />
-              - Pelarut NMR-Metanol: Rp80.000/ml. <br />
+              - Pelarut NMR-Metanol: Rp200.000/ml. <br />
               - Pengenceran sampel lebih dari 25ml dikenakan biaya tambahan seeuai pemakaian.
             </p>
             <p className="text-black-700 md:font-semibold font-semibold text-end md:text-[14px] text-xs">
