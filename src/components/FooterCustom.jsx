@@ -1,7 +1,15 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 function FooterCustom() {
+  const pathname = usePathname();
+
+  if(pathname.startsWith("/inventory")) {
+    return null;
+  }
+
   return (
     <div>
       <div className="bg-[#202020]">

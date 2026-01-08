@@ -69,6 +69,10 @@ export default function NavbarCustom() {
     </Navbar.Link>
   );
 
+  if(pathname.startsWith("/inventory")) {
+    return null;
+  }
+
   return (
     <>
       <div className="fixed z-50 w-full bg-[#202020] shadow-lg">
@@ -162,7 +166,7 @@ export default function NavbarCustom() {
       </div>
       
       {/* Spacer to prevent content overlap */}
-      <div className="h-20" />
+      <div className="h-16" />
     </>
   );
 }
