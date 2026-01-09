@@ -2,14 +2,14 @@
 import { useState } from 'react';
 import { Package } from 'lucide-react';
 
-const LoginPage = ({ onLoginSuccess }) => {
+const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = (e) => {
     e.preventDefault();
     if (username && password) {
-      onLoginSuccess();
+      
     }
   };
 
