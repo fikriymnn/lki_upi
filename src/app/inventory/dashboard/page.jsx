@@ -11,7 +11,7 @@ import LaporanPage from './Laporan';
 import PenggunaPage from './Pengguna';
 import PengaturanPage from './Pengaturan';
 
-const DashboardPage = ({ onLogout }) => {
+const DashboardPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activePage, setActivePage] = useState('dashboard');
 
@@ -23,7 +23,7 @@ const DashboardPage = ({ onLogout }) => {
         setSidebarOpen={setSidebarOpen}
         activePage={activePage}
         setActivePage={setActivePage}
-        onLogout={onLogout}
+        onLogout={() => {}} // Placeholder for logout function
       />
 
       {/* Main Content */}
