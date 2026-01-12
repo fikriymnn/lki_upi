@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Package, Users, FileText, Settings, LogOut, Menu, X, BarChart3, Box, Beaker, History, DollarSign, ChevronDown, ChevronRight } from 'lucide-react';
+import { Package, Users, FileText, LogOut, Menu, X, BarChart3, Box, Beaker, History, ChevronDown, ChevronRight } from 'lucide-react';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLogout }) => {
   const [itemDropdownOpen, setItemDropdownOpen] = useState(false);
+  const [masterDropdownOpen, setMasterDropdownOpen] = useState(false);
 
   const menuItems = [
     { icon: BarChart3, label: 'Dashboard', page: 'dashboard', type: 'single' },
     { icon: Package, label: 'Peminjaman', page: 'peminjaman', type: 'single' },
     { icon: History, label: 'Riwayat', page: 'riwayat', type: 'single' },
-    { icon: DollarSign, label: 'Sanksi', page: 'sanksi', type: 'single' },
     { 
       icon: Box, 
       label: 'Item', 
@@ -18,17 +18,39 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
         { icon: Beaker, label: 'Bahan Kimia', page: 'bahan' },
       ]
     },
+    { 
+      icon: Users, 
+      label: 'Master', 
+      type: 'dropdown',
+      submenu: [
+        { icon: Package, label: 'Supplier', page: 'master-supplier' },
+        { icon: Users, label: 'Peminjam', page: 'master-peminjam' },
+        { icon: Box, label: 'Lokasi Penyimpanan', page: 'master-lokasi' },
+      ]
+    },
     { icon: FileText, label: 'Laporan', page: 'laporan', type: 'single' },
     { icon: Users, label: 'Pengguna', page: 'pengguna', type: 'single' },
-    { icon: Settings, label: 'Pengaturan', page: 'pengaturan', type: 'single' },
   ];
 
   const handleItemClick = (item) => {
     if (item.type === 'dropdown') {
-      setItemDropdownOpen(!itemDropdownOpen);
+      if (item.label === 'Item') {
+        setItemDropdownOpen(!itemDropdownOpen);
+      } else if (item.label === 'Master') {
+        setMasterDropdownOpen(!masterDropdownOpen);
+      }
     } else {
       setActivePage(item.page);
     }
+  };
+
+  const isActiveDropdown = (label) => {
+    if (label === 'Item') {
+      return activePage === 'alat' || activePage === 'bahan';
+    } else if (label === 'Master') {
+      return activePage === 'master-supplier' || activePage === 'master-peminjam' || activePage === 'master-lokasi';
+    }
+    return false;
   };
 
   return (
@@ -74,7 +96,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
                   <button
                     onClick={() => handleItemClick(item)}
                     className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition ${
-                      (activePage === 'alat' || activePage === 'bahan')
+                      isActiveDropdown(item.label)
                         ? 'bg-red-50 text-red-600'
                         : 'text-gray-600 hover:bg-gray-50'
                     }`}
@@ -84,14 +106,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
                       {sidebarOpen && <span className="font-medium">{item.label}</span>}
                     </div>
                     {sidebarOpen && (
-                      itemDropdownOpen ? 
+                      (item.label === 'Item' ? itemDropdownOpen : masterDropdownOpen) ? 
                         <ChevronDown className="w-4 h-4 flex-shrink-0" /> : 
                         <ChevronRight className="w-4 h-4 flex-shrink-0" />
                     )}
                   </button>
                   
                   {/* Submenu */}
-                  {sidebarOpen && itemDropdownOpen && (
+                  {sidebarOpen && (item.label === 'Item' ? itemDropdownOpen : masterDropdownOpen) && (
                     <div className="mt-1 ml-4 space-y-1">
                       {item.submenu.map((subitem, subindex) => (
                         <button
