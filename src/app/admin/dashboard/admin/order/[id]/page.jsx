@@ -277,7 +277,8 @@ export default function DetailOrderAdmin({ params, searchParams }) {
 
             <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Kuitansi </p>{invoice?.status == "Selesai" ? <Button className="ml-5" color="blue" size={5} onClick={downloadKuitansi}>download</Button> : <p className="ml-5">-</p>}</div>
 
-            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Bukti pembayaran </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} href={invoice?.bukti_pembayaran}>download</Button> : ""} </div>
+            <div className="grid grid-cols-2  border-2 rounded-lg p-2 border-b-2"><p className="md:text-xl sm:text-xl text-xs font-semibold ">Bukti pembayaran </p> {invoice?.bukti_pembayaran ? <Button className="ml-5" color="blue" size={5} href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${invoice?.bukti_pembayaran}`}
+              target="_blank">download</Button> : ""} </div>
           </div> : <div className="m-auto  w-11/12 border-2 rounded-lg">
             <br />
             <br />

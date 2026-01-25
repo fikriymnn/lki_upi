@@ -18,27 +18,21 @@ export default function AdminOrderCard({ riwayat_pengujian, sample_dikembalikan,
     const handleConfirm = async (e) => {
         e.preventDefault()
         try {
-            const directory = 'hasilanalisis/'
-            const fileName = `${file.name}`
-
-            const storageRef = ref(storage, directory + fileName);
-
-            // Create file metadata including the content type
-            const metadata = {
-                contentType: file.type,
-            };
-
-            // Upload the file in the bucket storage
-            const snapshot = await uploadBytesResumable(storageRef, file, metadata);
-            //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
-
-            // Grab the public url
-            const downloadURL = await getDownloadURL(snapshot.ref);
+            const downloadURL = await axios.post(
+                `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=hasilanalisis`,
+                { file: file },
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            );
             if (!file) {
                 alert('no file uploaded')
                 setAdd(a => !a)
             } else {
-                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}?invoice_id=${invoice_id}${status == "Sample Dikerjakan Operator" ? "&task=operator" : ""}`, { hasil_analisis: downloadURL }, { withCredentials: true })
+                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}?invoice_id=${invoice_id}${status == "Sample Dikerjakan Operator" ? "&task=operator" : ""}`, { hasil_analisis: downloadURL.data.filename }, { withCredentials: true })
                 if (data.data == 'success') {
 
                     setAdd(a => !a)
@@ -226,7 +220,9 @@ export default function AdminOrderCard({ riwayat_pengujian, sample_dikembalikan,
                                     <div className="md:text-lg sm:text-lg text-xs ">
 
 
-                                        {foto_sample ? <Button className="grad" color="failure" size={5} href={foto_sample}>download</Button> : <p>-</p>}
+                                        {foto_sample ? <Button className="grad" color="failure" size={5} href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/fotosample/${foto_sample}`}
+                                            target="_blank"
+                                        >download</Button> : <p>-</p>}
                                     </div>
 
                                 </div>
@@ -236,7 +232,9 @@ export default function AdminOrderCard({ riwayat_pengujian, sample_dikembalikan,
                                         <h1 className="md:text-lg text-xs font-semibold text-grey-600">jurnal pendukung (*format file berupa docx atau pdf) : </h1>
                                         <div className="md:text-lg sm:text-lg text-xs">
 
-                                            {jurnal_pendukung ? <Button className="grad" color="failure" size={5} href={jurnal_pendukung}>download</Button> : <p>-</p>}
+                                            {jurnal_pendukung ? <Button className="grad" color="failure" size={5} href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/jurnalpendukung/${jurnal_pendukung}`}
+                                                target="_blank"
+                                            >download</Button> : <p>-</p>}
                                         </div>
 
                                     </div>
@@ -251,7 +249,9 @@ export default function AdminOrderCard({ riwayat_pengujian, sample_dikembalikan,
                                             setFile(e.target.files[0])
 
 
-                                        }} /> : (hasil_analisis ? <Button color="failure" size={5} href={hasil_analisis}>download</Button> : <p className="md:text-lg sm:text-lg text-xs ">-</p>)}
+                                        }} /> : (hasil_analisis ? <Button color="failure" size={5} href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${hasil_analisis}`}
+                                            target="_blank"
+                                        >download</Button> : <p className="md:text-lg sm:text-lg text-xs ">-</p>)}
                                     </div>
                                 </div>
                             </div>

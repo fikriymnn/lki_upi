@@ -37,32 +37,21 @@ export default function Detail({ params, searchParams }) {
   const handleBukti = async (e) => {
     e.preventDefault();
     try {
-      const directory = "hasilanalisis/";
-      const fileName = `${buktiPembayaran[0].name}`;
-
-      const storageRef = ref(storage, directory + fileName);
-
-      // Create file metadata including the content type
-      const metadata = {
-        contentType: buktiPembayaran[0].type,
-      };
-
-      // Upload the file in the bucket storage
-      const snapshot = await uploadBytesResumable(
-        storageRef,
-        buktiPembayaran[0],
-        metadata
+      const downloadURL = await axios.post(
+        `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=hasilanalisis`,
+        { file: buktiPembayaran[0] },
+        {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
       );
-      //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
 
-      // Grab the public url
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      // const filepath = await getMetadata(snapshot.ref)
-
-      if (downloadURL) {
+      if (downloadURL.data.filename) {
         const data = await axios.post(
           `${process.env.NEXT_PUBLIC_URL}/api/bukti_pembayaran/${id}`,
-          { bukti_pembayaran: downloadURL },
+          { bukti_pembayaran: downloadURL.data.filename },
           { withCredentials: true }
         );
         if (data.data == "success") {
@@ -342,7 +331,8 @@ export default function Detail({ params, searchParams }) {
                       className="ml-5 text-xs"
                       color="blue"
                       size={5}
-                      href={invoice.bukti_pembayaran}
+                      href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${invoice?.bukti_pembayaran}`}
+                      target="_blank"
                     >
                       download{" "}
                     </Button>

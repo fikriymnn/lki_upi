@@ -9,6 +9,7 @@ import RiwayatPage from './Riwayat';
 import SupplierPage from './Supplier';
 import LaporanPage from './Laporan';
 import PenggunaPage from './Pengguna';
+import Penyimpanan from './Penyimpanan';
 
 const DashboardPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -60,8 +61,9 @@ const DashboardPage = () => {
           {activePage === 'bahan' && <BahanPage />}
           {activePage === 'peminjaman' && <PeminjamanPage />}
           {activePage === 'riwayat' && <RiwayatPage />}
-          {activePage === 'supplier' && <SupplierPage />}
+          {activePage === 'master-supplier' && <SupplierPage />}
           {activePage === 'laporan' && <LaporanPage />}
+          {activePage === 'master-lokasi' && <Penyimpanan />}
           {activePage === 'pengguna' && <PenggunaPage />}
           {/* {activePage === 'pengaturan' && <ComingSoonPage title="Pengaturan" />} */}
         </main>

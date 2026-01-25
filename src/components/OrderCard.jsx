@@ -80,30 +80,20 @@ export default function OrderCard({
             });
             if (file) {
               try {
-                const directory = "fotosample/";
-                const fileName = `${file.name}`;
-
-                const storageRef = ref(storage, directory + fileName);
-
-                // Create file metadata including the content type
-                const metadata = {
-                  contentType: file.type,
-                };
-
-                // Upload the file in the bucket storage
-                const snapshot = await uploadBytesResumable(
-                  storageRef,
-                  file,
-                  metadata
+                const downloadURL = await axios.post(
+                  `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=fotosample`,
+                  { file: file },
+                  {
+                    withCredentials: true,
+                    headers: {
+                      'Content-Type': 'multipart/form-data'
+                    }
+                  }
                 );
-                //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
-
-                // Grab the public url
-                const downloadURL = await getDownloadURL(snapshot.ref);
-                if (downloadURL) {
+                if (downloadURL.data.filename) {
                   const cek = await axios.post(
                     `${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${uuid}`,
-                    { foto_sample: downloadURL },
+                    { foto_sample: downloadURL.data.filename },
                     {
                       withCredentials: true,
                     }
@@ -140,31 +130,21 @@ export default function OrderCard({
     e.preventDefault();
     setLoading(true)
     try {
-      const directory = "jurnalpendukung/";
-      const fileName = `${e.target.files[0].name}`;
-
-      const storageRef = ref(storage, directory + fileName);
-
-      // Create file metadata including the content type
-      const metadata = {
-        contentType: e.target.files[0].type,
-      };
-
-      // Upload the file in the bucket storage
-      const snapshot = await uploadBytesResumable(
-        storageRef,
-        e.target.files[0],
-        metadata
+      const downloadURL = await axios.post(
+        `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=jurnalpendukung`,
+        { file: e.target.files[0] },
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
       );
-      //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
 
-      // Grab the public url
-      const downloadURL = await getDownloadURL(snapshot.ref);
-
-      if (downloadURL) {
+      if (downloadURL.data.filename) {
         const cek = await axios.post(
           `${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${uuid}`,
-          { jurnal_pendukung: downloadURL },
+          { jurnal_pendukung: downloadURL.data.filename },
           {
             withCredentials: true,
           }
@@ -324,7 +304,8 @@ export default function OrderCard({
                           className="grad"
                           color="failure"
                           size={5}
-                          href={foto_sample}
+                          href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/fotosample/${foto_sample}`}
+                          target="_blank"
                         >
                           download
                         </Button>
@@ -365,7 +346,8 @@ export default function OrderCard({
                               className="grad"
                               color="failure"
                               size={5}
-                              href={jurnal_pendukung}
+                              href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/jurnalpendukung/${jurnal_pendukung}`}
+                              target="_blank"
                             >
                               download
                             </Button>
@@ -405,7 +387,8 @@ export default function OrderCard({
                               className="grad"
                               color="failure"
                               size={5}
-                              href={hasil_analisis}
+                              href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${hasil_analisis}`}
+                              target="_blank"
                             >
                               download
                             </Button>

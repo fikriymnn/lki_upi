@@ -9,7 +9,7 @@ function CardPenguji({ id, nama, foto }) {
             {/* Image Container */}
             <div className='relative h-64 w-full bg-gray-100'>
                 <Image 
-                    src={foto} 
+                    src={`${process.env.NEXT_PUBLIC_FILE_URL}/file/files/${foto}`} 
                     width={0} 
                     height={0} 
                     sizes='100vw' 

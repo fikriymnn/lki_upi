@@ -49,7 +49,7 @@ function Page({ params }) {
                     <div className='md:flex sm:flex bg-white p-3 gap-5'>
                         <div className='flex flex-col align-start items-start md:w-4/12 sm:w-4/12 gap-y-10 mt-10 justify-center'>
                             <div>
-                            <Image alt='' src={data?.foto} width={0} height={0} sizes='100vw' className='w-[348px]' />
+                            <Image alt='' src={`${process.env.NEXT_PUBLIC_FILE_URL}/file/files/${data?.foto}`} width={0} height={0} sizes='100vw' className='w-[348px]' />
                             <p className='font-bold text-center md:text-xl sm:text-base text-base mt-5'>{data?.title}</p>
                             <p className='text-center md:text-lg sm:text-base text-sm'>
 
@@ -69,7 +69,7 @@ function Page({ params }) {
                     <p className='text-[24px] font-bold text-center my-3'>Contoh Hasil Pengujian</p>
                     <div className=' bg-white px-3 py-5'>
                         <div className='mt-10 flex justify-center'>
-                            <Image alt='' src={data?.contoh_hasil} width={0} height={0} sizes='100vw' className='w-10/12 h-full' />
+                            <Image alt='' src={`${process.env.NEXT_PUBLIC_FILE_URL}/file/files/${data?.contoh_hasil}`} width={0} height={0} sizes='100vw' className='w-10/12 h-full' />
 
                         </div>
                        

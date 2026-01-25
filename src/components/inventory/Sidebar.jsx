@@ -60,7 +60,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           {sidebarOpen && (
             <div className="flex items-center space-x-3">
-              <img src='/logo-upi.png' className='w-10' alt="Logo UPI"/>
+              <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold">
+                LKI
+              </div>
               <div>
                 <h2 className="font-bold text-red-600">LKI UPI</h2>
                 <p className="text-xs text-gray-800">Inventory System</p>

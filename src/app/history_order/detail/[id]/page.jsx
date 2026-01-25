@@ -218,7 +218,8 @@ export default function Hdetail({ params, searchParams }) {
                 className="ml-5"
                 color="blue"
                 size={5}
-                href={invoice.bukti_pembayaran}
+                href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${invoice?.bukti_pembayaran}`}
+                target="_blank"
               >
                 Download
               </Button>

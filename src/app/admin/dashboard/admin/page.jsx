@@ -14,7 +14,7 @@ import Navigasi from '@/components/Navigasi'
 
 export default function Adminn() {
   const [tambah, setTambah] = useState({
-    title: "", foto: "", contoh_hasil: ""
+    title: "", foto: "", contoh_hasil: "" 
   });
   const [sub_title, setSub_title] = useState('');
   const [deskripsi, setDeskripsi] = useState('');
@@ -68,50 +68,38 @@ export default function Adminn() {
   }, [])
 
   const handleFoto = async (e) => {
-    const directory = 'files/'
-    const fileName = `${e.name + new Date().toISOString()}`
+    const downloadURL = await axios.post(
+        `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=files`,
+        { file: e },
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
+    if (downloadURL.data.filename) {
 
-    const storageRef = ref(storage, directory + fileName);
-
-    // Create file metadata including the content type
-    const metadata = {
-      contentType: e.type,
-    };
-
-    // Upload the file in the bucket storage
-    const snapshot = await uploadBytesResumable(storageRef, e, metadata);
-    //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
-
-    // Grab the public url
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    if (downloadURL) {
-
-      setTambah((a) => ({ ...a, foto: downloadURL }))
+      setTambah((a) => ({ ...a, foto: downloadURL.data.filename }))
 
     }
 
   }
 
   const handleContohHasil = async (e) => {
-    const directory = 'files/'
-    const fileName = `${e.name + new Date().toISOString()}`
+    const downloadURL = await axios.post(
+        `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=files`,
+        { file: e },
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
+    if (downloadURL.data.filename) {
 
-    const storageRef = ref(storage, directory + fileName);
-
-    // Create file metadata including the content type
-    const metadata = {
-      contentType: e.type,
-    };
-
-    // Upload the file in the bucket storage
-    const snapshot = await uploadBytesResumable(storageRef, e, metadata);
-    //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
-
-    // Grab the public url
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    if (downloadURL) {
-
-      setTambah((a) => ({ ...a, contoh_hasil: downloadURL }))
+      setTambah((a) => ({ ...a, contoh_hasil: downloadURL.data.filename }))
 
     }
   }

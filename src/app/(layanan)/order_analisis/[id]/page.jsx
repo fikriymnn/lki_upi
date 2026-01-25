@@ -27,7 +27,7 @@ export default function Order_analisis_next({ params }) {
         let reader = new FileReader();
         const imageFile = event.target.files[0];
         const imageFilname = event.target.files[0].name;
-        reader.onload = async(e) => {
+        reader.onload = async (e) => {
             setLoading2(true)
             const img = new Image();
             img.onload = () => {
@@ -62,43 +62,36 @@ export default function Order_analisis_next({ params }) {
                             type: imageFile.type,
                             lastModified: Date.now(),
                         });
-if(file){
-                        try {
-                            const directory = "fotosample/";
-                            const fileName = `${file.name}`;
-        
-                            const storageRef = ref(storage, directory + fileName);
-        
-                            // Create file metadata including the content type
-                            const metadata = {
-                                contentType: file.type,
-                            };
-        
-                            // Upload the file in the bucket storage
-                            const snapshot = await uploadBytesResumable(
-                                storageRef,
-                                file,
-                                metadata
-                            );
-                            //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
-        
-                            // Grab the public url
-                            const downloadURL = await getDownloadURL(snapshot.ref);
-                            if (downloadURL) {
-                                await axios.post(
-                                    `${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${id}`,
-                                    { foto_sample: downloadURL },
+                        if (file) {
+                            try {
+                                // Grab the public url
+                                const downloadURL = await axios.post(
+                                    `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=fotosample`,
+                                    { file: file },
                                     {
                                         withCredentials: true,
+                                        headers: {
+                                            'Content-Type': 'multipart/form-data'
+                                        }
                                     }
                                 );
-                                setLoading2(false)
-        
+                                console.log(downloadURL)
+
+                                if (downloadURL.data.filename) {
+                                    await axios.post(
+                                        `${process.env.NEXT_PUBLIC_URL}/api/foto_sample/${id}`,
+                                        { foto_sample: downloadURL.data.filename },
+                                        {
+                                            withCredentials: true,
+                                        }
+                                    );
+                                    setLoading2(false)
+
+                                }
+                            } catch (err) {
+                                console.log(err.message);
                             }
-                        } catch (err) {
-                            console.log(err.message);
                         }
-                    }
                     },
                     imageFile.type,
                     1
@@ -121,32 +114,23 @@ if(file){
             async function cek() {
                 setLoading2(true)
                 try {
-                    const directory = "jurnalpendukung/";
-                    const fileName = `${jurnal_pendukung[0].name}`;
-
-                    const storageRef = ref(storage, directory + fileName);
-
-                    // Create file metadata including the content type
-                    const metadata = {
-                        contentType: jurnal_pendukung[0].type,
-                    };
-
-                    // Upload the file in the bucket storage
-                    const snapshot = await uploadBytesResumable(
-                        storageRef,
-                        jurnal_pendukung[0],
-                        metadata
-                    );
-                    //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
-
                     // Grab the public url
-                    const downloadURL = await getDownloadURL(snapshot.ref);
+                    const downloadURL = await axios.post(
+                        `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=jurnalpendukung`,
+                        { file: jurnal_pendukung[0] },
+                        {
+                            withCredentials: true,
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }
+                    );
 
-                    if (downloadURL) {
+                    if (downloadURL.data.filename) {
                         console.log(downloadURL)
                         await axios.post(
                             `${process.env.NEXT_PUBLIC_URL}/api/jurnal_pendukung/${id}`,
-                            { jurnal_pendukung: downloadURL },
+                            { jurnal_pendukung: downloadURL.data.filename },
                             {
                                 withCredentials: true,
                             }
@@ -161,17 +145,17 @@ if(file){
         }
     }
 
-    const onUploadFS = async (e) => {
-        handleFS(e);
-        if (file) {
-            setLoading2(true)
-            async function cek2() {
-                
-                
-            }
-            cek2();
-        }
-    }
+    // const onUploadFS = async (e) => {
+    //     handleFS(e);
+    //     if (file) {
+    //         setLoading2(true)
+    //         async function cek2() {
+
+
+    //         }
+    //         cek2();
+    //     }
+    // }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -201,14 +185,14 @@ if(file){
 
     return (
         <>
- {
-                                loading2 ? (
-                                    <div className="fixed inset-0 top-[4rem] z-40 flex items-center justify-center backdrop-blur-sm bg-black/30">
-                                    {/* Spinner atau loader */}
-                                    <div className="w-16 h-16 border-4 border-t-transparent border-black rounded-full animate-spin"></div>
-                                  </div>
-                                ) : ""
-                            }
+            {
+                loading2 ? (
+                    <div className="fixed inset-0 top-[4rem] z-40 flex items-center justify-center backdrop-blur-sm bg-black/30">
+                        {/* Spinner atau loader */}
+                        <div className="w-16 h-16 border-4 border-t-transparent border-black rounded-full animate-spin"></div>
+                    </div>
+                ) : ""
+            }
             <div className="">
                 {/* <button onClick={() => { console.log(jenis_pengujian); console.log(nama_sample) }}>asd</button> */}
                 <p className="md:mt-14 sm:mt-14 mt-10 text-center md:text-3xl sm:text-2xl text-sm font-bold text-gray-800">
@@ -229,7 +213,7 @@ if(file){
                                 Foto Sample (*format file yang diupload berupa png, jpg atau
                                 jpeg)
                             </h2>
-                           
+
                             <div>
 
                                 <input
