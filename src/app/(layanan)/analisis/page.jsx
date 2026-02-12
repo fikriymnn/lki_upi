@@ -93,7 +93,7 @@ const Analisis = () => {
           kimia: "a. 120.000",
           nonKimia: "a. 170.000",
           luarUpi: "a. 200.000",
-          perusahaan: "a. 100.000",
+          perusahaan: "a. 350.000",
           tigaHariNonKimia: "a. 229.500",
           tujuhHariNonKimia: "a. 121.500",
           tigaHariLuarUpi: "a. 270.000",
