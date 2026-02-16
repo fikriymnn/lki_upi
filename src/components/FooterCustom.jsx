@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 function FooterCustom() {
   const pathname = usePathname();
 
-  if(pathname.startsWith("/inventory")) {
+  if(pathname.startsWith("/panel")) {
     return null;
   }
 

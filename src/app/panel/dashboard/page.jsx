@@ -4,7 +4,8 @@ import { Search, Bell, ChevronDown, Package, AlertCircle, TrendingUp, BarChart3,
 import Sidebar from '@/components/inventory/Sidebar';
 import AlatPage from './Alat';
 import BahanPage from './Bahan';
-import PeminjamanPage from './Peminjaman';
+import PeminjamanBahanPage from './PeminjamanBahan';
+import PeminjamanAlatPage from './PeminjamanAlat';
 import RiwayatPage from './Riwayat';
 import SupplierPage from './Supplier';
 import LaporanPage from './Laporan';
@@ -18,35 +19,32 @@ const DashboardPage = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar Component */}
-      <Sidebar 
+      <Sidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
         activePage={activePage}
         setActivePage={setActivePage}
-        onLogout={() => {}} // Placeholder for logout function
+        onLogout={() => { }} // Placeholder for logout function
       />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar */}
-        <header className="bg-white border-b border-gray-200 px-6 py-4">
+        <header className="bg-red-600 border-b border-red-700 px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex-1 max-w-lg">
             </div>
 
             <div className="flex items-center space-x-4 ml-6">
-              <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition">
-                <Bell className="w-6 h-6" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-600 rounded-full"></span>
-              </button>
+               <p className="text-white font-bold text-base">INVENTORY SYSTEM</p>
 
               <div className="flex items-center space-x-3 pl-4 border-l border-gray-200">
                 <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center text-white font-bold">
                   A
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Admin Lab</p>
-                  <p className="text-xs text-gray-500">Administrator</p>
+                  <p className="text-sm font-bold text-gray-100">Admin Lab</p>
+                  <p className="text-xs text-white">Administrator</p>
                 </div>
                 <ChevronDown className="w-4 h-4 text-gray-400" />
               </div>
@@ -59,7 +57,8 @@ const DashboardPage = () => {
           {activePage === 'dashboard' && <DashboardContent />}
           {activePage === 'alat' && <AlatPage />}
           {activePage === 'bahan' && <BahanPage />}
-          {activePage === 'peminjaman' && <PeminjamanPage />}
+          {activePage === 'peminjaman-bahan' && <PeminjamanBahanPage />}
+          {activePage === 'peminjaman-alat' && <PeminjamanAlatPage />}
           {activePage === 'riwayat' && <RiwayatPage />}
           {activePage === 'master-supplier' && <SupplierPage />}
           {activePage === 'laporan' && <LaporanPage />}
@@ -160,11 +159,10 @@ const DashboardContent = () => {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                          item.status === 'Tersedia' 
-                            ? 'bg-green-100 text-green-700' 
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${item.status === 'Tersedia'
+                            ? 'bg-green-100 text-green-700'
                             : 'bg-red-100 text-red-700'
-                        }`}>
+                          }`}>
                           {item.status}
                         </span>
                       </td>
@@ -213,11 +211,10 @@ const DashboardContent = () => {
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-600">{item.stock}</td>
                       <td className="px-4 py-3">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                          item.status === 'Tersedia' 
-                            ? 'bg-green-100 text-green-700' 
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${item.status === 'Tersedia'
+                            ? 'bg-green-100 text-green-700'
                             : 'bg-red-100 text-red-700'
-                        }`}>
+                          }`}>
                           {item.status}
                         </span>
                       </td>

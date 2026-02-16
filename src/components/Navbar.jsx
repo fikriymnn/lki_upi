@@ -69,7 +69,7 @@ export default function NavbarCustom() {
     </Navbar.Link>
   );
 
-  if(pathname.startsWith("/inventory")) {
+  if(pathname.startsWith("/panel")) {
     return null;
   }
 

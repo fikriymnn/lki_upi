@@ -14,16 +14,16 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-red-600 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-red-100">
           {/* Logo & Title */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-red-600 rounded-xl mb-4">
-              <Package className="w-8 h-8 text-white" />
+            <div className="inline-flex items-center justify-center h-14 px-4 bg-red-600 rounded-md mb-4">
+              <img src='footer.png' className='w-24 object-center'/>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Lab Kimia UPI</h1>
-            <p className="text-gray-600">Sistem Manajemen Inventory</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Dashboard Lab Kimia UPI</h1>
+            <p className="text-gray-600 text-sm">Manajemen Inventory, Layanan analisis & Affiliate</p>
           </div>
 
           {/* Login Form */}

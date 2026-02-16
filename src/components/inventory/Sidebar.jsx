@@ -1,31 +1,45 @@
 import React, { useState } from 'react';
-import { Package, Users, FileText, LogOut, Menu, X, BarChart3, Box, Beaker, History, ChevronDown, ChevronRight } from 'lucide-react';
+import {
+  Package, Users, FileText, LogOut, Menu, X, BarChart3, Box, Beaker, History, ChevronDown, ChevronRight, FlaskRound, Microscope, ShoppingCart, Archive, MapPin, UserPlus,
+  ClipboardList, TestTube, ShoppingBag, Calendar, Layers, Database,
+  Home, Settings, Bell, HelpCircle, Download, Upload, Printer
+} from 'lucide-react';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLogout }) => {
-  const [itemDropdownOpen, setItemDropdownOpen] = useState(false);
+  const [inventarisDropdownOpen, setInventarisDropdownOpen] = useState(false);
   const [masterDropdownOpen, setMasterDropdownOpen] = useState(false);
+  const [peminjamanDropdownOpen, setPeminjamanDropdownOpen] = useState(false);
+  const [riwayatDropdownOpen, setRiwayatDropdownOpen] = useState(false);
 
   const menuItems = [
-    { icon: BarChart3, label: 'Dashboard', page: 'dashboard', type: 'single' },
-    { icon: Package, label: 'Peminjaman', page: 'peminjaman', type: 'single' },
-    { icon: History, label: 'Riwayat', page: 'riwayat', type: 'single' },
-    { 
-      icon: Box, 
-      label: 'Item', 
+    { icon: Home, label: 'Dashboard', page: 'dashboard', type: 'single' },
+    {
+      icon: ClipboardList,
+      label: 'Peminjaman',
       type: 'dropdown',
       submenu: [
-        { icon: Box, label: 'Alat Lab', page: 'alat' },
-        { icon: Beaker, label: 'Bahan Kimia', page: 'bahan' },
+        { icon: FlaskRound, label: 'Bahan Kimia', page: 'peminjaman-bahan' },
+        { icon: Microscope, label: 'Alat Lab', page: 'peminjaman-alat' },
+        { icon: Users, label: 'Praktikum', page: 'praktikum' },
       ]
     },
-    { 
-      icon: Users, 
-      label: 'Master', 
+    {
+      icon: Layers,
+      label: 'Inventaris',
+      type: 'dropdown',
+      submenu: [
+        { icon: FlaskRound, label: 'Bahan Kimia', page: 'bahan' },
+        { icon: Microscope, label: 'Alat Lab', page: 'alat' },
+      ]
+    },
+    {
+      icon: Database,
+      label: 'Master',
       type: 'dropdown',
       submenu: [
         { icon: Package, label: 'Supplier', page: 'master-supplier' },
         { icon: Users, label: 'Peminjam', page: 'master-peminjam' },
-        { icon: Box, label: 'Lokasi Penyimpanan', page: 'master-lokasi' },
+        { icon: Box, label: 'Lokasi Penyimpanan', page: 'master-lokasi' }
       ]
     },
     { icon: FileText, label: 'Laporan', page: 'laporan', type: 'single' },
@@ -34,10 +48,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
 
   const handleItemClick = (item) => {
     if (item.type === 'dropdown') {
-      if (item.label === 'Item') {
-        setItemDropdownOpen(!itemDropdownOpen);
+      if (item.label === 'Inventaris') {
+        setInventarisDropdownOpen(!inventarisDropdownOpen);
       } else if (item.label === 'Master') {
         setMasterDropdownOpen(!masterDropdownOpen);
+      } else if (item.label === 'Peminjaman') {
+        setPeminjamanDropdownOpen(!peminjamanDropdownOpen);
+      } else if (item.label === 'Riwayat') {
+        setRiwayatDropdownOpen(!riwayatDropdownOpen);
       }
     } else {
       setActivePage(item.page);
@@ -45,33 +63,40 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
   };
 
   const isActiveDropdown = (label) => {
-    if (label === 'Item') {
+    if (label === 'Inventaris') {
       return activePage === 'alat' || activePage === 'bahan';
     } else if (label === 'Master') {
       return activePage === 'master-supplier' || activePage === 'master-peminjam' || activePage === 'master-lokasi';
+    } else if (label === 'Peminjaman') {
+      return activePage === 'peminjaman-bahan' || activePage === 'peminjaman-alat' || activePage === 'praktikum';
+    } else if (label === 'Riwayat') {
+      return activePage === 'riwayat-bahan' || activePage === 'riwayat-alat' || activePage === 'riwayat-pembelian-bahan' || activePage === 'riwayat-pembelian-alat' || activePage === 'riwayat-praktikum';
     }
     return false;
   };
 
+  const getDropdownState = (label) => {
+    if (label === 'Inventaris') return inventarisDropdownOpen;
+    if (label === 'Master') return masterDropdownOpen;
+    if (label === 'Peminjaman') return peminjamanDropdownOpen;
+    if (label === 'Riwayat') return riwayatDropdownOpen;
+    return false;
+  };
+
   return (
-    <aside className={`bg-white border-r border-gray-200 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-20'}`}>
+    <aside className={`bg-red-600 border-r border-red-700 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-20'}`}>
       <div className="flex flex-col h-full">
         {/* Logo */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b border-red-700">
           {sidebarOpen && (
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold">
-                LKI
-              </div>
-              <div>
-                <h2 className="font-bold text-red-600">LKI UPI</h2>
-                <p className="text-xs text-gray-800">Inventory System</p>
-              </div>
+            <div className="items-center space-x-3">
+
+                <img src='/icon/upi-white.png' className='w-44 object-center'/>
             </div>
           )}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition"
+            className="p-2 hover:bg-red-700 rounded-lg transition text-white"
           >
             {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -84,11 +109,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
               {item.type === 'single' ? (
                 <button
                   onClick={() => setActivePage(item.page)}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-                    activePage === item.page
-                      ? 'bg-red-50 text-red-600'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${activePage === item.page
+                    ? 'bg-white text-red-600'
+                    : 'text-white hover:bg-white hover:text-red-600'
+                    }`}
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0" />
                   {sidebarOpen && <span className="font-medium">{item.label}</span>}
@@ -97,35 +121,33 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
                 <div>
                   <button
                     onClick={() => handleItemClick(item)}
-                    className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition ${
-                      isActiveDropdown(item.label)
-                        ? 'bg-red-50 text-red-600'
-                        : 'text-gray-600 hover:bg-gray-50'
-                    }`}
+                    className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition ${isActiveDropdown(item.label)
+                      ? 'bg-white text-red-600'
+                      : 'text-white hover:bg-white hover:text-red-600'
+                      }`}
                   >
                     <div className="flex items-center space-x-3">
                       <item.icon className="w-5 h-5 flex-shrink-0" />
                       {sidebarOpen && <span className="font-medium">{item.label}</span>}
                     </div>
                     {sidebarOpen && (
-                      (item.label === 'Item' ? itemDropdownOpen : masterDropdownOpen) ? 
-                        <ChevronDown className="w-4 h-4 flex-shrink-0" /> : 
+                      getDropdownState(item.label) ?
+                        <ChevronDown className="w-4 h-4 flex-shrink-0" /> :
                         <ChevronRight className="w-4 h-4 flex-shrink-0" />
                     )}
                   </button>
-                  
+
                   {/* Submenu */}
-                  {sidebarOpen && (item.label === 'Item' ? itemDropdownOpen : masterDropdownOpen) && (
+                  {sidebarOpen && getDropdownState(item.label) && (
                     <div className="mt-1 ml-4 space-y-1">
                       {item.submenu.map((subitem, subindex) => (
                         <button
                           key={subindex}
                           onClick={() => setActivePage(subitem.page)}
-                          className={`w-full flex items-center space-x-3 px-4 py-2 rounded-lg transition text-sm ${
-                            activePage === subitem.page
-                              ? 'bg-red-100 text-red-600'
-                              : 'text-gray-600 hover:bg-gray-50'
-                          }`}
+                          className={`w-full flex items-center space-x-3 px-4 py-2 rounded-lg transition text-sm ${activePage === subitem.page
+                            ? 'bg-white text-red-600'
+                            : 'text-white hover:bg-white hover:text-red-600'
+                            }`}
                         >
                           <subitem.icon className="w-4 h-4 flex-shrink-0" />
                           <span className="font-medium">{subitem.label}</span>
@@ -140,10 +162,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
         </nav>
 
         {/* Logout */}
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-red-700">
           <button
             onClick={onLogout}
-            className="w-full flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition"
+            className="w-full flex items-center space-x-3 px-4 py-3 text-white hover:bg-white hover:text-red-600 rounded-lg transition"
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />
             {sidebarOpen && <span className="font-medium">Keluar</span>}
