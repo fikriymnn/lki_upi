@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import {
   Package, Users, FileText, LogOut, Menu, X, BarChart3, Box, Beaker, History, ChevronDown, ChevronRight, FlaskRound, Microscope, ShoppingCart, Archive, MapPin, UserPlus,
   ClipboardList, TestTube, ShoppingBag, Calendar, Layers, Database,
-  Home, Settings, Bell, HelpCircle, Download, Upload, Printer
+  Home, Settings, Bell, HelpCircle, Download, Upload, Printer,
+  Wrench
 } from 'lucide-react';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLogout }) => {
@@ -30,6 +31,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
       submenu: [
         { icon: FlaskRound, label: 'Bahan Kimia', page: 'bahan' },
         { icon: Microscope, label: 'Alat Lab', page: 'alat' },
+        { icon: Wrench, label: 'Alat Lab Rusak', page: 'alat-rusak' },
       ]
     },
     {

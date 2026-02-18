@@ -11,6 +11,7 @@ import SupplierPage from './Supplier';
 import LaporanPage from './Laporan';
 import PenggunaPage from './Pengguna';
 import Penyimpanan from './Penyimpanan';
+import MasterPeminjamPage from './Peminjam';
 
 const DashboardPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -64,6 +65,7 @@ const DashboardPage = () => {
           {activePage === 'laporan' && <LaporanPage />}
           {activePage === 'master-lokasi' && <Penyimpanan />}
           {activePage === 'pengguna' && <PenggunaPage />}
+          {activePage === 'master-peminjam' && <MasterPeminjamPage />}
           {/* {activePage === 'pengaturan' && <ComingSoonPage title="Pengaturan" />} */}
         </main>
       </div>
