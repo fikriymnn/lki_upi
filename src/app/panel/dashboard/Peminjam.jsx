@@ -262,7 +262,7 @@ const MasterPeminjamPage = () => {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div className="bg-white rounded-xl p-6 border border-gray-200">
             <div className="flex items-center justify-between">
               <div>
@@ -300,7 +300,7 @@ const MasterPeminjamPage = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Actions Bar */}
         <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">

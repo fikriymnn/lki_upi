@@ -21,7 +21,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
       submenu: [
         { icon: FlaskRound, label: 'Bahan Kimia', page: 'peminjaman-bahan' },
         { icon: Microscope, label: 'Alat Lab', page: 'peminjaman-alat' },
-        { icon: Users, label: 'Praktikum', page: 'praktikum' },
+        // { icon: Users, label: 'Praktikum', page: 'praktikum' },
       ]
     },
     {
@@ -66,7 +66,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
 
   const isActiveDropdown = (label) => {
     if (label === 'Inventaris') {
-      return activePage === 'alat' || activePage === 'bahan';
+      return activePage === 'alat' || activePage === 'bahan' || activePage === 'alat-rusak';
     } else if (label === 'Master') {
       return activePage === 'master-supplier' || activePage === 'master-peminjam' || activePage === 'master-lokasi';
     } else if (label === 'Peminjaman') {
