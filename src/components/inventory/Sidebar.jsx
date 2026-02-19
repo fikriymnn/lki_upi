@@ -21,6 +21,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
       submenu: [
         { icon: FlaskRound, label: 'Bahan Kimia', page: 'peminjaman-bahan' },
         { icon: Microscope, label: 'Alat Lab', page: 'peminjaman-alat' },
+        { icon: Wrench, label: 'Alat Lab Rusak', page: 'alat-rusak' },
         // { icon: Users, label: 'Praktikum', page: 'praktikum' },
       ]
     },
@@ -31,7 +32,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
       submenu: [
         { icon: FlaskRound, label: 'Bahan Kimia', page: 'bahan' },
         { icon: Microscope, label: 'Alat Lab', page: 'alat' },
-        { icon: Wrench, label: 'Alat Lab Rusak', page: 'alat-rusak' },
       ]
     },
     {
@@ -66,11 +66,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
 
   const isActiveDropdown = (label) => {
     if (label === 'Inventaris') {
-      return activePage === 'alat' || activePage === 'bahan' || activePage === 'alat-rusak';
+      return activePage === 'alat' || activePage === 'bahan' ;
     } else if (label === 'Master') {
       return activePage === 'master-supplier' || activePage === 'master-peminjam' || activePage === 'master-lokasi';
     } else if (label === 'Peminjaman') {
-      return activePage === 'peminjaman-bahan' || activePage === 'peminjaman-alat' || activePage === 'praktikum';
+      return activePage === 'peminjaman-bahan' || activePage === 'peminjaman-alat' || activePage === 'praktikum'|| activePage === 'alat-rusak';
     } else if (label === 'Riwayat') {
       return activePage === 'riwayat-bahan' || activePage === 'riwayat-alat' || activePage === 'riwayat-pembelian-bahan' || activePage === 'riwayat-pembelian-alat' || activePage === 'riwayat-praktikum';
     }

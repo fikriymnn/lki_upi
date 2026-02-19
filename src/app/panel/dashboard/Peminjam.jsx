@@ -261,47 +261,6 @@ const MasterPeminjamPage = () => {
           <p className="text-gray-600">Kelola data peminjam alat dan bahan kimia laboratorium</p>
         </div>
 
-        {/* Stats */}
-        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm mb-1">Total Peminjam</p>
-                <p className="text-2xl font-bold text-gray-900">{masterPeminjam.length}</p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <User className="w-6 h-6 text-purple-600" />
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm mb-1">Sedang Meminjam</p>
-                <p className="text-2xl font-bold text-blue-600">
-                  {masterPeminjam.filter(p => getAktifCount(p.id) > 0).length}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Clock className="w-6 h-6 text-blue-600" />
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm mb-1">Pernah Terlambat</p>
-                <p className="text-2xl font-bold text-red-600">
-                  {masterPeminjam.filter(p => getTerlambatCount(p.id) > 0).length}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                <AlertCircle className="w-6 h-6 text-red-600" />
-              </div>
-            </div>
-          </div>
-        </div> */}
-
         {/* Actions Bar */}
         <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
