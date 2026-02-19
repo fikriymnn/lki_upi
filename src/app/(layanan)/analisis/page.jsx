@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import AnalisisComponent from "/src/components/AnalisisComponent";
+import AnalisisComponent from "@/components/AnalisisComponent";
 import ButtonOrder from "@/components/ButtonOrder";
 export const metadata = {
   title: "Layanan Analisis",
