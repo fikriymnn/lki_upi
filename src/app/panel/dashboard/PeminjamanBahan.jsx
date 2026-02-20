@@ -1287,7 +1287,7 @@ const PeminjamanBahanPage = () => {
                             onClick={() => setShowNewUserForm(false)}
                             className="text-sm text-red-600 hover:text-red-700 font-medium"
                           >
-                            ← Kembali ke Master
+                            &larr; Kembali ke Master
                           </button>
                         </div>
 
@@ -1824,17 +1824,6 @@ const PeminjamanBahanPage = () => {
                     <p className="text-xs text-gray-500 mt-1">
                       Catatan ini akan tersimpan di riwayat peminjaman
                     </p>
-                  </div>
-
-                  {/* Warning Box */}
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                    <div className="flex items-start gap-2">
-                      <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                      <p className="text-sm text-yellow-800">
-                        <strong>Perhatian:</strong> Setelah konfirmasi, peminjaman ini akan berstatus "Dikembalikan"
-                        dan dipindahkan ke tab Riwayat Peminjaman. Pastikan data pengembalian sudah benar.
-                      </p>
-                    </div>
                   </div>
                 </div>
 
