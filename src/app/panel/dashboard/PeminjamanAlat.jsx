@@ -49,7 +49,8 @@ const PeminjamanAlatPage = () => {
 
     const [returnFormData, setReturnFormData] = useState({
         returnItems: [],
-        catatanPengembalian: ''
+        catatanPengembalian: '',
+        damagedItems: [] // Akan diisi saat submit
     });
 
     const STATUS_OPTIONS = [
@@ -154,8 +155,16 @@ const PeminjamanAlatPage = () => {
         },
     ]);
 
+
     // NEW: State untuk tracking alat rusak
     const [alatRusakList, setAlatRusakList] = useState([]);
+
+    // Fungsi untuk melihat daftar alat rusak
+    // const handleViewDamagedItems = () => {
+    //     // Bisa dibuat modal terpisah untuk menampilkan daftar alat rusak
+    //     console.log('Daftar Alat Rusak:', alatRusakList);
+    //     alert(`Total alat rusak: ${alatRusakList.length} item`);
+    // };
 
     const [peminjamanList, setPeminjamanList] = useState([
         {
@@ -476,7 +485,7 @@ const PeminjamanAlatPage = () => {
     const openReturnModal = (peminjaman) => {
         setSelectedPeminjaman(peminjaman);
 
-        // NEW: Initialize dengan field untuk alat rusak
+        // Initialize dengan field untuk alat rusak
         const returnItems = peminjaman.items.map(item => ({
             alatId: item.alatId,
             namaAlat: item.namaAlat,
@@ -484,13 +493,15 @@ const PeminjamanAlatPage = () => {
             jumlahPinjam: item.jumlahPinjam,
             jumlahSudahKembali: item.jumlahKembali,
             jumlahDikembalikan: item.jumlahPinjam - item.jumlahKembali,
-            jumlahRusak: 0, // NEW: Field untuk tracking alat rusak
-            keteranganRusak: '' // NEW: Keterangan kerusakan
+            jumlahRusak: 0,
+            keteranganRusak: '',
+            showDamagedForm: false // Untuk toggle form rusak
         }));
 
         setReturnFormData({
             returnItems,
-            catatanPengembalian: ''
+            catatanPengembalian: '',
+            damagedItems: []
         });
         setShowReturnModal(true);
     };
@@ -504,30 +515,92 @@ const PeminjamanAlatPage = () => {
     };
 
     // NEW: Handle perubahan jumlah rusak
+    // Handle perubahan jumlah rusak/hilang (digabung)
     const handleDamagedQuantityChange = (index, value) => {
         const updatedReturnItems = [...returnFormData.returnItems];
-        const maxDamaged = updatedReturnItems[index].jumlahPinjam - updatedReturnItems[index].jumlahSudahKembali;
-        const newValue = Math.max(0, Math.min(parseInt(value) || 0, maxDamaged));
-        updatedReturnItems[index].jumlahRusak = newValue;
+        const item = updatedReturnItems[index];
 
-        // Auto adjust jumlah dikembalikan (tidak termasuk yang rusak)
-        const availableReturn = maxDamaged - newValue;
-        updatedReturnItems[index].jumlahDikembalikan = Math.min(updatedReturnItems[index].jumlahDikembalikan, availableReturn);
+        // Hitung maksimum yang bisa dikembalikan (sisa yang belum dikembalikan)
+        const maxReturnable = item.jumlahPinjam - item.jumlahSudahKembali;
 
-        setReturnFormData(prev => ({ ...prev, returnItems: updatedReturnItems }));
+        // Validasi input
+        let newValue = parseInt(value) || 0;
+        newValue = Math.max(0, Math.min(newValue, maxReturnable));
+
+        // Update jumlah rusak/hilang
+        item.jumlahRusak = newValue;
+
+        // Auto adjust jumlah dikembalikan (tidak termasuk yang rusak/hilang)
+        const maxDikembalikan = maxReturnable - newValue;
+        if (item.jumlahDikembalikan > maxDikembalikan) {
+            item.jumlahDikembalikan = maxDikembalikan;
+        }
+
+        setReturnFormData(prev => ({
+            ...prev,
+            returnItems: updatedReturnItems
+        }));
     };
 
-    // NEW: Handle keterangan rusak
+    const handleLostQuantityChange = (index, value) => {
+        const updatedReturnItems = [...returnFormData.returnItems];
+        const item = updatedReturnItems[index];
+
+        const maxReturnable = item.jumlahPinjam - item.jumlahSudahKembali;
+        let newValue = parseInt(value) || 0;
+        newValue = Math.max(0, Math.min(newValue, maxReturnable));
+
+        item.jumlahHilang = newValue;
+
+        // Auto adjust jumlah dikembalikan
+        const maxDikembalikan = maxReturnable - item.jumlahRusak - newValue;
+        if (item.jumlahDikembalikan > maxDikembalikan) {
+            item.jumlahDikembalikan = maxDikembalikan;
+        }
+
+        setReturnFormData(prev => ({
+            ...prev,
+            returnItems: updatedReturnItems
+        }));
+    };
+
+
+
+    // Handle keterangan rusak
     const handleDamagedNoteChange = (index, value) => {
         const updatedReturnItems = [...returnFormData.returnItems];
         updatedReturnItems[index].keteranganRusak = value;
-        setReturnFormData(prev => ({ ...prev, returnItems: updatedReturnItems }));
+        setReturnFormData(prev => ({
+            ...prev,
+            returnItems: updatedReturnItems
+        }));
+    };
+
+    // Handle keterangan hilang
+    const handleLostNoteChange = (index, value) => {
+        const updatedReturnItems = [...returnFormData.returnItems];
+        updatedReturnItems[index].keteranganHilang = value;
+        setReturnFormData(prev => ({
+            ...prev,
+            returnItems: updatedReturnItems
+        }));
     };
 
     const handleReturnSubmit = (e) => {
         e.preventDefault();
 
         const todayDate = new Date().toISOString().split('T')[0];
+
+        // Validasi: Pastikan total (dikembalikan + rusak) tidak melebihi sisa
+        for (const item of returnFormData.returnItems) {
+            const sisa = item.jumlahPinjam - item.jumlahSudahKembali;
+            const total = item.jumlahDikembalikan + (item.jumlahRusak || 0);
+
+            if (total > sisa) {
+                alert(`Total pengembalian untuk ${item.namaAlat} melebihi sisa pinjaman!`);
+                return;
+            }
+        }
 
         // Cek keterlambatan
         const late = isLate(selectedPeminjaman.tanggalKembali, todayDate);
@@ -542,35 +615,61 @@ const PeminjamanAlatPage = () => {
                 : lateNote;
         }
 
-        // NEW: Process damaged items - tambahkan ke daftar alat rusak
+        // ===== PERBAIKAN 1: Simpan data alat rusak ke array =====
         const newDamagedItems = [];
+        const damagedItemsForState = []; // Untuk state frontend sementara
+
         returnFormData.returnItems.forEach(item => {
+            const alat = alatList.find(a => a.id === item.alatId);
+
+            // Alat Rusak/Hilang
             if (item.jumlahRusak > 0) {
-                const alat = alatList.find(a => a.id === item.alatId);
-                newDamagedItems.push({
-                    id: alatRusakList.length + newDamagedItems.length + 1,
+                const damagedItem = {
+                    // Reference ke peminjaman
+                    id_peminjaman: selectedPeminjaman.id, // Ini akan diganti dengan ObjectId dari MongoDB nanti
+
+                    // Snapshot data alat lab
                     alatId: item.alatId,
-                    namaAlat: item.namaAlat,
+                    nama_alat: item.namaAlat,
                     spesifikasi: item.spesifikasi,
-                    jumlahRusak: item.jumlahRusak,
-                    keterangan: item.keteranganRusak || 'Tidak ada keterangan',
-                    tanggalRusak: todayDate,
-                    peminjamNama: selectedPeminjaman.userName,
-                    peminjamNIK: selectedPeminjaman.userNIK,
-                    peminjamanId: selectedPeminjaman.id,
-                    penyimpanan: alat?.penyimpanan || '-',
-                    status: 'Belum Diperbaiki'
+                    merk_brand: alat?.merkBrand || '',
+                    penyimpanan: alat?.penyimpanan || '',
+                    suppliers: alat?.suppliers || [],
+
+                    // Snapshot data peminjam
+                    user_name: selectedPeminjaman.userName,
+                    user_nik: selectedPeminjaman.userNIK,
+                    user_status: selectedPeminjaman.userStatus,
+                    user_institusi: selectedPeminjaman.userInstitusi,
+                    user_fakultas: selectedPeminjaman.userFakultas || '',
+                    user_jurusan: selectedPeminjaman.userJurusan || '',
+                    user_phone: selectedPeminjaman.userPhone,
+                    user_alamat: selectedPeminjaman.userAlamat || '',
+                    user_email: selectedPeminjaman.userEmail || '',
+
+                    // Informasi kerusakan
+                    jumlah_rusak: item.jumlahRusak,
+                    deskripsi_kerusakan: item.keteranganRusak || 'Tidak ada keterangan',
+
+                    // Status penggantian
+                    status_penggantian: 'Belum Diganti'
+                };
+
+                newDamagedItems.push(damagedItem);
+
+                // Untuk state frontend (tampilan sementara)
+                damagedItemsForState.push({
+                    ...damagedItem,
+                    id: Date.now() + Math.random(), // ID sementara
+                    tanggal_rusak: todayDate
                 });
 
                 // Append info alat rusak ke catatan
-                finalCatatan += ` ${item.namaAlat} (${item.spesifikasi}): ${item.jumlahRusak} unit rusak.`;
+                finalCatatan += ` ${item.namaAlat} (${item.spesifikasi}): ${item.jumlahRusak} unit rusak/hilang.`;
             }
         });
 
-        if (newDamagedItems.length > 0) {
-            setAlatRusakList(prev => [...prev, ...newDamagedItems]);
-        }
-
+        // ===== PERBAIKAN 2: Update peminjaman list - HANYA yang baik yang ditambah ke jumlahKembali =====
         const updatedPeminjamanList = peminjamanList.map(peminjaman => {
             if (peminjaman.id === selectedPeminjaman.id) {
                 const updatedItems = peminjaman.items.map(item => {
@@ -578,7 +677,15 @@ const PeminjamanAlatPage = () => {
                     if (returnItem) {
                         return {
                             ...item,
-                            jumlahKembali: item.jumlahKembali + returnItem.jumlahDikembalikan + returnItem.jumlahRusak
+                            // HANYA jumlahDikembalikan (baik) yang ditambah ke jumlahKembali
+                            // jumlahRusak TIDAK ditambah dulu, menunggu penggantian
+                            jumlahKembali: item.jumlahKembali + returnItem.jumlahDikembalikan,
+                            // Simpan informasi alat rusak untuk tracking (opsional)
+                            rusak: returnItem.jumlahRusak > 0 ? {
+                                jumlah: returnItem.jumlahRusak,
+                                keterangan: returnItem.keteranganRusak,
+                                status: 'Belum Diganti'
+                            } : null
                         };
                     }
                     return item;
@@ -587,42 +694,65 @@ const PeminjamanAlatPage = () => {
                 return {
                     ...peminjaman,
                     items: updatedItems,
-                    status: 'Dikembalikan',
+                    status: updatedItems.every(item => item.jumlahKembali === item.jumlahPinjam)
+                        ? 'Dikembalikan'
+                        : 'Sebagian Dikembalikan', // Status baru jika ada yang rusak
                     tanggalDikembalikan: todayDate,
-                    catatanPengembalian: finalCatatan
+                    catatanPengembalian: finalCatatan,
+                    // Simpan reference ke alat rusak (untuk tracking)
+                    alatRusakIds: newDamagedItems.map(item => item.id_peminjaman) // Akan diisi ID dari MongoDB
                 };
             }
             return peminjaman;
         });
 
-        // NEW: Update stok - hanya yang baik yang kembali ke stok
+        // ===== PERBAIKAN 3: Update stok alat - HANYA yang baik yang kembali ke stok =====
         const updatedAlatList = alatList.map(alat => {
             const returnItem = returnFormData.returnItems.find(ri => ri.alatId === alat.id);
             if (returnItem) {
                 return {
                     ...alat,
-                    jumlah: alat.jumlah + returnItem.jumlahDikembalikan // Tidak termasuk yang rusak
+                    jumlah: alat.jumlah + returnItem.jumlahDikembalikan // HANYA yang baik
+                    // jumlahRusak TIDAK menambah stok
                 };
             }
             return alat;
         });
 
+        // ===== PERBAIKAN 4: Kirim ke backend dan update state =====
+        if (newDamagedItems.length > 0) {
+            // Simulasi API call ke backend
+            console.log('Data alat rusak yang akan dikirim ke backend:', newDamagedItems);
+
+            // TODO: Ganti dengan API call sebenarnya
+            // const response = await fetch('/api/alat-lab-rusak', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(newDamagedItems)
+            // });
+            // const savedItems = await response.json();
+
+            // Update state alat rusak di frontend
+            setAlatRusakList(prev => [...prev, ...damagedItemsForState]);
+
+            const totalDamaged = newDamagedItems.reduce((sum, item) => sum + item.jumlah_rusak, 0);
+            alert(`${totalDamaged} unit alat rusak/hilang telah dicatat. Status peminjaman: "Sebagian Dikembalikan". 
+Alat rusak akan menunggu proses penggantian.`);
+        } else {
+            alert('Pengembalian berhasil! Semua alat dikembalikan dalam kondisi baik.');
+        }
+
         setAlatList(updatedAlatList);
         setPeminjamanList(updatedPeminjamanList);
         setShowReturnModal(false);
         setSelectedPeminjaman(null);
-
-        // NEW: Show notification jika ada alat rusak
-        if (newDamagedItems.length > 0) {
-            const totalDamaged = newDamagedItems.reduce((sum, item) => sum + item.jumlahRusak, 0);
-            alert(`Pengembalian berhasil! ${totalDamaged} unit alat rusak telah dicatat dan akan masuk ke daftar Alat Rusak.`);
-        }
     };
 
     const handleResetFilter = () => {
         setFilterDateFrom('');
         setFilterDateTo('');
     };
+
 
     const handleShowDetail = (peminjaman) => {
         setSelectedPeminjaman(peminjaman);
@@ -1043,6 +1173,29 @@ const PeminjamanAlatPage = () => {
                                             </table>
                                         </div>
                                     </div>
+
+                                    {selectedPeminjaman.items.some(item => item.rusak) && (
+                                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                            <h4 className="font-semibold text-yellow-800 mb-2 flex items-center gap-1">
+                                                <AlertTriangle className="w-4 h-4" />
+                                                Alat Rusak/Hilang (Menunggu Penggantian)
+                                            </h4>
+                                            <div className="space-y-2">
+                                                {selectedPeminjaman.items.filter(item => item.rusak).map((item, idx) => (
+                                                    <div key={idx} className="text-sm">
+                                                        <span className="font-medium">{item.namaAlat}</span> ({item.spesifikasi}):
+                                                        <span className="text-red-600 font-medium"> {item.rusak.jumlah} unit</span>
+                                                        {item.rusak.keterangan && (
+                                                            <p className="text-xs text-gray-600 mt-1">Keterangan: {item.rusak.keterangan}</p>
+                                                        )}
+                                                        <span className="inline-block ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">
+                                                            {item.rusak.status}
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
 
                                     {/* Detail Peminjaman */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1610,77 +1763,194 @@ const PeminjamanAlatPage = () => {
                     </div>
                 )}
 
-                {/* Return Modal */}
+                {/* Return Modal - Versi Ringkas */}
                 {showReturnModal && selectedPeminjaman && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                        <div className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl max-h-[90vh] overflow-y-auto">
-                            <div className="p-6 border-b border-gray-200">
-                                <h2 className="text-xl font-bold text-gray-900">Form Pengembalian Alat</h2>
-                                <p className="text-sm text-gray-600 mt-1">
-                                    Peminjam: {selectedPeminjaman.userName} ({selectedPeminjaman.userNIK})
-                                </p>
+                        <div className="bg-white rounded-2xl w-full max-w-5xl shadow-2xl max-h-[90vh] overflow-y-auto">
+                            <div className="p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h2 className="text-xl font-bold text-gray-900">Form Pengembalian Alat</h2>
+                                        <p className="text-sm text-gray-600 mt-1">
+                                            Peminjam: <span className="font-medium">{selectedPeminjaman.userName}</span> ({selectedPeminjaman.userNIK})
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            setShowReturnModal(false);
+                                            setSelectedPeminjaman(null);
+                                        }}
+                                        className="p-2 hover:bg-gray-100 rounded-lg transition"
+                                    >
+                                        <X className="w-5 h-5 text-gray-500" />
+                                    </button>
+                                </div>
                             </div>
-                            <form onSubmit={handleReturnSubmit} className="p-6">
-                                <div className="space-y-4">
 
-                                    {/* Table Pengembalian */}
-                                    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                                        <table className="w-full">
-                                            <thead className="bg-gray-50">
-                                                <tr>
-                                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Alat</th>
-                                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Dipinjam</th>
-                                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Sudah Kembali</th>
-                                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Sisa</th>
-                                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Dikembalikan Sekarang</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody className="divide-y divide-gray-200">
-                                                {returnFormData.returnItems.map((item, index) => {
-                                                    const sisa = item.jumlahPinjam - item.jumlahSudahKembali;
-                                                    return (
-                                                        <tr key={index}>
-                                                            <td className="px-4 py-3">
-                                                                <div className="text-sm font-medium text-gray-900">{item.namaAlat}</div>
-                                                                <div className="text-xs text-gray-500">{item.spesifikasi}</div>
-                                                            </td>
-                                                            <td className="px-4 py-3 text-sm text-gray-600">
-                                                                {item.jumlahPinjam} unit
-                                                            </td>
-                                                            <td className="px-4 py-3 text-sm text-gray-600">
-                                                                {item.jumlahSudahKembali} unit
-                                                            </td>
-                                                            <td className="px-4 py-3 text-sm font-medium text-orange-600">
-                                                                {sisa} unit
-                                                            </td>
-                                                            <td className="px-4 py-3">
-                                                                <div className="flex items-center gap-2">
+                            <form onSubmit={handleReturnSubmit} className="p-6">
+                                {/* Table Pengembalian - Desain Ringkas */}
+                                <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-4">
+                                    <table className="w-full">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 w-1/4">Alat</th>
+                                                <th className="px-3 py-2 text-center text-xs font-medium text-gray-600">Dipinjam</th>
+                                                <th className="px-3 py-2 text-center text-xs font-medium text-gray-600">Dikembalikan</th>
+                                                <th className="px-3 py-2 text-center text-xs font-medium text-gray-600">Sisa</th>
+                                                <th className="px-3 py-2 text-center text-xs font-medium text-gray-600">Dikembalikan Baik</th>
+                                                <th className="px-3 py-2 text-center text-xs font-medium text-gray-600 bg-red-50">Rusak/Hilang</th>
+                                                <th className="px-3 py-2 text-center text-xs font-medium text-gray-600">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-200">
+                                            {returnFormData.returnItems.map((item, index) => {
+                                                const sisa = item.jumlahPinjam - item.jumlahSudahKembali;
+
+                                                return (
+                                                    <tr key={index} className="hover:bg-gray-50">
+                                                        <td className="px-3 py-2">
+                                                            <div className="text-sm font-medium text-gray-900">{item.namaAlat}</div>
+                                                            <div className="text-xs text-gray-500">{item.spesifikasi}</div>
+                                                        </td>
+                                                        <td className="px-3 py-2 text-center text-sm text-gray-600">
+                                                            {item.jumlahPinjam}
+                                                        </td>
+                                                        <td className="px-3 py-2 text-center text-sm text-gray-600">
+                                                            {item.jumlahSudahKembali}
+                                                        </td>
+                                                        <td className="px-3 py-2 text-center text-sm font-medium text-orange-600">
+                                                            {sisa}
+                                                        </td>
+                                                        <td className="px-3 py-2">
+                                                            <div className="flex items-center justify-center gap-1">
+                                                                <input
+                                                                    type="number"
+                                                                    value={item.jumlahDikembalikan}
+                                                                    onChange={(e) => handleReturnQuantityChange(index, e.target.value)}
+                                                                    min="0"
+                                                                    max={sisa - item.jumlahRusak}
+                                                                    className="w-16 px-2 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-center"
+                                                                />
+                                                                <span className="text-xs text-gray-500">/ {sisa - item.jumlahRusak}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-3 py-2 bg-red-50/50">
+                                                            <div className="flex flex-col items-center gap-1">
+                                                                <div className="flex items-center gap-1">
                                                                     <input
                                                                         type="number"
-                                                                        value={item.jumlahDikembalikan}
-                                                                        onChange={(e) => handleReturnQuantityChange(index, e.target.value)}
+                                                                        value={item.jumlahRusak}
+                                                                        onChange={(e) => handleDamagedQuantityChange(index, e.target.value)}
                                                                         min="0"
-                                                                        max={sisa}
-                                                                        className="w-28 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+                                                                        max={sisa - item.jumlahDikembalikan}
+                                                                        className="w-16 px-2 py-1 text-sm border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-center bg-red-50"
                                                                     />
-                                                                    <span className="text-sm text-gray-600">unit</span>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            const updatedItems = [...returnFormData.returnItems];
+                                                                            updatedItems[index].showDamagedForm = !updatedItems[index].showDamagedForm;
+                                                                            setReturnFormData(prev => ({
+                                                                                ...prev,
+                                                                                returnItems: updatedItems
+                                                                            }));
+                                                                        }}
+                                                                        className="p-1 text-gray-500 hover:text-red-600 hover:bg-red-100 rounded transition"
+                                                                        title="Tambah keterangan"
+                                                                    >
+                                                                        <FileText className="w-4 h-4" />
+                                                                    </button>
                                                                 </div>
-                                                                <p className="text-xs text-gray-500 mt-1">
-                                                                    Min: 0, Max: {sisa}
-                                                                </p>
-                                                            </td>
-                                                        </tr>
-                                                    );
-                                                })}
-                                            </tbody>
-                                        </table>
+
+                                                                {/* Keterangan (muncul jika diperlukan) */}
+                                                                {item.showDamagedForm && item.jumlahRusak > 0 && (
+                                                                    <div className="mt-1 w-full">
+                                                                        <input
+                                                                            type="text"
+                                                                            value={item.keteranganRusak}
+                                                                            onChange={(e) => handleDamagedNoteChange(index, e.target.value)}
+                                                                            placeholder="Contoh: pecah, retak, hilang..."
+                                                                            className="w-full px-2 py-1 text-xs border border-red-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                                                        />
+                                                                    </div>
+                                                                )}
+
+                                                                {/* Indikator jika ada keterangan */}
+                                                                {item.keteranganRusak && !item.showDamagedForm && (
+                                                                    <div className="text-xs text-gray-500 truncate max-w-full" title={item.keteranganRusak}>
+                                                                        {item.keteranganRusak.length > 15
+                                                                            ? item.keteranganRusak.substring(0, 15) + '...'
+                                                                            : item.keteranganRusak}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-3 py-2">
+                                                            <div className="flex items-center justify-center gap-1">
+                                                                {/* Tombol Reset */}
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        const updatedItems = [...returnFormData.returnItems];
+                                                                        updatedItems[index] = {
+                                                                            ...item,
+                                                                            jumlahDikembalikan: 0,
+                                                                            jumlahRusak: 0,
+                                                                            keteranganRusak: '',
+                                                                            showDamagedForm: false
+                                                                        };
+                                                                        setReturnFormData(prev => ({
+                                                                            ...prev,
+                                                                            returnItems: updatedItems
+                                                                        }));
+                                                                    }}
+                                                                    className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition"
+                                                                    title="Reset"
+                                                                >
+                                                                    <X className="w-4 h-4" />
+                                                                </button>
+
+                                                                {/* Indikator status */}
+                                                                {item.jumlahRusak > 0 && (
+                                                                    <span className="inline-block w-2 h-2 bg-red-500 rounded-full"></span>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                {/* Ringkasan Total - Baris baru yang ringkas */}
+                                <div className="grid grid-cols-2 gap-4 mb-4">
+                                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                        <div className="flex items-center justify-between text-sm">
+                                            <span className="text-gray-600">Total alat dipinjam:</span>
+                                            <span className="font-semibold text-gray-900">
+                                                {returnFormData.returnItems.reduce((sum, item) => sum + item.jumlahPinjam, 0)} unit
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center justify-between text-sm mt-1">
+                                            <span className="text-gray-600">Total dikembalikan baik:</span>
+                                            <span className="font-semibold text-green-600">
+                                                {returnFormData.returnItems.reduce((sum, item) => sum + item.jumlahDikembalikan, 0)} unit
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center justify-between text-sm mt-1">
+                                            <span className="text-gray-600">Total rusak/hilang:</span>
+                                            <span className="font-semibold text-red-600">
+                                                {returnFormData.returnItems.reduce((sum, item) => sum + item.jumlahRusak, 0)} unit
+                                            </span>
+                                        </div>
                                     </div>
 
-                                    {/* Catatan Pengembalian */}
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
-                                            <FileText className="w-4 h-4" />
-                                            Catatan Pengembalian <span className="text-gray-400 text-xs">(Opsional)</span>
+                                    {/* Catatan Pengembalian - Ringkas */}
+                                    <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                                        <label className="block text-xs font-medium text-blue-700 mb-1 flex items-center gap-1">
+                                            <FileText className="w-3 h-3" />
+                                            Catatan Pengembalian
                                         </label>
                                         <textarea
                                             value={returnFormData.catatanPengembalian}
@@ -1688,30 +1958,36 @@ const PeminjamanAlatPage = () => {
                                                 ...prev,
                                                 catatanPengembalian: e.target.value
                                             }))}
-                                            rows="3"
-                                            placeholder="Contoh: Semua alat dikembalikan dalam kondisi baik, Ada kerusakan pada alat X, dll"
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm resize-none"
+                                            rows="2"
+                                            placeholder="Contoh: Semua alat baik, Ada kerusakan..."
+                                            className="w-full px-3 py-1.5 text-xs border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-white"
                                         />
-                                        <p className="text-xs text-gray-500 mt-1">
-                                            Catatan ini akan tersimpan di riwayat peminjaman
-                                        </p>
                                     </div>
                                 </div>
 
-                                <div className="flex gap-3 pt-6 border-t mt-6">
+                                {/* Informasi Peringatan - Ringkas */}
+                                <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                                    <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                                    <p className="text-xs text-red-700">
+                                        <span className="font-semibold">Catatan:</span> Alat rusak/hilang tidak menambah stok dan akan tercatat di database untuk penggantian.
+                                    </p>
+                                </div>
+
+                                {/* Tombol Aksi */}
+                                <div className="flex gap-3 pt-4 border-t border-gray-200">
                                     <button
                                         type="button"
                                         onClick={() => {
                                             setShowReturnModal(false);
                                             setSelectedPeminjaman(null);
                                         }}
-                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm font-medium"
                                     >
                                         Batal
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
+                                        className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-medium"
                                     >
                                         Konfirmasi Pengembalian
                                     </button>

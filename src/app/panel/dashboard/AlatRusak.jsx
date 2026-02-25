@@ -294,11 +294,12 @@ const AlatRusakPage = () => {
             <table className="w-full min-w-[800px]">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[200px]">Alat</th>
                   <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[180px]">Peminjam</th>
+                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[200px]">Alat</th>
+
                   <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan Kerusakan</th>
                   <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[150px]">Tanggal</th>
-                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[150px]">Status</th>
+
                   <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px]">Aksi</th>
                 </tr>
               </thead>
@@ -306,13 +307,19 @@ const AlatRusakPage = () => {
                 {filteredList.length > 0 ? (
                   filteredList.map((item) => (
                     <tr key={item.id} className="hover:bg-gray-50 transition align-center">
+                      {/* ── Kolom Peminjam ── */}
+                      <td className="px-5 py-4">
+                        <p className="text-sm font-medium text-gray-900 leading-tight">{item.peminjamNama}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">NIK/NIM: {item.peminjamNIK}</p>
+                        <span className={`inline-block mt-1 px-2 py-0.5 text-xs font-medium rounded ${getStatusBadgeColor(item.peminjamStatus)}`}>
+                          {item.peminjamStatus}
+                        </span>
+                        <p className="text-xs text-gray-400 mt-0.5 truncate max-w-[150px]">{item.peminjamInstitusi}</p>
+                      </td>
 
                       {/* ── Kolom Alat ── */}
                       <td className="px-5 py-4">
                         <div className="flex items-start gap-2">
-                          <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <Wrench className="w-4 h-4 text-red-600" />
-                          </div>
                           <div>
                             <p className="text-sm font-semibold text-gray-900 leading-tight">{item.namaAlat}</p>
                             <p className="text-xs text-gray-500 mt-0.5">
@@ -325,16 +332,6 @@ const AlatRusakPage = () => {
                             </span>
                           </div>
                         </div>
-                      </td>
-
-                      {/* ── Kolom Peminjam ── */}
-                      <td className="px-5 py-4">
-                        <p className="text-sm font-medium text-gray-900 leading-tight">{item.peminjamNama}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">NIK/NIM: {item.peminjamNIK}</p>
-                        <span className={`inline-block mt-1 px-2 py-0.5 text-xs font-medium rounded ${getStatusBadgeColor(item.peminjamStatus)}`}>
-                          {item.peminjamStatus}
-                        </span>
-                        <p className="text-xs text-gray-400 mt-0.5 truncate max-w-[150px]">{item.peminjamInstitusi}</p>
                       </td>
 
                       {/* ── Kolom Keterangan ── */}
@@ -358,21 +355,6 @@ const AlatRusakPage = () => {
                             <CheckCircle className="w-3 h-3 flex-shrink-0" />
                             <span>Ditangani: {new Date(item.tanggalDiperbaiki).toLocaleDateString('id-ID')}</span>
                           </div>
-                        )}
-                      </td>
-
-                      {/* ── Kolom Status ── */}
-                      <td className="px-5 py-4">
-                        {item.status === 'Belum Diperbaiki' ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700 whitespace-nowrap">
-                            <Clock className="w-3 h-3" />
-                            Belum Diperbaiki
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700 whitespace-nowrap">
-                            <CheckCircle className="w-3 h-3" />
-                            Sudah Ditangani
-                          </span>
                         )}
                       </td>
 

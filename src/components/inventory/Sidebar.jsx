@@ -3,7 +3,10 @@ import {
   Package, Users, FileText, LogOut, Menu, X, BarChart3, Box, Beaker, History, ChevronDown, ChevronRight, FlaskRound, Microscope, ShoppingCart, Archive, MapPin, UserPlus,
   ClipboardList, TestTube, ShoppingBag, Calendar, Layers, Database,
   Home, Settings, Bell, HelpCircle, Download, Upload, Printer,
-  Wrench
+  Wrench,
+  Package2,
+  Move3dIcon,
+  PackageCheck
 } from 'lucide-react';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLogout }) => {
@@ -16,11 +19,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
     { icon: Home, label: 'Dashboard', page: 'dashboard', type: 'single' },
     {
       icon: ClipboardList,
-      label: 'Peminjaman',
+      label: 'Transaksi',
       type: 'dropdown',
       submenu: [
-        { icon: FlaskRound, label: 'Bahan Kimia', page: 'peminjaman-bahan' },
-        { icon: Microscope, label: 'Alat Lab', page: 'peminjaman-alat' },
+        { icon: FlaskRound, label: 'Penggunaan Bahan', page: 'peminjaman-bahan' },
+        { icon: Microscope, label: 'Peminjaman Alat', page: 'peminjaman-alat' },
         { icon: Wrench, label: 'Alat Lab Rusak', page: 'alat-rusak' },
         // { icon: Users, label: 'Praktikum', page: 'praktikum' },
       ]
@@ -32,6 +35,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
       submenu: [
         { icon: FlaskRound, label: 'Bahan Kimia', page: 'bahan' },
         { icon: Microscope, label: 'Alat Lab', page: 'alat' },
+        { icon: Package2, label: 'Pergerakan Stock', page: 'pergerakan-stock' },
+        { icon: PackageCheck, label: 'Stock Opname', page: 'stock-opname' },
       ]
     },
     {
@@ -54,7 +59,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
         setInventarisDropdownOpen(!inventarisDropdownOpen);
       } else if (item.label === 'Master') {
         setMasterDropdownOpen(!masterDropdownOpen);
-      } else if (item.label === 'Peminjaman') {
+      } else if (item.label === 'Transaksi') {
         setPeminjamanDropdownOpen(!peminjamanDropdownOpen);
       } else if (item.label === 'Riwayat') {
         setRiwayatDropdownOpen(!riwayatDropdownOpen);
@@ -69,7 +74,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
       return activePage === 'alat' || activePage === 'bahan' ;
     } else if (label === 'Master') {
       return activePage === 'master-supplier' || activePage === 'master-peminjam' || activePage === 'master-lokasi';
-    } else if (label === 'Peminjaman') {
+    } else if (label === 'Transaksi') {
       return activePage === 'peminjaman-bahan' || activePage === 'peminjaman-alat' || activePage === 'praktikum'|| activePage === 'alat-rusak';
     } else if (label === 'Riwayat') {
       return activePage === 'riwayat-bahan' || activePage === 'riwayat-alat' || activePage === 'riwayat-pembelian-bahan' || activePage === 'riwayat-pembelian-alat' || activePage === 'riwayat-praktikum';
@@ -80,7 +85,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
   const getDropdownState = (label) => {
     if (label === 'Inventaris') return inventarisDropdownOpen;
     if (label === 'Master') return masterDropdownOpen;
-    if (label === 'Peminjaman') return peminjamanDropdownOpen;
+    if (label === 'Transaksi') return peminjamanDropdownOpen;
     if (label === 'Riwayat') return riwayatDropdownOpen;
     return false;
   };
@@ -170,7 +175,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
             className="w-full flex items-center space-x-3 px-4 py-3 text-white hover:bg-white hover:text-red-600 rounded-lg transition"
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />
-            {sidebarOpen && <span className="font-medium">Keluar</span>}
+            {sidebarOpen && <span className="font-medium">Kembali</span>}
           </button>
         </div>
       </div>
