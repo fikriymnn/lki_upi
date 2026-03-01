@@ -13,6 +13,10 @@ import PenggunaPage from './Pengguna';
 import Penyimpanan from './Penyimpanan';
 import MasterPeminjamPage from './Peminjam';
 import AlatRusakPage from './AlatRusak';
+import StockInPage from './StockIn';
+import StockOutPage from './StockOut';
+import StockOpnamePage from './StockOpname';
+import StockMovementPage from './StockMovement';
 
 const DashboardPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -121,6 +125,10 @@ const DashboardPage = () => {
           {activePage === 'peminjaman-alat' && <PeminjamanAlatPage />}
           {activePage === 'riwayat' && <RiwayatPage />}
           {activePage === 'alat-rusak' && <AlatRusakPage />}
+          {activePage === 'stock-in' && <StockInPage />}
+          {activePage === 'stock-out' && <StockOutPage/>}
+           {activePage === 'stock-opname' && <StockOpnamePage/>}
+           {activePage === 'stock-movement' && <StockMovementPage/>}
           {activePage === 'master-supplier' && <SupplierPage />}
           {activePage === 'laporan' && <LaporanPage />}
           {activePage === 'master-lokasi' && <Penyimpanan />}

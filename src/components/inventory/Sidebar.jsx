@@ -6,7 +6,10 @@ import {
   Wrench,
   Package2,
   Move3dIcon,
-  PackageCheck
+  PackageCheck,
+  PackagePlusIcon,
+  PackageMinus,
+  PackagePlus
 } from 'lucide-react';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLogout }) => {
@@ -33,10 +36,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
       label: 'Inventaris',
       type: 'dropdown',
       submenu: [
-        { icon: FlaskRound, label: 'Bahan Kimia', page: 'bahan' },
-        { icon: Microscope, label: 'Alat Lab', page: 'alat' },
-        { icon: Package2, label: 'Pergerakan Stock', page: 'pergerakan-stock' },
+        { icon: PackagePlus, label: 'Stock Masuk', page: 'stock-in' },
+        { icon: PackageMinus, label: 'Stock Keluar', page: 'stock-out' },
         { icon: PackageCheck, label: 'Stock Opname', page: 'stock-opname' },
+        { icon: Package2, label: 'Stock Movement', page: 'stock-movement' },
       ]
     },
     {
@@ -44,6 +47,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
       label: 'Master',
       type: 'dropdown',
       submenu: [
+        { icon: FlaskRound, label: 'Bahan Kimia', page: 'bahan' },
+        { icon: Microscope, label: 'Alat Lab', page: 'alat' },
         { icon: Package, label: 'Supplier', page: 'master-supplier' },
         { icon: Users, label: 'Peminjam', page: 'master-peminjam' },
         { icon: Box, label: 'Lokasi Penyimpanan', page: 'master-lokasi' }
@@ -71,11 +76,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
 
   const isActiveDropdown = (label) => {
     if (label === 'Inventaris') {
-      return activePage === 'alat' || activePage === 'bahan' ;
+      return activePage === 'alat' || activePage === 'bahan' || activePage == 'stock-in';
     } else if (label === 'Master') {
       return activePage === 'master-supplier' || activePage === 'master-peminjam' || activePage === 'master-lokasi';
     } else if (label === 'Transaksi') {
-      return activePage === 'peminjaman-bahan' || activePage === 'peminjaman-alat' || activePage === 'praktikum'|| activePage === 'alat-rusak';
+      return activePage === 'peminjaman-bahan' || activePage === 'peminjaman-alat' || activePage === 'praktikum' || activePage === 'alat-rusak';
     } else if (label === 'Riwayat') {
       return activePage === 'riwayat-bahan' || activePage === 'riwayat-alat' || activePage === 'riwayat-pembelian-bahan' || activePage === 'riwayat-pembelian-alat' || activePage === 'riwayat-praktikum';
     }
@@ -98,7 +103,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
           {sidebarOpen && (
             <div className="items-center space-x-3">
 
-                <img src='/icon/upi-white.png' className='w-44 object-center'/>
+              <img src='/icon/upi-white.png' className='w-44 object-center' />
             </div>
           )}
           <button
