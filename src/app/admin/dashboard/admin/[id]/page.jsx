@@ -44,13 +44,17 @@ export default function DetailCardAdmin({ params }) {
     async function getData() {
       try {
 
-        await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`, {
+        const res = await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/content/${id}`, {
           title: title,
           sub_title: sub_title, deskripsi: deskripsi, contoh_hasil: contoh_hasil, foto: foto
         }, {
           withCredentials: true,
         })
-        alert('update success')
+        if (res) {
+          alert('update success')
+          window.location.reload()
+        }
+
       } catch (err) {
         alert(err.message)
       }
@@ -58,67 +62,62 @@ export default function DetailCardAdmin({ params }) {
     getData()
   }
 
-  const handleFoto = async (e) => {
-    const directory = 'files/'
-    const fileName = `${e.name + new Date().toISOString()}`
 
-    const storageRef = ref(storage, directory + fileName);
 
-    // Create file metadata including the content type
-    const metadata = {
-      contentType: e.type,
-    };
+  const handleFoto = async (file) => {
+    try {
+      const downloadURL = await axios.post(
+        `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=files`,
+        { file: file },
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
 
-    // Upload the file in the bucket storage
-    const snapshot = await uploadBytesResumable(storageRef, e, metadata);
-    //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
-
-    // Grab the public url
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    if (downloadURL) {
-
-      setFoto(downloadURL)
-
+      if (downloadURL.data.filename) {
+        setFoto(downloadURL.data.filename)
+      }
+    } catch (err) {
+      alert(err.message);
     }
+  };
 
-  }
+  const handleContohHasil = async (file) => {
+    try {
+      const downloadURL = await axios.post(
+        `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=files`,
+        { file: file },
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
 
-  const handleContohHasil = async (e) => {
-    const directory = 'files/'
-    const fileName = `${e.name + new Date().toISOString()}`
-
-    const storageRef = ref(storage, directory + fileName);
-
-    // Create file metadata including the content type
-    const metadata = {
-      contentType: e.type,
-    };
-
-    // Upload the file in the bucket storage
-    const snapshot = await uploadBytesResumable(storageRef, e, metadata);
-    //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
-
-    // Grab the public url
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    if (downloadURL) {
-
-      setContoh_hasil(downloadURL)
-
+      if (downloadURL.data.filename) {
+        setContoh_hasil(downloadURL.data.filename)
+      }
+    } catch (err) {
+      alert(err.message);
     }
-  }
+  };
 
 
 
   return (
     <>
       {/* <p className='text-center text-4xl font-bold text-gray-800 mt-7'>EDIT CONTENT</p> */}
-      <Navigasi text1={"admin"} text2={'edit content'}/>
+      <Navigasi text1={"admin"} text2={'edit content'} />
       <div className=" md:mx-20 mx-5 rounded-lg  mt-24 border-2 border-black p-7 h-full mb-24">
 
         <form onSubmit={handleConfirm} className="flex flex-col ">
           <div className="md:grid grid-cols-2 gap-5">
             <div className="flex flex-col gap-5">
-              <Image src={foto} width={400} height={400} />
+              <Image src={`${process.env.NEXT_PUBLIC_FILE_URL}/file/files/${foto}`} width={400} height={400} />
               <input type="file" name="foto" onChange={(e) => handleFoto(e.target.files[0])} />
             </div>
             <div className="mt-10 mb-5">
@@ -136,7 +135,7 @@ export default function DetailCardAdmin({ params }) {
             <ReactQuill className='h-48' theme="snow" value={deskripsi} onChange={setDeskripsi} />
           </div>
           <div className="my-10">
-            <Image src={contoh_hasil} width={400} height={400} className="mb-6 mt-6" />
+            <Image src={`${process.env.NEXT_PUBLIC_FILE_URL}/file/files/${contoh_hasil}`} width={400} height={400} className="mb-6 mt-6" />
             <input type="file" name="contoh_hasil" onChange={(e) => handleContohHasil(e.target.files[0])} />
           </div>
           <button className="border-2 w-60 mx-auto grad text-white rounded-md mt-5" type="submit">Submit Edit</button>

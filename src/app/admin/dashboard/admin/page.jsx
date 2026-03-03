@@ -5,9 +5,6 @@ import dynamic from "next/dynamic";
 import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
 import CardPengujiAdmin from '../../../../components/CardPengujiAdmin';
 import axios from 'axios';
-
-import { ref, deleteObject,getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage"
-import {storage} from '../../../../firebase/firebase'
 import Navigasi from '@/components/Navigasi'
 
 
