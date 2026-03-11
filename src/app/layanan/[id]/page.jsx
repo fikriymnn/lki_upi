@@ -70,7 +70,7 @@ function Page({ params }) {
                     <p className='text-[24px] font-bold text-center my-3'>Contoh Hasil Pengujian</p>
                     <div className=' bg-white px-3 py-5'>
                         <div className='mt-10 flex justify-center'>
-                            <Image alt='' src={`${process.env.NEXT_PUBLIC_FILE_URL}/file/files/${file2}`} width={0} height={0} sizes='100vw' className='w-10/12 h-full' />
+                            <Image alt='' src={`${process.env.NEXT_PUBLIC_FILE_URL}/file/files/${data?.contoh_hasil}`} width={0} height={0} sizes='100vw' className='w-10/12 h-full' />
 
                         </div>
                        
