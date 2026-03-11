@@ -413,9 +413,12 @@ const Analisis = () => {
             <ButtonOrder />
           </div>
 
-          <div className="md:mb-4 mb-4 mx-auto">
+          <div className="md:mb-4 mb-4 w-full flex justify-between items-center">
             <p className="md:text-3xl sm:text-2xl text-lg font-bold text-gray-800 mt-7 max-w-3xl md:px-8 px-4 text-red-700">
               Daftar Harga Pengujian
+            </p>
+            <p className="font-semibold md:px-8 px-4">
+              *semua harga yang tertulis tidak termasuk pajak
             </p>
           </div>
 

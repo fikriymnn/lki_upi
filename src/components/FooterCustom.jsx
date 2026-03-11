@@ -39,7 +39,7 @@ function FooterCustom() {
            No : 0851-6885-1789
           </div>
           <div className="flex gap-3 mb-6">
-            <a href="mailto:lkiupi2022@gmail.com"> Email : lkiupi2022@gmail.com</a>
+            <a href="mailto:lki@upi.edu"> Email : lki@upi.edu</a>
           </div>
           <div className="flex gap-3 mb-6">
            IG : @lki_upi

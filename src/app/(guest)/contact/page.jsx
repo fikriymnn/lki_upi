@@ -1,7 +1,6 @@
 "use client";
 import Iframe from "react-iframe";
 import Image from "next/image";
-import emailjs from "@emailjs/browser";
 import { useState } from "react";
 
 export default function Contact() {
@@ -21,15 +20,15 @@ export default function Contact() {
       to_name: "lki_upi",
       message: message,
     };
-    emailjs
-      .send(serviceId, templateId, templateParams, publicKey)
-      .then((response) => {
-        alert("email sent successfully", response);
-        setName(""), setEmail(""), setMessage("");
-      })
-      .catch((error) => {
-        alert("error email sent", error);
-      });
+    // emailjs
+    //   .send(serviceId, templateId, templateParams, publicKey)
+    //   .then((response) => {
+    //     alert("email sent successfully", response);
+    //     setName(""), setEmail(""), setMessage("");
+    //   })
+    //   .catch((error) => {
+    //     alert("error email sent", error);
+    //   });
   };
 
   return (

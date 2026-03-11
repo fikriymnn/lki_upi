@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react';
 import {
   Package, Users, FileText, LogOut, Menu, X, BarChart3, Box, Beaker, History, ChevronDown, ChevronRight, FlaskRound, Microscope, ShoppingCart, Archive, MapPin, UserPlus,
@@ -11,12 +12,14 @@ import {
   PackageMinus,
   PackagePlus
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLogout }) => {
   const [inventarisDropdownOpen, setInventarisDropdownOpen] = useState(false);
   const [masterDropdownOpen, setMasterDropdownOpen] = useState(false);
   const [peminjamanDropdownOpen, setPeminjamanDropdownOpen] = useState(false);
   const [riwayatDropdownOpen, setRiwayatDropdownOpen] = useState(false);
+  const router = useRouter()
 
   const menuItems = [
     { icon: Home, label: 'Dashboard', page: 'dashboard', type: 'single' },
@@ -94,6 +97,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
     if (label === 'Riwayat') return riwayatDropdownOpen;
     return false;
   };
+
+  const onBack = ()=>{
+    router.push("/panel/portal")
+  }
 
   return (
     <aside className={`bg-red-600 border-r border-red-700 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-20'}`}>
@@ -173,10 +180,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
           ))}
         </nav>
 
-        {/* Logout */}
+        {/* Kembali */}
         <div className="p-4 border-t border-red-700">
           <button
-            onClick={onLogout}
+            onClick={()=> router.push("/panel/portal")}
             className="w-full flex items-center space-x-3 px-4 py-3 text-white hover:bg-white hover:text-red-600 rounded-lg transition"
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />

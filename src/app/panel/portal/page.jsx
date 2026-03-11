@@ -64,7 +64,7 @@ export default function PortalPage() {
           <FlaskConical className="w-5 h-5 text-white/70" />
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-6 py-10 text-center">
+        <div className="relative z-10 max-w-4xl mx-auto px-6 py-4 text-center">
           {/* Logo */}
           <div className="flex justify-center mb-8">
             <div className="bg-white/15 backdrop-blur-sm border border-white/20 rounded-3xl p-5 shadow-2xl">

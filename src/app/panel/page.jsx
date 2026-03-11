@@ -1,19 +1,79 @@
 "use client";
 import { useState } from 'react';
 import { Eye, EyeOff, FlaskConical, Lock, User, ChevronRight, Beaker, Atom } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {
+  const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (username && password) {
-      setIsLoading(true);
-      setTimeout(() => setIsLoading(false), 2000);
+    
+    if (!username || !password) {
+      setErrorMessage('Username dan password harus diisi');
+      return;
+    }
+
+    setIsLoading(true);
+    setErrorMessage('');
+
+    try {
+      // Ganti URL dengan base URL API Anda
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      
+      const response = await fetch(`${API_URL}/api/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Penting untuk mengirim dan menerima cookies
+        body: JSON.stringify({
+          email: username,
+          password: password
+        })
+      });
+
+      const data = await response.json();
+      console.log('Login response:', data); // Untuk debugging
+
+      if (data.success) {
+        // Login berhasil
+        // Simpan data user di localStorage untuk keperluan client-side
+        if (data.data) {
+          localStorage.setItem('userData', JSON.stringify(data.data));
+          localStorage.setItem('token', data.token);
+          
+          // Cek role user
+          const userRole = data.data.role;
+          console.log('User role:', userRole); // Untuk debugging
+          
+          // Redirect berdasarkan role (hanya untuk role selain 'user')
+          if (userRole === 'admin' || userRole === 'operator' || userRole === 'pj') {
+            // Redirect ke halaman panel/portal untuk admin, operator, atau pj
+            router.push('/panel/portal');
+          } else {
+            // Untuk role 'user', tampilkan pesan akses ditolak
+            setErrorMessage('Akses hanya untuk Admin, Operator, dan Penanggung Jawab. Akun Anda adalah pengguna biasa.');
+            // Opsional: logout otomatis atau redirect ke halaman user
+            // router.push('/user/dashboard'); // Jika ada halaman khusus user
+          }
+        } else {
+          setErrorMessage('Data user tidak lengkap');
+        }
+      } else {
+        // Login gagal
+        setErrorMessage(data.message || 'Login gagal. Periksa kembali email dan password Anda.');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setErrorMessage('Terjadi kesalahan koneksi. Silakan coba lagi.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -53,23 +113,6 @@ const LoginPage = () => {
           <p className="text-red-100 text-lg mb-10 leading-relaxed">
             Platform terintegrasi untuk manajemen laboratorium, layanan analisis, dan sistem affiliasi UPI
           </p>
-
-          {/* Feature pills */}
-          {/* <div className="flex flex-col gap-3">
-            {[
-              { icon: '', label: 'Manajemen Inventory' },
-              { icon: '', label: 'Layanan Analisis Kimia' },
-              { icon: '', label: 'Affiliate' },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-left"
-              >
-                <span className="text-xl">{item.icon}</span>
-                <span className="text-white/90 text-sm font-medium">{item.label}</span>
-              </div>
-            ))}
-          </div> */}
         </div>
 
         {/* Bottom credit */}
@@ -91,10 +134,6 @@ const LoginPage = () => {
 
           {/* Header */}
           <div className="mb-8">
-            {/* <div className="inline-flex items-center gap-2 bg-red-50 text-red-600 text-xs font-semibold px-3 py-1.5 rounded-full mb-4 border border-red-100">
-              <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
-              Sistem Aktif
-            </div> */}
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Selamat Datang</h2>
             <p className="text-gray-500 text-sm">
               Masuk ke <span className="text-red-600 font-semibold">Dashboard Lab LKI UPI</span> untuk melanjutkan
@@ -103,23 +142,29 @@ const LoginPage = () => {
 
           {/* Form Card */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-            <form onSubmit={handleLogin} className="space-y-5">
+            {/* Error Message */}
+            {errorMessage && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
+                {errorMessage}
+              </div>
+            )}
 
+            <form onSubmit={handleLogin} className="space-y-5">
               {/* Username Field */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Username
+                  Email
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                     <User className="w-4 h-4 text-gray-400" />
                   </div>
                   <input
-                    type="text"
+                    type="email"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all outline-none bg-gray-50/50 placeholder:text-gray-400"
-                    placeholder="Masukkan username Anda"
+                    placeholder="Masukkan email Anda"
                     required
                   />
                 </div>
@@ -151,31 +196,6 @@ const LoginPage = () => {
                   </button>
                 </div>
               </div>
-
-              {/* Remember Me & Forgot Password */}
-              {/* <div className="flex items-center justify-between pt-1">
-                <label className="flex items-center gap-2 cursor-pointer group">
-                  <div className="relative">
-                    <input
-                      type="checkbox"
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                      className="sr-only"
-                    />
-                    <div className={`w-4 h-4 rounded border-2 transition-all flex items-center justify-center ${rememberMe ? 'bg-red-600 border-red-600' : 'border-gray-300 bg-white group-hover:border-red-400'}`}>
-                      {rememberMe && (
-                        <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
-                    </div>
-                  </div>
-                  <span className="text-sm text-gray-600 select-none">Ingat saya</span>
-                </label>
-                <a href="#" className="text-sm text-red-600 hover:text-red-700 font-semibold transition-colors hover:underline">
-                  Lupa password?
-                </a>
-              </div> */}
 
               {/* Submit Button */}
               <button
