@@ -294,13 +294,12 @@ const AlatRusakPage = () => {
             <table className="w-full min-w-[800px]">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[180px]">Peminjam</th>
-                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[200px]">Alat</th>
-
-                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan Kerusakan</th>
-                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[150px]">Tanggal</th>
-
-                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px]">Aksi</th>
+                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[180px]">Peminjam</th>
+                  <th className="px-5 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[150px]">Tanggal</th>
+                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[150px]">Alat</th>
+                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[150px]">Jumlah</th>
+                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan Kerusakan</th>
+                  <th className="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px]">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -308,75 +307,71 @@ const AlatRusakPage = () => {
                   filteredList.map((item) => (
                     <tr key={item.id} className="hover:bg-gray-50 transition align-center">
                       {/* ── Kolom Peminjam ── */}
-                      <td className="px-5 py-4">
-                        <p className="text-sm font-medium text-gray-900 leading-tight">{item.peminjamNama}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">NIK/NIM: {item.peminjamNIK}</p>
-                        <span className={`inline-block mt-1 px-2 py-0.5 text-xs font-medium rounded ${getStatusBadgeColor(item.peminjamStatus)}`}>
-                          {item.peminjamStatus}
-                        </span>
-                        <p className="text-xs text-gray-400 mt-0.5 truncate max-w-[150px]">{item.peminjamInstitusi}</p>
+                      <td className="px-2 py-4">
+                        <p className="text-sm text-gray-900 leading-tight">{item.peminjamNama}</p>
+                      </td>
+
+                      {/* ── Kolom Tanggal ── */}
+                      <td className="px-5 py-4 whitespace-nowrap">
+                        <div className='flex flex-col items-start'>
+                          <div className="flex items-center gap-1 text-xs text-gray-600">
+                            <Calendar className="w-3 h-3 flex-shrink-0" />
+                            <span>Rusak: {new Date(item.tanggalRusak).toLocaleDateString('id-ID')}</span>
+                          </div>
+                          {item.tanggalDiperbaiki && (
+                            <div className="flex items-center gap-1 text-xs text-green-600 mt-1">
+                              <CheckCircle className="w-3 h-3 flex-shrink-0" />
+                              <span>Ditangani: {new Date(item.tanggalDiperbaiki).toLocaleDateString('id-ID')}</span>
+                            </div>
+                          )}
+                        </div>
                       </td>
 
                       {/* ── Kolom Alat ── */}
-                      <td className="px-5 py-4">
-                        <div className="flex items-start gap-2">
-                          <div>
-                            <p className="text-sm font-semibold text-gray-900 leading-tight">{item.namaAlat}</p>
-                            <p className="text-xs text-gray-500 mt-0.5">
-                              {item.spesifikasi}{item.merkBrand ? ` · ${item.merkBrand}` : ''}
-                            </p>
-                            <p className="text-xs text-gray-400">{item.penyimpanan}</p>
-                            {/* Badge jumlah unit — di bawah nama, tidak menumpuk */}
-                            <span className="inline-block mt-1.5 px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded-full">
-                              {item.jumlahRusak} unit rusak
-                            </span>
-                          </div>
+                      <td className="px-2 py-4">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm text-gray-900 leading-tight">{item.namaAlat}</p>
+                        </div>
+                      </td>
+
+                      <td className="px-2 py-4">
+                        <div className="flex items-center gap-2">
+                          {/* Badge jumlah unit — di bawah nama, tidak menumpuk */}
+                          <span className="inline-block mt-1.5 px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded-full">
+                            {item.jumlahRusak} unit rusak
+                          </span>
                         </div>
                       </td>
 
                       {/* ── Kolom Keterangan ── */}
-                      <td className="px-5 py-4">
+                      <td className="px-2 py-4">
                         <p className="text-sm text-gray-700 line-clamp-2 leading-snug">{item.keterangan}</p>
-                        <p className="text-xs text-gray-400 mt-1 italic">Keperluan: {item.keperluan}</p>
                         {/* Jika sudah ditangani, tampilkan cuplikan catatan */}
                         {item.status === 'Sudah Diperbaiki' && item.catatanPerbaikan && (
                           <p className="text-xs text-green-600 mt-1.5 line-clamp-1 italic">✓ {item.catatanPerbaikan}</p>
                         )}
                       </td>
 
-                      {/* ── Kolom Tanggal ── */}
-                      <td className="px-5 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-1 text-xs text-gray-600">
-                          <Calendar className="w-3 h-3 flex-shrink-0" />
-                          <span>Rusak: {new Date(item.tanggalRusak).toLocaleDateString('id-ID')}</span>
-                        </div>
-                        {item.tanggalDiperbaiki && (
-                          <div className="flex items-center gap-1 text-xs text-green-600 mt-1">
-                            <CheckCircle className="w-3 h-3 flex-shrink-0" />
-                            <span>Ditangani: {new Date(item.tanggalDiperbaiki).toLocaleDateString('id-ID')}</span>
-                          </div>
-                        )}
-                      </td>
-
                       {/* ── Kolom Aksi ── */}
-                      <td className="px-5 py-4">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => handleShowDetail(item)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                            title="Lihat Detail"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                          {item.status === 'Belum Diperbaiki' && (
+                      <td className="px-2 py-4">
+                        <div className='flex flex-col items-center'>
+                          <div className="flex items-center gap-2">
                             <button
-                              onClick={() => handleOpenUpdate(item)}
-                              className="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-medium whitespace-nowrap"
+                              onClick={() => handleShowDetail(item)}
+                              className="p-2 bg-blue-600 text-white hover:bg-blue-500 rounded-lg transition"
+                              title="Lihat Detail"
                             >
-                              <RotateCcw className="w-3 h-3" />
-                              Tangani
+                              <Eye className="w-4 h-4" />
                             </button>
-                          )}
+                            {item.status === 'Belum Diperbaiki' && (
+                              <button
+                                onClick={() => handleOpenUpdate(item)}
+                                className="flex items-center p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-medium whitespace-nowrap"
+                              >
+                                <RotateCcw className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </td>
                     </tr>

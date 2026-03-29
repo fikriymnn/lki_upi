@@ -33,12 +33,12 @@ const DashboardPage = () => {
         onLogout={() => { }}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="bg-red-600 border-b border-red-700 px-6 py-4">
+        <header className="bg-[#b91c1c] border-b border-red-700 px-6 py-4">
           <div className="flex items-center justify-between">
+            <p className="text-white font-bold text-2xl">INVENTORY SYSTEM</p>
             <div className="flex-1 max-w-lg" />
             <div className="flex items-center space-x-4 ml-6">
-              <p className="text-white font-bold text-xl">INVENTORY SYSTEM</p>
-
+            
               {/* Dropdown Menu */}
               <div className="relative">
                 <div className="flex items-center space-x-3 pl-4 border-l border-red-400">

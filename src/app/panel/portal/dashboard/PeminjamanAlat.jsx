@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import { Plus, Search, User, Calendar, Clock, AlertCircle, X, Trash2, Edit2, Package, Filter, ChevronDown, Building2, Mail, Phone, Eye, FileText, Wrench, AlertTriangle } from 'lucide-react';
+import { Plus, Search, User, Calendar, Clock, AlertCircle, X, Trash2, Edit2, Package, Filter, ChevronDown, Building2, Mail, Phone, Eye, FileText, Wrench, AlertTriangle, Undo } from 'lucide-react';
 
 const PeminjamanAlatPage = () => {
     const [showBorrowModal, setShowBorrowModal] = useState(false);
@@ -952,54 +952,58 @@ Alat rusak akan menunggu proses penggantian.`);
                         <table className="w-full">
                             <thead className="bg-gray-50 border-b border-gray-200">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Peminjam</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keperluan</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Peminjam</th>
+                                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keperluan</th>
+                                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
                                 {filteredPeminjaman.length > 0 ? (
-                                    filteredPeminjaman.map((item) => {
+                                    filteredPeminjaman.map((item, i) => {
                                         const late = item.tanggalDikembalikan && isLate(item.tanggalKembali, item.tanggalDikembalikan);
                                         const lateDays = late ? calculateLateDays(item.tanggalKembali, item.tanggalDikembalikan) : 0;
 
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 transition">
-                                                <td className="px-6 py-4">
+                                                <td className="px-4 py-4">
+
+                                                    <span className={`px-2 py-0.5 text-xs text-center rounded`}>
+                                                        {i + 1}
+                                                    </span>
+
+                                                </td>
+                                                <td className="px-4 py-4">
                                                     <div>
                                                         <div className="text-sm font-medium text-gray-900">{item.userName}</div>
-                                                        <div className="text-xs text-gray-500">NIK/NIM: {item.userNIK}</div>
-                                                        <div className="flex items-center gap-1 mt-1">
-                                                            <span className={`px-2 py-0.5 text-xs font-medium rounded ${getStatusBadgeColor(item.userStatus)}`}>
-                                                                {item.userStatus}
-                                                            </span>
-                                                        </div>
                                                         <div className="text-xs text-gray-500 mt-1">{item.userInstitusi}</div>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                                    <div className="flex items-center gap-1 text-xs mb-1">
-                                                        <Calendar className="w-3 h-3" />
-                                                        <span>Pinjam: {new Date(item.tanggalPinjam).toLocaleDateString('id-ID')}</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-1 text-xs">
-                                                        <Clock className="w-3 h-3" />
-                                                        <span>Target: {new Date(item.tanggalKembali).toLocaleDateString('id-ID')}</span>
-                                                    </div>
-                                                    {item.tanggalDikembalikan && (
-                                                        <div className={`flex items-center gap-1 text-xs mt-1 ${late ? 'text-red-600' : 'text-green-600'}`}>
-                                                            <Clock className="w-3 h-3" />
-                                                            <span>Kembali: {new Date(item.tanggalDikembalikan).toLocaleDateString('id-ID')}</span>
+                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
+                                                    <div className='flex flex-col items-center'>
+                                                        <div className="flex items-center gap-1 text-xs mb-1">
+                                                            <Calendar className="w-3 h-3" />
+                                                            <span>Pinjam: {new Date(item.tanggalPinjam).toLocaleDateString('id-ID')}</span>
                                                         </div>
-                                                    )}
+                                                        <div className="flex items-center gap-1 text-xs">
+                                                            <Clock className="w-3 h-3" />
+                                                            <span>Target: {new Date(item.tanggalKembali).toLocaleDateString('id-ID')}</span>
+                                                        </div>
+                                                        {item.tanggalDikembalikan && (
+                                                            <div className={`flex items-center gap-1 text-xs mt-1 ${late ? 'text-red-600' : 'text-green-600'}`}>
+                                                                <Clock className="w-3 h-3" />
+                                                                <span>Kembali: {new Date(item.tanggalDikembalikan).toLocaleDateString('id-ID')}</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </td>
-                                                <td className="px-6 py-4">
+                                                <td className="px-4 py-4">
                                                     <div className="text-sm text-gray-600 max-w-xs truncate">{item.keperluan}</div>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex flex-col gap-1">
+                                                <td className="px-4 py-4">
+                                                    <div className="flex flex-col gap-1 items-center">
                                                         <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(item.status)} w-fit`}>
                                                             {item.status}
                                                         </span>
@@ -1010,23 +1014,25 @@ Alat rusak akan menunggu proses penggantian.`);
                                                         )}
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                                    <div className="flex gap-2">
-                                                        <button
-                                                            onClick={() => handleShowDetail(item)}
-                                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                                                            title="Detail"
-                                                        >
-                                                            <Eye className="w-4 h-4" />
-                                                        </button>
-                                                        {activeTab === 'active' && item.status !== 'Dikembalikan' && (
+                                                <td className="px-4 py-4 whitespace-nowrap text-sm">
+                                                    <div className='flex justify-center'>
+                                                        <div className="flex justify-center gap-2">
                                                             <button
-                                                                onClick={() => openReturnModal(item)}
-                                                                className="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs"
+                                                                onClick={() => handleShowDetail(item)}
+                                                                className="p-2 bg-blue-600 text-white hover:bg-blue-500 rounded-lg transition"
+                                                                title="Detail"
                                                             >
-                                                                Kembalikan
+                                                                <Eye className="w-4 h-4" />
                                                             </button>
-                                                        )}
+                                                            {activeTab === 'active' && item.status !== 'Dikembalikan' && (
+                                                                <button
+                                                                    onClick={() => openReturnModal(item)}
+                                                                    className="px-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs"
+                                                                >
+                                                                    <Undo className="w-4 h-4" />
+                                                                </button>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>

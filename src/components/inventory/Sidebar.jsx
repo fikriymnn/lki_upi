@@ -28,8 +28,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
       label: 'Transaksi',
       type: 'dropdown',
       submenu: [
-        { icon: FlaskRound, label: 'Penggunaan Bahan', page: 'peminjaman-bahan' },
-        { icon: Microscope, label: 'Peminjaman Alat', page: 'peminjaman-alat' },
+        { icon: FlaskRound, label: 'Bahan Kimia', page: 'peminjaman-bahan' },
+        { icon: Microscope, label: 'Alat Lab', page: 'peminjaman-alat' },
         { icon: Wrench, label: 'Alat Lab Rusak', page: 'alat-rusak' },
         // { icon: Users, label: 'Praktikum', page: 'praktikum' },
       ]
@@ -79,13 +79,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
 
   const isActiveDropdown = (label) => {
     if (label === 'Inventaris') {
-      return activePage === 'alat' || activePage === 'bahan' || activePage == 'stock-in';
+      return activePage == 'stock-in';
     } else if (label === 'Master') {
-      return activePage === 'master-supplier' || activePage === 'master-peminjam' || activePage === 'master-lokasi';
+      return activePage === 'alat' || activePage === 'bahan' || activePage === 'master-supplier' || activePage === 'master-peminjam' || activePage === 'master-lokasi';
     } else if (label === 'Transaksi') {
       return activePage === 'peminjaman-bahan' || activePage === 'peminjaman-alat' || activePage === 'praktikum' || activePage === 'alat-rusak';
-    } else if (label === 'Riwayat') {
-      return activePage === 'riwayat-bahan' || activePage === 'riwayat-alat' || activePage === 'riwayat-pembelian-bahan' || activePage === 'riwayat-pembelian-alat' || activePage === 'riwayat-praktikum';
     }
     return false;
   };
@@ -103,14 +101,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
   }
 
   return (
-    <aside className={`bg-red-600 border-r border-red-700 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-20'}`}>
+    <aside className={`bg-[#b91c1c] border-r border-red-700 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-20'}`}>
       <div className="flex flex-col h-full">
         {/* Logo */}
         <div className="flex items-center justify-between p-4 border-b border-red-700">
           {sidebarOpen && (
             <div className="items-center space-x-3">
 
-              <img src='/icon/upi-white.png' className='w-44 object-center' />
+              <img src='/icon/upi-white.png' className='w-40 object-center mx-auto' />
             </div>
           )}
           <button
