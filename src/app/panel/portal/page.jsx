@@ -154,7 +154,7 @@ export default function PortalPage() {
             />
           </div>
 
-          <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">
             Portal Dashboard <br />
             <span className="text-red-200">Lab Kimia Instrumen</span>
           </h1>

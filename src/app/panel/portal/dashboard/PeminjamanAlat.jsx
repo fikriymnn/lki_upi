@@ -954,7 +954,7 @@ Alat rusak akan menunggu proses penggantian.`);
                                 <tr>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Peminjam</th>
-                                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keperluan</th>
                                     <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                     <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
@@ -969,20 +969,17 @@ Alat rusak akan menunggu proses penggantian.`);
                                         return (
                                             <tr key={item.id} className="hover:bg-gray-50 transition">
                                                 <td className="px-4 py-4">
-
                                                     <span className={`px-2 py-0.5 text-xs text-center rounded`}>
                                                         {i + 1}
                                                     </span>
-
                                                 </td>
                                                 <td className="px-4 py-4">
                                                     <div>
-                                                        <div className="text-sm font-medium text-gray-900">{item.userName}</div>
-                                                        <div className="text-xs text-gray-500 mt-1">{item.userInstitusi}</div>
+                                                        <div className="text-sm text-gray-900">{item.userName}</div>
                                                     </div>
                                                 </td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
-                                                    <div className='flex flex-col items-center'>
+                                                    <div className='flex flex-col items-start'>
                                                         <div className="flex items-center gap-1 text-xs mb-1">
                                                             <Calendar className="w-3 h-3" />
                                                             <span>Pinjam: {new Date(item.tanggalPinjam).toLocaleDateString('id-ID')}</span>

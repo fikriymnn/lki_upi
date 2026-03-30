@@ -1,269 +1,226 @@
 "use client"
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios"
-import { Button } from 'flowbite-react';
-import { ref, deleteObject, getStorage, getDownloadURL, uploadBytesResumable, getMetadata } from "firebase/storage"
-import { storage } from '../firebase/firebase'
+import {
+  FlaskConical, Layers, Droplets, Clock,
+  User, Wrench, Target, BookOpen,
+  FileText, Image, Upload, Download, X, Check, TestTube
+} from "lucide-react";
 
-export default function AdminOrderCard({ riwayat_pengujian, sample_dikembalikan, uuid, jenis_pengujian, nama_sample, jumlah_sample, index, wujud_sample, pelarut, preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung, deskripsi, hasil_analisis, foto_sample, id, kode_pengujian, nama_pembimbing, lama_pengerjaan, no_invoice, status, invoice_id
+export default function AdminOrderCard({
+  riwayat_pengujian, sample_dikembalikan, uuid, jenis_pengujian,
+  nama_sample, jumlah_sample, index, wujud_sample, pelarut,
+  preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung,
+  deskripsi, hasil_analisis, foto_sample, id, kode_pengujian,
+  nama_pembimbing, lama_pengerjaan, no_invoice, status, invoice_id
 }) {
-    const [add, setAdd] = useState(false)
-    const [file, setFile] = useState('')
-    const [foto, setFoto] = useState('')
+  const [add, setAdd] = useState(false)
+  const [file, setFile] = useState('')
 
-    useEffect(() => {
-        console.log(status)
-    }, [])
-    const handleConfirm = async (e) => {
-        e.preventDefault()
-        try {
-            const downloadURL = await axios.post(
-                `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=hasilanalisis`,
-                { file: file },
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }
-            );
-            if (!file) {
-                alert('no file uploaded')
-                setAdd(a => !a)
-            } else {
-                const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}?invoice_id=${invoice_id}${status == "Sample Dikerjakan Operator" ? "&task=operator" : ""}`, { hasil_analisis: downloadURL.data.filename }, { withCredentials: true })
-                if (data.data == 'success') {
+  useEffect(() => {
+    console.log(status)
+  }, [])
 
-                    setAdd(a => !a)
-                    alert("upload successfully!")
-                    window.location.reload()
-                }
-            }
-        } catch (err) {
-            console.log(err)
-            alert(err.message)
+  const handleConfirm = async (e) => {
+    e.preventDefault()
+    try {
+      const downloadURL = await axios.post(
+        `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=hasilanalisis`,
+        { file: file },
+        { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } }
+      );
+      if (!file) {
+        alert('no file uploaded')
+        setAdd(a => !a)
+      } else {
+        const data = await axios.post(
+          `${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}?invoice_id=${invoice_id}${status == "Sample Dikerjakan Operator" ? "&task=operator" : ""}`,
+          { hasil_analisis: downloadURL.data.filename },
+          { withCredentials: true }
+        )
+        if (data.data == 'success') {
+          setAdd(a => !a)
+          alert("upload successfully!")
+          window.location.reload()
         }
+      }
+    } catch (err) {
+      console.log(err)
+      alert(err.message)
     }
+  }
 
-    /* const handleDownloadHA = async () => {
-        try {
-            try {
-                const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/download_hasil_analisis/${id}`, {
-                    responseType: 'arraybuffer', withCredentials: true // Important for receiving binary data
-                });
+  const Field = ({ label, value, icon }) => (
+    <div>
+      <p className="text-xs text-gray-400 flex items-center gap-1 mb-0.5">
+        {icon}
+        {label}
+      </p>
+      <p className="text-sm font-medium text-gray-800">{value || '—'}</p>
+    </div>
+  )
 
-                const blob = new Blob([response.data], { type: 'application/octet-stream' });
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
 
-                // Create a link element and click it to trigger the download
+      {/* Header */}
+      <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 border-b border-gray-200">
+        <div>
+          <p className="text-sm font-semibold text-gray-900">Sample {nama_sample || 'Sampel tanpa nama'}</p>
+          <p className="text-sm text-gray-400 mt-0.5">{kode_pengujian || '—'} · {jenis_pengujian || '—'}</p>
+        </div>
+        <span className={`ml-auto inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${sample_dikembalikan ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
+          {sample_dikembalikan ? 'Dikembalikan' : 'Tidak Dikembalikan'}
+        </span>
+      </div>
 
-                const link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = hasil_analisis;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } catch (error) {
-                console.error('Error downloading file:', error);
-            }
-        } catch (err) {
-            alert(err.message)
-        }
-    }
+      <div className="px-5 py-5 flex flex-col gap-6">
 
-    const handleDownloadJP = async () => {
-        try {
-            try {
-                const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/download_jurnal_pendukung/${uuid}`, {
-                    responseType: 'arraybuffer', withCredentials: true  // Important for receiving binary data
-                });
+        {/* Info Utama */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Field label="Jumlah Sample" value={jumlah_sample} icon={<Layers className="w-3 h-3" />} />
+          <Field label="Wujud Sample" value={wujud_sample} icon={<FlaskConical className="w-3 h-3" />} />
+          <Field label="Pelarut" value={pelarut} icon={<Droplets className="w-3 h-3" />} />
+          <Field label="Lama Pengerjaan" value={lama_pengerjaan} icon={<Clock className="w-3 h-3" />} />
+        </div>
 
-                const blob = new Blob([response.data], { type: 'application/octet-stream' });
+        {/* Info Tambahan */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gray-100">
+          <Field label="Nama Pembimbing" value={nama_pembimbing} icon={<User className="w-3 h-3" />} />
+          <Field label="Preparasi Khusus" value={preparasi_khusus ? 'Ya' : 'Tidak'} icon={<Wrench className="w-3 h-3" />} />
+          <Field label="Target Senyawa" value={target_senyawa} icon={<Target className="w-3 h-3" />} />
+          <Field label="Metode / Parameter" value={metode_parameter} icon={<TestTube className="w-3 h-3" />} />
+        </div>
 
-                // Create a link element and click it to trigger the download
+        {/* Deskripsi & Riwayat */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+          <div>
+            <p className="text-xs text-gray-400 mb-1">Deskripsi</p>
+            <div className="bg-gray-50 rounded-lg p-3 text-sm text-gray-700 border border-gray-100 min-h-[60px]">
+              {deskripsi || '—'}
+            </div>
+          </div>
+          <div>
+            <p className="text-xs text-gray-400 mb-1">Riwayat Pengujian</p>
+            <div className="bg-gray-50 rounded-lg p-3 text-sm text-gray-700 border border-gray-100 min-h-[60px]">
+              {riwayat_pengujian || '—'}
+            </div>
+          </div>
+        </div>
 
-                const link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = jurnal_pendukung;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } catch (error) {
-                console.error('Error downloading file:', error);
-            }
-        } catch (err) {
-            alert(err.message)
-        }
-    }
+        {/* Dokumen */}
+        <div className="pt-4 border-t border-gray-100">
+          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">Dokumen</p>
+          <div className="flex flex-col gap-3">
 
-
-    const handleDownloadFS = async () => {
-        try {
-
-
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/download_foto_sample/${uuid}`, {
-
-                responseType: 'arraybuffer', withCredentials: true  // Important for receiving binary data
-            });
-
-            const blob = new Blob([response.data], { type: 'application/octet-stream' });
-
-            // Create a link element and click it to trigger the download
-
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = foto_sample;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } catch (error) {
-            console.error('Error downloading file:', error);
-        }
-
-    } */
-
-    // const download_foto = async ()=>{
-
-    // }
-    // const download_jurnal_pendukung = async ()=>{
-
-    // }
-    // const download_hasil_analisis = async ()=>{
-
-    // }
-
-    return (
-        <>
-            <div className="border my-10">
-
+            {/* Foto Sample */}
+            <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Image className="w-4 h-4 text-amber-600" />
+                </div>
                 <div>
-
-                    <h1 className="grad rounded p-2 text-white">{index}</h1>
-                    <br />
+                  <p className="text-sm font-medium">Foto Sample</p>
+                  <p className="text-xs text-gray-400">PNG, JPG, JPEG</p>
                 </div>
-                <div className="px-5 pb-5 ">
+              </div>
+              {foto_sample
+                ? 
+                   <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/fotosample/${foto_sample}`}
+                    target="_blank"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium hover:bg-amber-100 transition"
+                  >
+                    <Download className="w-3.5 h-3.5" /> Unduh
+                  </a>
+                : <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg">Tidak ada</span>
+              }
+            </div>
 
-                    <div className="border-1 rounded grid md:grid-cols-2 md:gap-10 gap-5">
-
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">nama sample : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{nama_sample ? nama_sample : "-"}</h1>
-                        </div>
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">jumlah sample : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{jumlah_sample ? jumlah_sample : "-"}</h1>
-                        </div>
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">wujud sample : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{wujud_sample ? wujud_sample : "-"}</h1>
-                        </div>
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">pelarut : </h1>
-
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{pelarut ? pelarut : "-"}</h1>
-
-
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-5 mt-5">
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">sample_dikembalikan : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki-box ">{sample_dikembalikan ? sample_dikembalikan : "tidak"}</h1>
-                        </div>
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">jenis pengujian sample : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{jenis_pengujian ? jenis_pengujian : "-"}</h1>
-                        </div>
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">kode pengujian sample : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{kode_pengujian ? kode_pengujian : "-"}</h1>
-                        </div>
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">lama pengerjaan : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{lama_pengerjaan ? lama_pengerjaan : "-"}</h1>
-                        </div>
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">nama pembimbing : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{nama_pembimbing ? nama_pembimbing : "-"}</h1>
-                        </div>
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">preparasi khusus : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{preparasi_khusus ? "ya" : "tidak"}</h1>
-
-                        </div>
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">target senyawa : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{target_senyawa ? target_senyawa : "-"}</h1>
-                        </div>
-
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">metode parameter : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki">{metode_parameter ? metode_parameter : "-"}</h1>
-                        </div>
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">deskripsi : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki-box ">{deskripsi ? deskripsi : "-"}</h1>
-                        </div>
-                        <div>
-                            <h1 className="md:text-lg text-xs font-semibold text-grey-600">riwayat pengujian : </h1>
-                            <h1 className="md:text-lg sm:text-lg text-xs input-style-lki-box ">{riwayat_pengujian ? riwayat_pengujian : "-"}</h1>
-                        </div>
-
-
-                        <div className="mt-2">
-
-
-                            <div className="w-full">
-
-                                <div className="">
-                                    <h1 className="md:text-lg text-xs font-semibold text-grey-600">foto sample (*format file berupa png, jpg dan jpeg) : </h1>
-                                    <div className="md:text-lg sm:text-lg text-xs ">
-
-
-                                        {foto_sample ? <Button className="grad" color="failure" size={5} href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/fotosample/${foto_sample}`}
-                                            target="_blank"
-                                        >download</Button> : <p>-</p>}
-                                    </div>
-
-                                </div>
-                                <div className="grid md:grid-cols-2 gap-10 mt-5">
-
-                                    <div className="md:w-full sm:w-full w-8/12">
-                                        <h1 className="md:text-lg text-xs font-semibold text-grey-600">jurnal pendukung (*format file berupa docx atau pdf) : </h1>
-                                        <div className="md:text-lg sm:text-lg text-xs">
-
-                                            {jurnal_pendukung ? <Button className="grad" color="failure" size={5} href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/jurnalpendukung/${jurnal_pendukung}`}
-                                                target="_blank"
-                                            >download</Button> : <p>-</p>}
-                                        </div>
-
-                                    </div>
-
-                                    <div>
-                                        <div className="md:flex gap-1">
-                                            <h1 className="md:text-sm text-xs font-semibold text-grey-600 md:w-full sm:w-full w-8/12">Hasil analisis (*format file berupa pdf dan jika ingin mengirimkan lebih dari satu file, kirimkan dalam format zip/rar. Ukuran file dibawah 20mb) : </h1>
-                                            {add ? <div className="flex"><button onClick={handleConfirm} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Kirim</button><button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">Cancel</button></div> : <button onClick={() => setAdd(a => !a)} className="bg-blue-400 text-white px-2 py-1 rounded-lg">upload file hasil analisis</button>}
-                                        </div>
-                                        {add ? <input type="file" name="hasil_analisis" onChange={(e) => {
-                                            e.preventDefault()
-                                            setFile(e.target.files[0])
-
-
-                                        }} /> : (hasil_analisis ? <Button color="failure" size={5} href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${hasil_analisis}`}
-                                            target="_blank"
-                                        >download</Button> : <p className="md:text-lg sm:text-lg text-xs ">-</p>)}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            {/* Jurnal Pendukung */}
+            <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <BookOpen className="w-4 h-4 text-blue-600" />
                 </div>
+                <div>
+                  <p className="text-sm font-medium">Jurnal Pendukung</p>
+                  <p className="text-xs text-gray-400">DOCX, PDF</p>
+                </div>
+              </div>
+              {jurnal_pendukung
+                ? 
+                  <a  href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/jurnalpendukung/${jurnal_pendukung}`}
+                    target="_blank"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium hover:bg-blue-100 transition"
+                  >
+                    <Download className="w-3.5 h-3.5" /> Unduh
+                  </a>
+                : <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg">Tidak ada</span>
+              }
             </div>
-            <div>
 
-
-
+            {/* Hasil Analisis */}
+            <div className="flex flex-col gap-2 p-3 border border-gray-200 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <FileText className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Hasil Analisis</p>
+                    <p className="text-xs text-gray-400">PDF, ZIP, RAR — maks. 20MB</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {hasil_analisis && !add && (
+                    
+                    <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${hasil_analisis}`}
+                      target="_blank"
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-xs font-medium hover:bg-green-100 transition"
+                    >
+                      <Download className="w-3.5 h-3.5" /> Unduh
+                    </a>
+                  )}
+                  {!add
+                    ? <button
+                        onClick={() => setAdd(true)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 text-white rounded-lg text-xs font-medium hover:bg-red-700 transition"
+                      >
+                        <Upload className="w-3.5 h-3.5" />
+                        {hasil_analisis ? 'Ganti File' : 'Upload File'}
+                      </button>
+                    : <div className="flex items-center gap-2">
+                        <button
+                          onClick={handleConfirm}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white rounded-lg text-xs font-medium hover:bg-green-700 transition"
+                        >
+                          <Check className="w-3.5 h-3.5" /> Kirim
+                        </button>
+                        <button
+                          onClick={() => { setAdd(false); setFile('') }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded-lg text-xs hover:bg-gray-50 transition"
+                        >
+                          <X className="w-3.5 h-3.5" /> Batal
+                        </button>
+                      </div>
+                  }
+                </div>
+              </div>
+              {add && (
+                <div className="mt-1 pt-3 border-t border-gray-100">
+                  <input
+                    type="file"
+                    name="hasil_analisis"
+                    onChange={(e) => { e.preventDefault(); setFile(e.target.files[0]) }}
+                    className="w-full text-sm text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+                  />
+                </div>
+              )}
             </div>
-        </>
-    )
+
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }

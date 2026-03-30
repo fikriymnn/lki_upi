@@ -294,8 +294,9 @@ const AlatRusakPage = () => {
             <table className="w-full min-w-[800px]">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[80px]">No</th>
                   <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[180px]">Peminjam</th>
-                  <th className="px-5 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[150px]">Tanggal</th>
+                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[150px]">Tanggal</th>
                   <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[150px]">Alat</th>
                   <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[150px]">Jumlah</th>
                   <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan Kerusakan</th>
@@ -304,15 +305,20 @@ const AlatRusakPage = () => {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredList.length > 0 ? (
-                  filteredList.map((item) => (
+                  filteredList.map((item,i) => (
                     <tr key={item.id} className="hover:bg-gray-50 transition align-center">
+                      <td className="px-6 py-4">
+                        <p className="text-xs">
+                          {i + 1}
+                        </p>
+                      </td>
                       {/* ── Kolom Peminjam ── */}
                       <td className="px-2 py-4">
                         <p className="text-sm text-gray-900 leading-tight">{item.peminjamNama}</p>
                       </td>
 
                       {/* ── Kolom Tanggal ── */}
-                      <td className="px-5 py-4 whitespace-nowrap">
+                      <td className="px-2 py-4 whitespace-nowrap">
                         <div className='flex flex-col items-start'>
                           <div className="flex items-center gap-1 text-xs text-gray-600">
                             <Calendar className="w-3 h-3 flex-shrink-0" />

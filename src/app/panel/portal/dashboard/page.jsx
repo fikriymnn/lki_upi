@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import { Search, Bell, ChevronDown, Package, AlertCircle, TrendingUp, BarChart3, Settings, Box, Wrench, Clock, CheckCircle, ArrowUpRight, ArrowDownRight, Calendar } from 'lucide-react';
 import Sidebar from '@/components/inventory/Sidebar';
 import AlatPage from './Alat';
@@ -158,8 +158,12 @@ const MiniBarChart = ({ data, colorClass }) => {
   );
 };
 
+
+
+
+// ── Dashboard Content ─────────────────────────────────────────────────────
 // ── Sparkline SVG ─────────────────────────────────────────────────────────
-const Sparkline = ({ data, color = '#ef4444', width = 120, height = 36 }) => {
+const Sparkline = ({ data, color = '#ef4444', width = 100, height = 28 }) => {
   if (!data || data.length < 2) return null;
   const max = Math.max(...data, 1);
   const min = Math.min(...data);
@@ -190,117 +194,166 @@ const StockBar = ({ current, max, color }) => {
 
 // ── Dashboard Content ─────────────────────────────────────────────────────
 const DashboardContent = () => {
+  const [filterJenis, setFilterJenis] = useState('all');
+  const [filterPeriode, setFilterPeriode] = useState(6);
+  const chartRef = useRef(null);
+  const chartInstanceRef = useRef(null);
 
-  // ── Trend data (6 bulan terakhir) ──
-  const months = ['Sep', 'Okt', 'Nov', 'Des', 'Jan', 'Feb'];
+  const ALL_MONTHS = ['Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nov','Des','Jan','Feb'];
+  const DATA_ALAT =  [8,11,9,14,10,13,15,12,18,16,14,17];
+  const DATA_BAHAN = [5,7,6,10,8,11,9,13,15,12,10,14];
 
-  const trendAlatData = [
-    { label: 'Sep', value: 8 },
-    { label: 'Okt', value: 12 },
-    { label: 'Nov', value: 9 },
-    { label: 'Des', value: 15 },
-    { label: 'Jan', value: 11 },
-    { label: 'Feb', value: 14 },
-  ];
+  const alatSpark = DATA_ALAT.slice(-6);
+  const bahanSpark = DATA_BAHAN.slice(-6);
 
-  const trendBahanData = [
-    { label: 'Sep', value: 5 },
-    { label: 'Okt', value: 9 },
-    { label: 'Nov', value: 13 },
-    { label: 'Des', value: 10 },
-    { label: 'Jan', value: 16 },
-    { label: 'Feb', value: 12 },
-  ];
-
-  const terlambatData = [
-    { label: 'Sep', value: 1 },
-    { label: 'Okt', value: 3 },
-    { label: 'Nov', value: 2 },
-    { label: 'Des', value: 4 },
-    { label: 'Jan', value: 2 },
-    { label: 'Feb', value: 1 },
-  ];
-
-  // sparkline raw values
-  const alatSpark = trendAlatData.map(d => d.value);
-  const bahanSpark = trendBahanData.map(d => d.value);
-
-  // ── Stok kritis ──
   const stokAlatKritis = [
-    { name: 'Erlenmeyer', spesifikasi: '25 ml', jumlah: 1, maks: 10, penyimpanan: 'Lemari Kanan' },
-    { name: 'Buret Kolom', spesifikasi: 'sedang', jumlah: 2, maks: 8, penyimpanan: 'Rak 1' },
-    { name: 'Labu Ukur', spesifikasi: '100 ml', jumlah: 3, maks: 12, penyimpanan: 'Rak 2' },
+    { name: 'Erlenmeyer 25 ml', sub: 'Lemari Kanan', jumlah: 1, maks: 10 },
+    { name: 'Buret Kolom', sub: 'Rak 1 · sedang', jumlah: 2, maks: 8 },
+    { name: 'Labu Ukur 100 ml', sub: 'Rak 2', jumlah: 3, maks: 12 },
   ];
 
   const stokBahanKritis = [
-    { name: 'Terte-butylamine', rumus: 'C4H11N', jumlah: 900, maks: 5000, satuan: 'mL', penyimpanan: 'Rak 3' },
-    { name: 'Natrium Hidroksida', rumus: 'NaOH', jumlah: 800, maks: 5000, satuan: 'g', penyimpanan: 'Lemari Penyimpanan' },
-    { name: 'HCl', rumus: 'HCl', jumlah: 400, maks: 3000, satuan: 'mL', penyimpanan: 'Lemari Kuning' },
+    { name: 'Terte-butylamine', sub: 'C₄H₁₁N · Rak 3', jumlah: 900, maks: 5000, satuan: 'mL' },
+    { name: 'Natrium Hidroksida', sub: 'NaOH · Lemari Penyimpanan', jumlah: 800, maks: 5000, satuan: 'g' },
+    { name: 'HCl', sub: 'HCl · Lemari Kuning', jumlah: 400, maks: 3000, satuan: 'mL' },
   ];
 
-  // ── Peminjaman aktif terbaru ──
-  const peminjamanAktif = [
-    { nama: 'Ahmad Fauzi', jenis: 'Alat', item: 'Buret 10 ml', tgl: '2024-03-05', deadline: '2024-03-15', status: 'Dipinjam' },
-    { nama: 'Rizki Ramadhan', jenis: 'Bahan', item: 'Carbon disulfide', tgl: '2024-03-08', deadline: '2024-03-18', status: 'Dipinjam' },
-    { nama: 'Dr. Siti N.', jenis: 'Alat', item: 'Labu Jantung 50ml', tgl: '2024-03-10', deadline: '2024-03-20', status: 'Dipinjam' },
-    { nama: 'Budi Santoso', jenis: 'Bahan', item: 'Petroleum benzene', tgl: '2024-02-20', deadline: '2024-03-01', status: 'Terlambat' },
+  useEffect(() => {
+    if (!chartRef.current) return;
+    if (chartInstanceRef.current) chartInstanceRef.current.destroy();
+
+    const labels = ALL_MONTHS.slice(-filterPeriode);
+    const a = DATA_ALAT.slice(-filterPeriode);
+    const b = DATA_BAHAN.slice(-filterPeriode);
+    const datasets = [];
+
+    if (filterJenis !== 'bahan') datasets.push({
+      label: 'Alat Lab', data: a,
+      borderColor: '#E24B4A', backgroundColor: 'rgba(226,75,74,0.10)',
+      tension: 0.4, pointBackgroundColor: '#E24B4A', pointRadius: 4, fill: true,
+    });
+    if (filterJenis !== 'alat') datasets.push({
+      label: 'Bahan Kimia', data: b,
+      borderColor: '#7F77DD', backgroundColor: 'rgba(127,119,221,0.09)',
+      tension: 0.4, pointBackgroundColor: '#7F77DD', pointRadius: 4, fill: true,
+    });
+
+    chartInstanceRef.current = new window.Chart(chartRef.current, {
+      type: 'line',
+      data: { labels, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#888780' } },
+          y: { grid: { color: 'rgba(136,135,128,0.12)' }, ticks: { font: { size: 11 }, color: '#888780', stepSize: 3 }, min: 0 },
+        },
+      },
+    });
+
+    return () => { if (chartInstanceRef.current) chartInstanceRef.current.destroy(); };
+  }, [filterJenis, filterPeriode]);
+
+  const statCards = [
+    { label: 'Total Alat Lab', value: '156', sub: '12 kategori', iconBg: 'bg-red-50', iconColor: 'text-red-600', icon: Wrench },
+    { label: 'Alat Lab Rusak', value: '14', sub: '6 belum diganti', iconBg: 'bg-amber-50', iconColor: 'text-amber-600', icon: AlertCircle, badge: '9%', badgeColor: 'bg-amber-100 text-amber-700' },
+    { label: 'Total Bahan Kimia', value: '234', sub: '48 jenis senyawa', iconBg: 'bg-purple-50', iconColor: 'text-purple-600', icon: Package },
+    { label: 'Bahan Stok Minimal', value: '18', sub: 'perlu restock', iconBg: 'bg-blue-50', iconColor: 'text-blue-600', icon: TrendingUp, badge: '7.7%', badgeColor: 'bg-red-100 text-red-700' },
   ];
 
+  const datasets_legend = [];
+  if (filterJenis !== 'bahan') datasets_legend.push({ label: 'Alat Lab', color: '#E24B4A' });
+  if (filterJenis !== 'alat') datasets_legend.push({ label: 'Bahan Kimia', color: '#7F77DD' });
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="px-6 pb-6 space-y-6">
+      {/* Chart.js CDN */}
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" />
+
       <div className="max-w-7xl mx-auto">
-
-        {/* ── Header ── */}
-        <div className="mb-2">
+        <div className="mb-4">
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-500 text-sm mt-1">Selamat datang di Sistem Manajemen Inventory Lab Kimia UPI</p>
+          <p className="text-gray-500 text-sm mt-1">Sistem Manajemen Inventory Lab Kimia UPI</p>
         </div>
 
-        {/* ── Stat Cards ── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-          {[
-            { label: 'Total Alat Lab', value: '156', sub: '5 jenis berbeda', icon: Wrench, bg: 'bg-red-50', iconColor: 'text-red-600', iconBg: 'bg-red-100', spark: alatSpark, sparkColor: '#ef4444' },
-            { label: 'Total Bahan Kimia', value: '234', sub: 'item tercatat', icon: Package, bg: 'bg-purple-50', iconColor: 'text-purple-600', iconBg: 'bg-purple-100', spark: bahanSpark, sparkColor: '#9333ea' },
-            { label: 'Stok Menipis', value: '6', sub: '3 alat · 3 bahan', icon: AlertCircle, bg: 'bg-orange-50', iconColor: 'text-orange-600', iconBg: 'bg-orange-100' },
-            { label: 'Sedang Dipinjam', value: '4', sub: 'transaksi aktif', icon: Clock, bg: 'bg-blue-50', iconColor: 'text-blue-600', iconBg: 'bg-blue-100' },
-          ].map((card, i) => (
-            <div key={i} className={`bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition`}>
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs text-gray-500 font-medium">{card.label}</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">{card.value}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{card.sub}</p>
+        {/* Stat Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+          {statCards.map((card, i) => {
+            const Icon = card.icon;
+            return (
+              <div key={i} className="bg-white rounded-xl border border-gray-200 p-5">
+                <div className={`w-9 h-9 rounded-lg ${card.iconBg} flex items-center justify-center mb-3`}>
+                  <Icon className={`w-5 h-5 ${card.iconColor}`} />
                 </div>
+                <p className="text-xs text-gray-500 font-medium">{card.label}</p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">{card.value}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{card.sub}</p>
+                {card.badge && (
+                  <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full mt-2 ${card.badgeColor}`}>
+                    {card.badge} dari total
+                  </span>
+                )}
               </div>
-              {card.spark && (
-                <div className="mt-3">
-                  <Sparkline data={card.spark} color={card.sparkColor} width={120} height={28} />
-                </div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
 
+        {/* Chart Tren Peminjaman */}
+        <div className="bg-white rounded-xl border border-gray-200 p-5 mb-5">
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+            <p className="text-sm font-semibold text-gray-900">Tren Peminjaman</p>
+            <div className="flex items-center gap-2">
+              <select
+                value={filterJenis}
+                onChange={e => setFilterJenis(e.target.value)}
+                className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 text-gray-700 focus:outline-none"
+              >
+                <option value="all">Semua</option>
+                <option value="alat">Alat Lab</option>
+                <option value="bahan">Bahan Kimia</option>
+              </select>
+              <select
+                value={filterPeriode}
+                onChange={e => setFilterPeriode(parseInt(e.target.value))}
+                className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 text-gray-700 focus:outline-none"
+              >
+                <option value={3}>3 Bulan</option>
+                <option value={6}>6 Bulan</option>
+                <option value={12}>12 Bulan</option>
+              </select>
+            </div>
+          </div>
+          {/* Legend */}
+          <div className="flex gap-4 mb-3">
+            {datasets_legend.map((d, i) => (
+              <span key={i} className="flex items-center gap-1.5 text-xs text-gray-500">
+                <span className="w-2.5 h-2.5 rounded-sm" style={{ background: d.color }}></span>
+                {d.label}
+              </span>
+            ))}
+          </div>
+          <div className="relative w-full" style={{ height: '240px' }}>
+            <canvas ref={chartRef}></canvas>
+          </div>
+        </div>
 
-        {/* ── Stok Kritis + Peminjaman Aktif ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-
-          {/* Stok Kritis Alat */}
-          <div className="bg-white rounded-xl border border-gray-200">
-            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+        {/* Stok Kritis */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {/* Alat Kritis */}
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                   <Wrench className="w-4 h-4 text-red-600" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">Stok Alat Menipis</p>
+                  <p className="text-sm font-semibold text-gray-900">Stok Alat Kritis</p>
                   <p className="text-xs text-gray-400">Perlu segera diisi ulang</p>
                 </div>
               </div>
               <span className="text-xs font-medium px-2 py-0.5 bg-red-100 text-red-700 rounded-full">{stokAlatKritis.length} item</span>
             </div>
-            <div className="p-4 space-y-3">
+            <div className="space-y-3">
               {stokAlatKritis.map((item, i) => {
                 const pct = Math.round((item.jumlah / item.maks) * 100);
                 return (
@@ -308,12 +361,10 @@ const DashboardContent = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-gray-900">{item.name}</p>
-                        <p className="text-xs text-gray-400">{item.spesifikasi} · {item.penyimpanan}</p>
+                        <p className="text-xs text-gray-400">{item.sub}</p>
                       </div>
                       <div className="text-right">
-                        <span className={`text-sm font-bold ${pct <= 20 ? 'text-red-600' : 'text-orange-500'}`}>
-                          {item.jumlah}
-                        </span>
+                        <span className={`text-sm font-bold ${pct <= 20 ? 'text-red-600' : 'text-orange-500'}`}>{item.jumlah}</span>
                         <span className="text-xs text-gray-400">/{item.maks} unit</span>
                       </div>
                     </div>
@@ -324,34 +375,32 @@ const DashboardContent = () => {
             </div>
           </div>
 
-          {/* Stok Kritis Bahan */}
-          <div className="bg-white rounded-xl border border-gray-200">
-            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+          {/* Bahan Kritis */}
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                   <Package className="w-4 h-4 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">Stok Bahan Menipis</p>
+                  <p className="text-sm font-semibold text-gray-900">Bahan Kimia Di Bawah Minimal</p>
                   <p className="text-xs text-gray-400">Perlu segera diisi ulang</p>
                 </div>
               </div>
               <span className="text-xs font-medium px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full">{stokBahanKritis.length} item</span>
             </div>
-            <div className="p-4 space-y-3">
+            <div className="space-y-3">
               {stokBahanKritis.map((item, i) => {
-                const pctVal = Math.round((item.jumlah / item.maks) * 100);
+                const pct = Math.round((item.jumlah / item.maks) * 100);
                 return (
                   <div key={i}>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-gray-900">{item.name}</p>
-                        <p className="text-xs text-gray-400 font-mono">{item.rumus} · {item.penyimpanan}</p>
+                        <p className="text-xs text-gray-400 font-mono">{item.sub}</p>
                       </div>
                       <div className="text-right">
-                        <span className={`text-sm font-bold ${pctVal <= 20 ? 'text-red-600' : 'text-orange-500'}`}>
-                          {item.jumlah}
-                        </span>
+                        <span className={`text-sm font-bold ${pct <= 20 ? 'text-red-600' : 'text-orange-500'}`}>{item.jumlah}</span>
                         <span className="text-xs text-gray-400"> {item.satuan}</span>
                       </div>
                     </div>
@@ -361,46 +410,6 @@ const DashboardContent = () => {
               })}
             </div>
           </div>
-
-          {/* Peminjaman Aktif */}
-          <div className="bg-white rounded-xl border border-gray-200">
-            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Clock className="w-4 h-4 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-gray-900">Peminjaman Aktif</p>
-                  <p className="text-xs text-gray-400">Belum dikembalikan</p>
-                </div>
-              </div>
-              <span className="text-xs font-medium px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full">{peminjamanAktif.length} aktif</span>
-            </div>
-            <div className="divide-y divide-gray-100">
-              {peminjamanAktif.map((p, i) => (
-                <div key={i} className="px-5 py-3 hover:bg-gray-50 transition">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium text-gray-900 truncate">{p.nama}</p>
-                        <span className={`flex-shrink-0 text-xs px-1.5 py-0.5 rounded font-medium ${p.jenis === 'Alat' ? 'bg-red-100 text-red-600' : 'bg-purple-100 text-purple-600'}`}>
-                          {p.jenis}
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-500 mt-0.5 truncate">{p.item}</p>
-                      <div className="flex items-center gap-1 mt-1">
-                        <Calendar className="w-3 h-3 text-gray-400" />
-                        <span className="text-xs text-gray-400">Batas: {new Date(p.deadline).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</span>
-                      </div>
-                    </div>
-                    <span className={`flex-shrink-0 text-xs px-2 py-0.5 rounded-full font-medium mt-0.5 ${p.status === 'Terlambat' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`}>
-                      {p.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
 
       </div>
@@ -408,4 +417,4 @@ const DashboardContent = () => {
   );
 };
 
-export default DashboardPage;
+export default DashboardPage

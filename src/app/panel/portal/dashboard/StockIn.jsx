@@ -535,11 +535,10 @@ const StockInPage = () => {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">No</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Item</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Spesifikasi</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Masuk</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stok Sebelum → Sesudah</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Masuk</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Stok Sebelum → Sesudah</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                 </tr>
               </thead>
@@ -552,14 +551,13 @@ const StockInPage = () => {
                       <td className="px-6 py-4">
                         <p className="text-sm font-semibold text-gray-900">{itemName}</p>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{trx.item?.spesifikasi || '-'}</td>
                       <td className="px-6 py-4">
-                        <span className="px-3 py-1 text-sm font-semibold rounded-full bg-emerald-100 text-emerald-700">
+                        <span className="px-3 py-1 text-sm text-center mx-auto font-semibold rounded-full bg-emerald-100 text-emerald-700">
                           +{trx.quantity}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-sm">
+                        <div className="flex items-center justify-center gap-2 text-sm">
                           <span className="text-gray-500">{trx.previousStock}</span>
                           <span className="text-gray-400">→</span>
                           <span className="font-semibold text-emerald-600">{trx.newStock}</span>

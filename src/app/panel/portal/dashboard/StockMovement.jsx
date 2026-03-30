@@ -381,12 +381,9 @@ const StockMovementPage = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">No</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Item</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Spesifikasi</th>
                   <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stok Sebelum → Sesudah</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Stok Sebelum → Sesudah</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Oleh</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                 </tr>
               </thead>
@@ -405,7 +402,6 @@ const StockMovementPage = () => {
                       <td className="px-6 py-4">
                         <p className="text-sm font-semibold text-gray-900">{itemName}</p>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{mv.item?.spesifikasi || '-'}</td>
                       <td className="px-6 py-4 text-center">
                         <span className={`px-2.5 py-1 text-sm font-semibold rounded-full ${
                           isIN  ? 'bg-emerald-100 text-emerald-700' :
@@ -416,7 +412,7 @@ const StockMovementPage = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-sm">
+                        <div className="flex justify-center items-center gap-2 text-sm">
                           <span className="text-gray-500">{mv.previousStock}</span>
                           <span className="text-gray-400">→</span>
                           <span className={`font-semibold ${
@@ -438,12 +434,6 @@ const StockMovementPage = () => {
                             hour: '2-digit', minute: '2-digit'
                           })}
                         </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
-                        {mv.createdBy?.name || '-'}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600 max-w-[140px]">
-                        <p className="truncate">{mv.note || '-'}</p>
                       </td>
                       <td className="px-6 py-4">
                         <button
