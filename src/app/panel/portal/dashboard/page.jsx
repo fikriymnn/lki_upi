@@ -268,7 +268,7 @@ const DashboardContent = () => {
   return (
     <div className="px-6 pb-6 space-y-6">
       {/* Chart.js CDN */}
-      {/* <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" /> */}
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" />
 
       <div className="max-w-7xl mx-auto">
         <div className="mb-4">
