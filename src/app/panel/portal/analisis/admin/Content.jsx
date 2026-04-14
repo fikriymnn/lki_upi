@@ -411,7 +411,7 @@ export default function Adminn() {
             </div>
             <h3 className="text-base font-bold text-gray-900 mb-2">Hapus Konten Ini?</h3>
             <p className="text-sm text-gray-500">
-              <strong>"{deleteTarget.title}"</strong> akan dihapus secara permanen dan tidak dapat dikembalikan.
+              <strong>&quot;{deleteTarget.title}&quot;</strong> akan dihapus secara permanen dan tidak dapat dikembalikan.
             </p>
           </div>
           <div className="px-6 pb-6 flex gap-3">
