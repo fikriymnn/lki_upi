@@ -5,23 +5,23 @@
 
 
 export default function Layout({ children }) {
-    const router = useRouter()
-    useEffect(() => {
-        async function user() {
-            try {
-                const token = localStorage.getItem('access_token')
-                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user/${token}`, {
-                    withCredentials: true
-                })
-                if (data.data.success !== "pj") {
-                    router.replace("/")
-                }
-            } catch (err) {
-                router.replace("/")
-            }
-        }
-        user()
-    }, [])
+    // const router = useRouter()
+    // useEffect(() => {
+    //     async function user() {
+    //         try {
+    //             const token = localStorage.getItem('access_token')
+    //             const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user/${token}`, {
+    //                 withCredentials: true
+    //             })
+    //             if (data.data.success !== "pj") {
+    //                 router.replace("/")
+    //             }
+    //         } catch (err) {
+    //             router.replace("/")
+    //         }
+    //     }
+    //     user()
+    // }, [])
 
 
     return (

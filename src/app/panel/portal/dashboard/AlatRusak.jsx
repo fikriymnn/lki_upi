@@ -344,7 +344,7 @@ const AlatRusakPage = () => {
                         <div className="flex items-center gap-2">
                           {/* Badge jumlah unit — di bawah nama, tidak menumpuk */}
                           <span className="inline-block mt-1.5 px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded-full">
-                            {item.jumlahRusak} unit rusak
+                            {item.jumlahRusak}
                           </span>
                         </div>
                       </td>

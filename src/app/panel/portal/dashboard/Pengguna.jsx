@@ -11,7 +11,7 @@ const PenggunaPage = () => {
     prodi: '',
     email: '',
     phone: '',
-    role: 'mahasiswa',
+    role: 'operator',
     status: 'active'
   });
 
@@ -24,7 +24,7 @@ const PenggunaPage = () => {
       prodi: 'Kimia',
       email: 'ahmad.fauzi@upi.edu',
       phone: '081234567890',
-      role: 'mahasiswa',
+      role: 'operator',
       status: 'active',
       totalPinjam: 5,
       lastLogin: '2024-01-07'
@@ -36,22 +36,10 @@ const PenggunaPage = () => {
       prodi: 'Pendidikan Kimia',
       email: 'siti.nurhaliza@upi.edu',
       phone: '081234567891',
-      role: 'mahasiswa',
+      role: 'operator',
       status: 'active',
       totalPinjam: 3,
       lastLogin: '2024-01-06'
-    },
-    {
-      id: 3,
-      name: 'Dr. Budi Santoso',
-      nim: '-',
-      prodi: 'Staff Kimia',
-      email: 'budi.santoso@upi.edu',
-      phone: '081234567892',
-      role: 'dosen',
-      status: 'active',
-      totalPinjam: 12,
-      lastLogin: '2024-01-07'
     },
     {
       id: 4,
@@ -72,7 +60,7 @@ const PenggunaPage = () => {
       prodi: 'Pendidikan Kimia',
       email: 'dewi.lestari@upi.edu',
       phone: '081234567894',
-      role: 'mahasiswa',
+      role: 'operator',
       status: 'blocked',
       totalPinjam: 8,
       lastLogin: '2023-12-15'
@@ -103,7 +91,7 @@ const PenggunaPage = () => {
       prodi: '',
       email: '',
       phone: '',
-      role: 'mahasiswa',
+      role: 'operator',
       status: 'active'
     });
   };
@@ -134,7 +122,7 @@ const PenggunaPage = () => {
     switch(role) {
       case 'admin': return 'bg-red-100 text-red-700';
       case 'dosen': return 'bg-blue-100 text-blue-700';
-      case 'mahasiswa': return 'bg-green-100 text-green-700';
+      case 'operator': return 'bg-green-100 text-green-700';
       default: return 'bg-gray-100 text-gray-700';
     }
   };
@@ -143,7 +131,7 @@ const PenggunaPage = () => {
     switch(role) {
       case 'admin': return Shield;
       case 'dosen': return BookOpen;
-      case 'mahasiswa': return User;
+      case 'operator': return User;
       default: return User;
     }
   };
@@ -152,8 +140,7 @@ const PenggunaPage = () => {
     total: userList.length,
     active: userList.filter(u => u.status === 'active').length,
     blocked: userList.filter(u => u.status === 'blocked').length,
-    mahasiswa: userList.filter(u => u.role === 'mahasiswa').length,
-    dosen: userList.filter(u => u.role === 'dosen').length,
+    operator: userList.filter(u => u.role === 'operator').length,
     admin: userList.filter(u => u.role === 'admin').length,
   };
 
@@ -181,12 +168,8 @@ const PenggunaPage = () => {
             <div className="text-2xl font-bold text-red-600">{stats.blocked}</div>
           </div>
           <div className="bg-white rounded-xl p-4 border border-gray-200">
-            <div className="text-gray-600 text-xs mb-1">Mahasiswa</div>
-            <div className="text-2xl font-bold text-blue-600">{stats.mahasiswa}</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 border border-gray-200">
-            <div className="text-gray-600 text-xs mb-1">Dosen</div>
-            <div className="text-2xl font-bold text-purple-600">{stats.dosen}</div>
+            <div className="text-gray-600 text-xs mb-1">operator</div>
+            <div className="text-2xl font-bold text-blue-600">{stats.operator}</div>
           </div>
           <div className="bg-white rounded-xl p-4 border border-gray-200">
             <div className="text-gray-600 text-xs mb-1">Admin</div>
@@ -216,7 +199,7 @@ const PenggunaPage = () => {
                 <option value="all">Semua Role</option>
                 <option value="admin">Admin</option>
                 <option value="dosen">Dosen</option>
-                <option value="mahasiswa">Mahasiswa</option>
+                <option value="operator">operator</option>
               </select>
             </div>
             <button
@@ -239,7 +222,6 @@ const PenggunaPage = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kontak</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aktivitas</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
                 </tr>
               </thead>
@@ -285,12 +267,6 @@ const PenggunaPage = () => {
                         }`}>
                           {user.status === 'active' ? 'Aktif' : 'Blokir'}
                         </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900">{user.totalPinjam} peminjaman</div>
-                        <div className="text-xs text-gray-500">
-                          Login: {new Date(user.lastLogin).toLocaleDateString('id-ID')}
-                        </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex gap-2">
@@ -407,8 +383,7 @@ const PenggunaPage = () => {
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                       required
                     >
-                      <option value="mahasiswa">Mahasiswa</option>
-                      <option value="dosen">Dosen</option>
+                      <option value="operator">Operator</option>
                       <option value="admin">Admin</option>
                     </select>
                   </div>

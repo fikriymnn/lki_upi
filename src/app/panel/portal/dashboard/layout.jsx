@@ -17,7 +17,7 @@ export default function Layout({ children }) {
                     // router.replace("/")
                 }
             } catch (err) {
-                router.replace("/")
+                // router.replace("/")
             }
         }
         user()
