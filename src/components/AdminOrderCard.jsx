@@ -66,7 +66,7 @@ export default function AdminOrderCard({
       {/* Header */}
       <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 border-b border-gray-200">
         <div>
-          <p className="text-sm font-semibold text-gray-900">Sample {nama_sample || 'Sampel tanpa nama'}</p>
+          <Field value={nama_sample || 'Sampel tanpa nama'}/>
           <p className="text-sm text-gray-400 mt-0.5">{kode_pengujian || '—'} · {jenis_pengujian || '—'}</p>
         </div>
         <span className={`ml-auto inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${sample_dikembalikan ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
@@ -125,13 +125,13 @@ export default function AdminOrderCard({
                 </div>
               </div>
               {foto_sample
-                ? 
-                   <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/fotosample/${foto_sample}`}
-                    target="_blank"
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium hover:bg-amber-100 transition"
-                  >
-                    <Download className="w-3.5 h-3.5" /> Unduh
-                  </a>
+                ?
+                <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/fotosample/${foto_sample}`}
+                  target="_blank"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium hover:bg-amber-100 transition"
+                >
+                  <Download className="w-3.5 h-3.5" /> Unduh
+                </a>
                 : <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg">Tidak ada</span>
               }
             </div>
@@ -148,13 +148,13 @@ export default function AdminOrderCard({
                 </div>
               </div>
               {jurnal_pendukung
-                ? 
-                  <a  href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/jurnalpendukung/${jurnal_pendukung}`}
-                    target="_blank"
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium hover:bg-blue-100 transition"
-                  >
-                    <Download className="w-3.5 h-3.5" /> Unduh
-                  </a>
+                ?
+                <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/jurnalpendukung/${jurnal_pendukung}`}
+                  target="_blank"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium hover:bg-blue-100 transition"
+                >
+                  <Download className="w-3.5 h-3.5" /> Unduh
+                </a>
                 : <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg">Tidak ada</span>
               }
             </div>
@@ -173,7 +173,7 @@ export default function AdminOrderCard({
                 </div>
                 <div className="flex items-center gap-2">
                   {hasil_analisis && !add && (
-                    
+
                     <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${hasil_analisis}`}
                       target="_blank"
                       className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-xs font-medium hover:bg-green-100 transition"
@@ -183,26 +183,26 @@ export default function AdminOrderCard({
                   )}
                   {!add
                     ? <button
-                        onClick={() => setAdd(true)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 text-white rounded-lg text-xs font-medium hover:bg-red-700 transition"
-                      >
-                        <Upload className="w-3.5 h-3.5" />
-                        {hasil_analisis ? 'Ganti File' : 'Upload File'}
-                      </button>
+                      onClick={() => setAdd(true)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 text-white rounded-lg text-xs font-medium hover:bg-red-700 transition"
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      {hasil_analisis ? 'Ganti File' : 'Upload File'}
+                    </button>
                     : <div className="flex items-center gap-2">
-                        <button
-                          onClick={handleConfirm}
-                          className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white rounded-lg text-xs font-medium hover:bg-green-700 transition"
-                        >
-                          <Check className="w-3.5 h-3.5" /> Kirim
-                        </button>
-                        <button
-                          onClick={() => { setAdd(false); setFile('') }}
-                          className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded-lg text-xs hover:bg-gray-50 transition"
-                        >
-                          <X className="w-3.5 h-3.5" /> Batal
-                        </button>
-                      </div>
+                      <button
+                        onClick={handleConfirm}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white rounded-lg text-xs font-medium hover:bg-green-700 transition"
+                      >
+                        <Check className="w-3.5 h-3.5" /> Kirim
+                      </button>
+                      <button
+                        onClick={() => { setAdd(false); setFile('') }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded-lg text-xs hover:bg-gray-50 transition"
+                      >
+                        <X className="w-3.5 h-3.5" /> Batal
+                      </button>
+                    </div>
                   }
                 </div>
               </div>

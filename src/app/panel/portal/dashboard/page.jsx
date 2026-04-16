@@ -17,6 +17,29 @@ import StockInPage from './StockIn';
 import StockOutPage from './StockOut';
 import StockOpnamePage from './StockOpname';
 import StockMovementPage from './StockMovement';
+import {
+  Chart,
+  LineElement,
+  PointElement,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  Filler,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+// Register komponen yang dipakai
+Chart.register(
+  LineElement,
+  PointElement,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  Filler,
+  Tooltip,
+  Legend
+);
 
 const DashboardPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -238,7 +261,7 @@ const DashboardContent = () => {
       tension: 0.4, pointBackgroundColor: '#7F77DD', pointRadius: 4, fill: true,
     });
 
-    chartInstanceRef.current = new window.Chart(chartRef.current, {
+    chartInstanceRef.current = new Chart(chartRef.current, {
       type: 'line',
       data: { labels, datasets },
       options: {
@@ -267,9 +290,6 @@ const DashboardContent = () => {
 
   return (
     <div className="px-6 pb-6 space-y-6">
-      {/* Chart.js CDN */}
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" />
-
       <div className="max-w-7xl mx-auto">
         <div className="mb-4">
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>

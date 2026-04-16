@@ -1,21 +1,10 @@
 "use client"
 import React, { useState } from 'react';
 import {
-  Package, Users, FileText, LogOut, Menu, X, BarChart3, Box, Beaker, History, ChevronDown, ChevronRight, FlaskRound, Microscope, ShoppingCart, Archive, MapPin, UserPlus,
-  ClipboardList, TestTube, ShoppingBag, Calendar, Layers, Database,
-  Home, Settings, Bell, HelpCircle, Download, Upload, Printer,
-  Wrench,
-  Package2,
-  Move3dIcon,
-  PackageCheck,
-  PackagePlusIcon,
-  PackageMinus,
-  PackagePlus,
-  Notebook,
-  Text,
+  LogOut, Menu, X, ChevronDown, ChevronRight, ShoppingCart,
+  Home,
   ChartAreaIcon,
   FileTextIcon,
-  MenuIcon
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -23,14 +12,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
   const router = useRouter()
 
   const menuItems = [
-    { icon: MenuIcon, label: 'Dashboard', page: 'dashboard', type: 'single' },
+    { icon: Home, label: 'Dashboard', page: 'dashboard', type: 'single' },
     { icon: ShoppingCart, label: 'Order', page: 'order', type: 'single' },
     { icon: FileTextIcon, label: 'Konten', page: 'content', type: 'single' },
     { icon: ChartAreaIcon, label: 'Laporan', page: 'report', type: 'single' },
   ];
 
 
-  const onBack = ()=>{
+  const onBack = () => {
     router.push("/panel/portal")
   }
 
@@ -115,7 +104,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage, onLog
         {/* Kembali */}
         <div className="p-4 border-t border-red-700">
           <button
-            onClick={()=> router.push("/panel/portal")}
+            onClick={() => router.push("/panel/portal")}
             className="w-full flex items-center space-x-3 px-4 py-3 text-white hover:bg-white hover:text-red-600 rounded-lg transition"
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />

@@ -30,7 +30,7 @@ function CardPenguji({ id, nama, foto }) {
 
                 {/* Button */}
                 <Link 
-                    href={`/layanan/${id}`}
+                    href={`/analisis/${id}`}
                     className='inline-flex items-center justify-center w-full px-6 py-3 text-sm font-semibold text-white bg-red-700 rounded-md'
                 >
                     <span>Selengkapnya</span>

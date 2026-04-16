@@ -1,29 +1,45 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  LayoutDashboard,
-  ShoppingCart,
-  BarChart2,
-  FileText,
   ChevronRight,
   BarChart3,
   CheckCircle,
   Clock,
+  LayoutDashboard,
+  ShoppingCart,
+  BarChart2,
+  FileText,
 } from 'lucide-react';
-import Sidebar from '../../../../../components/analisis/Sidebar';
+import Sidebar from '../../../../../components/analisis/SidebarAnalisisAdmin';
 import OrderPage from './Order';
 import ReportPage from './Report';
 import ContentPage from './Content';
 import OrderDetail from './OrderDetail';
 import OrderTracking from './OrderTracking';
 import OrderEdit from './OrderEdit';
+import axios from 'axios';
+import {
+  Chart,
+  LineElement,
+  PointElement,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  Filler,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
-const NAV_ITEMS = [
-  { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { key: 'order', label: 'Order', icon: ShoppingCart },
-  { key: 'report', label: 'Report', icon: BarChart2 },
-  { key: 'content', label: 'Content', icon: FileText },
-];
+Chart.register(
+  LineElement,
+  PointElement,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  Filler,
+  Tooltip,
+  Legend
+);
 
 const StockBar = ({ pct, color }) => (
   <div className="flex-1 bg-gray-100 rounded-full h-1.5">
@@ -37,42 +53,12 @@ const StockBar = ({ pct, color }) => (
 // ── Dashboard Content ─────────────────────────────────────────────────────
 const DashboardContent = () => {
   const [filterPeriode, setFilterPeriode] = useState('bulan');
+  const [statData, setStatData] = useState({ totalOrder: 0, totalSelesai: 0, totalAktif: 0 });
+  const [trenData, setTrenData] = useState({ labels: [], selesai: [] });
+  const [loading, setLoading] = useState(true);
+
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
-
-  const RAW_DATA = {
-    minggu: {
-      labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
-      selesai: [2, 4, 3, 5, 3, 6, 2],
-      aktif: [1, 2, 1, 3, 2, 1, 0],
-    },
-    bulan: {
-      labels: Array.from({ length: 30 }, (_, i) => String(i + 1)),
-      selesai: [1, 0, 2, 1, 3, 2, 0, 1, 4, 2, 1, 3, 2, 5, 3, 1, 2, 4, 2, 1, 3, 2, 4, 1, 2, 3, 2, 1, 4, 3],
-      aktif: [0, 1, 1, 0, 1, 1, 1, 2, 1, 0, 1, 2, 1, 1, 2, 0, 1, 1, 1, 0, 2, 1, 1, 0, 1, 2, 1, 0, 1, 1],
-    },
-    '6bulan': {
-      labels: ['Agt', 'Sep', 'Okt', 'Nov', 'Des', 'Jan'],
-      selesai: [18, 24, 21, 30, 27, 35],
-      aktif: [5, 7, 6, 9, 8, 10],
-    },
-    tahun: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'],
-      selesai: [12, 18, 15, 22, 19, 25, 21, 28, 24, 30, 27, 35],
-      aktif: [3, 5, 4, 7, 6, 8, 7, 9, 8, 10, 9, 11],
-    },
-    all: {
-      labels: ['2021', '2022', '2023', '2024', '2025'],
-      selesai: [95, 140, 178, 230, 265],
-      aktif: [12, 18, 22, 28, 32],
-    },
-  };
-
-  const current = RAW_DATA[filterPeriode];
-  const totalSelesai = current.selesai.reduce((a, b) => a + b, 0);
-  const totalAktif = current.aktif.reduce((a, b) => a + b, 0);
-  const totalOrder = totalSelesai + totalAktif;
-  const pctSelesai = totalOrder > 0 ? Math.round((totalSelesai / totalOrder) * 100) : 0;
 
   const PERIODE_OPTIONS = [
     { value: 'minggu', label: 'Minggu Ini' },
@@ -84,68 +70,82 @@ const DashboardContent = () => {
 
   const periodeLabel = PERIODE_OPTIONS.find(p => p.value === filterPeriode)?.label;
 
-  useEffect(() => {
-    const renderChart = () => {
-      if (!chartRef.current) return;
-      if (chartInstanceRef.current) chartInstanceRef.current.destroy();
-      chartInstanceRef.current = new window.Chart(chartRef.current, {
-        type: 'line',
-        data: {
-          labels: current.labels,
-          datasets: [{
-            label: 'Order Selesai',
-            data: current.selesai,
-            borderColor: '#16a34a',
-            backgroundColor: 'rgba(22,163,74,0.08)',
-            tension: 0.4,
-            pointBackgroundColor: '#16a34a',
-            pointRadius: 3,
-            fill: true,
-          }],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: { mode: 'index', intersect: false },
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: {
-                font: { size: 10 },
-                color: '#888780',
-                maxTicksLimit: filterPeriode === 'bulan' ? 10 : 20,
-                autoSkip: true,
-              },
-            },
-            y: {
-              grid: { color: 'rgba(136,135,128,0.12)' },
-              ticks: { font: { size: 11 }, color: '#888780', stepSize: 1 },
-              min: 0,
-            },
-          },
-        },
-      });
-    };
+  const totalOrder = statData.totalOrder;
+  const totalSelesai = statData.totalSelesai;
+  const totalAktif = statData.totalAktif;
+  const pctSelesai = totalOrder > 0 ? Math.round((totalSelesai / totalOrder) * 100) : 0;
 
-    if (window.Chart) {
-      renderChart();
-    } else {
-      const existing = document.querySelector('script[src*="chart.umd"]');
-      if (existing) {
-        existing.addEventListener('load', renderChart);
-      } else {
-        const s = document.createElement('script');
-        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
-        s.onload = renderChart;
-        document.head.appendChild(s);
+  // ── Fetch dari API ───────────────────────────────────────────────────
+  const fetchDashboard = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_URL}/api/dashboard?periode=${filterPeriode}`,
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        setStatData(res.data.data.stat);
+        setTrenData(res.data.data.tren);
       }
+    } catch (err) {
+      console.error('Gagal fetch dashboard:', err.message);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchDashboard();
+  }, [filterPeriode]);
+
+  // ── Render chart setelah trenData berubah ────────────────────────────
+  useEffect(() => {
+    if (!chartRef.current || trenData.labels.length === 0) return;
+    if (chartInstanceRef.current) chartInstanceRef.current.destroy();
+
+    chartInstanceRef.current = new Chart(chartRef.current, {
+      type: 'line',
+      data: {
+        labels: trenData.labels,
+        datasets: [{
+          label: 'Order Selesai',
+          data: trenData.selesai,
+          borderColor: '#16a34a',
+          backgroundColor: 'rgba(22,163,74,0.08)',
+          tension: 0.4,
+          pointBackgroundColor: '#16a34a',
+          pointRadius: 3,
+          fill: true,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { mode: 'index', intersect: false },
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              font: { size: 10 },
+              color: '#888780',
+              maxTicksLimit: filterPeriode === 'bulan' ? 10 : 20,
+              autoSkip: true,
+            },
+          },
+          y: {
+            grid: { color: 'rgba(136,135,128,0.12)' },
+            ticks: { font: { size: 11 }, color: '#888780', stepSize: 1 },
+            min: 0,
+          },
+        },
+      },
+    });
 
     return () => { if (chartInstanceRef.current) chartInstanceRef.current.destroy(); };
-  }, [filterPeriode]);
+  }, [trenData]);
 
   return (
     <div className="px-6 pb-6 space-y-5">
@@ -156,13 +156,17 @@ const DashboardContent = () => {
 
       {/* ── Stat Cards ── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
         {/* Total Order */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center mb-3">
             <BarChart3 className="w-5 h-5 text-blue-600" />
           </div>
           <p className="text-xs text-gray-500 font-medium">Total Order</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{totalOrder}</p>
+          {loading
+            ? <div className="h-8 w-16 bg-gray-200 rounded animate-pulse mt-1" />
+            : <p className="text-2xl font-bold text-gray-900 mt-1">{totalOrder}</p>
+          }
           <p className="text-xs text-gray-400 mt-0.5">{periodeLabel}</p>
         </div>
 
@@ -172,7 +176,10 @@ const DashboardContent = () => {
             <CheckCircle className="w-5 h-5 text-green-600" />
           </div>
           <p className="text-xs text-gray-500 font-medium">Order Selesai</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{totalSelesai}</p>
+          {loading
+            ? <div className="h-8 w-16 bg-gray-200 rounded animate-pulse mt-1" />
+            : <p className="text-2xl font-bold text-gray-900 mt-1">{totalSelesai}</p>
+          }
           <div className="flex items-center gap-2 mt-2">
             <StockBar pct={pctSelesai} color="bg-green-500" />
             <span className="text-xs text-green-600 font-medium flex-shrink-0">{pctSelesai}%</span>
@@ -185,7 +192,10 @@ const DashboardContent = () => {
             <Clock className="w-5 h-5 text-red-600" />
           </div>
           <p className="text-xs text-gray-500 font-medium">Order Belum Selesai</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{totalAktif}</p>
+          {loading
+            ? <div className="h-8 w-16 bg-gray-200 rounded animate-pulse mt-1" />
+            : <p className="text-2xl font-bold text-gray-900 mt-1">{totalAktif}</p>
+          }
           <div className="flex items-center gap-2 mt-2">
             <StockBar pct={100 - pctSelesai} color="bg-red-400" />
             <span className="text-xs text-red-500 font-medium flex-shrink-0">{100 - pctSelesai}%</span>
@@ -210,9 +220,16 @@ const DashboardContent = () => {
             ))}
           </select>
         </div>
-        <div className="relative w-full" style={{ height: '260px' }}>
-          <canvas ref={chartRef} />
-        </div>
+
+        {/* Skeleton chart */}
+        {loading
+          ? <div className="w-full h-[260px] bg-gray-100 rounded-lg animate-pulse" />
+          : (
+            <div className="relative w-full" style={{ height: '260px' }}>
+              <canvas ref={chartRef} />
+            </div>
+          )
+        }
       </div>
     </div>
   );
@@ -254,8 +271,7 @@ const MainPage = () => {
                     className="focus:outline-none"
                   >
                     <ChevronRight
-                      className={`w-4 h-4 text-red-200 transition-transform duration-200 ${showUserDropdown ? 'rotate-90' : 'rotate-0'
-                        }`}
+                      className={`w-4 h-4 text-red-200 transition-transform duration-200 ${showUserDropdown ? 'rotate-90' : 'rotate-0'}`}
                     />
                   </button>
                 </div>
@@ -282,8 +298,7 @@ const MainPage = () => {
                         className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path
-                            strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                             d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                           />
                         </svg>
@@ -302,7 +317,7 @@ const MainPage = () => {
           {activePage === 'order' && <OrderPage setActivePage={setActivePage} setNoInvoice={setNoInvoice} setIdInvoice={setIdInvoice} />}
           {activePage === 'order-detail' && <OrderDetail setActivePage={setActivePage} noInvoice={noInvoice} idInvoice={idInvoice} />}
           {activePage === 'order-tracking' && <OrderTracking setActivePage={setActivePage} noInvoice={noInvoice} idInvoice={idInvoice} />}
-          {activePage === 'order-edit' && <OrderEdit setActivePage={setActivePage} noInvoice={noInvoice} idInvoice={idInvoice} />}
+          {activePage === 'order-edit' && <OrderEdit setActivePage={setActivePage} noInvoice={noInvoice}/>}
           {activePage === 'report' && <ReportPage />}
           {activePage === 'content' && <ContentPage />}
         </main>

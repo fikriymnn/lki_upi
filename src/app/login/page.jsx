@@ -56,7 +56,7 @@ export default function Login({ searchParams }) {
             if (data.data.success) {
                 localStorage.setItem('access_token', data.data.token)
                 alert("Login sukses")
-                window.location.replace(prevRoute || "/")
+                window.location.href= prevRoute || "/"
             } else {
                 alert(data.data.message)
             }
@@ -89,7 +89,7 @@ export default function Login({ searchParams }) {
             </div>
 
             {/* Right Side - Login Form */}
-            <div className="flex items-center justify-center p-6 lg:p-12 bg-gray-50">
+            <div className="flex items-center justify-center p-6 lg:p-12 ">
                 <div className="w-full max-w-md space-y-8">
                     {/* Mobile Header */}
                     <div className="lg:hidden text-center mb-8">
@@ -159,7 +159,7 @@ export default function Login({ searchParams }) {
                         </div>
 
                         {/* Forgot Password Link */}
-                        <div className="text-center">
+                        {/* <div className="text-center">
                             <button
                                 type="button"
                                 onClick={handleLupaPassword}
@@ -167,7 +167,7 @@ export default function Login({ searchParams }) {
                             >
                                 Lupa password?
                             </button>
-                        </div>
+                        </div> */}
 
                         {/* Action Buttons */}
                         <div className="grid grid-cols-2 gap-4 pt-2">

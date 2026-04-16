@@ -72,7 +72,7 @@ export default function Register({ searchParams }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-10">
@@ -85,7 +85,7 @@ export default function Register({ searchParams }) {
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-md p-8 md:p-10">
+        <div className="bg-white rounded-2xl shadow-lg border p-8 md:p-10">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Grid Layout */}
             <div className="grid md:grid-cols-2 gap-8">

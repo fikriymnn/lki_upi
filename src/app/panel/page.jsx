@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-import { Eye, EyeOff, FlaskConical, Lock, User, ChevronRight, Beaker, Atom, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, FlaskConical, Lock, User, Beaker, Atom, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {

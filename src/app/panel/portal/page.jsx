@@ -27,7 +27,7 @@ const portals = [
   {
     title: 'Layanan Analisis',
     description: 'Pengajuan, pemantauan, dan pelaporan layanan analisis kimia instrumen.',
-    link: '/analisis',
+    link: '/panel/portal/analisis/admin',
     icon: Microscope,
     stats: '24 Antrian Aktif',
     color: 'from-rose-500 to-rose-600',
@@ -38,7 +38,7 @@ const portals = [
   {
     title: 'Affiliate',
     description: 'Kelola program kemitraan, affiliasi, dan jaringan kolaborasi laboratorium.',
-    link: '/affiliate',
+    link: '#',
     icon: Users,
     stats: '12 Partner Institusi',
     color: 'from-gray-800 to-gray-900',
@@ -64,6 +64,13 @@ export default function PortalPage() {
 
         {/* Header */}
         <div className="flex items-center justify-between">
+          <div className="p-3">
+            <img
+              src="/icon/upi-white.png"
+              alt="UPI Logo"
+              className="w-32 md:w-40 object-contain"
+            />
+          </div>
           <div className="flex-1 max-w-lg" />
           <div className="flex items-center space-x-4 ml-6 p-4">
 
@@ -146,13 +153,6 @@ export default function PortalPage() {
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto pt-4 px-6 text-center">
-          <div className="inline-flex items-center justify-center p-3 mb-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl">
-            <img
-              src="/icon/upi-white.png"
-              alt="UPI Logo"
-              className="w-16 md:w-20 object-contain"
-            />
-          </div>
 
           <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">
             Portal Dashboard <br />
@@ -197,9 +197,12 @@ export default function PortalPage() {
                   <div className="flex flex-col">
                   </div>
 
-                  <div className={`flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 ${portal.textColor} group-hover:bg-gradient-to-r ${portal.color} group-hover:text-white transition-all duration-300 shadow-inner`}>
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
+                  {
+                    portal.link == "#" ? <p>Under Development</p> : <div className={`flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 ${portal.textColor} group-hover:bg-gradient-to-r ${portal.color} group-hover:text-white transition-all duration-300 shadow-inner`}>
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                  }
+
                 </div>
 
                 {/* Subtle Glow Effect on Hover */}
