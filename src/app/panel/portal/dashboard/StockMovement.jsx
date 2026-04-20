@@ -382,7 +382,6 @@ const StockMovementPage = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Item</th>
                   <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Stok Sebelum → Sesudah</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                 </tr>
@@ -410,19 +409,6 @@ const StockMovementPage = () => {
                         }`}>
                           {isIN ? '+' : isADJ ? (diff >= 0 ? '+' : '') : '-'}{mv.quantity} {satuan}
                         </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex justify-center items-center gap-2 text-sm">
-                          <span className="text-gray-500">{mv.previousStock}</span>
-                          <span className="text-gray-400">→</span>
-                          <span className={`font-semibold ${
-                            isIN  ? 'text-emerald-600' :
-                            isADJ ? 'text-orange-600'  :
-                                    'text-red-600'
-                          }`}>
-                            {mv.newStock}
-                          </span>
-                        </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
                         {new Date(mv.createdAt).toLocaleDateString('id-ID', {

@@ -289,7 +289,7 @@ const DashboardContent = () => {
   if (filterJenis !== 'alat') datasets_legend.push({ label: 'Bahan Kimia', color: '#7F77DD' });
 
   return (
-    <div className="px-6 pb-6 space-y-6">
+    <div className="p-6 space-y-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-4">
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
