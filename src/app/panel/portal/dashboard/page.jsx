@@ -1,5 +1,5 @@
 "use client";
-import React, { useState,useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, Bell, ChevronDown, Package, AlertCircle, TrendingUp, BarChart3, Settings, Box, Wrench, Clock, CheckCircle, ArrowUpRight, ArrowDownRight, Calendar } from 'lucide-react';
 import Sidebar from '@/components/inventory/Sidebar';
 import AlatPage from './Alat';
@@ -61,7 +61,7 @@ const DashboardPage = () => {
             <p className="text-white font-bold text-2xl">INVENTORY SYSTEM</p>
             <div className="flex-1 max-w-lg" />
             <div className="flex items-center space-x-4 ml-6">
-            
+
               {/* Dropdown Menu */}
               <div className="relative">
                 <div className="flex items-center space-x-3 pl-4 border-l border-red-400">
@@ -149,9 +149,9 @@ const DashboardPage = () => {
           {activePage === 'riwayat' && <RiwayatPage />}
           {activePage === 'alat-rusak' && <AlatRusakPage />}
           {activePage === 'stock-in' && <StockInPage />}
-          {activePage === 'stock-out' && <StockOutPage/>}
-           {activePage === 'stock-opname' && <StockOpnamePage/>}
-           {activePage === 'stock-movement' && <StockMovementPage/>}
+          {activePage === 'stock-out' && <StockOutPage />}
+          {activePage === 'stock-opname' && <StockOpnamePage />}
+          {activePage === 'stock-movement' && <StockMovementPage />}
           {activePage === 'master-supplier' && <SupplierPage />}
           {activePage === 'laporan' && <LaporanPage />}
           {activePage === 'master-lokasi' && <Penyimpanan />}
@@ -222,9 +222,9 @@ const DashboardContent = () => {
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
-  const ALL_MONTHS = ['Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nov','Des','Jan','Feb'];
-  const DATA_ALAT =  [8,11,9,14,10,13,15,12,18,16,14,17];
-  const DATA_BAHAN = [5,7,6,10,8,11,9,13,15,12,10,14];
+  const ALL_MONTHS = ['Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des', 'Jan', 'Feb'];
+  const DATA_ALAT = [8, 11, 9, 14, 10, 13, 15, 12, 18, 16, 14, 17];
+  const DATA_BAHAN = [5, 7, 6, 10, 8, 11, 9, 13, 15, 12, 10, 14];
 
   const alatSpark = DATA_ALAT.slice(-6);
   const bahanSpark = DATA_BAHAN.slice(-6);
