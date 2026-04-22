@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import { Plus, Search, User, Calendar, Clock, AlertCircle, X, Trash2, Edit2, Package, Filter,Undo, ChevronDown, Building2, Mail, Phone, Eye, FileText } from 'lucide-react';
+import { Plus, Search, User, Calendar, Clock, AlertCircle, X, Trash2, Edit2, Package, Filter, Undo, ChevronDown, Building2, Mail, Phone, Eye, FileText, CheckCircle, RotateCcw } from 'lucide-react';
 
 const PeminjamanBahanPage = () => {
   const [showBorrowModal, setShowBorrowModal] = useState(false);
@@ -14,7 +14,6 @@ const PeminjamanBahanPage = () => {
   const [activeTab, setActiveTab] = useState('active');
   const [showFilterModal, setShowFilterModal] = useState(false);
 
-  // State untuk search bahan
   const [bahanSearch, setBahanSearch] = useState('');
   const [showBahanDropdown, setShowBahanDropdown] = useState(false);
 
@@ -236,7 +235,13 @@ const PeminjamanBahanPage = () => {
     jumlah: ''
   });
 
-  // Function untuk cek keterlambatan
+  // Format tanggal ke format huruf (tgl bulan tahun)
+  const formatTanggal = (dateString) => {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+  };
+
   const isLate = (tanggalKembali, tanggalDikembalikan) => {
     if (!tanggalDikembalikan) return false;
     const targetDate = new Date(tanggalKembali);
@@ -244,7 +249,6 @@ const PeminjamanBahanPage = () => {
     return returnDate > targetDate;
   };
 
-  // Function untuk hitung hari terlambat
   const calculateLateDays = (tanggalKembali, tanggalDikembalikan) => {
     if (!tanggalDikembalikan) return 0;
     const targetDate = new Date(tanggalKembali);
@@ -252,6 +256,18 @@ const PeminjamanBahanPage = () => {
     const diffTime = returnDate - targetDate;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays > 0 ? diffDays : 0;
+  };
+
+  // Hitung statistik per peminjam
+  const getPeminjamStats = (nik) => {
+    const transactions = peminjamanList.filter(p => p.userNIK === nik);
+    const lateTransactions = transactions.filter(p =>
+      p.tanggalDikembalikan && isLate(p.tanggalKembali, p.tanggalDikembalikan)
+    );
+    return {
+      totalTransaksi: transactions.length,
+      totalTerlambat: lateTransactions.length
+    };
   };
 
   const handleInputChange = (e) => {
@@ -304,7 +320,6 @@ const PeminjamanBahanPage = () => {
     }));
   };
 
-  // Function untuk select bahan dari dropdown
   const selectBahan = (bahan) => {
     setCurrentItem(prev => ({
       ...prev,
@@ -474,6 +489,7 @@ const PeminjamanBahanPage = () => {
     const returnItems = peminjaman.items.map(item => ({
       bahanId: item.bahanId,
       namaBahan: item.namaBahan,
+      rumusKimia: item.rumusKimia,
       jumlahPinjam: item.jumlahPinjam,
       jumlahSudahKembali: item.jumlahKembali,
       jumlahDikembalikan: item.jumlahPinjam - item.jumlahKembali,
@@ -588,7 +604,6 @@ const PeminjamanBahanPage = () => {
     p.institusi.toLowerCase().includes(peminjamSearch.toLowerCase())
   );
 
-  // Filter bahan berdasarkan search
   const filteredBahan = bahanList.filter(b =>
     b.jumlah > 0 && (
       b.namaBahan.toLowerCase().includes(bahanSearch.toLowerCase()) ||
@@ -734,7 +749,7 @@ const PeminjamanBahanPage = () => {
                 <span className="text-sm text-gray-600">Filter aktif:</span>
                 {filterDateFrom && filterDateTo && (
                   <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-                    {new Date(filterDateFrom).toLocaleDateString('id-ID')} - {new Date(filterDateTo).toLocaleDateString('id-ID')}
+                    {formatTanggal(filterDateFrom)} - {formatTanggal(filterDateTo)}
                     <button
                       onClick={handleResetFilter}
                       className="hover:bg-blue-200 rounded-full p-0.5"
@@ -754,80 +769,88 @@ const PeminjamanBahanPage = () => {
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10">No</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Peminjam</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keperluan</th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  {activeTab === 'history' && (
+                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  )}
                   <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredPeminjaman.length > 0 ? (
-                  filteredPeminjaman.map((item,i) => {
-                    // NEW: Cek keterlambatan
+                  filteredPeminjaman.map((item, i) => {
                     const late = item.tanggalDikembalikan && isLate(item.tanggalKembali, item.tanggalDikembalikan);
                     const lateDays = late ? calculateLateDays(item.tanggalKembali, item.tanggalDikembalikan) : 0;
 
                     return (
                       <tr key={item.id} className="hover:bg-gray-50 transition">
-                        <td className="px-4 py-4">
-                          <span className={`px-2 py-0.5 text-xs text-center rounded`}>
-                            {i + 1}
-                          </span>
+                        {/* No */}
+                        <td className="px-4 py-3">
+                          <span className="text-xs text-gray-500">{i + 1}</span>
                         </td>
-                        <td className="px-4 py-4">
-                          <div>
-                            <div className="text-sm text-gray-900">{item.userName}</div>
-                          </div>
+
+                        {/* Peminjam */}
+                        <td className="px-4 py-3">
+                          <p className="text-xs font-semibold text-gray-900">{item.userName}</p>
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
-                          <div className="flex items-center gap-1 text-xs mb-1">
-                            <Calendar className="w-3 h-3" />
-                            <span>Pinjam: {new Date(item.tanggalPinjam).toLocaleDateString('id-ID')}</span>
+
+                        {/* Tanggal */}
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
+                            <Calendar className="w-3 h-3 flex-shrink-0" />
+                            <span>Pinjam: {formatTanggal(item.tanggalPinjam)}</span>
                           </div>
-                          <div className="flex items-center gap-1 text-xs">
-                            <Clock className="w-3 h-3" />
-                            <span>Target: {new Date(item.tanggalKembali).toLocaleDateString('id-ID')}</span>
+                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <Clock className="w-3 h-3 flex-shrink-0" />
+                            <span>Target: {formatTanggal(item.tanggalKembali)}</span>
                           </div>
                           {item.tanggalDikembalikan && (
                             <div className={`flex items-center gap-1 text-xs mt-1 ${late ? 'text-red-600' : 'text-green-600'}`}>
-                              <Clock className="w-3 h-3" />
-                              <span>Kembali: {new Date(item.tanggalDikembalikan).toLocaleDateString('id-ID')}</span>
+                              <CheckCircle className="w-3 h-3 flex-shrink-0" />
+                              <span>Kembali: {formatTanggal(item.tanggalDikembalikan)}</span>
                             </div>
                           )}
                         </td>
-                        <td className="px-4 py-4">
-                          <div className="text-sm text-gray-600 max-w-xs truncate">{item.keperluan}</div>
+
+                        {/* Keperluan */}
+                        <td className="px-4 py-3">
+                          <span className="text-xs text-gray-600">{item.keperluan || '-'}</span>
                         </td>
-                        <td className="px-4 py-4">
-                          <div className="flex flex-col items-center gap-1">
-                            <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(item.status)} w-fit`}>
+
+                        {/* Status - hanya di tab history */}
+                        {activeTab === 'history' && (
+                          <td className="px-4 py-3 text-center">
+                            <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(item.status)}`}>
                               {item.status}
                             </span>
-                            {/* NEW: Badge Terlambat */}
-                            {late && (
-                              <span className="inline-block px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700 w-fit">
+                            {/* {late && (
+                              <span className="inline-block mt-1 px-2 py-0.5 text-xs font-medium rounded-full bg-red-100 text-red-700">
                                 Terlambat {lateDays} hari
                               </span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm">
+                            )} */}
+                          </td>
+                        )}
+
+                        {/* Aksi */}
+                        <td className="px-4 py-3">
                           <div className="flex gap-2 justify-center">
                             <button
                               onClick={() => handleShowDetail(item)}
-                              className="p-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition"
-                              title="Detail"
+                              title="Lihat Detail"
+                              className="p-1.5 rounded-md text-green-600 hover:bg-green-50 transition"
                             >
                               <Eye className="w-4 h-4" />
                             </button>
                             {activeTab === 'active' && item.status !== 'Dikembalikan' && (
                               <button
                                 onClick={() => openReturnModal(item)}
-                                className="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs"
+                                title="Kembalikan Bahan"
+                                className="p-1.5 rounded-md text-blue-500 hover:bg-blue-50 transition"
                               >
-                                <Undo className="w-4 h-4" />
+                                <RotateCcw className="w-4 h-4" />
                               </button>
                             )}
                           </div>
@@ -837,7 +860,7 @@ const PeminjamanBahanPage = () => {
                   })
                 ) : (
                   <tr>
-                    <td colSpan="5" className="px-6 py-8 text-center text-gray-500">
+                    <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
                       <div className="flex flex-col items-center gap-2">
                         <Package className="w-12 h-12 text-gray-300" />
                         <p className="text-sm">
@@ -921,6 +944,24 @@ const PeminjamanBahanPage = () => {
                         </p>
                       </div>
                     </div>
+                    {/* Statistik peminjam di detail */}
+                    {(() => {
+                      const stats = getPeminjamStats(selectedPeminjaman.userNIK);
+                      return (
+                        <div className="mt-3 pt-3 border-t border-gray-200 flex gap-4">
+                          <div className="text-sm">
+                            <span className="text-gray-500">Total Transaksi: </span>
+                            <span className="font-semibold text-gray-800">{stats.totalTransaksi}</span>
+                          </div>
+                          <div className="text-sm">
+                            <span className="text-gray-500">Riwayat Terlambat: </span>
+                            <span className={`font-semibold ${stats.totalTerlambat > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                              {stats.totalTerlambat}x
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
 
                   {/* Bahan yang Dipinjam */}
@@ -936,27 +977,30 @@ const PeminjamanBahanPage = () => {
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-600">Bahan</th>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-600">Dipinjam</th>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-600">Dikembalikan</th>
-                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-600">Sisa</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-600">Terpakai</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                          {selectedPeminjaman.items.map((item, idx) => (
-                            <tr key={idx}>
-                              <td className="px-4 py-2">
-                                <div className="text-sm font-medium text-gray-900">{item.namaBahan}</div>
-                                <div className="text-xs text-gray-500">{item.rumusKimia}</div>
-                              </td>
-                              <td className="px-4 py-2 text-sm text-gray-900">
-                                {item.jumlahPinjam} {item.satuan}
-                              </td>
-                              <td className="px-4 py-2 text-sm text-gray-900">
-                                {item.jumlahKembali} {item.satuan}
-                              </td>
-                              <td className="px-4 py-2 text-sm font-medium text-blue-600">
-                                {item.jumlahPinjam - item.jumlahKembali} {item.satuan}
-                              </td>
-                            </tr>
-                          ))}
+                          {selectedPeminjaman.items.map((item, idx) => {
+                            const terpakai = item.jumlahPinjam - item.jumlahKembali;
+                            return (
+                              <tr key={idx}>
+                                <td className="px-4 py-2">
+                                  <div className="text-sm font-medium text-gray-900">{item.namaBahan}</div>
+                                  <div className="text-xs text-gray-500 font-mono">{item.rumusKimia}</div>
+                                </td>
+                                <td className="px-4 py-2 text-sm text-gray-900">
+                                  {item.jumlahPinjam} {item.satuan}
+                                </td>
+                                <td className="px-4 py-2 text-sm text-green-700 font-medium">
+                                  {item.jumlahKembali} {item.satuan}
+                                </td>
+                                <td className="px-4 py-2 text-sm font-medium text-orange-600">
+                                  {terpakai} {item.satuan}
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
@@ -966,17 +1010,17 @@ const PeminjamanBahanPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-500 mb-1">Tanggal Pinjam</label>
-                      <p className="text-sm text-gray-900">{new Date(selectedPeminjaman.tanggalPinjam).toLocaleDateString('id-ID')}</p>
+                      <p className="text-sm text-gray-900">{formatTanggal(selectedPeminjaman.tanggalPinjam)}</p>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-500 mb-1">Tanggal Kembali</label>
-                      <p className="text-sm text-gray-900">{new Date(selectedPeminjaman.tanggalKembali).toLocaleDateString('id-ID')}</p>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">Target Kembali</label>
+                      <p className="text-sm text-gray-900">{formatTanggal(selectedPeminjaman.tanggalKembali)}</p>
                     </div>
                     {selectedPeminjaman.tanggalDikembalikan && (
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-500 mb-1">Tanggal Dikembalikan</label>
                         <p className={`text-sm font-medium ${isLate(selectedPeminjaman.tanggalKembali, selectedPeminjaman.tanggalDikembalikan) ? 'text-red-600' : 'text-green-600'}`}>
-                          {new Date(selectedPeminjaman.tanggalDikembalikan).toLocaleDateString('id-ID')}
+                          {formatTanggal(selectedPeminjaman.tanggalDikembalikan)}
                           {isLate(selectedPeminjaman.tanggalKembali, selectedPeminjaman.tanggalDikembalikan) &&
                             ` (Terlambat ${calculateLateDays(selectedPeminjaman.tanggalKembali, selectedPeminjaman.tanggalDikembalikan)} hari)`
                           }
@@ -985,7 +1029,7 @@ const PeminjamanBahanPage = () => {
                     )}
                     <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-500 mb-1">Keperluan</label>
-                      <p className="text-sm text-gray-900">{selectedPeminjaman.keperluan}</p>
+                      <p className="text-sm text-gray-900">{selectedPeminjaman.keperluan || '-'}</p>
                     </div>
                     {selectedPeminjaman.catatanPengembalian && (
                       <div className="md:col-span-2">
@@ -1020,27 +1064,48 @@ const PeminjamanBahanPage = () => {
           </div>
         )}
 
-        {/* Filter Modal */}
+        {/* Filter Modal - REVISED with date range inputs */}
         {showFilterModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl">
-              <div className="p-6 border-b border-gray-200">
+              <div className="p-6 border-b border-gray-200 flex items-center justify-between">
                 <h2 className="text-xl font-bold text-gray-900">Filter Tanggal Peminjaman</h2>
+                <button onClick={() => setShowFilterModal(false)} className="p-2 hover:bg-gray-100 rounded-lg transition">
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
               </div>
               <div className="p-6">
-                <div className="space-y-6">
-                  {/* NEW: Late Warning Banner */}
-                  {selectedPeminjaman.tanggalDikembalikan && isLate(selectedPeminjaman.tanggalKembali, selectedPeminjaman.tanggalDikembalikan) && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                      <div className="flex items-start gap-2">
-                        <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-sm font-semibold text-red-800">Pengembalian Terlambat</p>
-                          <p className="text-xs text-red-700 mt-1">
-                            Terlambat {calculateLateDays(selectedPeminjaman.tanggalKembali, selectedPeminjaman.tanggalDikembalikan)} hari dari tanggal target pengembalian
-                          </p>
-                        </div>
-                      </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Dari Tanggal</label>
+                    <input
+                      type="date"
+                      value={filterDateFrom}
+                      onChange={(e) => setFilterDateFrom(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+                    />
+                    {filterDateFrom && (
+                      <p className="mt-1 text-xs text-gray-500">{formatTanggal(filterDateFrom)}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Sampai Tanggal</label>
+                    <input
+                      type="date"
+                      value={filterDateTo}
+                      onChange={(e) => setFilterDateTo(e.target.value)}
+                      min={filterDateFrom}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+                    />
+                    {filterDateTo && (
+                      <p className="mt-1 text-xs text-gray-500">{formatTanggal(filterDateTo)}</p>
+                    )}
+                  </div>
+                  {filterDateFrom && filterDateTo && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                      <p className="text-xs text-blue-800">
+                        Menampilkan peminjaman dari <strong>{formatTanggal(filterDateFrom)}</strong> sampai <strong>{formatTanggal(filterDateTo)}</strong>
+                      </p>
                     </div>
                   )}
                 </div>
@@ -1068,83 +1133,134 @@ const PeminjamanBahanPage = () => {
           </div>
         )}
 
-        {/* Return Modal - REVISED VERSION */}
+        {/* Return Modal - SIMPLIFIED */}
         {showReturnModal && selectedPeminjaman && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl max-h-[90vh] overflow-y-auto">
-              <div className="p-6 border-b border-gray-200">
-                <h2 className="text-xl font-bold text-gray-900">Form Pengembalian Bahan</h2>
-                <p className="text-sm text-gray-600 mt-1">
-                  Peminjam: {selectedPeminjaman.userName} ({selectedPeminjaman.userNIK})
-                </p>
+            <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+              <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Pengembalian Bahan</h2>
+                  <p className="text-sm text-gray-500 mt-1">{selectedPeminjaman.userName} &mdash; {selectedPeminjaman.userNIK}</p>
+                </div>
+                <button onClick={() => { setShowReturnModal(false); setSelectedPeminjaman(null); }} className="p-2 hover:bg-gray-100 rounded-lg transition">
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
               </div>
               <form onSubmit={handleReturnSubmit} className="p-6">
-                <div className="space-y-4">
-                  {/* Table Pengembalian */}
-                  <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                    <table className="w-full">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Bahan</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Dipinjam</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Sudah Kembali</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Sisa Belum Kembali</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Dikembalikan Sekarang</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200">
-                        {returnFormData.returnItems.map((item, index) => {
-                          const sisa = item.jumlahPinjam - item.jumlahSudahKembali;
-                          return (
-                            <tr key={index}>
-                              <td className="px-4 py-3">
-                                <div className="text-sm font-medium text-gray-900">{item.namaBahan}</div>
-                                <div className="text-xs text-gray-500">{item.namaBahan}</div>
-                              </td>
-                              <td className="px-4 py-3 text-sm text-gray-600">
-                                {item.jumlahPinjam} {item.satuan}
-                              </td>
-                              <td className="px-4 py-3 text-sm text-gray-600">
-                                {item.jumlahSudahKembali} {item.satuan}
-                              </td>
-                              <td className="px-4 py-3 text-sm font-medium text-orange-600">
-                                {sisa} {item.satuan}
-                              </td>
-                              <td className="px-4 py-3">
-                                <div className="flex items-center gap-2">
+                <div className="space-y-5">
+                  {/* Late Warning */}
+                  {(() => {
+                    const todayDate = new Date().toISOString().split('T')[0];
+                    const late = isLate(selectedPeminjaman.tanggalKembali, todayDate);
+                    const lateDays = late ? calculateLateDays(selectedPeminjaman.tanggalKembali, todayDate) : 0;
+                    return late && (
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+                        <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-semibold text-red-800">Pengembalian Terlambat {lateDays} Hari</p>
+                          <p className="text-xs text-red-700 mt-0.5">Target: {formatTanggal(selectedPeminjaman.tanggalKembali)}. Catatan keterlambatan otomatis ditambahkan.</p>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Info Peminjaman */}
+                  <div className="bg-gray-50 rounded-lg p-4 flex flex-wrap gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-500 text-xs">Tanggal Pinjam</span>
+                      <p className="font-medium text-gray-900 text-xs mt-0.5">{formatTanggal(selectedPeminjaman.tanggalPinjam)}</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-500 text-xs">Target Kembali</span>
+                      <p className="font-medium text-gray-900 text-xs mt-0.5">{formatTanggal(selectedPeminjaman.tanggalKembali)}</p>
+                    </div>
+                    {selectedPeminjaman.keperluan && (
+                      <div>
+                        <span className="text-gray-500 text-xs">Keperluan</span>
+                        <p className="font-medium text-gray-900 text-xs mt-0.5">{selectedPeminjaman.keperluan}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Daftar Bahan */}
+                  <div>
+                    <p className="text-sm font-semibold text-gray-700 mb-3">Bahan yang Dikembalikan</p>
+                    <div className="space-y-3">
+                      {returnFormData.returnItems.map((item, index) => {
+                        const sisa = item.jumlahPinjam - item.jumlahSudahKembali;
+                        const terpakai = sisa - item.jumlahDikembalikan;
+                        return (
+                          <div key={index} className="border border-gray-200 rounded-xl p-4 bg-white">
+                            <div className="flex items-start justify-between mb-3">
+                              <div>
+                                <p className="text-sm font-semibold text-gray-900">{item.namaBahan}</p>
+                                <p className="text-xs text-gray-500 font-mono">{item.rumusKimia}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-xs text-gray-500">Dipinjam</p>
+                                <p className="text-sm font-bold text-gray-900">{item.jumlahPinjam} {item.satuan}</p>
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-2 mb-3 text-center text-xs">
+                              <div className="bg-gray-50 rounded-lg p-2">
+                                <p className="text-gray-500">Sudah Kembali</p>
+                                <p className="font-semibold text-gray-700 mt-0.5">{item.jumlahSudahKembali} {item.satuan}</p>
+                              </div>
+                              <div className="bg-orange-50 rounded-lg p-2">
+                                <p className="text-orange-500">Sisa Belum Kembali</p>
+                                <p className="font-semibold text-orange-700 mt-0.5">{sisa} {item.satuan}</p>
+                              </div>
+                              <div className="bg-red-50 rounded-lg p-2">
+                                <p className="text-red-500">Terpakai</p>
+                                <p className="font-semibold text-red-700 mt-0.5">{terpakai >= 0 ? terpakai : 0} {item.satuan}</p>
+                              </div>
+                            </div>
+
+                            <div>
+                              <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                                Jumlah Dikembalikan Sekarang <span className="text-gray-400">(maks. {sisa} {item.satuan})</span>
+                              </label>
+                              <div className="flex items-center gap-3">
+                                <input
+                                  type="range"
+                                  value={item.jumlahDikembalikan}
+                                  onChange={(e) => handleReturnQuantityChange(index, e.target.value)}
+                                  min="0"
+                                  max={sisa}
+                                  className="flex-1 accent-green-600"
+                                />
+                                <div className="flex items-center gap-1">
                                   <input
                                     type="number"
                                     value={item.jumlahDikembalikan}
                                     onChange={(e) => handleReturnQuantityChange(index, e.target.value)}
                                     min="0"
                                     max={sisa}
-                                    className="w-28 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+                                    className="w-20 px-2 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm text-center font-semibold"
                                   />
-                                  <span className="text-sm text-gray-600">{item.satuan}</span>
+                                  <span className="text-xs text-gray-600">{item.satuan}</span>
                                 </div>
-                                <p className="text-xs text-gray-500 mt-1">
-                                  Min: 0, Max: {sisa}
-                                </p>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
 
-                  {/* Catatan Pengembalian */}
+                  {/* Catatan */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
                       <FileText className="w-4 h-4" />
-                      Catatan Pengembalian <span className="text-gray-400 text-xs">(Opsional)</span>
+                      Catatan <span className="text-gray-400 text-xs font-normal">(Opsional)</span>
                     </label>
                     <textarea
                       value={returnFormData.catatanPengembalian}
                       onChange={(e) => setReturnFormData(prev => ({ ...prev, catatanPengembalian: e.target.value }))}
-                      rows="3"
-                      placeholder="Contoh: Semua bahan dikembalikan dalam kondisi baik, Ada sisa bahan yang tidak terpakai, dll"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+                      rows="2"
+                      placeholder="Kondisi bahan, keterangan tambahan, dll."
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm resize-none"
                     />
                   </div>
                 </div>
@@ -1152,18 +1268,16 @@ const PeminjamanBahanPage = () => {
                 <div className="flex gap-3 pt-6 border-t mt-6">
                   <button
                     type="button"
-                    onClick={() => {
-                      setShowReturnModal(false);
-                      setSelectedPeminjaman(null);
-                    }}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                    onClick={() => { setShowReturnModal(false); setSelectedPeminjaman(null); }}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm"
                   >
                     Batal
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium text-sm flex items-center justify-center gap-2"
                   >
+                    <CheckCircle className="w-4 h-4" />
                     Konfirmasi Pengembalian
                   </button>
                 </div>
@@ -1176,8 +1290,11 @@ const PeminjamanBahanPage = () => {
         {showBorrowModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl w-full max-w-5xl shadow-2xl max-h-[90vh] overflow-y-auto">
-              <div className="p-6 border-b border-gray-200">
+              <div className="p-6 border-b border-gray-200 flex items-center justify-between">
                 <h2 className="text-xl font-bold text-gray-900">Form Peminjaman Bahan Kimia</h2>
+                <button onClick={resetForm} className="p-2 hover:bg-gray-100 rounded-lg transition">
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
               </div>
               <form onSubmit={handleSubmit} className="p-6">
                 <div className="space-y-6">
@@ -1240,23 +1357,32 @@ const PeminjamanBahanPage = () => {
                                 </div>
                                 <div className="max-h-60 overflow-y-auto">
                                   {filteredPeminjam.length > 0 ? (
-                                    filteredPeminjam.map(peminjam => (
-                                      <button
-                                        key={peminjam.id}
-                                        type="button"
-                                        onClick={() => selectPeminjam(peminjam)}
-                                        className="w-full px-4 py-3 text-left hover:bg-gray-50 transition border-b border-gray-100 last:border-0"
-                                      >
-                                        <div className="font-medium text-gray-900">{peminjam.name}</div>
-                                        <div className="text-sm text-gray-600 mt-1">
-                                          <span className={`inline-block px-2 py-0.5 text-xs font-medium rounded mr-2 ${getStatusBadgeColor(peminjam.status)}`}>
-                                            {peminjam.status}
-                                          </span>
-                                          NIK/NIM: {peminjam.nik}
-                                        </div>
-                                        <div className="text-xs text-gray-500 mt-1">{peminjam.institusi}</div>
-                                      </button>
-                                    ))
+                                    filteredPeminjam.map(peminjam => {
+                                      const stats = getPeminjamStats(peminjam.nik);
+                                      return (
+                                        <button
+                                          key={peminjam.id}
+                                          type="button"
+                                          onClick={() => selectPeminjam(peminjam)}
+                                          className="w-full px-4 py-3 text-left hover:bg-gray-50 transition border-b border-gray-100 last:border-0"
+                                        >
+                                          <div className="font-medium text-gray-900">{peminjam.name}</div>
+                                          <div className="text-sm text-gray-600 mt-1">
+                                            <span className={`inline-block px-2 py-0.5 text-xs font-medium rounded mr-2 ${getStatusBadgeColor(peminjam.status)}`}>
+                                              {peminjam.status}
+                                            </span>
+                                            NIK/NIM: {peminjam.nik}
+                                          </div>
+                                          <div className="text-xs text-gray-500 mt-1">{peminjam.institusi}</div>
+                                          <div className="flex items-center gap-3 mt-1">
+                                            <span className="text-xs text-gray-400">{stats.totalTransaksi} transaksi</span>
+                                            {stats.totalTerlambat > 0 && (
+                                              <span className="text-xs text-red-500 font-medium">{stats.totalTerlambat}x terlambat</span>
+                                            )}
+                                          </div>
+                                        </button>
+                                      );
+                                    })
                                   ) : (
                                     <div className="px-4 py-3 text-sm text-gray-500 text-center">
                                       Peminjam tidak ditemukan
@@ -1429,7 +1555,6 @@ const PeminjamanBahanPage = () => {
                   </div>
 
                   {/* Items Section */}
-                  {/* Items Section - WITH SEARCH FEATURE & CLEAR BUTTON */}
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                       <Package className="w-5 h-5" />
@@ -1438,7 +1563,6 @@ const PeminjamanBahanPage = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                       <div className="md:col-span-2 relative">
-                        {/* Search Input dengan Clear Button */}
                         <div className="relative">
                           <input
                             type="text"
@@ -1452,8 +1576,6 @@ const PeminjamanBahanPage = () => {
                             onFocus={() => setShowBahanDropdown(true)}
                             className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                           />
-
-                          {/* Clear/Cancel Button */}
                           {(bahanSearch || currentItem.bahanId) && (
                             <button
                               type="button"
@@ -1463,14 +1585,12 @@ const PeminjamanBahanPage = () => {
                                 setShowBahanDropdown(false);
                               }}
                               className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition"
-                              title="Batal/Hapus pencarian"
                             >
                               <X className="w-4 h-4" />
                             </button>
                           )}
                         </div>
 
-                        {/* NEW: Display Selected Bahan dengan Stok Info */}
                         {currentItem.bahanId && (
                           <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg">
                             <div className="flex items-start justify-between">
@@ -1486,7 +1606,6 @@ const PeminjamanBahanPage = () => {
                                     {bahanList.find(b => b.id === parseInt(currentItem.bahanId))?.spesifikasi}
                                   </span>
                                 </div>
-                                {/* NEW: Stock Info */}
                                 <div className="mt-2 flex items-center gap-2">
                                   <div className="flex items-center gap-1">
                                     <Package className="w-3 h-3 text-green-600" />
@@ -1508,7 +1627,6 @@ const PeminjamanBahanPage = () => {
                                   setCurrentItem(prev => ({ ...prev, bahanId: '', jumlah: '' }));
                                 }}
                                 className="p-1 text-green-600 hover:bg-green-100 rounded transition ml-2"
-                                title="Ganti bahan"
                               >
                                 <X className="w-4 h-4" />
                               </button>
@@ -1518,7 +1636,6 @@ const PeminjamanBahanPage = () => {
 
                         {showBahanDropdown && !currentItem.bahanId && (
                           <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-hidden">
-                            {/* Header with close button */}
                             <div className="sticky top-0 bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
                               <span className="text-xs font-medium text-gray-600">
                                 {filteredBahan.length} bahan ditemukan
@@ -1527,12 +1644,10 @@ const PeminjamanBahanPage = () => {
                                 type="button"
                                 onClick={() => setShowBahanDropdown(false)}
                                 className="text-gray-400 hover:text-gray-600 p-1"
-                                title="Tutup"
                               >
                                 <X className="w-4 h-4" />
                               </button>
                             </div>
-
                             <div className="max-h-48 overflow-y-auto">
                               {filteredBahan.length > 0 ? (
                                 filteredBahan.map(bahan => (
@@ -1562,16 +1677,6 @@ const PeminjamanBahanPage = () => {
                                 <div className="px-4 py-8 text-center">
                                   <Package className="w-12 h-12 text-gray-300 mx-auto mb-2" />
                                   <p className="text-sm text-gray-500">Bahan tidak ditemukan</p>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setBahanSearch('');
-                                      setShowBahanDropdown(false);
-                                    }}
-                                    className="mt-2 text-xs text-red-600 hover:text-red-700 font-medium"
-                                  >
-                                    Reset pencarian
-                                  </button>
                                 </div>
                               )}
                             </div>
@@ -1602,7 +1707,6 @@ const PeminjamanBahanPage = () => {
                       </div>
                     </div>
 
-                    {/* Help Text */}
                     {currentItem.bahanId && !currentItem.jumlah && (
                       <p className="text-xs text-gray-500 mb-4 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" />
@@ -1666,6 +1770,9 @@ const PeminjamanBahanPage = () => {
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                         required
                       />
+                      {formData.tanggalPinjam && (
+                        <p className="mt-1 text-xs text-gray-500">{formatTanggal(formData.tanggalPinjam)}</p>
+                      )}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1676,15 +1783,19 @@ const PeminjamanBahanPage = () => {
                         name="tanggalKembali"
                         value={formData.tanggalKembali}
                         onChange={handleInputChange}
+                        min={formData.tanggalPinjam}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                         required
                       />
+                      {formData.tanggalKembali && (
+                        <p className="mt-1 text-xs text-gray-500">{formatTanggal(formData.tanggalKembali)}</p>
+                      )}
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Keperluan <span className="text-red-600">*</span>
+                      Keperluan <span className="text-gray-400 text-xs font-normal">(Opsional)</span>
                     </label>
                     <textarea
                       name="keperluan"
@@ -1693,7 +1804,6 @@ const PeminjamanBahanPage = () => {
                       rows="3"
                       placeholder="Contoh: Praktikum Kimia Analitik, Penelitian Skripsi, dll"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                      required
                     ></textarea>
                   </div>
                 </div>
@@ -1711,137 +1821,6 @@ const PeminjamanBahanPage = () => {
                     className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
                   >
                     Simpan Peminjaman
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* Return Modal */}
-        {showReturnModal && selectedPeminjaman && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl max-h-[90vh] overflow-y-auto">
-              <div className="p-6 border-b border-gray-200">
-                <h2 className="text-xl font-bold text-gray-900">Form Pengembalian Bahan</h2>
-                <p className="text-sm text-gray-600 mt-1">
-                  Peminjam: {selectedPeminjaman.userName} ({selectedPeminjaman.userNIK})
-                </p>
-              </div>
-              <form onSubmit={handleReturnSubmit} className="p-6">
-                <div className="space-y-4">
-                  {(() => {
-                    const todayDate = new Date().toISOString().split('T')[0];
-                    const late = isLate(selectedPeminjaman.tanggalKembali, todayDate);
-                    const lateDays = late ? calculateLateDays(selectedPeminjaman.tanggalKembali, todayDate) : 0;
-
-                    return late && (
-                      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                        <div className="flex items-start gap-2">
-                          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                          <div>
-                            <p className="text-sm font-semibold text-red-800">Pengembalian Terlambat</p>
-                            <p className="text-xs text-red-700 mt-1">
-                              Terlambat {lateDays} hari dari tanggal target pengembalian ({new Date(selectedPeminjaman.tanggalKembali).toLocaleDateString('id-ID')}).
-                              Catatan keterlambatan akan otomatis ditambahkan.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })()}
-
-                  {/* Table Pengembalian */}
-                  <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                    <table className="w-full">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Bahan</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Dipinjam</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Sudah Kembali</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Sisa</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-600">Dikembalikan Sekarang</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200">
-                        {returnFormData.returnItems.map((item, index) => {
-                          const sisa = item.jumlahPinjam - item.jumlahSudahKembali;
-                          return (
-                            <tr key={index}>
-                              <td className="px-4 py-3">
-                                <div className="text-sm font-medium text-gray-900">{item.namaBahan}</div>
-                                <div className="text-xs text-gray-500 font-mono">{item.rumusKimia}</div>
-                              </td>
-                              <td className="px-4 py-3 text-sm text-gray-600">
-                                {item.jumlahPinjam} {item.satuan}
-                              </td>
-                              <td className="px-4 py-3 text-sm text-gray-600">
-                                {item.jumlahSudahKembali} {item.satuan}
-                              </td>
-                              <td className="px-4 py-3 text-sm font-medium text-orange-600">
-                                {sisa} {item.satuan}
-                              </td>
-                              <td className="px-4 py-3">
-                                <div className="flex items-center gap-2">
-                                  <input
-                                    type="number"
-                                    value={item.jumlahDikembalikan}
-                                    onChange={(e) => handleReturnQuantityChange(index, e.target.value)}
-                                    min="0"
-                                    max={sisa}
-                                    className="w-28 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
-                                  />
-                                  <span className="text-sm text-gray-600">{item.satuan}</span>
-                                </div>
-                                <p className="text-xs text-gray-500 mt-1">
-                                  Min: 0, Max: {sisa}
-                                </p>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {/* Catatan Pengembalian - FIELD TAMBAHAN */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
-                      <FileText className="w-4 h-4" />
-                      Catatan Pengembalian <span className="text-gray-400 text-xs">(Opsional)</span>
-                    </label>
-                    <textarea
-                      value={returnFormData.catatanPengembalian}
-                      onChange={(e) => setReturnFormData(prev => ({
-                        ...prev,
-                        catatanPengembalian: e.target.value
-                      }))}
-                      rows="3"
-                      placeholder="Contoh: Semua bahan dikembalikan dalam kondisi baik, Ada sisa bahan yang tidak terpakai sebanyak X mL, Bahan rusak/tumpah, dll"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm resize-none"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Catatan ini akan tersimpan di riwayat peminjaman
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3 pt-6 border-t mt-6">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowReturnModal(false);
-                      setSelectedPeminjaman(null);
-                    }}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
-                  >
-                    Konfirmasi Pengembalian
                   </button>
                 </div>
               </form>

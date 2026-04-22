@@ -117,6 +117,12 @@ const AlatRusakPage = () => {
     },
   ]);
 
+  const formatTanggal = (dateStr) => {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+  };
+
   const getStatusBadgeColor = (status) => {
     switch (status) {
       case 'Mahasiswa': return 'bg-blue-100 text-blue-700';
@@ -183,10 +189,9 @@ const AlatRusakPage = () => {
   const sudahCount = alatRusakList.filter(i => i.status === 'Sudah Diperbaiki').length;
   const totalRusakUnit = alatRusakList.reduce((sum, i) => sum + i.jumlahRusak, 0);
 
-  // ── Reusable Modal Wrapper ──────────────────────────────────────────────
   const ModalWrapper = ({ children, maxWidth = 'max-w-3xl' }) => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center p-4 overflow-y-auto">
-      <div className={`bg-white rounded-2xl w-full ${maxWidth} shadow-2xl my-4`}>
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div className={`bg-white rounded-2xl w-full ${maxWidth} shadow-2xl max-h-[90vh] overflow-y-auto`}>
         {children}
       </div>
     </div>
@@ -202,28 +207,19 @@ const AlatRusakPage = () => {
           <p className="text-gray-500 text-sm">Pencatatan dan penanganan alat laboratorium yang rusak</p>
         </div>
 
-        {/* Stats */}
+        {/* Stats - same style as screenshot */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-xl p-5 border border-gray-200 flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 mb-1">Total Laporan Rusak</p>
-              <p className="text-2xl font-bold text-gray-900">{alatRusakList.length}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{totalRusakUnit} unit keseluruhan</p>
-            </div>
+          <div className="bg-white rounded-xl p-5 border border-gray-200">
+            <p className="text-sm text-gray-500 mb-1">Total Laporan Rusak</p>
+            <p className="text-2xl font-bold text-gray-900">{alatRusakList.length}</p>
           </div>
-          <div className="bg-white rounded-xl p-5 border border-gray-200 flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 mb-1">Belum Diperbaiki</p>
-              <p className="text-2xl font-bold text-red-600">{belumCount}</p>
-              <p className="text-xs text-red-400 mt-0.5">Perlu penanganan segera</p>
-            </div>
+          <div className="bg-white rounded-xl p-5 border border-gray-200">
+            <p className="text-sm text-gray-500 mb-1">Belum Diperbaiki</p>
+            <p className="text-2xl font-bold text-red-600">{belumCount}</p>
           </div>
-          <div className="bg-white rounded-xl p-5 border border-gray-200 flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 mb-1">Sudah Ditangani</p>
-              <p className="text-2xl font-bold text-green-600">{sudahCount}</p>
-              <p className="text-xs text-green-500 mt-0.5">Selesai diperbaiki</p>
-            </div>
+          <div className="bg-white rounded-xl p-5 border border-gray-200">
+            <p className="text-sm text-gray-500 mb-1">Sudah Ditangani</p>
+            <p className="text-2xl font-bold text-green-600">{sudahCount}</p>
           </div>
         </div>
 
@@ -279,7 +275,7 @@ const AlatRusakPage = () => {
             <div className="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
               <span className="text-sm text-gray-500">Filter aktif:</span>
               <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">
-                {new Date(filterDateFrom).toLocaleDateString('id-ID')} – {new Date(filterDateTo).toLocaleDateString('id-ID')}
+                {formatTanggal(filterDateFrom)} – {formatTanggal(filterDateTo)}
                 <button onClick={handleResetFilter} className="hover:bg-blue-200 rounded-full p-0.5">
                   <X className="w-3 h-3" />
                 </button>
@@ -288,103 +284,81 @@ const AlatRusakPage = () => {
           )}
         </div>
 
-        {/* ── Table ── */}
+        {/* Table */}
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[800px]">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[80px]">No</th>
-                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[180px]">Peminjam</th>
-                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[150px]">Tanggal</th>
-                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[150px]">Alat</th>
-                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[150px]">Jumlah</th>
-                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan Kerusakan</th>
-                  <th className="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px]">Aksi</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[50px]">No</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Alat</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Rusak</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Spesifikasi</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Rusak</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan Kerusakan</th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[100px]">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredList.length > 0 ? (
-                  filteredList.map((item,i) => (
-                    <tr key={item.id} className="hover:bg-gray-50 transition align-center">
-                      <td className="px-6 py-4">
-                        <p className="text-xs">
-                          {i + 1}
-                        </p>
+                  filteredList.map((item, i) => (
+                    <tr key={item.id} className="hover:bg-gray-50 transition">
+                      <td className="px-4 py-4">
+                        <span className="text-xs text-gray-700">{i + 1}</span>
                       </td>
-                      {/* ── Kolom Peminjam ── */}
-                      <td className="px-2 py-4">
-                        <p className="text-sm text-gray-900 leading-tight">{item.peminjamNama}</p>
+                      <td className="px-4 py-4">
+                        <span className="text-xs text-gray-900 font-semibold">{item.namaAlat}</span>
                       </td>
-
-                      {/* ── Kolom Tanggal ── */}
-                      <td className="px-2 py-4 whitespace-nowrap">
-                        <div className='flex flex-col items-start'>
-                          <div className="flex items-center gap-1 text-xs text-gray-600">
-                            <Calendar className="w-3 h-3 flex-shrink-0" />
-                            <span>Rusak: {new Date(item.tanggalRusak).toLocaleDateString('id-ID')}</span>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                            <Calendar className="w-3 h-3 flex-shrink-0 text-gray-400" />
+                            <span>Rusak: {formatTanggal(item.tanggalRusak)}</span>
                           </div>
                           {item.tanggalDiperbaiki && (
-                            <div className="flex items-center gap-1 text-xs text-green-600 mt-1">
+                            <div className="flex items-center gap-1.5 text-xs text-green-600">
                               <CheckCircle className="w-3 h-3 flex-shrink-0" />
-                              <span>Ditangani: {new Date(item.tanggalDiperbaiki).toLocaleDateString('id-ID')}</span>
+                              <span>Ditangani: {formatTanggal(item.tanggalDiperbaiki)}</span>
                             </div>
                           )}
                         </div>
                       </td>
-
-                      {/* ── Kolom Alat ── */}
-                      <td className="px-2 py-4">
-                        <div className="flex items-center gap-2">
-                          <p className="text-sm text-gray-900 leading-tight">{item.namaAlat}</p>
-                        </div>
+                      <td className="px-4 py-4">
+                        <span className="text-xs text-gray-700">{item.spesifikasi}</span>
                       </td>
-
-                      <td className="px-2 py-4">
-                        <div className="flex items-center gap-2">
-                          {/* Badge jumlah unit — di bawah nama, tidak menumpuk */}
-                          <span className="inline-block mt-1.5 px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded-full">
-                            {item.jumlahRusak}
-                          </span>
-                        </div>
+                      <td className="px-4 py-4">
+                        <span className="text-xs text-gray-900">{item.jumlahRusak} unit</span>
                       </td>
-
-                      {/* ── Kolom Keterangan ── */}
-                      <td className="px-2 py-4">
-                        <p className="text-sm text-gray-700 line-clamp-2 leading-snug">{item.keterangan}</p>
-                        {/* Jika sudah ditangani, tampilkan cuplikan catatan */}
-                        {item.status === 'Sudah Diperbaiki' && item.catatanPerbaikan && (
-                          <p className="text-xs text-green-600 mt-1.5 line-clamp-1 italic">✓ {item.catatanPerbaikan}</p>
-                        )}
+                      <td className="px-4 py-4">
+                        <span className="text-xs text-gray-700 line-clamp-2">{item.keterangan}</span>
                       </td>
-
-                      {/* ── Kolom Aksi ── */}
-                      <td className="px-2 py-4">
-                        <div className='flex flex-col items-center'>
-                          <div className="flex items-center gap-2">
+                      <td className="px-4 py-4">
+                        <div className="flex items-center justify-center gap-2">
+                          {/* Detail button - same style as screenshot (eye icon, green outline) */}
+                          <button
+                            onClick={() => handleShowDetail(item)}
+                            title="Lihat Detail"
+                            className="p-1.5 rounded-md text-green-600 hover:bg-green-50 transition"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                          {/* Tandai diperbaiki - pencil/edit style, blue outline */}
+                          {item.status === 'Belum Diperbaiki' && (
                             <button
-                              onClick={() => handleShowDetail(item)}
-                              className="p-2 bg-blue-600 text-white hover:bg-blue-500 rounded-lg transition"
-                              title="Lihat Detail"
+                              onClick={() => handleOpenUpdate(item)}
+                              title="Tandai Ditangani"
+                              className="p-1.5 rounded-md text-blue-500 hover:bg-blue-50 transition"
                             >
-                              <Eye className="w-4 h-4" />
+                              <RotateCcw className="w-4 h-4" />
                             </button>
-                            {item.status === 'Belum Diperbaiki' && (
-                              <button
-                                onClick={() => handleOpenUpdate(item)}
-                                className="flex items-center p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-medium whitespace-nowrap"
-                              >
-                                <RotateCcw className="w-4 h-4" />
-                              </button>
-                            )}
-                          </div>
+                          )}
                         </div>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="px-6 py-12 text-center">
+                    <td colSpan="7" className="px-6 py-12 text-center">
                       <AlertTriangle className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                       <p className="text-sm text-gray-500">
                         {activeTab === 'belum' ? 'Tidak ada alat rusak yang belum ditangani' : 'Belum ada riwayat perbaikan alat'}
@@ -399,12 +373,9 @@ const AlatRusakPage = () => {
 
       </div>
 
-      {/* ══════════════════════════════════════════════
-          MODAL DETAIL
-      ══════════════════════════════════════════════ */}
+      {/* MODAL DETAIL */}
       {showDetailModal && selectedItem && (
         <ModalWrapper maxWidth="max-w-3xl">
-          {/* Header */}
           <div className="p-5 border-b border-gray-200 flex items-start justify-between">
             <div>
               <h2 className="text-lg font-bold text-gray-900">Detail Alat Rusak</h2>
@@ -416,7 +387,6 @@ const AlatRusakPage = () => {
           </div>
 
           <div className="p-5 space-y-4">
-            {/* Status Banner */}
             {selectedItem.status === 'Belum Diperbaiki' ? (
               <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-start gap-2">
                 <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
@@ -431,7 +401,7 @@ const AlatRusakPage = () => {
                 <div>
                   <p className="text-sm font-semibold text-green-800">Sudah Ditangani</p>
                   <p className="text-xs text-green-600 mt-0.5">
-                    {new Date(selectedItem.tanggalDiperbaiki).toLocaleDateString('id-ID')} oleh {selectedItem.diperbaikiOleh}
+                    {formatTanggal(selectedItem.tanggalDiperbaiki)}
                   </p>
                 </div>
               </div>
@@ -459,9 +429,7 @@ const AlatRusakPage = () => {
                 )}
                 <div>
                   <p className="text-xs text-gray-500">Jumlah Rusak</p>
-                  <span className="inline-block mt-0.5 px-2 py-0.5 bg-red-100 text-red-700 text-sm font-bold rounded">
-                    {selectedItem.jumlahRusak} unit
-                  </span>
+                  <p className="text-sm font-bold text-gray-900 mt-0.5">{selectedItem.jumlahRusak} unit</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">Lokasi Penyimpanan</p>
@@ -469,7 +437,7 @@ const AlatRusakPage = () => {
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">Tanggal Rusak</p>
-                  <p className="text-sm text-gray-900 mt-0.5">{new Date(selectedItem.tanggalRusak).toLocaleDateString('id-ID')}</p>
+                  <p className="text-sm text-gray-900 mt-0.5">{formatTanggal(selectedItem.tanggalRusak)}</p>
                 </div>
               </div>
               <div className="mt-3">
@@ -541,29 +509,26 @@ const AlatRusakPage = () => {
                 <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
                   <RotateCcw className="w-4 h-4 text-green-600" /> Catatan Penanganan
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3">
                   <div>
                     <p className="text-xs text-gray-500">Tanggal Ditangani</p>
                     <p className="text-sm font-medium text-gray-900 mt-0.5">
-                      {new Date(selectedItem.tanggalDiperbaiki).toLocaleDateString('id-ID')}
+                      {formatTanggal(selectedItem.tanggalDiperbaiki)}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Ditangani Oleh</p>
-                    <p className="text-sm font-medium text-gray-900 mt-0.5">{selectedItem.diperbaikiOleh}</p>
-                  </div>
-                  <div className="md:col-span-2">
-                    <p className="text-xs text-gray-500 mb-1">Catatan Perbaikan</p>
-                    <div className="bg-white border border-green-200 rounded-lg p-3">
-                      <p className="text-sm text-gray-800">{selectedItem.catatanPerbaikan}</p>
+                  {selectedItem.catatanPerbaikan && (
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Catatan Perbaikan</p>
+                      <div className="bg-white border border-green-200 rounded-lg p-3">
+                        <p className="text-sm text-gray-800">{selectedItem.catatanPerbaikan}</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
 
-          {/* Footer */}
           <div className="p-5 border-t border-gray-200 flex gap-3">
             {selectedItem.status === 'Belum Diperbaiki' && (
               <button
@@ -584,12 +549,9 @@ const AlatRusakPage = () => {
         </ModalWrapper>
       )}
 
-      {/* ══════════════════════════════════════════════
-          MODAL TANGANI / UPDATE
-      ══════════════════════════════════════════════ */}
+      {/* MODAL TANGANI / UPDATE */}
       {showUpdateModal && selectedItem && (
         <ModalWrapper maxWidth="max-w-lg">
-          {/* Header */}
           <div className="p-5 border-b border-gray-200 flex items-start justify-between">
             <div>
               <h2 className="text-lg font-bold text-gray-900">Tandai Sudah Ditangani</h2>
@@ -604,7 +566,6 @@ const AlatRusakPage = () => {
 
           <form onSubmit={handleUpdateSubmit}>
             <div className="p-5 space-y-4">
-              {/* Ringkasan Kerusakan */}
               <div className="bg-red-50 border border-red-100 rounded-lg p-3">
                 <p className="text-xs text-gray-500 mb-1">Keterangan Kerusakan:</p>
                 <p className="text-sm text-gray-800">{selectedItem.keterangan}</p>
@@ -613,7 +574,6 @@ const AlatRusakPage = () => {
                 </p>
               </div>
 
-              {/* Tanggal */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
                   Tanggal Ditangani <span className="text-red-600">*</span>
@@ -627,25 +587,9 @@ const AlatRusakPage = () => {
                 />
               </div>
 
-              {/* Ditangani Oleh */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Ditangani Oleh <span className="text-red-600">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Contoh: Teknisi Lab - Pak Surya, Admin Lab - Bu Dewi"
-                  value={updateFormData.diperbaikiOleh}
-                  onChange={(e) => setUpdateFormData(prev => ({ ...prev, diperbaikiOleh: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  required
-                />
-              </div>
-
-              {/* Catatan */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Catatan Penanganan <span className="text-red-600">*</span>
+                  Catatan Penanganan <span className="text-gray-400 text-xs font-normal">(opsional)</span>
                 </label>
                 <textarea
                   rows="4"
@@ -653,20 +597,11 @@ const AlatRusakPage = () => {
                   value={updateFormData.catatanPerbaikan}
                   onChange={(e) => setUpdateFormData(prev => ({ ...prev, catatanPerbaikan: e.target.value }))}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none text-sm"
-                  required
                 />
               </div>
 
-              {/* Warning */}
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                <p className="text-xs text-yellow-800">
-                  Setelah disimpan, laporan ini akan dipindahkan ke tab{' '}
-                  <strong>Riwayat Perbaikan</strong> dan tidak dapat diubah kembali.
-                </p>
-              </div>
             </div>
 
-            {/* Footer */}
             <div className="p-5 border-t border-gray-200 flex gap-3">
               <button
                 type="button"
@@ -687,24 +622,33 @@ const AlatRusakPage = () => {
         </ModalWrapper>
       )}
 
-      {/* ══════════════════════════════════════════════
-          MODAL FILTER
-      ══════════════════════════════════════════════ */}
+      {/* MODAL FILTER */}
       {showFilterModal && (
         <ModalWrapper maxWidth="max-w-md">
-          <div className="p-5 border-b border-gray-200">
+          <div className="p-5 border-b border-gray-200 flex items-center justify-between">
             <h2 className="text-lg font-bold text-gray-900">Filter Tanggal Rusak</h2>
+            <button onClick={() => setShowFilterModal(false)} className="p-2 hover:bg-gray-100 rounded-lg transition">
+              <X className="w-5 h-5 text-gray-500" />
+            </button>
           </div>
           <div className="p-5 space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Dari Tanggal</label>
-              <input type="date" value={filterDateFrom} onChange={(e) => setFilterDateFrom(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent" />
+              <input
+                type="date"
+                value={filterDateFrom}
+                onChange={(e) => setFilterDateFrom(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Sampai Tanggal</label>
-              <input type="date" value={filterDateTo} onChange={(e) => setFilterDateTo(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent" />
+              <input
+                type="date"
+                value={filterDateTo}
+                onChange={(e) => setFilterDateTo(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              />
             </div>
             <div className="flex gap-3 pt-2 border-t border-gray-200">
               <button
