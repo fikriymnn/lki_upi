@@ -3,12 +3,9 @@ import {
   Plus, Search, Eye, X, Wrench, FlaskConical,
   ClipboardList, CheckCircle, Clock, ChevronLeft,
   ChevronRight, Save, AlertTriangle, Package,
-  Calendar, Edit2
+  Calendar, Edit2, Filter
 } from 'lucide-react';
 
-// ============================================================
-// MOCK DATA
-// ============================================================
 const mockAlatLab = [
   { _id: 'a1', nama_alat: 'Erlenmeyer', spesifikasi: '100 ml', jumlah: 10, merk_brand: 'Pyrex', penyimpanan: 'Rak 2' },
   { _id: 'a2', nama_alat: 'Labu Jantung', spesifikasi: '50 ml', jumlah: 4, merk_brand: 'Duran', penyimpanan: 'Rak 3' },
@@ -44,7 +41,6 @@ const mockOpnameList = [
   },
 ];
 
-// Generate opname items dari mock master data
 const generateOpnameItems = (opnameId) => [
   ...mockAlatLab.map(a => ({
     _id: `oi_${opnameId}_${a._id}`,
@@ -68,23 +64,82 @@ const generateOpnameItems = (opnameId) => [
   })),
 ];
 
+const formatTanggal = (dateStr) => {
+  if (!dateStr) return '-';
+  return new Date(dateStr).toLocaleDateString('id-ID', {
+    day: 'numeric', month: 'long', year: 'numeric'
+  });
+};
+
 // ============================================================
-// STATUS BADGE
+// STATUS BADGE — tanpa icon
 // ============================================================
 const StatusBadge = ({ status }) => {
   if (status === 'FINAL') {
     return (
-      <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full font-medium">
-        <CheckCircle className="w-3 h-3" /> Final
+      <span className="inline-flex items-center px-2.5 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full font-medium">
+        Final
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full font-medium">
-      <Clock className="w-3 h-3" /> Draft
+    <span className="inline-flex items-center px-2.5 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full font-medium">
+      Draft
     </span>
   );
 };
+
+// ============================================================
+// FILTER MODAL
+// ============================================================
+const FilterModal = ({ fromDate, toDate, setFromDate, setToDate, onClose, onReset }) => (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl">
+      <div className="p-5 border-b border-gray-200 flex items-center justify-between">
+        <h2 className="text-lg font-bold text-gray-900">Filter Tanggal Opname</h2>
+        <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition">
+          <X className="w-5 h-5 text-gray-500" />
+        </button>
+      </div>
+      <div className="p-5 space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">Dari Tanggal</label>
+          <input
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">Sampai Tanggal</label>
+          <input
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+          />
+        </div>
+        <div className="flex gap-3 pt-2 border-t border-gray-200">
+          <button
+            type="button"
+            onClick={() => { onReset(); onClose(); }}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm"
+          >
+            Reset
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm"
+          >
+            Terapkan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 // ============================================================
 // CREATE OPNAME MODAL
@@ -103,8 +158,8 @@ const CreateOpnameModal = ({ onClose, onSubmit }) => {
       <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl">
         <div className="p-6 border-b border-gray-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-purple-100">
-              <ClipboardList className="w-5 h-5 text-purple-600" />
+            <div className="p-2 rounded-lg bg-red-100">
+              <ClipboardList className="w-5 h-5 text-red-600" />
             </div>
             <h2 className="text-xl font-bold text-gray-900">Buat Stock Opname</h2>
           </div>
@@ -115,14 +170,13 @@ const CreateOpnameModal = ({ onClose, onSubmit }) => {
         <div className="p-6 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Calendar className="w-4 h-4 inline mr-1" />
               Tanggal Opname <span className="text-red-500">*</span>
             </label>
             <input
               type="date"
               value={tanggal}
               onChange={(e) => setTanggal(e.target.value)}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
             />
           </div>
           <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl">
@@ -138,7 +192,7 @@ const CreateOpnameModal = ({ onClose, onSubmit }) => {
             Batal
           </button>
           <button onClick={handleSubmit}
-            className="flex-1 px-4 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium">
+            className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium">
             Buat Opname
           </button>
         </div>
@@ -148,7 +202,7 @@ const CreateOpnameModal = ({ onClose, onSubmit }) => {
 };
 
 // ============================================================
-// EDIT OPNAME MODAL (input physical stock)
+// EDIT OPNAME MODAL
 // ============================================================
 const EditOpnameModal = ({ opname, onClose, onSaveDraft, onSesuaikan }) => {
   const [activeTab, setActiveTab] = useState('AlatLab');
@@ -188,23 +242,16 @@ const EditOpnameModal = ({ opname, onClose, onSaveDraft, onSesuaikan }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl w-full max-w-5xl shadow-2xl max-h-[95vh] flex flex-col">
 
-        {/* Header */}
+        {/* Header — tanpa icon di dekat teks judul */}
         <div className="p-6 border-b border-gray-200 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-purple-100">
-              <ClipboardList className="w-5 h-5 text-purple-600" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-900">
-                {isFinal ? 'Detail' : 'Edit'} Stock Opname
-              </h2>
-              <p className="text-sm text-gray-500">
-                {new Date(opname.tanggal).toLocaleDateString('id-ID', {
-                  day: '2-digit', month: 'long', year: 'numeric'
-                })}
-                {' • '}
-                <StatusBadge status={opname.status} />
-              </p>
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">
+              {isFinal ? 'Detail' : 'Edit'} Stock Opname
+            </h2>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-sm text-gray-500">{formatTanggal(opname.tanggal)}</span>
+              <span className="text-gray-300">•</span>
+              <StatusBadge status={opname.status} />
             </div>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition">
@@ -234,10 +281,9 @@ const EditOpnameModal = ({ opname, onClose, onSaveDraft, onSesuaikan }) => {
 
         {/* Tab + Search */}
         <div className="shrink-0">
-          {/* Tab */}
           <div className="flex border-b border-gray-200 px-6">
             {[
-              { key: 'AlatLab',    label: 'Alat Lab',    icon: <Wrench className="w-4 h-4" />,     count: alatCount },
+              { key: 'AlatLab',    label: 'Alat Lab',    icon: <Wrench className="w-4 h-4" />,      count: alatCount },
               { key: 'BahanKimia', label: 'Bahan Kimia', icon: <FlaskConical className="w-4 h-4" />, count: bahanCount },
             ].map(tab => (
               <button
@@ -245,22 +291,20 @@ const EditOpnameModal = ({ opname, onClose, onSaveDraft, onSesuaikan }) => {
                 onClick={() => { setActiveTab(tab.key); setSearchTerm(''); }}
                 className={`flex items-center gap-2 px-6 py-3 text-sm font-medium transition-all border-b-2 -mb-px ${
                   activeTab === tab.key
-                    ? 'border-purple-500 text-purple-600'
+                    ? 'border-red-500 text-red-600'
                     : 'border-transparent text-gray-400 hover:text-gray-600'
                 }`}
               >
                 {tab.icon}
                 {tab.label}
                 <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                  activeTab === tab.key ? 'bg-purple-100 text-purple-600' : 'bg-gray-100 text-gray-500'
+                  activeTab === tab.key ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-500'
                 }`}>
                   {tab.count}
                 </span>
               </button>
             ))}
           </div>
-
-          {/* Search */}
           <div className="px-6 py-3 border-b border-gray-200">
             <div className="relative max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -269,7 +313,7 @@ const EditOpnameModal = ({ opname, onClose, onSaveDraft, onSesuaikan }) => {
                 placeholder={`Cari ${activeTab === 'AlatLab' ? 'alat lab' : 'bahan kimia'}...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -280,14 +324,14 @@ const EditOpnameModal = ({ opname, onClose, onSaveDraft, onSesuaikan }) => {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8">No</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Item</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Spesifikasi</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Stok Sistem</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Stok Aktual</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Selisih</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8">No</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Item</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Spesifikasi</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Stok Sistem</th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Stok Aktual</th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Selisih</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -299,27 +343,20 @@ const EditOpnameModal = ({ opname, onClose, onSaveDraft, onSesuaikan }) => {
 
                 return (
                   <tr key={it._id} className={`transition ${hasSelisih ? 'bg-orange-50' : 'hover:bg-gray-50'}`}>
-                    <td className="px-6 py-3 text-sm text-gray-500">{idx + 1}</td>
-                    <td className="px-6 py-3">
-                      <p className="text-sm font-semibold text-gray-900">{name}</p>
-                      {it.item.merk_brand && (
-                        <p className="text-xs text-gray-400">{it.item.merk_brand}</p>
-                      )}
-                    </td>
-                    <td className="px-6 py-3 text-sm text-gray-600">{it.item.spesifikasi || '-'}</td>
-                    <td className="px-6 py-3 text-sm text-gray-600">{it.item.penyimpanan || '-'}</td>
+                    <td className="px-4 py-3"><span className="text-xs text-gray-500">{idx + 1}</span></td>
+                    <td className="px-4 py-3"><span className="text-xs font-semibold text-gray-900">{name}</span></td>
+                    <td className="px-4 py-3"><span className="text-xs text-gray-600">{it.item.spesifikasi || '-'}</span></td>
+                    <td className="px-4 py-3"><span className="text-xs text-gray-600">{it.item.penyimpanan || '-'}</span></td>
 
-                    {/* Stok Sistem */}
-                    <td className="px-6 py-3 text-center">
-                      <span className="px-2.5 py-1 bg-blue-100 text-blue-700 text-sm font-semibold rounded-full">
+                    <td className="px-4 py-3 text-center">
+                      <span className="px-2.5 py-1 text-xs text-gray-600 rounded-full">
                         {it.systemStock} {satuan}
                       </span>
                     </td>
 
-                    {/* Stok Aktual — input */}
-                    <td className="px-6 py-3 text-center">
+                    <td className="px-4 py-3 text-center">
                       {isFinal ? (
-                        <span className={`px-2.5 py-1 text-sm font-semibold rounded-full ${
+                        <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
                           hasSelisih ? 'bg-orange-100 text-orange-700' : 'bg-emerald-100 text-emerald-700'
                         }`}>
                           {it.physicalStock} {satuan}
@@ -331,41 +368,39 @@ const EditOpnameModal = ({ opname, onClose, onSaveDraft, onSesuaikan }) => {
                           value={it.physicalStock === 0 && !isPhysicalFilled ? '' : it.physicalStock}
                           onChange={(e) => handlePhysicalChange(it._id, e.target.value)}
                           placeholder="0"
-                          className={`w-24 px-3 py-1.5 border rounded-lg text-sm text-center focus:ring-2 focus:border-transparent ${
+                          className={`w-24 px-3 py-1.5 border rounded-lg text-xs text-center focus:ring-2 focus:border-transparent ${
                             hasSelisih
                               ? 'border-orange-300 focus:ring-orange-400 bg-orange-50'
-                              : 'border-gray-300 focus:ring-purple-500'
+                              : 'border-gray-300 focus:ring-red-500'
                           }`}
                         />
                       )}
                     </td>
 
-                    {/* Selisih */}
-                    <td className="px-6 py-3 text-center">
+                    <td className="px-4 py-3 text-center">
                       {it.selisih === 0 ? (
-                        <span className="px-2.5 py-1 bg-gray-100 text-gray-500 text-sm rounded-full">0</span>
+                        <span className="px-2.5 py-1 bg-gray-100 text-gray-500 text-xs rounded-full">0</span>
                       ) : it.selisih > 0 ? (
-                        <span className="px-2.5 py-1 bg-emerald-100 text-emerald-700 text-sm font-semibold rounded-full">
+                        <span className="px-2.5 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
                           +{it.selisih}
                         </span>
                       ) : (
-                        <span className="px-2.5 py-1 bg-red-100 text-red-700 text-sm font-semibold rounded-full">
+                        <span className="px-2.5 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full">
                           {it.selisih}
                         </span>
                       )}
                     </td>
 
-                    {/* Catatan */}
-                    <td className="px-6 py-3">
+                    <td className="px-4 py-3">
                       {isFinal ? (
-                        <p className="text-sm text-gray-600">{it.note || '-'}</p>
+                        <span className="text-xs text-gray-600">{it.note || '-'}</span>
                       ) : (
                         <input
                           type="text"
                           value={it.note}
                           onChange={(e) => handleNoteChange(it._id, e.target.value)}
                           placeholder="Tambah catatan..."
-                          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-red-500 focus:border-transparent"
                         />
                       )}
                     </td>
@@ -385,10 +420,9 @@ const EditOpnameModal = ({ opname, onClose, onSaveDraft, onSesuaikan }) => {
           </table>
         </div>
 
-        {/* Footer */}
+        {/* Footer — Draft */}
         {!isFinal && (
           <div className="p-6 border-t border-gray-200 shrink-0">
-            {/* Konfirmasi sesuaikan */}
             {confirmSesuaikan ? (
               <div className="p-4 bg-orange-50 border border-orange-200 rounded-xl mb-4">
                 <div className="flex items-start gap-3">
@@ -426,14 +460,14 @@ const EditOpnameModal = ({ opname, onClose, onSaveDraft, onSesuaikan }) => {
                 </button>
                 <button
                   onClick={() => onSaveDraft(items)}
-                  className="flex items-center gap-2 px-5 py-2.5 border border-purple-300 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition font-medium text-sm"
+                  className="flex items-center gap-2 px-5 py-2.5 border border-red-300 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition font-medium text-sm"
                 >
                   <Save className="w-4 h-4" />
                   Simpan Draft
                 </button>
                 <button
                   onClick={() => setConfirmSesuaikan(true)}
-                  className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition font-medium text-sm"
+                  className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-orange-600 transition font-medium text-sm"
                 >
                   <CheckCircle className="w-4 h-4" />
                   Sesuaikan Stok
@@ -448,20 +482,9 @@ const EditOpnameModal = ({ opname, onClose, onSaveDraft, onSesuaikan }) => {
           </div>
         )}
 
-        {/* Footer jika FINAL */}
+        {/* Footer — Final */}
         {isFinal && (
           <div className="p-6 border-t border-gray-200 shrink-0">
-            <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-              <span>Disesuaikan oleh: <strong>{opname.disesuaikanOleh?.name || '-'}</strong></span>
-              <span>
-                {opname.disesuaikanPada
-                  ? new Date(opname.disesuaikanPada).toLocaleDateString('id-ID', {
-                      day: '2-digit', month: 'short', year: 'numeric',
-                      hour: '2-digit', minute: '2-digit'
-                    })
-                  : '-'}
-              </span>
-            </div>
             <button onClick={onClose}
               className="w-full px-4 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-medium">
               Tutup
@@ -479,18 +502,28 @@ const EditOpnameModal = ({ opname, onClose, onSaveDraft, onSesuaikan }) => {
 const StockOpnamePage = () => {
   const [opnameList, setOpnameList] = useState(mockOpnameList);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
   const [editOpname, setEditOpname] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const perPage = 10;
+
+  const hasActiveFilter = fromDate || toDate;
+
+  const clearFilter = () => { setFromDate(''); setToDate(''); };
 
   const filtered = opnameList.filter(op => {
     const tanggalStr = new Date(op.tanggal).toLocaleDateString('id-ID');
     const matchSearch = tanggalStr.includes(searchTerm) ||
       op.dibuatOleh?.name?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchStatus = filterStatus === '' || op.status === filterStatus;
-    return matchSearch && matchStatus;
+    const opDate = new Date(op.tanggal);
+    const matchFrom = !fromDate || opDate >= new Date(fromDate);
+    const matchTo   = !toDate   || opDate <= new Date(new Date(toDate).setHours(23, 59, 59));
+    return matchSearch && matchStatus && matchFrom && matchTo;
   });
 
   const totalPage = Math.ceil(filtered.length / perPage);
@@ -512,18 +545,12 @@ const StockOpnamePage = () => {
   };
 
   const handleSaveDraft = (items) => {
-    // Ganti dengan API call: PUT /api/opname/:id/items (status tetap DRAFT)
     alert('Draft berhasil disimpan!');
     setEditOpname(null);
   };
 
   const handleSesuaikan = (items) => {
-    // Ganti dengan API call:
-    // 1. PUT /api/opname/:id/sesuaikan → update stock item + generate StockMovement ADJUSTMENT
-    // 2. Update status opname ke FINAL
     const adjustedItems = items.filter(it => it.selisih !== 0);
-    console.log('Items to adjust:', adjustedItems);
-    // Simulasi: update status ke FINAL
     setOpnameList(prev => prev.map(op =>
       op._id === editOpname._id
         ? { ...op, status: 'FINAL', disesuaikanOleh: { name: 'Admin' }, disesuaikanPada: new Date().toISOString(), totalSelisih: adjustedItems.length }
@@ -537,48 +564,31 @@ const StockOpnamePage = () => {
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
-        <div className="mb-6 flex items-center gap-4">
-          {/* <div className="p-3 rounded-xl bg-purple-100">
-            <ClipboardList className="w-6 h-6 text-purple-600" />
-          </div> */}
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Stock Opname</h1>
-            <p className="text-gray-500 text-sm">Pengecekan & penyesuaian stok fisik alat lab & bahan kimia</p>
-          </div>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">Stock Opname</h1>
+          <p className="text-gray-500 text-sm">Pengecekan & penyesuaian stok fisik alat lab & bahan kimia</p>
         </div>
 
-        {/* Summary Cards */}
+        {/* Stat Cards — konsisten */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-purple-100">
-              <ClipboardList className="w-5 h-5 text-purple-600" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">Total Opname</p>
-              <p className="text-2xl font-bold text-gray-900">{opnameList.length}</p>
-            </div>
+          <div className="bg-white rounded-xl p-5 border border-gray-200">
+            <p className="text-sm text-gray-500 mb-1">Total Opname</p>
+            <p className="text-2xl font-bold text-gray-900">{opnameList.length}</p>
+            <p className="text-xs text-gray-400 mt-0.5">Semua periode</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-emerald-100">
-              <CheckCircle className="w-5 h-5 text-emerald-600" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">Final</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {opnameList.filter(o => o.status === 'FINAL').length}
-              </p>
-            </div>
+          <div className="bg-white rounded-xl p-5 border border-gray-200">
+            <p className="text-sm text-gray-500 mb-1">Final</p>
+            <p className="text-2xl font-bold text-emerald-600">
+              {opnameList.filter(o => o.status === 'FINAL').length}
+            </p>
+            <p className="text-xs text-emerald-500 mt-0.5">Sudah disesuaikan</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-yellow-100">
-              <Clock className="w-5 h-5 text-yellow-600" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">Draft</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {opnameList.filter(o => o.status === 'DRAFT').length}
-              </p>
-            </div>
+          <div className="bg-white rounded-xl p-5 border border-gray-200">
+            <p className="text-sm text-gray-500 mb-1">Draft</p>
+            <p className="text-2xl font-bold text-yellow-500">
+              {opnameList.filter(o => o.status === 'DRAFT').length}
+            </p>
+            <p className="text-xs text-yellow-400 mt-0.5">Belum disesuaikan</p>
           </div>
         </div>
 
@@ -592,26 +602,48 @@ const StockOpnamePage = () => {
                 placeholder="Cari tanggal atau nama pembuat..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
               />
             </div>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
             >
               <option value="">Semua Status</option>
               <option value="DRAFT">Draft</option>
               <option value="FINAL">Final</option>
             </select>
             <button
+              onClick={() => setShowFilterModal(true)}
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+            >
+              <Filter className="w-4 h-4" />
+              Filter Tanggal
+              {hasActiveFilter && (
+                <span className="px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded-full">1</span>
+              )}
+            </button>
+            <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center gap-2 px-5 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium whitespace-nowrap"
+              className="flex items-center gap-2 px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium whitespace-nowrap"
             >
               <Plus className="w-4 h-4" />
               Buat Opname
             </button>
           </div>
+
+          {hasActiveFilter && (
+            <div className="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+              <span className="text-sm text-gray-500">Filter aktif:</span>
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs">
+                {fromDate && formatTanggal(fromDate)}{fromDate && toDate && ' – '}{toDate && formatTanggal(toDate)}
+                <button onClick={clearFilter} className="hover:bg-red-200 rounded-full p-0.5">
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Table */}
@@ -620,65 +652,52 @@ const StockOpnamePage = () => {
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">No</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Opname</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total Item</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dibuat Oleh</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Disesuaikan Oleh</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">No</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Opname</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total Item</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dibuat Oleh</th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[80px]">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {paginated.length > 0 ? paginated.map((op, idx) => (
                   <tr key={op._id} className="hover:bg-gray-50 transition">
-                    <td className="px-6 py-4 text-sm text-gray-500">{(currentPage - 1) * perPage + idx + 1}</td>
-                    <td className="px-6 py-4">
-                      <p className="text-sm font-semibold text-gray-900">
-                        {new Date(op.tanggal).toLocaleDateString('id-ID', {
-                          day: '2-digit', month: 'long', year: 'numeric'
-                        })}
-                      </p>
-                      <p className="text-xs text-gray-400 mt-0.5">
-                        Dibuat: {new Date(op.createdAt || op.tanggal).toLocaleDateString('id-ID')}
-                      </p>
+                    <td className="px-4 py-4">
+                      <span className="text-xs text-gray-500">{(currentPage - 1) * perPage + idx + 1}</span>
                     </td>
-                    <td className="px-6 py-4"><StatusBadge status={op.status} /></td>
-                    <td className="px-6 text-center py-4">
-                      <span className="text-sm text-gray-900">{op.totalItem}</span>
+                    <td className="px-4 py-4">
+                      <div className="flex items-center gap-1.5 text-xs text-gray-700">
+                        <Calendar className="w-3 h-3 flex-shrink-0 text-gray-400" />
+                        <span>{formatTanggal(op.tanggal)}</span>
+                      </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{op.dibuatOleh?.name || '-'}</td>
-                    <td className="px-6 py-4">
-                      {op.disesuaikanOleh ? (
-                        <div>
-                          <p className="text-sm text-gray-600">{op.disesuaikanOleh.name}</p>
-                          <p className="text-xs text-gray-400">
-                            {op.disesuaikanPada
-                              ? new Date(op.disesuaikanPada).toLocaleDateString('id-ID')
-                              : '-'}
-                          </p>
-                        </div>
-                      ) : (
-                        <span className="text-sm text-gray-400">-</span>
-                      )}
+                    <td className="px-4 py-4">
+                      <StatusBadge status={op.status} />
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex gap-2">
+                    <td className="px-4 py-4 text-center">
+                      <span className="text-xs text-gray-900">{op.totalItem}</span>
+                    </td>
+                    <td className="px-4 py-4">
+                      <span className="text-xs text-gray-600">{op.dibuatOleh?.name || '-'}</span>
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="flex justify-center">
                         {op.status === 'DRAFT' ? (
                           <button
                             onClick={() => setEditOpname(op)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 text-purple-600 bg-purple-50 hover:bg-purple-100 rounded-lg transition text-sm font-medium"
                             title="Edit Opname"
+                            className="p-1.5 rounded-md border border-blue-500 text-blue-500 hover:bg-blue-50 transition"
                           >
-                            <Edit2 className="w-3.5 h-3.5" /> Edit
+                            <Edit2 className="w-4 h-4" />
                           </button>
                         ) : (
                           <button
                             onClick={() => setEditOpname(op)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 text-green-600 bg-green-50 hover:bg-green-100 rounded-lg transition text-sm font-medium"
                             title="Lihat Detail"
+                            className="p-1.5 rounded-md border border-green-600 text-green-600 hover:bg-green-50 transition"
                           >
-                            <Eye className="w-3.5 h-3.5" /> Detail
+                            <Eye className="w-4 h-4" />
                           </button>
                         )}
                       </div>
@@ -686,7 +705,7 @@ const StockOpnamePage = () => {
                   </tr>
                 )) : (
                   <tr>
-                    <td colSpan={8} className="px-6 py-16 text-center">
+                    <td colSpan={6} className="px-6 py-16 text-center">
                       <div className="flex flex-col items-center gap-3 text-gray-400">
                         <ClipboardList className="w-12 h-12 opacity-30" />
                         <p className="text-sm">Belum ada data stock opname</p>
@@ -698,7 +717,6 @@ const StockOpnamePage = () => {
             </table>
           </div>
 
-          {/* Pagination */}
           {filtered.length > perPage && (
             <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
               <p className="text-sm text-gray-500">
@@ -722,7 +740,7 @@ const StockOpnamePage = () => {
                     ) : (
                       <button key={p} onClick={() => setCurrentPage(p)}
                         className={`w-9 h-9 rounded-lg text-sm font-medium transition ${
-                          currentPage === p ? 'bg-purple-600 text-white' : 'border border-gray-300 hover:bg-gray-50 text-gray-700'
+                          currentPage === p ? 'bg-red-600 text-white' : 'border border-gray-300 hover:bg-gray-50 text-gray-700'
                         }`}>
                         {p}
                       </button>
@@ -738,13 +756,24 @@ const StockOpnamePage = () => {
         </div>
       </div>
 
-      {/* Modals */}
+      {showFilterModal && (
+        <FilterModal
+          fromDate={fromDate}
+          toDate={toDate}
+          setFromDate={setFromDate}
+          setToDate={setToDate}
+          onClose={() => setShowFilterModal(false)}
+          onReset={clearFilter}
+        />
+      )}
+
       {showCreateModal && (
         <CreateOpnameModal
           onClose={() => setShowCreateModal(false)}
           onSubmit={handleCreate}
         />
       )}
+
       {editOpname && (
         <EditOpnameModal
           opname={editOpname}
