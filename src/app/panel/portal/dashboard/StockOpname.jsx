@@ -687,7 +687,7 @@ const StockOpnamePage = () => {
                           <button
                             onClick={() => setEditOpname(op)}
                             title="Edit Opname"
-                            className="p-1.5 rounded-md border border-blue-500 text-blue-500 hover:bg-blue-50 transition"
+                            className="p-1.5 rounded-md text-blue-500 hover:bg-blue-50 transition"
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
@@ -695,7 +695,7 @@ const StockOpnamePage = () => {
                           <button
                             onClick={() => setEditOpname(op)}
                             title="Lihat Detail"
-                            className="p-1.5 rounded-md border border-green-600 text-green-600 hover:bg-green-50 transition"
+                            className="p-1.5 rounded-md text-green-600 hover:bg-green-50 transition"
                           >
                             <Eye className="w-4 h-4" />
                           </button>

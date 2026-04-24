@@ -639,8 +639,8 @@ const PeminjamanBahanPage = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Peminjaman Bahan Kimia</h1>
-          <p className="text-gray-600">Kelola peminjaman bahan kimia laboratorium</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Penggunaan Bahan Kimia</h1>
+          <p className="text-gray-600">Kelola penggunaan bahan kimia laboratorium</p>
         </div>
 
         {/* Stats Cards */}
@@ -648,7 +648,7 @@ const PeminjamanBahanPage = () => {
           <div className="bg-white rounded-xl p-6 border border-gray-200">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm mb-1">Total Peminjaman</p>
+                <p className="text-gray-600 text-sm mb-1">Total Penggunaan</p>
                 <p className="text-2xl font-bold text-gray-900">{peminjamanList.length}</p>
               </div>
             </div>
@@ -676,7 +676,7 @@ const PeminjamanBahanPage = () => {
           <div className="bg-white rounded-xl p-6 border border-gray-200">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm mb-1">Total Peminjam</p>
+                <p className="text-gray-600 text-sm mb-1">Total Pengguna</p>
                 <p className="text-2xl font-bold text-gray-900">{masterPeminjam.length}</p>
               </div>
             </div>
@@ -693,7 +693,7 @@ const PeminjamanBahanPage = () => {
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
             >
-              Peminjaman Aktif ({activePeminjaman.length})
+              Pengguna Aktif ({activePeminjaman.length})
             </button>
             <button
               onClick={() => setActiveTab('history')}
@@ -702,7 +702,7 @@ const PeminjamanBahanPage = () => {
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
             >
-              Riwayat Peminjaman ({completedPeminjaman.length})
+              Riwayat Penggunaan ({completedPeminjaman.length})
             </button>
           </div>
         </div>
@@ -882,7 +882,7 @@ const PeminjamanBahanPage = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl w-full max-w-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
               <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-gray-900">Detail Peminjaman</h2>
+                <h2 className="text-xl font-bold text-gray-900">Detail Penggunaan</h2>
                 <button
                   onClick={() => setShowDetailModal(false)}
                   className="p-2 hover:bg-gray-100 rounded-lg transition"
@@ -896,7 +896,7 @@ const PeminjamanBahanPage = () => {
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                       <User className="w-5 h-5" />
-                      Data Peminjam
+                      Data Pengguna
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
@@ -968,7 +968,7 @@ const PeminjamanBahanPage = () => {
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                       <Package className="w-5 h-5" />
-                      Bahan yang Dipinjam
+                      Bahan yang Gunakan
                     </h3>
                     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                       <table className="w-full">
@@ -1009,7 +1009,7 @@ const PeminjamanBahanPage = () => {
                   {/* Detail Peminjaman */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-500 mb-1">Tanggal Pinjam</label>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">Tanggal Penggunaan</label>
                       <p className="text-sm text-gray-900">{formatTanggal(selectedPeminjaman.tanggalPinjam)}</p>
                     </div>
                     <div>
@@ -1034,7 +1034,6 @@ const PeminjamanBahanPage = () => {
                     {selectedPeminjaman.catatanPengembalian && (
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-500 mb-1 flex items-center gap-1">
-                          <FileText className="w-4 h-4" />
                           Catatan Pengembalian
                         </label>
                         <div className={`border rounded-lg p-3 ${isLate(selectedPeminjaman.tanggalKembali, selectedPeminjaman.tanggalDikembalikan) ? 'bg-red-50 border-red-200' : 'bg-blue-50 border-blue-200'}`}>
@@ -1069,7 +1068,7 @@ const PeminjamanBahanPage = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl">
               <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-gray-900">Filter Tanggal Peminjaman</h2>
+                <h2 className="text-xl font-bold text-gray-900">Filter Tanggal Pengunaan</h2>
                 <button onClick={() => setShowFilterModal(false)} className="p-2 hover:bg-gray-100 rounded-lg transition">
                   <X className="w-5 h-5 text-gray-500" />
                 </button>
@@ -1104,7 +1103,7 @@ const PeminjamanBahanPage = () => {
                   {filterDateFrom && filterDateTo && (
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                       <p className="text-xs text-blue-800">
-                        Menampilkan peminjaman dari <strong>{formatTanggal(filterDateFrom)}</strong> sampai <strong>{formatTanggal(filterDateTo)}</strong>
+                        Menampilkan pengguna dari <strong>{formatTanggal(filterDateFrom)}</strong> sampai <strong>{formatTanggal(filterDateTo)}</strong>
                       </p>
                     </div>
                   )}
@@ -1167,7 +1166,7 @@ const PeminjamanBahanPage = () => {
                   {/* Info Peminjaman */}
                   <div className="bg-gray-50 rounded-lg p-4 flex flex-wrap gap-4 text-sm">
                     <div>
-                      <span className="text-gray-500 text-xs">Tanggal Pinjam</span>
+                      <span className="text-gray-500 text-xs">Tanggal Pengunaan</span>
                       <p className="font-medium text-gray-900 text-xs mt-0.5">{formatTanggal(selectedPeminjaman.tanggalPinjam)}</p>
                     </div>
                     <div>
@@ -1302,13 +1301,13 @@ const PeminjamanBahanPage = () => {
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                       <User className="w-5 h-5" />
-                      Data Peminjam
+                      Data Pengguna
                     </h3>
 
                     {!showNewUserForm ? (
                       <div className="space-y-3">
                         <label className="block text-sm font-medium text-gray-700">
-                          Pilih Peminjam <span className="text-red-600">*</span>
+                          Pilih Pengguna <span className="text-red-600">*</span>
                         </label>
                         {formData.userId ? (
                           <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white">
@@ -1340,7 +1339,7 @@ const PeminjamanBahanPage = () => {
                               onClick={() => setShowPeminjamDropdown(!showPeminjamDropdown)}
                               className="w-full flex items-center justify-between px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-left"
                             >
-                              <span className="text-sm text-gray-700">Pilih dari Master Peminjam</span>
+                              <span className="text-sm text-gray-700">Pilih dari Master Pengguna</span>
                               <ChevronDown className="w-4 h-4 text-gray-400" />
                             </button>
 
@@ -1385,7 +1384,7 @@ const PeminjamanBahanPage = () => {
                                     })
                                   ) : (
                                     <div className="px-4 py-3 text-sm text-gray-500 text-center">
-                                      Peminjam tidak ditemukan
+                                      Pengguna tidak ditemukan
                                     </div>
                                   )}
                                 </div>
@@ -1400,13 +1399,13 @@ const PeminjamanBahanPage = () => {
                           className="text-sm text-red-600 hover:text-red-700 font-medium flex items-center gap-1"
                         >
                           <Plus className="w-4 h-4" />
-                          Input Manual (Peminjam Baru)
+                          Input Manual (Pengguna Baru)
                         </button>
                       </div>
                     ) : (
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
-                          <span className="text-sm font-medium text-gray-700">Input Data Peminjam Baru</span>
+                          <span className="text-sm font-medium text-gray-700">Input Data Pengguna Baru</span>
                           <button
                             type="button"
                             onClick={() => setShowNewUserForm(false)}
@@ -1558,7 +1557,7 @@ const PeminjamanBahanPage = () => {
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                       <Package className="w-5 h-5" />
-                      Bahan yang Dipinjam
+                      Bahan yang Gunakan
                     </h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">

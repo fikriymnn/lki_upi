@@ -227,7 +227,6 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
 
                             <tbody className="divide-y divide-gray-100">
                                 {loading ? (
-                                    // ── Skeleton Rows ──
                                     Array.from({ length: 8 }).map((_, i) => (
                                         <tr key={i} className="animate-pulse">
                                             <td className="px-4 py-3"><div className="h-3 w-6 bg-gray-200 rounded" /></td>
@@ -256,21 +255,21 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                             <span className="text-xs text-gray-400">{i + 1 + page * 15}</span>
                                         </td>
 
-                                        {/* Invoice — dipindah ke kolom 2 */}
-                                        <td className="px-4 py-3">
+                                        {/* Invoice */}
+                                        <td className="px-4 py-3 whitespace-nowrap">
                                             <span className="text-xs font-mono font-medium text-gray-800 bg-gray-100 px-2 py-0.5 rounded">
                                                 {v.no_invoice}
                                             </span>
                                         </td>
 
                                         {/* Tanggal */}
-                                        <td className="px-4 py-3">
+                                        <td className="px-4 py-3 whitespace-nowrap">
                                             <span className="text-xs text-gray-600">{v.date_format}</span>
                                         </td>
 
                                         {/* Nama Customer */}
-                                        <td className="px-4 py-3">
-                                            <span className="text-sm font-medium text-gray-900">{v.nama_lengkap}</span>
+                                        <td className="px-4 py-3 whitespace-nowrap">
+                                            <span className="text-xs font-medium text-gray-900">{v.nama_lengkap}</span>
                                         </td>
 
                                         {/* Jenis Pengujian */}
@@ -281,7 +280,7 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                         </td>
 
                                         {/* Operator */}
-                                        <td className="px-4 py-3">
+                                        <td className="px-4 py-3 whitespace-nowrap">
                                             {v.s5_date
                                                 ? <span className="text-xs text-gray-700">{v.s5_date}</span>
                                                 : <span className="text-xs text-gray-400 italic">Belum dikerjakan</span>
@@ -289,7 +288,7 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                         </td>
 
                                         {/* PJ */}
-                                        <td className="px-4 py-3">
+                                        <td className="px-4 py-3 whitespace-nowrap">
                                             {v.s6_date
                                                 ? <span className="text-xs text-gray-700">{v.s6_date}</span>
                                                 : <span className="text-xs text-gray-400 italic">Belum diverifikasi</span>
@@ -297,7 +296,7 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                         </td>
 
                                         {/* Harga */}
-                                        <td className="px-4 py-3">
+                                        <td className="px-4 py-3 whitespace-nowrap">
                                             {v.total_harga
                                                 ? <span className="text-xs font-medium text-gray-800">Rp {convertRupiah(v.total_harga)}</span>
                                                 : <span className="text-gray-400 text-xs">—</span>
@@ -311,10 +310,9 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                             </span>
                                         </td>
 
-                                        {/* Aksi — gabungan keterangan + tracking + edit */}
+                                        {/* Aksi */}
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-1.5">
-                                                {/* Detail / Keterangan */}
                                                 <span onClick={() => {
                                                     setNoInvoice(v.no_invoice)
                                                     setIdInvoice(v._id)
@@ -326,8 +324,6 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                                     <FileText className="w-4 h-4" />
                                                 </span>
 
-                                                {/* Tracking */}
-
                                                 <a onClick={() => {
                                                     setNoInvoice(v.no_invoice)
                                                     setIdInvoice(v._id)
@@ -338,8 +334,6 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                                 >
                                                     <MapPin className="w-4 h-4" />
                                                 </a>
-
-                                                {/* Edit */}
 
                                                 <a onClick={() => {
                                                     setNoInvoice(v.no_invoice)

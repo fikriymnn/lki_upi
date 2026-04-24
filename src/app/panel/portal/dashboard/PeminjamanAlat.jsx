@@ -1167,7 +1167,6 @@ const PeminjamanAlatPage = () => {
                                         {selectedPeminjaman.catatanPengembalian && (
                                             <div className="md:col-span-2">
                                                 <label className="block text-sm font-medium text-gray-500 mb-1 flex items-center gap-1">
-                                                    <FileText className="w-4 h-4" />
                                                     Catatan Pengembalian
                                                 </label>
                                                 <div className={`border rounded-lg p-3 ${isLate(selectedPeminjaman.tanggalKembali, selectedPeminjaman.tanggalDikembalikan) ? 'bg-red-50 border-red-200' : 'bg-blue-50 border-blue-200'}`}>
