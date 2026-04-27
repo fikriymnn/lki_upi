@@ -6,6 +6,13 @@ import { Button } from "flowbite-react";
 import axios from "axios";
 import month_bahasa from "@/utils/month_bahasa";
 import Navigasi from "@/components/Navigasi";
+import {
+  FileText,
+  Download,
+  CreditCard,
+  FileCheck,
+  ChevronLeft,
+} from "lucide-react";
 
 export default function Hdetail({ params, searchParams }) {
   const { id } = params;
@@ -21,17 +28,6 @@ export default function Hdetail({ params, searchParams }) {
     return h + ":" + m;
   }
 
-  /* const convertRupiah = (angka)=>{
-    // Konversi angka menjadi string
-    let angkaString = angka.toString();
-  
-    // Bagi angka menjadi array per 3 digit dari belakang
-    let bagianAngka = angkaString.split('').reverse().join('').match(/\d{1,3}/g);
-  
-    // Gabungkan kembali dengan titik sebagai pemisah
-    return bagianAngka.join('.').split('').reverse().join('');
-  } */
-
   const downloadInvoice = async (e) => {
     try {
       const response = await axios.get(
@@ -40,12 +36,10 @@ export default function Hdetail({ params, searchParams }) {
       );
       console.log(response.data);
 
-      // Create a blob from the response data
       const blob = new Blob([response.data], {
         type: "application/octet-stream",
       });
 
-      // Create a link element and click it to trigger the download
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       link.download = `${invoice?.id_user?.nama_lengkap.replace(
@@ -69,12 +63,10 @@ export default function Hdetail({ params, searchParams }) {
       );
       console.log(response.data);
 
-      // Create a blob from the response data
       const blob = new Blob([response.data], {
         type: "application/octet-stream",
       });
 
-      // Create a link element and click it to trigger the download
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       link.download = `${invoice?.id_user?.nama_lengkap.replace(
@@ -100,12 +92,10 @@ export default function Hdetail({ params, searchParams }) {
           withCredentials: true,
         }
       );
-      // Create a blob from the response data
       const blob = new Blob([response.data], {
         type: "application/octet-stream",
       });
 
-      // Create a link element and click it to trigger the download
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       link.download = invoice?.bukti_pembayaran;
@@ -141,94 +131,225 @@ export default function Hdetail({ params, searchParams }) {
     getInvoice();
   }, []);
 
+  const statusBadge = (status) => {
+    const map = {
+      Selesai: "bg-green-100 text-green-800",
+      "Menunggu Pembayaran": "bg-amber-100 text-amber-800",
+      "Menunggu Konfirmasi Pembayaran": "bg-amber-100 text-amber-800",
+      "Order Dibatalkan": "bg-red-100 text-red-800",
+      "Form Dikonfirmasi": "bg-blue-100 text-blue-800",
+      "Sample Diterima Admin": "bg-blue-100 text-blue-800",
+      "Sample Dikerjakan Operator": "bg-blue-100 text-blue-800",
+      "Menunggu Verifikasi": "bg-purple-100 text-purple-800",
+      "Menunggu Form Dikonfirmasi": "bg-gray-100 text-gray-700",
+    };
+    return map[status] || "bg-gray-100 text-gray-700";
+  };
+
   return (
     <>
-      <div>
-        <Navigasi text1={"user"} text2={"detail history order"} />
-        {/* <p className='text-center text-4xl font-bold text-gray-800 mt-7'>DETAIL</p>
-        <div className='flex justify-center'>
-          <hr className='text-red-700 bg-red-600 h-2 mb-8 mt-5 w-56 text-center' />
-        </div> */}
-        <div className="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 md:mx-20 mx-5">
-          <p className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl   font-semibold">
-            Status {" "}
-            <span className="ml-3 font-semibold text-gray-600 md:text-base sm:text-sm text-xs my-auto text-end ">
-              : {invoice?.status}
-            </span>{" "}
-          </p>
-          {invoice?.status == "Form Dikonfirmasi" ? (
-            <p>
-              *Kirim Sample ke Alamat yang Tertera \n (Laboratorium Kimia
-              Instrumen Universitas Pendidikan Indonesia Gedung JICA ( FPMIPA-A
-              ) Lt. 5 Jl. Dr. Setiabudhi No. 229 Bandung 40154)
+      <div className="p-6 max-w-5xl mx-auto">
+
+        {/* Page Header */}
+        <div className="mb-6 flex items-center gap-3">
+          <button
+            onClick={() => window.history.back()}
+            className="p-2 hover:bg-gray-100 rounded-lg transition text-gray-500"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">Detail Order</h1>
+            <p className="text-sm text-gray-500">
+              Lihat status dan dokumen terkait pengujian Anda
             </p>
-          ) : (
-            ""
-          )}
-          <p className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">
-            Total Harga {" "}
-            <span className="text-end md:text-xl sm:text-xl text-xs">
-              {" "}
-              : Rp {invoice?.total_harga}
-            </span>
-          </p>
-          <p className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2 md:text-xl sm:text-xl  font-semibold">
-            Catatan {" "}
-            <span className="text-end md:text-xl sm:text-xl text-xs">
-              {" "}
-              : {invoice?.catatan}
-            </span>
-          </p>
-          <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
-            <p className="md:text-xl sm:text-xl  font-semibold">Invoice </p>
-            {invoice.status == "Selesai" ? (
-              <Button
-                className={`ml-5 h-7`}
-                color="blue"
-                size={5}
-                onClick={downloadInvoice}
-              >
-                Download
-              </Button>
-            ) : (
-              <p className="ml-5">-</p>
-            )}
-          </div>
-          <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
-            <p className=" md:text-xl sm:text-xl  font-semibold">Kuitansi </p>
-            {invoice?.status == "Selesai" && (order?.dana_penelitian == true || !order?.nama_pembimbing) ? (
-              <Button
-                className="ml-5"
-                color="blue"
-                size={5}
-                onClick={downloadKuitansi}
-              >
-                Download
-              </Button>
-            ) : (
-              <p className="ml-5">-</p>
-            )}
-          </div>
-          <div className="text-xs border-2 rounded-lg p-2 border-b-2 grid grid-cols-2">
-            <p className="md:text-xl sm:text-xl  font-semibold">
-              Bukti Pembayaran {" "}
-            </p>{" "}
-            {invoice?.bukti_pembayaran ? (
-              <Button
-                className="ml-5"
-                color="blue"
-                size={5}
-                href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${invoice?.bukti_pembayaran}`}
-                target="_blank"
-              >
-                Download
-              </Button>
-            ) : (
-              ""
-            )}{" "}
           </div>
         </div>
-        <div className="md:mx-20 mx-5">
+
+        {/* Stat Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <p className="text-sm text-gray-500 mb-1">No. Invoice</p>
+            <p className="text-base font-semibold text-gray-900">
+              {invoice?.no_invoice || "—"}
+            </p>
+            <p className="text-xs text-gray-400 mt-1">ID: {id}</p>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <p className="text-sm text-gray-500 mb-1">Total Harga</p>
+            <p className="text-2xl font-bold text-blue-600">
+              {invoice?.total_harga ? `Rp ${invoice.total_harga}` : "—"}
+            </p>
+            <p className="text-xs text-gray-400 mt-1">{order.length} item pengujian</p>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <p className="text-sm text-gray-500 mb-1">Status Order</p>
+            <span
+              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold mt-1 ${statusBadge(
+                invoice?.status
+              )}`}
+            >
+              {invoice?.status || "—"}
+            </span>
+          </div>
+        </div>
+
+        {/* Info Box */}
+        <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
+          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-4">
+            Informasi Order
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <p className="text-xs text-gray-400">Status</p>
+              <span
+                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold mt-1 ${statusBadge(
+                  invoice?.status
+                )}`}
+              >
+                {invoice?.status || "—"}
+              </span>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400">Total Harga</p>
+              <p className="text-sm font-medium mt-0.5">
+                {invoice?.total_harga ? `Rp ${invoice.total_harga}` : "—"}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400">Catatan</p>
+              <p className="text-sm font-medium mt-0.5 text-gray-600">
+                {invoice?.catatan || "—"}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Notif Form Dikonfirmasi */}
+        {invoice?.status == "Form Dikonfirmasi" && (
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 text-sm text-blue-800">
+            <span className="font-semibold">Kirim Sample ke:</span> Laboratorium
+            Kimia Instrumen Universitas Pendidikan Indonesia Gedung JICA (FPMIPA-A)
+            Lt. 5 Jl. Dr. Setiabudhi No. 229 Bandung 40154
+          </div>
+        )}
+
+        {/* Dokumen */}
+        <div className="bg-white rounded-xl border border-gray-200 p-5 mb-8">
+          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-4 flex items-center gap-2">
+            <FileText className="w-3.5 h-3.5" /> Dokumen Terkait
+          </p>
+          <div className="flex flex-col gap-3">
+
+            {/* Invoice */}
+            <div
+              className={`flex items-center justify-between p-4 border border-gray-200 rounded-lg ${
+                invoice.status != "Selesai" ? "opacity-50" : ""
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <FileText className="w-4 h-4 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Invoice</p>
+                  <p className="text-xs text-gray-400">
+                    {invoice.status == "Selesai"
+                      ? `${invoice?.no_invoice}.pdf`
+                      : "Tersedia setelah order selesai"}
+                  </p>
+                </div>
+              </div>
+              {invoice.status == "Selesai" ? (
+                <Button
+                  color="blue"
+                  size="xs"
+                  onClick={downloadInvoice}
+                  className="flex items-center gap-1.5"
+                >
+                  <Download className="w-3.5 h-3.5 mr-1" /> Download
+                </Button>
+              ) : (
+                <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg">
+                  Belum tersedia
+                </span>
+              )}
+            </div>
+
+            {/* Kuitansi */}
+            <div
+              className={`flex items-center justify-between p-4 border border-gray-200 rounded-lg ${
+                !(invoice?.status == "Selesai" && (order?.dana_penelitian == true || !order?.nama_pembimbing))
+                  ? "opacity-50"
+                  : ""
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <FileCheck className="w-4 h-4 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Kuitansi</p>
+                  <p className="text-xs text-gray-400">
+                    {invoice?.status == "Selesai" && (order?.dana_penelitian == true || !order?.nama_pembimbing)
+                      ? `${invoice?.no_invoice}_kuitansi.pdf`
+                      : "Tersedia setelah order selesai"}
+                  </p>
+                </div>
+              </div>
+              {invoice?.status == "Selesai" && (order?.dana_penelitian == true || !order?.nama_pembimbing) ? (
+                <Button
+                  color="success"
+                  size="xs"
+                  onClick={downloadKuitansi}
+                  className="flex items-center gap-1.5"
+                >
+                  <Download className="w-3.5 h-3.5 mr-1" /> Download
+                </Button>
+              ) : (
+                <span className="text-xs text-red-500 px-3 py-1.5 bg-red-50 rounded-lg">
+                  Belum tersedia
+                </span>
+              )}
+            </div>
+
+            {/* Bukti Pembayaran */}
+            <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <CreditCard className="w-4 h-4 text-amber-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Bukti Pembayaran</p>
+                  <p className="text-xs text-gray-400">
+                    {invoice?.bukti_pembayaran
+                      ? invoice.bukti_pembayaran
+                      : "Belum ada bukti pembayaran"}
+                  </p>
+                </div>
+              </div>
+              {invoice?.bukti_pembayaran ? (
+                <Button
+                  color="warning"
+                  size="xs"
+                  href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${invoice?.bukti_pembayaran}`}
+                  target="_blank"
+                  className="flex items-center gap-1.5"
+                >
+                  <Download className="w-3.5 h-3.5 mr-1" /> Download
+                </Button>
+              ) : (
+                <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg">
+                  Belum ada
+                </span>
+              )}
+            </div>
+
+          </div>
+        </div>
+
+        {/* Daftar Order */}
+        <div className="flex flex-col gap-3">
           {order.map((e, i) => {
             return (
               <OrderCard
@@ -257,6 +378,7 @@ export default function Hdetail({ params, searchParams }) {
             );
           })}
         </div>
+
       </div>
     </>
   );

@@ -100,7 +100,7 @@ export default function My_order() {
     <div>
 
       <div className="p-6">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto md:px-8 px-4">
 
           {/* ── Header ── */}
           <div className="mb-6">

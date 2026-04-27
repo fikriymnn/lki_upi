@@ -1,7 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Image from "next/image";
+import {
+  CheckCircle,
+  Circle,
+  Clock,
+  FileText,
+  Calendar,
+  AlertCircle,
+  ChevronLeft
+} from "lucide-react";
 
 export default function Tracking({ params }) {
   const { id } = params;
@@ -24,516 +32,291 @@ export default function Tracking({ params }) {
     getInvoice();
   }, []);
 
+  const STATUS_ORDER = [
+    "Menunggu Form Dikonfirmasi",
+    "Form Dikonfirmasi",
+    "Sample Diterima Admin",
+    "Sample Dikerjakan Operator",
+    "Menunggu Verifikasi",
+    "Menunggu Pembayaran",
+    "Menunggu Konfirmasi Pembayaran",
+    "Selesai",
+  ];
+
+  const steps = [
+    {
+      label: "Form Dikirim",
+      sub: "Menunggu Acc",
+      date: invoice.s1_date,
+      activeOn: [
+        "Menunggu Form Dikonfirmasi",
+        "Form Dikonfirmasi",
+        "Sample Diterima Admin",
+        "Sample Dikerjakan Operator",
+        "Menunggu Verifikasi",
+        "Menunggu Pembayaran",
+        "Menunggu Konfirmasi Pembayaran",
+        "Selesai",
+        "Order Dibatalkan",
+      ],
+    },
+    {
+      label: "Form Diterima",
+      sub: "Menunggu Sample Diterima Oleh Admin",
+      date: invoice.s2_date,
+      activeOn: [
+        "Form Dikonfirmasi",
+        "Sample Diterima Admin",
+        "Sample Dikerjakan Operator",
+        "Menunggu Verifikasi",
+        "Menunggu Pembayaran",
+        "Menunggu Konfirmasi Pembayaran",
+        "Selesai",
+        "Order Dibatalkan",
+      ],
+    },
+    {
+      label: "Sample Diterima Oleh Admin",
+      sub: "Sample Sedang Dikirim ke Operator",
+      date: invoice.s3_date,
+      activeOn: [
+        "Sample Diterima Admin",
+        "Sample Dikerjakan Operator",
+        "Menunggu Verifikasi",
+        "Menunggu Pembayaran",
+        "Menunggu Konfirmasi Pembayaran",
+        "Selesai",
+        "Order Dibatalkan",
+      ],
+    },
+    {
+      label: "Sample Diterima oleh Operator",
+      sub: "Sedang Dikerjakan oleh Operator",
+      date: invoice.s4_date,
+      activeOn: [
+        "Sample Dikerjakan Operator",
+        "Menunggu Verifikasi",
+        "Menunggu Pembayaran",
+        "Menunggu Konfirmasi Pembayaran",
+        "Selesai",
+        "Order Dibatalkan",
+      ],
+    },
+    {
+      label: "Selesai Dikerjakan oleh Operator",
+      sub: "Menunggu Verifikasi",
+      date: invoice.s5_date,
+      activeOn: [
+        "Menunggu Verifikasi",
+        "Menunggu Pembayaran",
+        "Menunggu Konfirmasi Pembayaran",
+        "Selesai",
+        "Order Dibatalkan",
+      ],
+    },
+    {
+      label: "Selesai Verifikasi",
+      sub: "Menunggu Pembayaran",
+      date: invoice.s6_date,
+      activeOn: [
+        "Menunggu Pembayaran",
+        "Menunggu Konfirmasi Pembayaran",
+        "Selesai",
+      ],
+    },
+    {
+      label: "Pembayaran Selesai",
+      sub: "Menunggu Pembayaran Dikonfirmasi",
+      date: invoice.s7_date,
+      activeOn: ["Menunggu Konfirmasi Pembayaran", "Selesai"],
+    },
+    {
+      label: "Selesai",
+      sub:
+        invoice.status === "Order Dibatalkan"
+          ? "Order Dibatalkan"
+          : "Order telah selesai",
+      date: invoice.s8_date,
+      activeOn: ["Selesai"],
+      cancelOn: ["Order Dibatalkan"],
+    },
+  ];
+
+  const isCancelled = invoice.status === "Order Dibatalkan";
+
+  const statusBadge = (status) => {
+    const map = {
+      Selesai: "bg-green-100 text-green-800",
+      "Menunggu Pembayaran": "bg-amber-100 text-amber-800",
+      "Menunggu Konfirmasi Pembayaran": "bg-amber-100 text-amber-800",
+      "Order Dibatalkan": "bg-red-100 text-red-800",
+      "Form Dikonfirmasi": "bg-blue-100 text-blue-800",
+      "Sample Diterima Admin": "bg-blue-100 text-blue-800",
+      "Sample Dikerjakan Operator": "bg-blue-100 text-blue-800",
+      "Menunggu Verifikasi": "bg-purple-100 text-purple-800",
+      "Menunggu Form Dikonfirmasi": "bg-gray-100 text-gray-700",
+    };
+    return map[status] || "bg-gray-100 text-gray-700";
+  };
+
+  const getStepState = (step) => {
+    if (step.cancelOn?.includes(invoice.status)) return "cancelled";
+    if (step.activeOn?.includes(invoice.status)) return "done";
+    return "pending";
+  };
+
+  const currentStepIndex = STATUS_ORDER.indexOf(invoice.status);
+
   return (
-    <>
-      <div className="m-auto">
-        <p className="text-center text-4xl font-bold text-gray-800 mt-7">
-          Progres Status
-        </p>
-        <div className="flex justify-center">
-          <hr className="grad rounded-md h-2 mb-8 mt-5 w-56 text-center" />
-        </div>
-        <div className="flex mb-20">
-          <div className="m-auto w-10/12 border-2 rounded-lg flex flex-col justify-start items-start ">
-            <p className="text-white text-xl font-bold px-10 w-full grad rounded-t-[6px]">
-              Detail
-            </p>
-            <div className="flex gap-5 w-62 mx-5  mt-10">
-              {invoice.status == "Menunggu Form Dikonfirmasi" ||
-              invoice.status == "Form Dikonfirmasi" ||
-              invoice.status == "Sample Diterima Admin" ||
-              invoice.status == "Sample Dikerjakan Operator" ||
-              invoice.status == "Menunggu Verifikasi" ||
-              invoice.status == "Menunggu Pembayaran" ||
-              invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-              invoice.status == "Selesai" ? (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/on/on1.png"}
-                />
-              ) : (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/on/on1.png"}
-                />
-              )}
-              <div>
-                {invoice.status == "menunggu form dikonfirmasi" ||
-                invoice.status == "Form Dikonfirmasi" ||
-                invoice.status == "Sample Diterima Admin" ||
-                invoice.status == "Sample Dikerjakan Operator" ||
-                invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Form Dikirim
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Form Dikirim
-                    </p>
-                  </div>
-                )}
-                {invoice.status == "Menunggu Form Dikonfirmasi" ||
-                invoice.status == "Form Dikonfirmasi" ||
-                invoice.status == "Sample Diterima Admin" ||
-                invoice.status == "Sample Dikerjakan Operator" ||
-                invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Menunggu Acc
-                    </p>
-                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
-                      {invoice.s1_date}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Menunggu Acc
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
+    <div className="p-6 max-w-3xl mx-auto">
 
-            <div className="flex gap-5 w-62 mx-5 ">
-              {invoice.status == "Form Dikonfirmasi" ||
-              invoice.status == "Sample Diterima Admin" ||
-              invoice.status == "Sample Dikerjakan Operator" ||
-              invoice.status == "Menunggu Verifikasi" ||
-              invoice.status == "Menunggu Pembayaran" ||
-              invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-              invoice.status == "Selesai" ? (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/on/on2.png"}
-                />
-              ) : (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/off/off2.png"}
-                />
-              )}
-              <div>
-                {invoice.status == "Form Dikonfirmasi" ||
-                invoice.status == "Sample Diterima Admin" ||
-                invoice.status == "Sample Dikerjakan Operator" ||
-                invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Form Diterima
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Form Diterima
-                    </p>
-                  </div>
-                )}
-                {invoice.status == "Form Dikonfirmasi" ||
-                invoice.status == "Sample Diterima Admin" ||
-                invoice.status == "Sample Dikerjakan Operator" ||
-                invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Menunggu Sample Diterima Oleh Admin
-                    </p>
-                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
-                      {invoice.s2_date}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Menunggu Sample Diterima Oleh Admin
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex gap-5 w-62 mx-5">
-              {invoice.status == "Sample Diterima Admin" ||
-              invoice.status == "Sample Dikerjakan Operator" ||
-              invoice.status == "Menunggu Verifikasi" ||
-              invoice.status == "Menunggu Pembayaran" ||
-              invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-              invoice.status == "Selesai" ? (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/on/on3.png"}
-                />
-              ) : (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/off/off3.png"}
-                />
-              )}
-              <div>
-                {invoice.status == "Sample Diterima Admin" ||
-                invoice.status == "Sample Dikerjakan Operator" ||
-                invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Sample Diterima Oleh Admin
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Sample Diterima Oleh Admin
-                    </p>
-                  </div>
-                )}
-                {invoice.status == "Sample Diterima Admin" ||
-                invoice.status == "Sample Dikerjakan Operator" ||
-                invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Sample Sedang Dikirim ke Operator
-                    </p>
-                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
-                      {invoice.s3_date}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Sedang dikirim ke operator{" "}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="flex gap-5 w-62 mx-5  ">
-              {invoice.status == "Sample Dikerjakan Operator" ||
-              invoice.status == "Menunggu Verifikasi" ||
-              invoice.status == "Menunggu Pembayaran" ||
-              invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-              invoice.status == "Selesai" ? (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/on/on4.png"}
-                />
-              ) : (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/off/off4.png"}
-                />
-              )}
-              <div>
-                {invoice.status == "Sample Dikerjakan Operator" ||
-                invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Sample Diterima oleh Operator
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Sample Diterima oleh Operator{" "}
-                    </p>
-                  </div>
-                )}
-                {invoice.status == "Sample Dikerjakan Operator" ||
-                invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Sedang Dikerjakan oleh Operator
-                    </p>
-                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
-                      {invoice.s4_date}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Sedang Dikerjakan oleh Operator
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex gap-5 w-62 mx-5  ">
-              {invoice.status == "Menunggu Verifikasi" ||
-              invoice.status == "Menunggu Pembayaran" ||
-              invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-              invoice.status == "Selesai" ? (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/on/on5.png"}
-                />
-              ) : (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/off/off5.png"}
-                />
-              )}
-              <div>
-                {invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Selesai Dikerjakan oleh Operator
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Selesai Dikerjakan oleh Operator{" "}
-                    </p>
-                  </div>
-                )}
-                {invoice.status == "Menunggu Verifikasi" ||
-                invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Menunggu Verifikasi
-                    </p>
-                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
-                      {invoice.s5_date}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Menunggu Verifikasi{" "}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex gap-5 w-62 mx-5  ">
-              {invoice.status == "Menunggu Pembayaran" ||
-              invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-              invoice.status == "Selesai" ? (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/on/on6.png"}
-                />
-              ) : (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/off/off6.png"}
-                />
-              )}
-              <div>
-                {invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Selesai Verifikasi
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Selesai Verifikasi{" "}
-                    </p>
-                  </div>
-                )}
-                {invoice.status == "Menunggu Pembayaran" ||
-                invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Menunggu Pembayaran
-                    </p>
-                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
-                      {invoice.s6_date}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Menunggu Pembayaran{" "}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex gap-5 w-62 mx-5  ">
-              {invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-              invoice.status == "Selesai" ? (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/on/on7.png"}
-                />
-              ) : (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[133.7px]"
-                  src={"/tracking/off/off7.png"}
-                />
-              )}
-              <div>
-                {invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Pembayaran Selesai
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Pembayaran Selesai
-                    </p>
-                  </div>
-                )}
-                {invoice.status == "Menunggu Konfirmasi Pembayaran" ||
-                invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Menunggu Pembayaran Dikonfirmasi
-                    </p>
-                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
-                      {invoice.s7_date}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Menunggu Pembayaran Dikonfirmasi
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex gap-5 w-62 mx-5  ">
-              {invoice.status == "Selesai" ||
-              invoice.status == "Order Dibatalkan" ? (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[87.5px]"
-                  src={"/tracking/on/on8.png"}
-                />
-              ) : (
-                <Image
-                  alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  className="w-[87.5px] h-[87.5px]"
-                  src={"/tracking/off/off8.png"}
-                />
-              )}
-              <div>
-                {invoice.status == "Selesai" ? (
-                  <div className="">
-                    <p className="text-red-600 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Selesai
-                    </p>
-                    <p className="mx-10  text-center md:text-base sm:text-sm text-[10px]">
-                      {invoice.s8_date}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="">
-                    <p className="text-gray-400 md:text-2xl sm:text-xl text-[10px] font-semibold">
-                      Selesai
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <br />
-            <br />
-          </div>
+      {/* Page Header */}
+      <div className="mb-6 flex items-center gap-3">
+        <button
+          onClick={() => window.history.back()}
+          className="p-2 hover:bg-gray-100 rounded-lg transition text-gray-500"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Progres Status</h1>
+          <p className="text-sm text-gray-500">Pantau status pengerjaan order pengujian kimia</p>
         </div>
       </div>
-    </>
+
+      {/* Info Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <p className="text-xs text-gray-400 mb-1 flex items-center gap-1">
+            <FileText className="w-3 h-3" /> No. Invoice
+          </p>
+          <p className="text-sm font-semibold text-gray-900">
+            {invoice?.no_invoice || "—"}
+          </p>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <p className="text-xs text-gray-400 mb-1 flex items-center gap-1">
+            <FileText className="w-3 h-3" /> ID Order
+          </p>
+          <p className="text-sm font-semibold text-gray-900">
+            {invoice?._id || "—"}
+          </p>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <p className="text-xs text-gray-400 mb-1 flex items-center gap-1">
+            <Calendar className="w-3 h-3" /> Status Saat Ini
+          </p>
+          <span
+            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${statusBadge(
+              invoice?.status
+            )}`}
+          >
+            {invoice?.status || "—"}
+          </span>
+        </div>
+      </div>
+
+      {/* Cancelled Banner */}
+      {isCancelled && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-red-800">Order Dibatalkan</p>
+            <p className="text-xs text-red-600 mt-0.5">{invoice.s8_date || ""}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Timeline */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-6">
+          Riwayat Progress
+        </p>
+
+        <div className="flex flex-col">
+          {steps.map((step, i) => {
+            const state = getStepState(step);
+            const isLast = i === steps.length - 1;
+
+            return (
+              <div key={i} className="flex gap-4">
+                {/* Connector column */}
+                <div className="flex flex-col items-center">
+                  {/* Icon */}
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 z-10 ${state === "done"
+                        ? "bg-red-600 text-white"
+                        : state === "cancelled"
+                          ? "bg-red-100 text-red-500"
+                          : "bg-gray-100 text-gray-400"
+                      }`}
+                  >
+                    {state === "done" ? (
+                      <CheckCircle className="w-4 h-4" />
+                    ) : state === "cancelled" ? (
+                      <AlertCircle className="w-4 h-4" />
+                    ) : (
+                      <Circle className="w-4 h-4" />
+                    )}
+                  </div>
+                  {/* Vertical line */}
+                  {!isLast && (
+                    <div
+                      className={`w-0.5 flex-1 my-1 ${state === "done" ? "bg-red-200" : "bg-gray-100"
+                        }`}
+                    />
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className={`pb-6 flex-1 ${isLast ? "pb-0" : ""}`}>
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p
+                        className={`text-sm font-semibold ${state === "done"
+                            ? "text-gray-900"
+                            : state === "cancelled"
+                              ? "text-red-600"
+                              : "text-gray-400"
+                          }`}
+                      >
+                        {step.label}
+                      </p>
+                      <p
+                        className={`text-xs mt-0.5 ${state === "done"
+                            ? "text-gray-500"
+                            : state === "cancelled"
+                              ? "text-red-400"
+                              : "text-gray-300"
+                          }`}
+                      >
+                        {step.sub}
+                      </p>
+                    </div>
+                    {step.date && (
+                      <span className="text-xs text-gray-400 flex items-center gap-1 flex-shrink-0 mt-0.5">
+                        <Clock className="w-3 h-3" />
+                        {step.date}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Active indicator */}
+                  {invoice.status === step.activeOn?.[0] && !isCancelled && (
+                    <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 border border-red-100 rounded-full">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                      <span className="text-xs text-red-600 font-medium">
+                        Status saat ini
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+    </div>
   );
 }

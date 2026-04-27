@@ -87,10 +87,8 @@ export default function History_order() {
 
   return (
     <div>
-      <Navigasi text1={"user"} text2={"history order"} />
-
       <div className="p-6">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto md:px-8 px-4">
 
           {/* ── Header ── */}
           <div className="mb-6">

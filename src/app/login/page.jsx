@@ -79,7 +79,7 @@ export default function Login({ searchParams }) {
                     priority
                 />
                 <div className="absolute inset-0 flex flex-col justify-center items-center px-8 text-white">
-                    <h1 className="text-5xl font-bold text-center mb-6">
+                    <h1 className="text-4xl text-red-600 font-bold text-center mb-6 ">
                         Masuk atau Daftar
                     </h1>
                     <p className="text-xl text-center max-w-md leading-relaxed">

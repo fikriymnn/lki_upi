@@ -32,6 +32,33 @@ const convertRupiah = (angka) => {
   return "Rp " + bagian.join(".").split("").reverse().join("");
 };
 
+// ── Komponen Popup Sukses ──────────────────────────────────
+function SuccessPopup({ message, onClose }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full mx-4 flex flex-col items-center gap-4 relative">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-lg transition text-gray-400"
+        >
+          <X className="w-4 h-4" />
+        </button>
+        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+          <CheckCircle className="w-8 h-8 text-green-600" />
+        </div>
+        <p className="text-lg font-semibold text-gray-900 text-center">{message}</p>
+        <button
+          onClick={onClose}
+          className="mt-2 w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-xl transition"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  );
+}
+// ──────────────────────────────────────────────────────────
+
 // ── Main Component ─────────────────────────────────────────
 export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
   const id         = idInvoice;
@@ -44,13 +71,43 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
   const [invoice,    setInvoice]    = useState({ id_user: {} });
   const [formVerif,  setFormVerif]  = useState({ status: "", catatan: "" });
 
-  // ── Tabs — 2 tab saja, Dokumen dihapus ───────────────────
+  // ── State popup ──
+  const [popup, setPopup] = useState({ show: false, message: "" });
+
+  const showPopup  = (message) => setPopup({ show: true, message });
+  const closePopup = ()        => setPopup({ show: false, message: "" });
+
+  // ── Tabs ─────────────────────────────────────────────────
   const tabs = [
     { key: "info",  label: "Informasi Pelanggan", icon: <User  className="w-4 h-4" /> },
     { key: "verif", label: "Update Verifikasi",   icon: <Edit2 className="w-4 h-4" /> },
   ];
 
-  // ── Fetch (tidak diubah) ──────────────────────────────────
+  // ── Fungsi refetch data ───────────────────────────────────
+  const refetch = async () => {
+    try {
+      const data = await axios.get(
+        `${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`,
+        { withCredentials: true }
+      );
+      const dataOrder = await axios.get(
+        `${process.env.NEXT_PUBLIC_URL}/api/order?no_invoice=${no_invoice}&skip=0&limit=20`,
+        { withCredentials: true }
+      );
+      if (data.data.success) {
+        setInvoice(data.data.data);
+        setFormVerif({
+          status:  data.data.data.status  || "",
+          catatan: data.data.data.catatan || "",
+        });
+      }
+      if (dataOrder.data.success) setOrder(dataOrder.data.data);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  // ── Fetch awal ────────────────────────────────────────────
   useEffect(() => {
     async function getInvoice() {
       try {
@@ -77,7 +134,7 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
     getInvoice();
   }, []);
 
-  // ── Handler konfirmasi verifikasi (tidak diubah) ──────────
+  // ── Handler konfirmasi verifikasi ─────────────────────────
   const handleConfirmVerif = async (e) => {
     e.preventDefault();
     setEditVerif(false);
@@ -104,9 +161,10 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
           obj,
           { withCredentials: true }
         );
-        alert("Update successfully");
+        // ── Ganti alert + redirect dengan popup + refetch ──
         if (data.data.success) {
-          window.location.replace(`/notifikasi?url=${path}`);
+          await refetch();
+          showPopup("Update berhasil!");
         }
       }
     } catch (err) {
@@ -117,6 +175,11 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
   // ── Render ─────────────────────────────────────────────────
   return (
     <div className="p-6 max-w-5xl mx-auto">
+
+      {/* ── Popup sukses ── */}
+      {popup.show && (
+        <SuccessPopup message={popup.message} onClose={closePopup} />
+      )}
 
       {/* ── Page Header ── */}
       <div className="mb-6 flex items-center gap-3">

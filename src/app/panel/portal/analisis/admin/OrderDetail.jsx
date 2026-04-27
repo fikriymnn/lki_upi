@@ -10,6 +10,35 @@ import {
     CheckCircle, FileCheck, CreditCard, Image
 } from "lucide-react";
 
+
+// ── Komponen Popup Sukses ──────────────────────────────────────────────────────
+function SuccessPopup({ message, onClose }) {
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full mx-4 flex flex-col items-center gap-4 relative">
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-lg transition text-gray-400"
+                >
+                    <X className="w-4 h-4" />
+                </button>
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-8 h-8 text-green-600" />
+                </div>
+                <p className="text-lg font-semibold text-gray-900 text-center">{message}</p>
+                <button
+                    onClick={onClose}
+                    className="mt-2 w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-xl transition"
+                >
+                    OK
+                </button>
+            </div>
+        </div>
+    );
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+
 export default function DetailOrderAdmin({ setActivePage, idInvoice, noInvoice }) {
     const id = idInvoice
     const no_invoice = noInvoice
@@ -21,6 +50,12 @@ export default function DetailOrderAdmin({ setActivePage, idInvoice, noInvoice }
         { keterangan: "", jumlah: "", hargaSatuan: "" },
     ]);
     const path = usePathname()
+
+    // ── State popup ──
+    const [popup, setPopup] = useState({ show: false, message: "" });
+
+    const showPopup = (message) => setPopup({ show: true, message });
+    const closePopup = () => setPopup({ show: false, message: "" });
 
     const handleHargaSatuan = (index, field, value) => {
         const updatedData = [...hargaSatuan];
@@ -85,6 +120,21 @@ export default function DetailOrderAdmin({ setActivePage, idInvoice, noInvoice }
         setInvoice((e) => ({ ...e, [name]: value }));
     };
 
+    // ── Fungsi refetch data ──
+    const refetch = async () => {
+        try {
+            const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`, { withCredentials: true })
+            const dataOrder = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?no_invoice=${no_invoice}&skip=0&limit=20`, { withCredentials: true })
+            if (data.data.success) {
+                setInvoice(data.data.data)
+                setHargaSatuan(data.data.data.harga_satuan)
+            }
+            if (dataOrder.data.success) {
+                setOrder(dataOrder.data.data)
+            }
+        } catch (err) { console.log(err.message) }
+    };
+
     const handleConfirm = async (e) => {
         e.preventDefault();
         setEdit(false);
@@ -119,9 +169,10 @@ export default function DetailOrderAdmin({ setActivePage, idInvoice, noInvoice }
             }
             if (selection() === true) {
                 const data = await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`, obj, { withCredentials: true });
-                alert("update successfully");
+                // ── Ganti alert + redirect dengan popup + refetch ──
                 if (data.data.success) {
-                    window.location.replace(`/notifikasi?url=${path}?no_invoice=${no_invoice}`);
+                    await refetch();
+                    showPopup("Update berhasil!");
                 }
             }
         } catch (err) { alert(err.message); }
@@ -188,6 +239,11 @@ export default function DetailOrderAdmin({ setActivePage, idInvoice, noInvoice }
 
     return (
         <div className="p-6 max-w-5xl mx-auto">
+
+            {/* ── Popup sukses ── */}
+            {popup.show && (
+                <SuccessPopup message={popup.message} onClose={closePopup} />
+            )}
 
             {/* Page Header */}
             <div className="mb-6 flex items-center gap-3">
