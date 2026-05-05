@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Pagination } from "flowbite-react";
-import Navigasi from "@/components/Navigasi";
 import {
   Search, ChevronDown, Filter, FileText,
   Calendar, MapPin, Pencil, Tag,
@@ -237,14 +236,14 @@ export default function My_order() {
                             
                              <a href={`/my_order/detail/${value._id}?no_invoice=${value.no_invoice}`}
                               title="Detail Order"
-                              className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+                              className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
                             >
                               <FileText className="w-4 h-4" />
                             </a>
                             
                             <a  href={`/my_order/tracking/${value._id}?no_invoice=${value.no_invoice}`}
                               title="Tracking Status"
-                              className="w-8 h-8 flex items-center justify-center rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 transition"
+                              className="w-8 h-8 flex items-center justify-center rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition"
                             >
                               <MapPin className="w-4 h-4" />
                             </a>

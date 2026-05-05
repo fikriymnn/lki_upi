@@ -196,7 +196,7 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
                             setActivePage('order-detail');
                           }}
                           title="Detail Order"
-                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
                         >
                           <FileText className="w-4 h-4" />
                         </button>
@@ -209,7 +209,7 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
                             setActivePage('order-tracking');
                           }}
                           title="Tracking / Konfirmasi"
-                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 transition"
+                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition"
                         >
                           <MapPin className="w-4 h-4" />
                         </button>

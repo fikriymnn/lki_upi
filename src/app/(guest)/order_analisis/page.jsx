@@ -1,10 +1,9 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/Loading";
-import { storage } from "../../../firebase/firebase";
 import {
   FlaskConical, TestTube, Hash, Layers, Droplets,
   Settings, Target, SlidersHorizontal, RotateCcw,
@@ -13,7 +12,6 @@ import {
   ChevronDown, Upload, Loader2, Send,
 } from "lucide-react";
 
-// ── Dipindah ke luar agar tidak di-recreate setiap render ────────────────────
 const inputClass =
   "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition bg-white";
 
@@ -29,7 +27,6 @@ const FieldRow = ({ icon: Icon, label, children }) => (
     {children}
   </div>
 );
-// ─────────────────────────────────────────────────────────────────────────────
 
 export default function Order_analisis() {
   const router = useRouter();
@@ -40,12 +37,15 @@ export default function Order_analisis() {
   const [uploadingFoto, setUploadingFoto] = useState(false);
   const [uploadingJurnal, setUploadingJurnal] = useState(false);
   const [verifikasi, setVerifikasi] = useState(false);
-  const [nonupi, setNonupi] = useState("");
+  const [upi, setUpi] = useState("");
   const [user, setUser] = useState({});
   const [uuid] = useState([uid]);
 
   const [fotoSampleUrl, setFotoSampleUrl] = useState("");
   const [jurnalUrl, setJurnalUrl] = useState("");
+  // Ref untuk memastikan nilai terbaru terbaca saat handleSubmit (hindari stale closure)
+  const fotoSampleUrlRef = useRef("");
+  const jurnalUrlRef = useRef("");
 
   const [jenis_pengujian] = useState([[]]);
   const [kode_pengujian] = useState([[]]);
@@ -114,7 +114,9 @@ export default function Order_analisis() {
                 { withCredentials: true, headers: { "Content-Type": "multipart/form-data" } }
               );
               if (downloadURL.data.filename) {
+                // Simpan ke state (untuk indikator UI) dan ref (untuk dibaca saat submit)
                 setFotoSampleUrl(downloadURL.data.filename);
+                fotoSampleUrlRef.current = downloadURL.data.filename;
               }
             } catch (err) {
               console.log(err.message);
@@ -130,8 +132,9 @@ export default function Order_analisis() {
     reader.readAsDataURL(imageFile);
   };
 
+  // Perbaikan: hapus e.preventDefault() karena ini onChange bukan onSubmit
+  // Tanpa preventDefault, e.target.files[0] terbaca normal di semua browser
   const onUploadJurnal = async (e) => {
-    e.preventDefault();
     const file = e.target.files[0];
     if (!file) return;
     setUploadingJurnal(true);
@@ -142,7 +145,9 @@ export default function Order_analisis() {
         { withCredentials: true, headers: { "Content-Type": "multipart/form-data" } }
       );
       if (downloadURL.data.filename) {
+        // Simpan ke state (untuk indikator UI) dan ref (untuk dibaca saat submit)
         setJurnalUrl(downloadURL.data.filename);
+        jurnalUrlRef.current = downloadURL.data.filename;
       }
     } catch (err) {
       console.log(err.message);
@@ -172,8 +177,9 @@ export default function Order_analisis() {
       obj.nama_pembimbing = nama_pembimbing[0];
       obj.lama_pengerjaan = lama_pengerjaan[0];
       obj.dana_penelitian = dana_penelitian[0];
-      obj.foto_sample = fotoSampleUrl;
-      obj.jurnal_pendukung = jurnalUrl;
+      // Baca dari ref bukan state, agar tidak terkena stale closure
+      obj.foto_sample = fotoSampleUrlRef.current;
+      obj.jurnal_pendukung = jurnalUrlRef.current;
       obj.uuid = uuid[0];
       arr[0] = obj;
 
@@ -386,10 +392,10 @@ export default function Order_analisis() {
                   <div className="relative">
                     <select
                       required
-                      name="nonupi"
+                      name="upi"
                       className={selectClass}
                       defaultValue=""
-                      onChange={(e) => { setNonupi(e.target.value); }}
+                      onChange={(e) => { setUpi(e.target.value); }}
                     >
                       <option value="">Pilih</option>
                       <option value="ya">Ya</option>
@@ -399,8 +405,8 @@ export default function Order_analisis() {
                   </div>
                 </FieldRow>
 
-                {/* Nama Pembimbing — conditional, pakai uncontrolled defaultValue agar tidak reset */}
-                {user.jenis_institusi !== "Perusahaan" && (
+                {/* Nama Pembimbing — conditional */}
+                {upi === "ya" && (
                   <FieldRow icon={UserRound} label="Nama Pembimbing">
                     <input
                       placeholder="Tuliskan nama pembimbing"
@@ -415,7 +421,7 @@ export default function Order_analisis() {
                 )}
 
                 {/* Dana Penelitian — conditional */}
-                {nonupi === "ya" && (
+                {upi === "ya" && (
                   <FieldRow icon={FileText} label="Apakah anda memiliki dana penelitian?">
                     <div className="relative">
                       <select

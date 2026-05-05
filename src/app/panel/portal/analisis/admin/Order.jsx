@@ -84,7 +84,7 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
     const handleSearch = async () => {
         try {
             const data = await axios.get(
-                `${process.env.NEXT_PUBLIC_URL}/api/invoice?skip=0&limit=30${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status !== "" ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Form Dikonfirmasi&status=sample diterima admin&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"}${search ? `&nama_lengkap=${search}` : ""}`,
+                `${process.env.NEXT_PUBLIC_URL}/api/invoice?skip=0&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status !== "" ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Form Dikonfirmasi&status=sample diterima admin&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"}${search ? `&nama_lengkap=${search}` : ""}`,
                 { withCredentials: true }
             );
             if (data.data.success) getInvoice();
@@ -319,7 +319,7 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                                     setActivePage('order-detail')
                                                 }}
                                                     title="Detail Order"
-                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
                                                 >
                                                     <FileText className="w-4 h-4" />
                                                 </span>
@@ -330,7 +330,7 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                                     setActivePage('order-tracking')
                                                 }}
                                                     title="Tracking Status"
-                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 transition"
+                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition"
                                                 >
                                                     <MapPin className="w-4 h-4" />
                                                 </a>
@@ -341,7 +341,7 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                                     setActivePage('order-edit')
                                                 }}
                                                     title="Edit Order"
-                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
+                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-600 text-white hover:bg-gray-700 transition"
                                                 >
                                                     <Pencil className="w-4 h-4" />
                                                 </a>

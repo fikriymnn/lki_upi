@@ -5,13 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 import { Menu, X, ChevronDown } from "lucide-react";
 
-function getRoleFromStorage() {
-  if (typeof window === "undefined") return "";
-  return localStorage.getItem("user_role") || "";
-}
-
 export default function NavbarCustom() {
-  const [userRole, setUserRole] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAuthLoaded, setIsAuthLoaded] = useState(false);
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -23,50 +18,30 @@ export default function NavbarCustom() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const isUser = userRole === "user";
-
-  // ── INIT AUTH (NO FLICKER) ──
+  // ── INIT AUTH (HANYA CEK TOKEN) ──
   useEffect(() => {
-    const initAuth = async () => {
+    const initAuth = () => {
       const token = localStorage.getItem("access_token");
-      const cachedRole = localStorage.getItem("user_role");
-
-      if (cachedRole) setUserRole(cachedRole);
-
-      if (!token) {
-        setUserRole("");
-        setIsAuthLoaded(true);
-        return;
+      
+      if (token) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
       }
-
-      try {
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/user/${token}`,
-          { withCredentials: true }
-        );
-
-        if (data.success) {
-          const role = data.data.role;
-          localStorage.setItem("user_role", role);
-          setUserRole(role);
-        } else {
-          throw new Error();
-        }
-      } catch {
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("user_role");
-        setUserRole("");
-      } finally {
-        setIsAuthLoaded(true);
-      }
+      
+      setIsAuthLoaded(true);
     };
 
     initAuth();
   }, []);
 
-  // ── Auth Change Listener ──
+  // ── Auth Change Listener (Update saat login/logout) ──
   useEffect(() => {
-    const onAuthChange = () => setUserRole(getRoleFromStorage());
+    const onAuthChange = () => {
+      const token = localStorage.getItem("access_token");
+      setIsLoggedIn(!!token);
+    };
+    
     window.addEventListener("authChange", onAuthChange);
     return () => window.removeEventListener("authChange", onAuthChange);
   }, []);
@@ -99,11 +74,13 @@ export default function NavbarCustom() {
   const handleLogout = async () => {
     try {
       localStorage.removeItem("access_token");
-      localStorage.removeItem("user_role");
-      setUserRole("");
+      localStorage.removeItem("user_data");
+      setIsLoggedIn(false);
+      
       await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/logout`, {
         withCredentials: true,
       });
+      
       window.dispatchEvent(new Event("authChange"));
       router.push("/");
     } catch {
@@ -115,9 +92,10 @@ export default function NavbarCustom() {
 
   // ── Active Link Helper ──
   const isActive = (path) => {
-    if (path === "/") return pathname === "/"; // 🔥 fix Home
+    if (path === "/") return pathname === "/";
     return pathname.startsWith(path);
   };
+  
   const getLinkClass = (path) =>
     isActive(path) ? activeLinkCls : mutedLinkCls;
 
@@ -164,31 +142,34 @@ export default function NavbarCustom() {
   return (
     <>
       <nav
-        className={`fixed w-full z-50 transition-all duration-500 ${isScrolled
-          ? "bg-white/80 backdrop-blur-xl py-4 border-b border-gray-100 shadow-sm"
-          : "bg-white py-4"
-          }`}
+        className={`fixed w-full z-50 transition-all duration-500 ${
+          isScrolled
+            ? "bg-white/80 backdrop-blur-xl py-4 border-b border-gray-100 shadow-sm"
+            : "bg-white py-4"
+        }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
-
           <a href="/" className="flex items-center gap-3">
             <img src="/UPI.png" alt="UPI Logo" className="w-28 md:w-36" />
           </a>
 
+          {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center gap-10">
             <a href="/" className={getLinkClass("/")}>Home</a>
 
             <div ref={layananRef} className="relative">
               <button
                 onClick={() => setLayananDesktopOpen((v) => !v)}
-                className={`${isLayananActive ? activeLinkCls : mutedLinkCls
-                  } flex items-center gap-1 cursor-pointer`}
+                className={`${
+                  isLayananActive ? activeLinkCls : mutedLinkCls
+                } flex items-center gap-1 cursor-pointer`}
               >
                 Layanan
                 <ChevronDown
                   size={12}
-                  className={`transition-transform duration-300 ${layananDesktopOpen ? "rotate-180" : ""
-                    }`}
+                  className={`transition-transform duration-300 ${
+                    layananDesktopOpen ? "rotate-180" : ""
+                  }`}
                 />
               </button>
 
@@ -199,10 +180,11 @@ export default function NavbarCustom() {
                       key={item.href}
                       href={item.href}
                       onClick={() => setLayananDesktopOpen(false)}
-                      className={`block px-5 py-3 text-[9px] font-semibold tracking-[0.2em] uppercase ${isActive(item.href)
-                        ? "text-red-700 bg-red-50"
-                        : "text-zinc-400 hover:text-red-700 hover:bg-red-50/50"
-                        }`}
+                      className={`block px-5 py-3 text-[9px] font-semibold tracking-[0.2em] uppercase ${
+                        isActive(item.href)
+                          ? "text-red-700 bg-red-50"
+                          : "text-zinc-400 hover:text-red-700 hover:bg-red-50/50"
+                      }`}
                     >
                       {item.label}
                     </a>
@@ -214,7 +196,8 @@ export default function NavbarCustom() {
             <a href="/about" className={getLinkClass("/about")}>Tentang Kami</a>
             <a href="/contact" className={getLinkClass("/contact")}>Kontak</a>
 
-            {isUser ? (
+            {/* HANYA CEK LOGIN STATUS, BUKAN ROLE */}
+            {isLoggedIn ? (
               <>
                 <a href="/my_order" className={getLinkClass("/my_order")}>Order Saya</a>
                 <a href="/history_order" className={getLinkClass("/history_order")}>Riwayat</a>
@@ -230,6 +213,7 @@ export default function NavbarCustom() {
             )}
           </div>
 
+          {/* MOBILE MENU BUTTON */}
           <button
             className="md:hidden text-zinc-900 p-1"
             onClick={() => setMobileMenuOpen((v) => !v)}
@@ -238,9 +222,11 @@ export default function NavbarCustom() {
           </button>
         </div>
 
+        {/* MOBILE MENU */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-500 ${mobileMenuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
-            }`}
+          className={`md:hidden overflow-hidden transition-all duration-500 ${
+            mobileMenuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
+          }`}
         >
           <div className="bg-white px-6 py-6 flex flex-col gap-5">
             <a href="/" className={getLinkClass("/")}>Home</a>
@@ -248,14 +234,16 @@ export default function NavbarCustom() {
             <div>
               <button
                 onClick={() => setLayananMobileOpen((v) => !v)}
-                className={`${isLayananActive ? activeLinkCls : mutedLinkCls
-                  } flex items-center gap-2 w-full`}
+                className={`${
+                  isLayananActive ? activeLinkCls : mutedLinkCls
+                } flex items-center gap-2 w-full`}
               >
                 Layanan
                 <ChevronDown
                   size={12}
-                  className={`transition-transform ${layananMobileOpen ? "rotate-180" : ""
-                    }`}
+                  className={`transition-transform ${
+                    layananMobileOpen ? "rotate-180" : ""
+                  }`}
                 />
               </button>
 
@@ -275,12 +263,15 @@ export default function NavbarCustom() {
             <a href="/about" className={getLinkClass("/about")}>Tentang Kami</a>
             <a href="/contact" className={getLinkClass("/contact")}>Kontak</a>
 
-            {isUser ? (
+            {/* HANYA CEK LOGIN STATUS, BUKAN ROLE */}
+            {isLoggedIn ? (
               <>
                 <a href="/my_order" className={getLinkClass("/my_order")}>Order Saya</a>
                 <a href="/history_order" className={getLinkClass("/history_order")}>Riwayat</a>
                 <a href="/profil" className={getLinkClass("/profil")}>Profil</a>
-                <button onClick={handleLogout}>Logout</button>
+                <button onClick={handleLogout} className={mutedLinkCls}>
+                  Logout
+                </button>
               </>
             ) : (
               <a href={`/login?prevRoute=${pathname}`} className={getLinkClass("/login")}>

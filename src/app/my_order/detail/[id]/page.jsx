@@ -23,7 +23,8 @@ export default function Detail({ params, searchParams }) {
   const { no_invoice } = searchParams;
   const [order, setOrder] = useState([]);
   const [invoice, setInvoice] = useState({});
-  const [buktiPembayaran, setBuktiPembayaran] = useState([]);
+  const [buktiPembayaran, setBuktiPembayaran] = useState(null)
+  const [isUploading, setIsUploading] = useState(false)
   const [kirim, setKirim] = useState(true);
   const [activeTab, setActiveTab] = useState("info");
 
@@ -34,17 +35,21 @@ export default function Detail({ params, searchParams }) {
     return h + ":" + m;
   }
 
+  // Ganti handleBukti — sesuaikan karena buktiPembayaran sekarang File, bukan array
   const handleBukti = async (e) => {
     e.preventDefault();
+    if (!buktiPembayaran) {
+      alert("Pilih file terlebih dahulu");
+      return;
+    }
+    setIsUploading(true)
     try {
       const downloadURL = await axios.post(
         `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=hasilanalisis`,
-        { file: buktiPembayaran[0] },
+        { file: buktiPembayaran }, // ← langsung file, bukan [0]
         {
           withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
 
@@ -61,6 +66,8 @@ export default function Detail({ params, searchParams }) {
       }
     } catch (err) {
       alert(err.message);
+    } finally {
+      setIsUploading(false)
     }
   };
 
@@ -78,9 +85,8 @@ export default function Detail({ params, searchParams }) {
       link.download = `${invoice?.id_user?.nama_lengkap.replace(
         " ",
         "_"
-      )}_${new Date().getDate()}-${
-        new Date().getMonth() + 1
-      }-${new Date().getFullYear()}_invoice.pdf`;
+      )}_${new Date().getDate()}-${new Date().getMonth() + 1
+        }-${new Date().getFullYear()}_invoice.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -103,9 +109,8 @@ export default function Detail({ params, searchParams }) {
       link.download = `${invoice?.id_user?.nama_lengkap.replace(
         " ",
         "_"
-      )}_${new Date().getDate()}-${
-        new Date().getMonth() + 1
-      }-${new Date().getFullYear()}_kuitansi.pdf`;
+      )}_${new Date().getDate()}-${new Date().getMonth() + 1
+        }-${new Date().getFullYear()}_kuitansi.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -130,52 +135,51 @@ export default function Detail({ params, searchParams }) {
       });
   };
 
+  // Ganti handleBP — wrapped dalam Promise agar resize selesai sebelum state diset
   const handleBP = (event) => {
-    let reader = new FileReader();
     const imageFile = event.target.files[0];
-    const imageFilname = event.target.files[0].name;
+    if (!imageFile) return;
+
+    const imageFilname = imageFile.name;
+    const reader = new FileReader();
+
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
-        var canvas = document.createElement("canvas");
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-        var MAX_WIDTH = 700;
-        var MAX_HEIGHT = 700;
-        var width = img.width;
-        var height = img.height;
+        const MAX_WIDTH = 700;
+        const MAX_HEIGHT = 700;
+        let width = img.width;
+        let height = img.height;
+
         if (width > height) {
-          if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
-            width = MAX_WIDTH;
-          }
+          if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
         } else {
-          if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height;
-            height = MAX_HEIGHT;
-          }
+          if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
         }
+
+        const canvas = document.createElement("canvas");
         canvas.width = width;
         canvas.height = height;
-        var ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
-        ctx.canvas.toBlob(
+
+        // toBlob async — set state di dalam callback ini
+        canvas.toBlob(
           (blob) => {
             const file = new File([blob], imageFilname, {
               type: imageFile.type,
               lastModified: Date.now(),
             });
-            buktiPembayaran[0] = file;
+            setBuktiPembayaran(file) // ← setState, bukan mutasi array langsung
           },
           imageFile.type,
           1
         );
       };
-      img.onerror = () => {
-        alert("invalid image content");
-      };
+      img.onerror = () => alert("invalid image content");
       img.src = e.target.result;
     };
+
     reader.readAsDataURL(imageFile);
   };
 
@@ -234,7 +238,7 @@ export default function Detail({ params, searchParams }) {
 
   const buktiPembayaranEditable =
     invoice?.status === "Menunggu Pembayaran" ||
-    invoice?.status === "menunggu konfirmasi pembayaran" ||
+    invoice?.status === "Menunggu Konfirmasi Pembayaran" ||
     invoice?.status === "Selesai";
 
   const tabs = [
@@ -274,9 +278,9 @@ export default function Detail({ params, searchParams }) {
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <p className="text-sm text-gray-500 mb-1">Total Harga</p>
             <p className="text-2xl font-bold text-blue-600">
-              {invoice?.total_harga ? `Rp ${invoice.total_harga}` : "—"}
+              {invoice?.total_harga ? `Rp ${invoice.total_harga.toLocaleString('id-ID')}` : "—"}
             </p>
-            <p className="text-xs text-gray-400 mt-1">{order.length} item pengujian</p>
+            <p className="text-xs text-gray-400 mt-1">pengujian</p>
           </div>
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <p className="text-sm text-gray-500 mb-1">Status Order</p>
@@ -300,11 +304,10 @@ export default function Detail({ params, searchParams }) {
               <button
                 key={t.key}
                 onClick={() => setActiveTab(t.key)}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition ${
-                  activeTab === t.key
-                    ? "text-red-600 border-b-2 border-red-600 bg-red-50"
-                    : "text-gray-500 hover:bg-gray-50"
-                }`}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition ${activeTab === t.key
+                  ? "text-red-600 border-b-2 border-red-600 bg-red-50"
+                  : "text-gray-500 hover:bg-gray-50"
+                  }`}
               >
                 {t.icon}
                 {t.label}
@@ -343,12 +346,6 @@ export default function Detail({ params, searchParams }) {
                     {invoice?.catatan || "—"}
                   </p>
                 </div>
-                <div>
-                  <p className="text-xs text-gray-400">Total Harga</p>
-                  <p className="text-sm font-medium mt-0.5">
-                    {invoice?.total_harga ? `Rp ${invoice.total_harga}` : "—"}
-                  </p>
-                </div>
               </div>
             </div>
 
@@ -371,127 +368,141 @@ export default function Detail({ params, searchParams }) {
             <div className="flex flex-col gap-3">
 
               {/* Invoice */}
-              <div
-                className={`flex items-center justify-between p-4 border border-gray-200 rounded-lg ${
-                  !invoiceAvailable ? "opacity-50" : ""
-                }`}
-              >
-                <div className="flex items-center gap-3">
+              <div className={`border border-gray-200 rounded-xl overflow-hidden ${!invoiceAvailable ? "opacity-50" : ""}`}>
+                <div className="flex items-center gap-3 px-4 py-3">
                   <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
                     <FileText className="w-4 h-4 text-blue-600" />
                   </div>
-                  <div>
-                    <p className="text-sm font-medium">Invoice</p>
-                    <p className="text-xs text-gray-400">
-                      {invoiceAvailable
-                        ? `${invoice?.no_invoice}.pdf`
-                        : "Tersedia setelah form dikonfirmasi"}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-800">Invoice</p>
+                    <p className="text-xs text-gray-400 truncate max-w-[140px] sm:max-w-none">
+                      {invoiceAvailable ? `${invoice?.no_invoice}.pdf` : "Tersedia setelah form dikonfirmasi"}
                     </p>
                   </div>
+                  <div className="flex-shrink-0 ml-auto">
+                    {invoiceAvailable ? (
+                      <button
+                        onClick={downloadInvoice}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium hover:bg-blue-100 transition whitespace-nowrap"
+                      >
+                        <Download className="w-3.5 h-3.5" /> Unduh
+                      </button>
+                    ) : (
+                      <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg whitespace-nowrap">
+                        Belum tersedia
+                      </span>
+                    )}
+                  </div>
                 </div>
-                {invoiceAvailable ? (
-                  <button
-                    onClick={downloadInvoice}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium hover:bg-blue-100 transition"
-                  >
-                    <Download className="w-3.5 h-3.5" /> Unduh
-                  </button>
-                ) : (
-                  <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg">
-                    Belum tersedia
-                  </span>
-                )}
               </div>
 
               {/* Kuitansi */}
-              <div
-                className={`flex items-center justify-between p-4 border border-gray-200 rounded-lg ${
-                  !kuitansiAvailable ? "opacity-50" : ""
-                }`}
-              >
-                <div className="flex items-center gap-3">
+              <div className={`border border-gray-200 rounded-xl overflow-hidden ${!kuitansiAvailable ? "opacity-50" : ""}`}>
+                <div className="flex items-center gap-3 px-4 py-3">
                   <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
                     <FileCheck className="w-4 h-4 text-green-600" />
                   </div>
-                  <div>
-                    <p className="text-sm font-medium">Kuitansi</p>
-                    <p className="text-xs text-gray-400">
-                      {kuitansiAvailable
-                        ? `${invoice?.no_invoice}_kuitansi.pdf`
-                        : "Tersedia setelah order selesai"}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-800">Kuitansi</p>
+                    <p className="text-xs text-gray-400 truncate max-w-[140px] sm:max-w-none">
+                      {kuitansiAvailable ? `${invoice?.no_invoice}_kuitansi.pdf` : "Tersedia setelah order selesai"}
                     </p>
                   </div>
+                  <div className="flex-shrink-0 ml-auto">
+                    {kuitansiAvailable ? (
+                      <button
+                        onClick={downloadKuitansi}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-xs font-medium hover:bg-green-100 transition whitespace-nowrap"
+                      >
+                        <Download className="w-3.5 h-3.5" /> Unduh
+                      </button>
+                    ) : (
+                      <span className="text-xs text-red-500 px-3 py-1.5 bg-red-50 rounded-lg whitespace-nowrap">
+                        Belum tersedia
+                      </span>
+                    )}
+                  </div>
                 </div>
-                {kuitansiAvailable ? (
-                  <button
-                    onClick={downloadKuitansi}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-xs font-medium hover:bg-green-100 transition"
-                  >
-                    <Download className="w-3.5 h-3.5" /> Unduh
-                  </button>
-                ) : (
-                  <span className="text-xs text-red-500 px-3 py-1.5 bg-red-50 rounded-lg">
-                    Belum tersedia
-                  </span>
-                )}
               </div>
 
               {/* Bukti Pembayaran */}
-              <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                <div className="flex items-center gap-3">
+              <div className="border border-gray-200 rounded-xl overflow-hidden">
+                <div className="flex items-center gap-3 px-4 py-3">
                   <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
                     <CreditCard className="w-4 h-4 text-amber-600" />
                   </div>
-                  <div>
-                    <p className="text-sm font-medium">Bukti Pembayaran</p>
-                    <p className="text-xs text-gray-400">
-                      {invoice?.bukti_pembayaran
-                        ? invoice.bukti_pembayaran
-                        : "Belum ada bukti pembayaran"}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-800">Bukti Pembayaran</p>
+                    <p className="text-xs text-gray-400 truncate max-w-[100px] sm:max-w-none">
+                      {invoice?.bukti_pembayaran ? invoice.bukti_pembayaran : "Belum ada bukti pembayaran"}
                     </p>
+                  </div>
+                  <div className="flex-shrink-0 ml-auto">
+                    {buktiPembayaranEditable ? (
+                      invoice.bukti_pembayaran && kirim === true ? (
+                        <div className="flex items-center gap-2">
+
+                          <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${invoice?.bukti_pembayaran}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium hover:bg-amber-100 transition whitespace-nowrap"
+                          >
+                            <Download className="w-3.5 h-3.5" /> Unduh
+                          </a>
+                          <button
+                            onClick={() => setKirim(false)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200 transition whitespace-nowrap"
+                          >
+                            <Edit2 className="w-3.5 h-3.5" /> Edit
+                          </button>
+                        </div>
+                      ) : null
+                    ) : (
+                      <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg whitespace-nowrap">
+                        Belum tersedia
+                      </span>
+                    )}
                   </div>
                 </div>
 
-                {buktiPembayaranEditable ? (
-                  invoice.bukti_pembayaran && kirim === true ? (
-                    <div className="flex items-center gap-2">
-                      
-                       <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${invoice?.bukti_pembayaran}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium hover:bg-amber-100 transition"
-                      >
-                        <Download className="w-3.5 h-3.5" /> Unduh
-                      </a>
-                      <button
-                        onClick={() => setKirim(false)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200 transition"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" /> Edit
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
+                {/* Row bawah: area upload */}
+                {buktiPembayaranEditable && !(invoice.bukti_pembayaran && kirim === true) && (
+                  <div className="px-4 py-3 bg-gray-50 border-t border-gray-100">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-100 transition flex-shrink-0">
+                        <Edit2 className="w-3.5 h-3.5" />
+                        Pilih File
+                      </span>
                       <input
                         type="file"
+                        accept="image/*"
                         name="bukti_pembayaran"
                         onChange={handleBP}
-                        className="text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+                        className="hidden"
                       />
-                      {buktiPembayaran[0] && (
+                      <span className="text-xs text-gray-400 truncate">
+                        {buktiPembayaran ? buktiPembayaran.name : "Belum ada file dipilih"}
+                      </span>
+                    </label>
+                    <div className="flex items-center gap-2 mt-2">
+                      {buktiPembayaran && (
                         <button
                           onClick={handleBukti}
-                          className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition"
+                          disabled={isUploading}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition whitespace-nowrap"
                         >
-                          <Send className="w-3.5 h-3.5" /> Kirim
+                          <Send className="w-3.5 h-3.5" />
+                          {isUploading ? "Mengirim..." : "Kirim"}
                         </button>
                       )}
+                      <button
+                        onClick={() => { setKirim(true); setBuktiPembayaran(null) }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 text-gray-600 rounded-lg text-xs font-medium hover:bg-gray-100 transition whitespace-nowrap"
+                      >
+                        Batal
+                      </button>
                     </div>
-                  )
-                ) : (
-                  <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg">
-                    Belum tersedia
-                  </span>
+                  </div>
                 )}
               </div>
 

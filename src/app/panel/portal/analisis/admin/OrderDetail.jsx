@@ -202,7 +202,7 @@ export default function DetailOrderAdmin({ setActivePage, idInvoice, noInvoice }
             const harga = parseFloat(item.hargaSatuan) || 0
             return sum + (jumlah * harga)
         }, 0)
-        setInvoice(prev => ({ ...prev, total_harga: total }))
+        setInvoice(prev => ({ ...prev, total_harga: Math.round(total) }))
     }, [hargaSatuan])
 
     const convertRupiah = (angka) => {
@@ -236,6 +236,8 @@ export default function DetailOrderAdmin({ setActivePage, idInvoice, noInvoice }
         { key: 'edit', label: 'Edit Order', icon: <Edit2 className="w-4 h-4" /> },
         { key: 'dokumen', label: 'Dokumen', icon: <FileText className="w-4 h-4" /> },
     ]
+
+    const preventScroll = (e) => e.target.blur()
 
     return (
         <div className="p-6 max-w-5xl mx-auto">
@@ -360,6 +362,7 @@ export default function DetailOrderAdmin({ setActivePage, idInvoice, noInvoice }
                                 <option value="Sample Dikerjakan Operator">Sample Diterima Admin dan Diproses</option>
                                 <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
                                 <option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
+                                <option value="Menunggu Konfirmasi Pembayaran">Menunggu Konfirmasi Pembayaran</option>
                                 <option value="Selesai">Konfirmasi Pembayaran dan Selesai</option>
                             </select>
                         </div>
@@ -370,6 +373,7 @@ export default function DetailOrderAdmin({ setActivePage, idInvoice, noInvoice }
                             <input
                                 type="number"
                                 name="total_harga"
+                                onWheel={preventScroll}
                                 readOnly
                                 onChange={handleChange}
                                 value={invoice?.total_harga || ''}
@@ -429,6 +433,7 @@ export default function DetailOrderAdmin({ setActivePage, idInvoice, noInvoice }
                                     />
                                     <input
                                         type="number"
+                                        onWheel={preventScroll}
                                         placeholder="Harga Satuan"
                                         value={item.hargaSatuan}
                                         onChange={(e) => handleHargaSatuan(index, "hargaSatuan", e.target.value)}

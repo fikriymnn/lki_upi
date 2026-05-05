@@ -242,6 +242,63 @@ const MainPage = () => {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [noInvoice, setNoInvoice] = useState('');
   const [idInvoice, setIdInvoice] = useState('');
+  const [userData, setUserData] = useState(null);
+
+  // ── Fetch user data ──────────────────────────────────────────────────
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem('access_token');
+        if (!token) return;
+
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.data.success) {
+          setUserData(res.data.data);
+        }
+      } catch (err) {
+        console.error('Gagal mengambil data user:', err);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  // ── Logout ──────────────────────────────────────────────────────────
+  const handleLogout = async () => {
+    if (!confirm('Yakin ingin keluar?')) return;
+
+    try {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user_data');
+
+      await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/logout`, {
+        withCredentials: true,
+      });
+
+      window.dispatchEvent(new Event('authChange'));
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      window.location.href = '/panel';
+    }
+  };
+
+  // ── Helpers ──────────────────────────────────────────────────────────
+  const getInitial = (nama) => {
+    if (!nama) return 'A';
+    return nama.charAt(0).toUpperCase();
+  };
+
+  const formatRole = (role) => {
+    if (!role) return 'Administrator';
+    return role.charAt(0).toUpperCase() + role.slice(1);
+  };
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -259,13 +316,22 @@ const MainPage = () => {
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <div className="flex items-center space-x-3 pl-4 border-l border-red-400">
-                  <div className="w-9 h-9 bg-red-800 rounded-lg flex items-center justify-center text-white font-bold border border-red-600">
-                    A
+                  {/* Avatar */}
+                  <div className="w-9 h-9 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center text-white font-bold border border-red-400">
+                    {getInitial(userData?.nama_lengkap)}
                   </div>
+
+                  {/* Nama & Role */}
                   <div>
-                    <p className="text-sm font-bold text-gray-100">Admin Lab</p>
-                    <p className="text-xs text-red-200">Administrator</p>
+                    <p className="text-sm font-bold text-gray-100">
+                      {userData?.nama_lengkap ?? 'Memuat...'}
+                    </p>
+                    <p className="text-xs text-red-200">
+                      {formatRole(userData?.role)}
+                    </p>
                   </div>
+
+                  {/* Chevron Toggle */}
                   <button
                     onClick={() => setShowUserDropdown(!showUserDropdown)}
                     className="focus:outline-none"
@@ -280,20 +346,22 @@ const MainPage = () => {
                   <>
                     <div className="fixed inset-0 z-10" onClick={() => setShowUserDropdown(false)} />
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20">
-                      <button
+                      {/* <button
                         onClick={() => setShowUserDropdown(false)}
                         className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 flex items-center gap-2 transition"
                       >
                         <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center">
-                          <span className="text-xs font-semibold text-red-600">A</span>
+                          <span className="text-xs font-semibold text-red-600">
+                            {getInitial(userData?.nama_lengkap)}
+                          </span>
                         </div>
                         <span>Profil Saya</span>
                       </button>
-                      <div className="border-t border-gray-100 my-1" />
+                      <div className="border-t border-gray-100 my-1" /> */}
                       <button
                         onClick={() => {
                           setShowUserDropdown(false);
-                          if (confirm('Yakin ingin keluar?')) window.location.href = '/login';
+                          handleLogout();
                         }}
                         className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition"
                       >

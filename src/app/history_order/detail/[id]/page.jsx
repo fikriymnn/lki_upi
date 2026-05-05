@@ -243,9 +243,8 @@ export default function Hdetail({ params, searchParams }) {
 
             {/* Invoice */}
             <div
-              className={`flex items-center justify-between p-4 border border-gray-200 rounded-lg ${
-                invoice.status != "Selesai" ? "opacity-50" : ""
-              }`}
+              className={`flex items-center justify-between p-4 border border-gray-200 rounded-lg ${invoice.status != "Selesai" ? "opacity-50" : ""
+                }`}
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -261,14 +260,13 @@ export default function Hdetail({ params, searchParams }) {
                 </div>
               </div>
               {invoice.status == "Selesai" ? (
-                <Button
-                  color="blue"
-                  size="xs"
-                  onClick={downloadInvoice}
-                  className="flex items-center gap-1.5"
-                >
-                  <Download className="w-3.5 h-3.5 mr-1" /> Download
-                </Button>
+<button
+  onClick={downloadInvoice}
+  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium transition"
+>
+  <Download className="w-3.5 h-3.5" /> Unduh
+</button>
+
               ) : (
                 <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg">
                   Belum tersedia
@@ -278,11 +276,10 @@ export default function Hdetail({ params, searchParams }) {
 
             {/* Kuitansi */}
             <div
-              className={`flex items-center justify-between p-4 border border-gray-200 rounded-lg ${
-                !(invoice?.status == "Selesai" && (order?.dana_penelitian == true || !order?.nama_pembimbing))
-                  ? "opacity-50"
-                  : ""
-              }`}
+              className={`flex items-center justify-between p-4 border border-gray-200 rounded-lg ${!(invoice?.status == "Selesai" && (order?.dana_penelitian == true || !order?.nama_pembimbing))
+                ? "opacity-50"
+                : ""
+                }`}
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -298,14 +295,12 @@ export default function Hdetail({ params, searchParams }) {
                 </div>
               </div>
               {invoice?.status == "Selesai" && (order?.dana_penelitian == true || !order?.nama_pembimbing) ? (
-                <Button
-                  color="success"
-                  size="xs"
+                <button
                   onClick={downloadKuitansi}
-                  className="flex items-center gap-1.5"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-medium transition"
                 >
-                  <Download className="w-3.5 h-3.5 mr-1" /> Download
-                </Button>
+                  <Download className="w-3.5 h-3.5" /> Unduh
+                </button>
               ) : (
                 <span className="text-xs text-red-500 px-3 py-1.5 bg-red-50 rounded-lg">
                   Belum tersedia
@@ -329,18 +324,15 @@ export default function Hdetail({ params, searchParams }) {
                 </div>
               </div>
               {invoice?.bukti_pembayaran ? (
-                <Button
-                  color="warning"
-                  size="xs"
-                  href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${invoice?.bukti_pembayaran}`}
-                  target="_blank"
-                  className="flex items-center gap-1.5"
+                <button
+                  onClick={downloadBuktiTransfer}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-medium transition"
                 >
-                  <Download className="w-3.5 h-3.5 mr-1" /> Download
-                </Button>
+                  <Download className="w-3.5 h-3.5" /> Unduh
+                </button>
               ) : (
                 <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg">
-                  Belum ada
+                  Belum tersedia
                 </span>
               )}
             </div>

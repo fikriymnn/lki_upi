@@ -13,15 +13,15 @@ import {
 // ── Helpers ────────────────────────────────────────────────
 const statusBadge = (status) => {
   const map = {
-    "Selesai":                        "bg-green-100 text-green-800",
-    "Menunggu Pembayaran":            "bg-amber-100 text-amber-800",
+    "Selesai": "bg-green-100 text-green-800",
+    "Menunggu Pembayaran": "bg-amber-100 text-amber-800",
     "Menunggu Konfirmasi Pembayaran": "bg-amber-100 text-amber-800",
-    "Order Dibatalkan":               "bg-red-100 text-red-800",
-    "Form Dikonfirmasi":              "bg-blue-100 text-blue-800",
-    "Sample Diterima Admin":          "bg-blue-100 text-blue-800",
-    "Sample Dikerjakan Operator":     "bg-blue-100 text-blue-800",
-    "Menunggu Verifikasi":            "bg-purple-100 text-purple-800",
-    "Menunggu Form Dikonfirmasi":     "bg-gray-100 text-gray-700",
+    "Order Dibatalkan": "bg-red-100 text-red-800",
+    "Form Dikonfirmasi": "bg-blue-100 text-blue-800",
+    "Sample Diterima Admin": "bg-blue-100 text-blue-800",
+    "Sample Dikerjakan Operator": "bg-blue-100 text-blue-800",
+    "Menunggu Verifikasi": "bg-purple-100 text-purple-800",
+    "Menunggu Form Dikonfirmasi": "bg-gray-100 text-gray-700",
   };
   return map[status] || "bg-gray-100 text-gray-700";
 };
@@ -61,26 +61,26 @@ function SuccessPopup({ message, onClose }) {
 
 // ── Main Component ─────────────────────────────────────────
 export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
-  const id         = idInvoice;
+  const id = idInvoice;
   const no_invoice = noInvoice;
-  const path       = usePathname();
+  const path = usePathname();
 
-  const [activeTab,  setActiveTab]  = useState("info");
-  const [editVerif,  setEditVerif]  = useState(false);
-  const [order,      setOrder]      = useState([]);
-  const [invoice,    setInvoice]    = useState({ id_user: {} });
-  const [formVerif,  setFormVerif]  = useState({ status: "", catatan: "" });
+  const [activeTab, setActiveTab] = useState("info");
+  const [editVerif, setEditVerif] = useState(false);
+  const [order, setOrder] = useState([]);
+  const [invoice, setInvoice] = useState({ id_user: {} });
+  const [formVerif, setFormVerif] = useState({ status: "", catatan: "" });
 
   // ── State popup ──
   const [popup, setPopup] = useState({ show: false, message: "" });
 
-  const showPopup  = (message) => setPopup({ show: true, message });
-  const closePopup = ()        => setPopup({ show: false, message: "" });
+  const showPopup = (message) => setPopup({ show: true, message });
+  const closePopup = () => setPopup({ show: false, message: "" });
 
   // ── Tabs ─────────────────────────────────────────────────
   const tabs = [
-    { key: "info",  label: "Informasi Pelanggan", icon: <User  className="w-4 h-4" /> },
-    { key: "verif", label: "Update Verifikasi",   icon: <Edit2 className="w-4 h-4" /> },
+    { key: "info", label: "Informasi Pelanggan", icon: <User className="w-4 h-4" /> },
+    { key: "verif", label: "Update Verifikasi", icon: <Edit2 className="w-4 h-4" /> },
   ];
 
   // ── Fungsi refetch data ───────────────────────────────────
@@ -97,7 +97,7 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
       if (data.data.success) {
         setInvoice(data.data.data);
         setFormVerif({
-          status:  data.data.data.status  || "",
+          status: data.data.data.status || "",
           catatan: data.data.data.catatan || "",
         });
       }
@@ -122,7 +122,7 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
         if (data.data.success) {
           setInvoice(data.data.data);
           setFormVerif({
-            status:  data.data.data.status  || "",
+            status: data.data.data.status || "",
             catatan: data.data.data.catatan || "",
           });
         }
@@ -142,17 +142,17 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
     try {
       function timeNow() {
         const d = new Date();
-        const h = (d.getHours()   < 10 ? "0" : "") + d.getHours();
+        const h = (d.getHours() < 10 ? "0" : "") + d.getHours();
         const m = (d.getMinutes() < 10 ? "0" : "") + d.getMinutes();
         return h + ":" + m;
       }
       const date_format = `${timeNow()} ${new Date().getDate()} ${month_bahasa(new Date().getMonth())} ${new Date().getFullYear()}`;
       function selection() {
         switch (formVerif.status) {
-          case "Menunggu Verifikasi":            obj.s5_date = date_format; return true;
-          case "Menunggu Pembayaran":            obj.s6_date = date_format; obj.success = true; return true;
+          case "Menunggu Verifikasi": obj.s5_date = date_format; return true;
+          case "Menunggu Pembayaran": obj.s6_date = date_format; obj.success = true; return true;
           case "Menunggu Konfirmasi Pembayaran": obj.s7_date = date_format; obj.success = true; return true;
-          case "Selesai":                        obj.success = true; obj.s8_date = date_format; return true;
+          case "Selesai": obj.success = true; obj.s8_date = date_format; return true;
         }
       }
       if (selection() === true) {
@@ -232,11 +232,10 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
                 setActiveTab(t.key);
                 if (t.key !== "verif") setEditVerif(false);
               }}
-              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition ${
-                activeTab === t.key
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition ${activeTab === t.key
                   ? "text-red-600 border-b-2 border-red-600 bg-red-50"
                   : "text-gray-500 hover:bg-gray-50"
-              }`}
+                }`}
             >
               {t.icon}
               {t.label}
@@ -328,12 +327,16 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
           </p>
 
           {/* Warning */}
-          <div className="flex items-start gap-2 bg-amber-50 border border-amber-100 rounded-lg px-4 py-3 mb-6">
-            <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-amber-700">
-              Upload hasil analisis terlebih dahulu sebelum melakukan verifikasi
-            </p>
-          </div>
+          {
+            !order[0]?.hasil_analisis && (
+              <div className="flex items-start gap-2 bg-amber-50 border border-amber-100 rounded-lg px-4 py-3 mb-6">
+                <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-amber-700">
+                  Upload hasil analisis terlebih dahulu sebelum melakukan verifikasi
+                </p>
+              </div>
+            )
+          }
 
           <div className="space-y-4 divide-y divide-gray-100">
             {/* Status Verifikasi */}

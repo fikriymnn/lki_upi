@@ -11,11 +11,12 @@ export default function AdminOrderCard({
   riwayat_pengujian, sample_dikembalikan, uuid, jenis_pengujian,
   nama_sample, jumlah_sample, index, wujud_sample, pelarut,
   preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung,
-  deskripsi, hasil_analisis, foto_sample, id, kode_pengujian,
+  deskripsi, hasil_analisis: hasil_analisis_init, foto_sample, id, kode_pengujian,
   nama_pembimbing, lama_pengerjaan, no_invoice, status, invoice_id
 }) {
   const [add, setAdd] = useState(false)
   const [file, setFile] = useState('')
+  const [hasilAnalisis, setHasilAnalisis] = useState(hasil_analisis_init) // <-- state lokal
 
   useEffect(() => {
     console.log(status)
@@ -23,26 +24,31 @@ export default function AdminOrderCard({
 
   const handleConfirm = async (e) => {
     e.preventDefault()
+
+    if (!file) {
+      alert('no file uploaded')
+      setAdd(false)
+      return
+    }
+
     try {
       const downloadURL = await axios.post(
         `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=hasilanalisis`,
         { file: file },
         { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } }
       );
-      if (!file) {
-        alert('no file uploaded')
-        setAdd(a => !a)
-      } else {
-        const data = await axios.post(
-          `${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}?invoice_id=${invoice_id}${status == "Sample Dikerjakan Operator" ? "&task=operator" : ""}`,
-          { hasil_analisis: downloadURL.data.filename },
-          { withCredentials: true }
-        )
-        if (data.data == 'success') {
-          setAdd(a => !a)
-          alert("upload successfully!")
-          window.location.reload()
-        }
+
+      const data = await axios.post(
+        `${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}?invoice_id=${invoice_id}${status == "Sample Dikerjakan Operator" ? "&task=operator" : ""}`,
+        { hasil_analisis: downloadURL.data.filename },
+        { withCredentials: true }
+      )
+
+      if (data.data == 'success') {
+        setHasilAnalisis(downloadURL.data.filename) // <-- update state lokal, tanpa reload
+        setAdd(false)
+        setFile('')
+        alert("upload successfully!")
       }
     } catch (err) {
       console.log(err)
@@ -172,9 +178,8 @@ export default function AdminOrderCard({
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  {hasil_analisis && !add && (
-
-                    <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${hasil_analisis}`}
+                  {hasilAnalisis && !add && ( // <-- pakai state lokal
+                    <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${hasilAnalisis}`}
                       target="_blank"
                       className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-xs font-medium hover:bg-green-100 transition"
                     >
@@ -187,7 +192,7 @@ export default function AdminOrderCard({
                       className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 text-white rounded-lg text-xs font-medium hover:bg-red-700 transition"
                     >
                       <Upload className="w-3.5 h-3.5" />
-                      {hasil_analisis ? 'Ganti File' : 'Upload File'}
+                      {hasilAnalisis ? 'Ganti File' : 'Upload File'} {/* <-- pakai state lokal */}
                     </button>
                     : <div className="flex items-center gap-2">
                       <button
