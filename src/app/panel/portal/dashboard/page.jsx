@@ -111,6 +111,7 @@ const DashboardPage = () => {
             <p className="text-white font-bold text-2xl">INVENTORY SYSTEM</p>
             <div className="flex-1 max-w-lg" />
             <div className="flex items-center space-x-4 ml-6">
+
               <div className="relative">
                 <div className="flex items-center space-x-3 pl-4 border-l border-red-400">
                   <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center text-white font-bold border border-red-400">
@@ -260,8 +261,10 @@ const DashboardContent = () => {
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
+
   const stats = STAT_BY_PERIOD[periode] || STAT_BY_PERIOD['bulan'];
   const chartData = CHART_DATA[periode] || CHART_DATA['bulan'];
+
 
   // Filter last activity
   const filteredActivity = MOCK_LAST_ACTIVITY.filter(a => {
