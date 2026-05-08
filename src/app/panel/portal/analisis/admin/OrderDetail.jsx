@@ -102,17 +102,15 @@ export default function DetailOrderAdmin({ setActivePage, idInvoice, noInvoice }
         } catch (err) { alert(err.message) }
     }
 
-    const downloadBuktiTransfer = async () => {
-        try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/download_bukti_pembayaran/${id}`, { withCredentials: true, responseType: 'arraybuffer' });
-            const blob = new Blob([response.data], { type: 'application/octet-stream' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = invoice?.bukti_pembayaran;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } catch (error) { console.error('Error downloading file:', error); }
+    const downloadBuktiTransfer = () => {
+        if (!invoice?.bukti_pembayaran) return;
+        const link = document.createElement('a');
+        link.href = `${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${invoice.bukti_pembayaran}`;
+        link.target = '_blank';
+        link.download = invoice.bukti_pembayaran;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     const handleChange = async (e) => {
@@ -519,7 +517,7 @@ export default function DetailOrderAdmin({ setActivePage, idInvoice, noInvoice }
                         </div>
 
                         {/* Bukti Pembayaran */}
-                        <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div className={`flex items-center justify-between p-4 border border-gray-200 rounded-lg ${!invoice?.bukti_pembayaran ? "opacity-50" : ""}`}>
                             <div className="flex items-center gap-3">
                                 <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
                                     <CreditCard className="w-4 h-4 text-amber-600" />

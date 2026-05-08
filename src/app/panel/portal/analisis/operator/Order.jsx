@@ -127,16 +127,17 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
         {/* ── Table ── */}
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[700px]">
+            <table className="w-full min-w-[800px]">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   {[
-                    { label: "No", w: "w-12" },
-                    { label: "Tanggal", w: "w-28" },
+                    { label: "No", w: "w-10" },
+                    { label: "Tanggal", w: "w-32" },
+                    { label: "No. Invoice", w: "w-48" },
                     { label: "Nama Customer", w: "" },
                     { label: "Jenis Pengujian", w: "w-36" },
                     { label: "Status", w: "w-44" },
-                    { label: "Aksi", w: "w-32" },
+                    { label: "Aksi", w: "w-24" },
                   ].map((h) => (
                     <th
                       key={h.label}
@@ -154,6 +155,7 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
                     <tr key={i} className="animate-pulse">
                       <td className="px-4 py-3"><div className="h-3 w-6 bg-gray-200 rounded" /></td>
                       <td className="px-4 py-3"><div className="h-3 w-20 bg-gray-200 rounded" /></td>
+                      <td className="px-4 py-3"><div className="h-5 w-28 bg-gray-200 rounded-lg" /></td>
                       <td className="px-4 py-3"><div className="h-3 w-32 bg-gray-200 rounded" /></td>
                       <td className="px-4 py-3"><div className="h-5 w-16 bg-gray-200 rounded-full" /></td>
                       <td className="px-4 py-3"><div className="h-5 w-28 bg-gray-200 rounded-full" /></td>
@@ -172,6 +174,11 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
                     </td>
                     <td className="px-4 py-3">
                       <span className="text-xs text-gray-600">{v.date_format}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-xs font-mono font-medium px-2.5 py-1 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">
+                        {v.no_invoice || "—"}
+                      </span>
                     </td>
                     <td className="px-4 py-3">
                       <span className="text-sm font-medium text-gray-900">{v.nama_lengkap}</span>
@@ -218,7 +225,7 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
                   </tr>
                 )) : (
                   <tr>
-                    <td colSpan={6} className="px-6 py-16 text-center">
+                    <td colSpan={7} className="px-6 py-16 text-center">
                       <FileText className="w-10 h-10 text-gray-300 mx-auto mb-3" />
                       <p className="text-sm text-gray-400">Tidak ada data order</p>
                     </td>

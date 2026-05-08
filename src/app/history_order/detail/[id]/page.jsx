@@ -159,7 +159,7 @@ export default function Hdetail({ params, searchParams }) {
             <ChevronLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">Detail Order</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">Detail Riwayat Order</h1>
             <p className="text-sm text-gray-500">
               Lihat status dan dokumen terkait pengujian Anda
             </p>
@@ -177,8 +177,11 @@ export default function Hdetail({ params, searchParams }) {
           </div>
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <p className="text-sm text-gray-500 mb-1">Total Harga</p>
+            {/* MODIFIKASI: tambah toLocaleString('id-ID') untuk format titik ribuan rupiah */}
             <p className="text-2xl font-bold text-blue-600">
-              {invoice?.total_harga ? `Rp ${invoice.total_harga}` : "—"}
+              {invoice?.total_harga
+                ? `Rp ${invoice.total_harga.toLocaleString("id-ID")}`
+                : "—"}
             </p>
             <p className="text-xs text-gray-400 mt-1">{order.length} item pengujian</p>
           </div>
@@ -212,8 +215,11 @@ export default function Hdetail({ params, searchParams }) {
             </div>
             <div>
               <p className="text-xs text-gray-400">Total Harga</p>
+              {/* MODIFIKASI: tambah toLocaleString('id-ID') untuk format titik ribuan rupiah */}
               <p className="text-sm font-medium mt-0.5">
-                {invoice?.total_harga ? `Rp ${invoice.total_harga}` : "—"}
+                {invoice?.total_harga
+                  ? `Rp ${invoice.total_harga.toLocaleString("id-ID")}`
+                  : "—"}
               </p>
             </div>
             <div>
@@ -243,16 +249,16 @@ export default function Hdetail({ params, searchParams }) {
 
             {/* Invoice */}
             <div
-              className={`flex items-center justify-between p-4 border border-gray-200 rounded-lg ${invoice.status != "Selesai" ? "opacity-50" : ""
-                }`}
+              className={`flex items-center justify-between gap-3 p-4 border border-gray-200 rounded-lg" ${invoice.status != "Selesai" ? "opacity-50" : ""}`}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                {/* ikon background biru */}
                 <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
                   <FileText className="w-4 h-4 text-blue-600" />
                 </div>
-                <div>
+                <div className="min-w-0 overflow-hidden">
                   <p className="text-sm font-medium">Invoice</p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-400 truncate max-w-[180px] sm:max-w-none">
                     {invoice.status == "Selesai"
                       ? `${invoice?.no_invoice}.pdf`
                       : "Tersedia setelah order selesai"}
@@ -260,13 +266,13 @@ export default function Hdetail({ params, searchParams }) {
                 </div>
               </div>
               {invoice.status == "Selesai" ? (
-<button
-  onClick={downloadInvoice}
-  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium transition"
->
-  <Download className="w-3.5 h-3.5" /> Unduh
-</button>
-
+                // MODIFIKASI: tombol unduh invoice → bg-blue-600 selaras ikon biru
+                <button
+                  onClick={downloadInvoice}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg text-xs font-medium transition"
+                >
+                  <Download className="w-3.5 h-3.5" /> Unduh
+                </button>
               ) : (
                 <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg">
                   Belum tersedia
@@ -276,18 +282,19 @@ export default function Hdetail({ params, searchParams }) {
 
             {/* Kuitansi */}
             <div
-              className={`flex items-center justify-between p-4 border border-gray-200 rounded-lg ${!(invoice?.status == "Selesai" && (order?.dana_penelitian == true || !order?.nama_pembimbing))
+              className={`flex items-center justify-between gap-3 p-4 border border-gray-200 rounded-lg" ${!(invoice?.status == "Selesai" && (order?.dana_penelitian == true || !order?.nama_pembimbing))
                 ? "opacity-50"
                 : ""
                 }`}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                {/* ikon background hijau */}
                 <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
                   <FileCheck className="w-4 h-4 text-green-600" />
                 </div>
-                <div>
+                <div className="min-w-0 overflow-hidden">
                   <p className="text-sm font-medium">Kuitansi</p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-400 truncate max-w-[180px] sm:max-w-none">
                     {invoice?.status == "Selesai" && (order?.dana_penelitian == true || !order?.nama_pembimbing)
                       ? `${invoice?.no_invoice}_kuitansi.pdf`
                       : "Tersedia setelah order selesai"}
@@ -295,9 +302,10 @@ export default function Hdetail({ params, searchParams }) {
                 </div>
               </div>
               {invoice?.status == "Selesai" && (order?.dana_penelitian == true || !order?.nama_pembimbing) ? (
+                // MODIFIKASI: tombol unduh kuitansi → bg-green-600 selaras ikon hijau
                 <button
                   onClick={downloadKuitansi}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-medium transition"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-600 rounded-lg text-xs font-medium transition"
                 >
                   <Download className="w-3.5 h-3.5" /> Unduh
                 </button>
@@ -309,14 +317,15 @@ export default function Hdetail({ params, searchParams }) {
             </div>
 
             {/* Bukti Pembayaran */}
-            <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-              <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between gap-3 p-4 border border-gray-200 rounded-lg">
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                {/* ikon background amber */}
                 <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
                   <CreditCard className="w-4 h-4 text-amber-600" />
                 </div>
-                <div>
+                <div className="min-w-0 overflow-hidden">
                   <p className="text-sm font-medium">Bukti Pembayaran</p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-400 truncate max-w-[180px] sm:max-w-none">
                     {invoice?.bukti_pembayaran
                       ? invoice.bukti_pembayaran
                       : "Belum ada bukti pembayaran"}
@@ -324,9 +333,10 @@ export default function Hdetail({ params, searchParams }) {
                 </div>
               </div>
               {invoice?.bukti_pembayaran ? (
+                // MODIFIKASI: tombol unduh bukti pembayaran → bg-amber-500 selaras ikon amber
                 <button
                   onClick={downloadBuktiTransfer}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-medium transition"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-lg text-xs font-medium transition"
                 >
                   <Download className="w-3.5 h-3.5" /> Unduh
                 </button>

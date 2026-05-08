@@ -234,8 +234,8 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
                 if (t.key !== "status") setEditVerif(false);
               }}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition ${activeTab === t.key
-                  ? "text-red-600 border-b-2 border-red-600 bg-red-50"
-                  : "text-gray-500 hover:bg-gray-50"
+                ? "text-red-600 border-b-2 border-red-600 bg-red-50"
+                : "text-gray-500 hover:bg-gray-50"
                 }`}
             >
               {t.icon}
@@ -340,18 +340,24 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
 
           <div className="space-y-4 divide-y divide-gray-100">
 
-            {/* Status */}
             <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-3 items-center pt-4 first:pt-0">
               <p className="text-sm font-semibold text-gray-700">Status</p>
-              {editVerif && invoice?.opTask ? (
+              {editVerif ? (
                 <select
                   name="status"
                   value={form.status}
                   onChange={(e) => setForm((a) => ({ ...a, [e.target.name]: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 >
+                  <option value="Menunggu Form Dikonfirmasi">Menunggu Form Dikonfirmasi</option>
+                  <option value="Form Dikonfirmasi">Form Dikonfirmasi</option>
+                  <option value="Sample Diterima Admin">Sample Diterima Admin</option>
                   <option value="Sample Dikerjakan Operator">Sample Dikerjakan Operator</option>
                   <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
+                  <option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
+                  <option value="Menunggu Konfirmasi Pembayaran">Menunggu Konfirmasi Pembayaran</option>
+                  <option value="Selesai">Selesai</option>
+                  <option value="Order Dibatalkan">Order Dibatalkan</option>
                 </select>
               ) : (
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold w-fit ${statusBadge(form.status)}`}>
@@ -380,7 +386,7 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
 
           {/* Action Buttons */}
           <div className="flex items-center justify-end gap-3 mt-6 pt-5 border-t border-gray-200">
-            {editVerif && invoice?.opTask ? (
+            {editVerif ? (
               <>
                 <button
                   onClick={() => setEditVerif(false)}
@@ -399,7 +405,7 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
               <button
                 onClick={() => setEditVerif(true)}
                 className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 transition"
-                disabled={!order[0]?.hasil_analisis}
+                disabled={!order[0]?.hasil_analisis} 
               >
                 <Edit2 className="w-4 h-4" /> Edit
               </button>

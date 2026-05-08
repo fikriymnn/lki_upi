@@ -1,6 +1,6 @@
 "use client";
 import AdminInvoiceCard from "@/components/AdminInvoiceCard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { Pagination } from "flowbite-react";
 import Navigasi from "@/components/Navigasi";
@@ -81,33 +81,29 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const handleSearch = async () => {
-        try {
-            const data = await axios.get(
-                `${process.env.NEXT_PUBLIC_URL}/api/invoice?skip=0&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status !== "" ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Form Dikonfirmasi&status=sample diterima admin&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"}${search ? `&nama_lengkap=${search}` : ""}`,
-                { withCredentials: true }
-            );
-            if (data.data.success) getInvoice();
-        } catch (err) {
-            alert(err.message);
-        }
-    };
-
     const convertRupiah = (angka = 0) => {
         let s = angka?.toString();
         let parts = s?.split("").reverse().join("").match(/\d{1,3}/g);
         return parts?.join(".").split("").reverse().join("");
     };
 
-    async function getInvoice() {
+    const getInvoice = useCallback(async () => {
         setLoading(true);
         try {
             const data = await axios.get(
-                `${process.env.NEXT_PUBLIC_URL}/api/invoice?&skip=${page * 15}&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}${status ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Form Dikonfirmasi&status=sample diterima admin&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=sample diterima admin&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai"}${search ? `&nama_lengkap=${search}` : ""}`,
+                `${process.env.NEXT_PUBLIC_URL}/api/invoice?skip=${page * 15}&limit=15`
+                + (year ? `&year=${year}` : "")
+                + (month ? `&month=${month}` : "")
+                + (jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : "")
+                + (status ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Form Dikonfirmasi&status=Sample Diterima Admin&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai")
+                + (search ? `&nama_lengkap=${search}` : ""),
                 { withCredentials: true }
             );
             const data2 = await axios.get(
-                `${process.env.NEXT_PUBLIC_URL}/api/order?status_pengujian=${jenis_pengujian}${month ? `&month=${month}` : ""}${year ? `&year=${year}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`,
+                `${process.env.NEXT_PUBLIC_URL}/api/order?status_pengujian=${jenis_pengujian}`
+                + (month ? `&month=${month}` : "")
+                + (year ? `&year=${year}` : "")
+                + (jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""),
                 { withCredentials: true }
             );
             if (data.data.success && data2.data) {
@@ -119,15 +115,30 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
         } finally {
             setLoading(false);
         }
-    }
+    }, [page, month, year, jenis_pengujian, status, search]);
 
+    // Reset page ke 0 saat filter berubah (kecuali page itu sendiri)
+    useEffect(() => {
+        setPage(0);
+    }, [month, year, jenis_pengujian, status]);
+
+    // Fetch saat getInvoice berubah (mencakup semua deps)
+    useEffect(() => {
+        getInvoice();
+    }, [getInvoice]);
+
+    // Inisialisasi yearOption
     useEffect(() => {
         let arr = [];
         const yearMax = new Date().getFullYear() - 2023;
         for (let i = 0; i < yearMax; i++) { arr.push(2024 + i); }
         setYearOption(arr);
+    }, []);
+
+    const handleSearch = () => {
+        setPage(0);
         getInvoice();
-    }, [page, month, year, jenis_pengujian, status]);
+    };
 
     return (
         <div className="p-6">
@@ -319,7 +330,7 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                                     setActivePage('order-detail')
                                                 }}
                                                     title="Detail Order"
-                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer"
                                                 >
                                                     <FileText className="w-4 h-4" />
                                                 </span>
@@ -330,7 +341,7 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                                     setActivePage('order-tracking')
                                                 }}
                                                     title="Tracking Status"
-                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition"
+                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition cursor-pointer"
                                                 >
                                                     <MapPin className="w-4 h-4" />
                                                 </a>
@@ -341,7 +352,7 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                                     setActivePage('order-edit')
                                                 }}
                                                     title="Edit Order"
-                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-600 text-white hover:bg-gray-700 transition"
+                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-600 text-white hover:bg-gray-700 transition cursor-pointer"
                                                 >
                                                     <Pencil className="w-4 h-4" />
                                                 </a>

@@ -7,7 +7,7 @@ import Image from "next/image"
 export default function Login({ searchParams }) {
     const router = useRouter()
     const { prevRoute } = searchParams
-    
+
     const [userForm, setUserForm] = useState({
         email: "",
         password: ""
@@ -15,48 +15,25 @@ export default function Login({ searchParams }) {
     const [showPassword, setShowPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
 
-    useEffect(() => {
-        async function checkUser() {
-            try {
-                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`, {
-                    withCredentials: true
-                })
-
-                if (data.data.success && prevRoute) {
-                    router.replace(prevRoute)
-                }
-            } catch (err) {
-                console.log(err.message)
-            }
-        }
-        checkUser()
-    }, [prevRoute, router])
-
     const handleChange = (e) => {
         const { name, value } = e.target
         setUserForm(prev => ({ ...prev, [name]: value }))
     }
 
-    const handleLupaPassword = (e) => {
-        e.preventDefault()
-        router.push('/lupapassword')
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         setIsLoading(true)
-        
+
         try {
             const data = await axios.post(
-                `${process.env.NEXT_PUBLIC_URL}/api/login`, 
-                userForm, 
+                `${process.env.NEXT_PUBLIC_URL}/api/login`,
+                userForm,
                 { withCredentials: true }
             )
 
             if (data.data.success) {
                 localStorage.setItem('access_token', data.data.token)
-                alert("Login sukses")
-                window.location.href= prevRoute || "/"
+                window.location.href = prevRoute || "/"
             } else {
                 alert(data.data.message)
             }
@@ -71,9 +48,9 @@ export default function Login({ searchParams }) {
         <div className="min-h-screen grid lg:grid-cols-2">
             {/* Left Side - Image with Overlay */}
             <div className="relative bg-neutral-900 lg:flex hidden">
-                <Image 
-                    alt="Gedung Laboratorium" 
-                    src="/images/gedung.jpg" 
+                <Image
+                    alt="Gedung Laboratorium"
+                    src="/images/gedung.jpg"
                     fill
                     className="object-cover opacity-50"
                     priority
@@ -111,8 +88,8 @@ export default function Login({ searchParams }) {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Email Field */}
                         <div className="space-y-2">
-                            <label 
-                                htmlFor="email" 
+                            <label
+                                htmlFor="email"
                                 className="block text-sm font-semibold text-gray-700 uppercase tracking-wide"
                             >
                                 Email
@@ -131,8 +108,8 @@ export default function Login({ searchParams }) {
 
                         {/* Password Field */}
                         <div className="space-y-2">
-                            <label 
-                                htmlFor="password" 
+                            <label
+                                htmlFor="password"
                                 className="block text-sm font-semibold text-gray-700 uppercase tracking-wide"
                             >
                                 Password

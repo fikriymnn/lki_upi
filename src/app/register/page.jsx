@@ -6,7 +6,6 @@ import Image from "next/image";
 
 export default function Register({ searchParams }) {
   const { prevRoute } = searchParams;
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,24 +26,6 @@ export default function Register({ searchParams }) {
     setUserForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  useEffect(() => {
-    async function checkUser() {
-      try {
-        const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/user`,
-          { withCredentials: true }
-        );
-
-        if (data.data.success) {
-          router.push(prevRoute || "/");
-        }
-      } catch (err) {
-        console.log(err.message);
-      }
-    }
-    checkUser();
-  }, [prevRoute, router]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -58,6 +39,7 @@ export default function Register({ searchParams }) {
 
       if (data.data.status === 400) {
         alert(data.data.message);
+        return  // tambah return agar tidak lanjut ke bawah
       }
 
       if (data.data.success) {
