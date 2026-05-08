@@ -6,7 +6,6 @@ import Image from "next/image";
 
 export default function Register({ searchParams }) {
   const { prevRoute } = searchParams;
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,24 +26,6 @@ export default function Register({ searchParams }) {
     setUserForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  useEffect(() => {
-    async function checkUser() {
-      try {
-        const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/user`,
-          { withCredentials: true }
-        );
-
-        if (data.data.success) {
-          router.push(prevRoute || "/");
-        }
-      } catch (err) {
-        console.log(err.message);
-      }
-    }
-    checkUser();
-  }, [prevRoute, router]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -58,6 +39,7 @@ export default function Register({ searchParams }) {
 
       if (data.data.status === 400) {
         alert(data.data.message);
+        return  // tambah return agar tidak lanjut ke bawah
       }
 
       if (data.data.success) {
@@ -72,7 +54,7 @@ export default function Register({ searchParams }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-10">
@@ -85,7 +67,7 @@ export default function Register({ searchParams }) {
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-md p-8 md:p-10">
+        <div className="bg-white rounded-2xl shadow-lg border p-8 md:p-10">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Grid Layout */}
             <div className="grid md:grid-cols-2 gap-8">

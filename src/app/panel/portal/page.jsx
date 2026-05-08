@@ -1,18 +1,26 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
-  FlaskConical,
-  Beaker,
-  Atom,
   Package,
   Users,
   Microscope,
   ArrowRight,
   ChevronDown,
-  ShowUs
 } from 'lucide-react';
+import axios from 'axios';
 
 const portals = [
+    {
+    title: 'Layanan Analisis',
+    description: 'Pengajuan, pemantauan, dan pelaporan layanan analisis kimia instrumen.',
+    link: '/panel/portal/analisis/admin',
+    icon: Microscope,
+    stats: '24 Antrian Aktif',
+    color: 'from-rose-500 to-rose-600',
+    lightColor: 'bg-rose-50',
+    textColor: 'text-rose-600',
+    ringColor: 'group-hover:ring-rose-500/20',
+  },
   {
     title: 'Inventory',
     description: 'Manajemen stok, reagen, peralatan, dan aset laboratorium secara terpadu.',
@@ -25,20 +33,9 @@ const portals = [
     ringColor: 'group-hover:ring-red-500/20',
   },
   {
-    title: 'Layanan Analisis',
-    description: 'Pengajuan, pemantauan, dan pelaporan layanan analisis kimia instrumen.',
-    link: '/analisis',
-    icon: Microscope,
-    stats: '24 Antrian Aktif',
-    color: 'from-rose-500 to-rose-600',
-    lightColor: 'bg-rose-50',
-    textColor: 'text-rose-600',
-    ringColor: 'group-hover:ring-rose-500/20',
-  },
-  {
     title: 'Affiliate',
     description: 'Kelola program kemitraan, affiliasi, dan jaringan kolaborasi laboratorium.',
-    link: '/affiliate',
+    link: '#',
     icon: Users,
     stats: '12 Partner Institusi',
     color: 'from-gray-800 to-gray-900',
@@ -51,6 +48,82 @@ const portals = [
 export default function PortalPage() {
   const [hovered, setHovered] = useState(null);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [userData, setUserData] = useState(null);
+
+  // ── Fetch user data on mount ──
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+          window.location.href = '/panel';
+          return;
+        }
+
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.data.success) {
+          const user = res.data.data;
+
+          // ── Validasi role: hanya admin yang boleh akses ──
+          if (user.role !== 'admin') {
+            window.location.href = '/panel';
+            return;
+          }
+
+          setUserData(user);
+        } else {
+          window.location.href = '/panel';
+        }
+      } catch (err) {
+        console.error('Gagal mengambil data user:', err);
+        window.location.href = '/panel';
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  // ── Logout ──
+  const handleLogout = async () => {
+    if (!confirm('Apakah Anda yakin ingin keluar?')) return;
+
+    try {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user_data');
+
+      await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/logout`, {
+        withCredentials: true,
+      });
+
+      window.dispatchEvent(new Event('authChange'));
+      window.location.href = '/panel';
+    } catch (err) {
+      console.error('Logout error:', err);
+      // Tetap redirect meski API gagal, karena token sudah dihapus
+      window.location.href = '/panel';
+    }
+  };
+
+  // ── Ambil inisial nama untuk avatar ──
+  const getInitial = (nama) => {
+    if (!nama) return 'A';
+    return nama.charAt(0).toUpperCase();
+  };
+
+  // ── Format role untuk tampilan ──
+  const formatRole = (role) => {
+    if (!role) return 'Administrator';
+    return role.charAt(0).toUpperCase() + role.slice(1);
+  };
+
+  // ── Jangan render apapun sebelum validasi selesai ──
+  if (!userData) return null;
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col font-sans">
@@ -63,25 +136,45 @@ export default function PortalPage() {
         </div>
 
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between px-2">
+          <div className="p-2">
+            <img
+              src="/icon/upi-white.png"
+              alt="UPI Logo"
+              className="w-32 md:w-40 object-contain"
+            />
+          </div>
           <div className="flex-1 max-w-lg" />
           <div className="flex items-center space-x-4 ml-6 p-4">
 
             {/* Dropdown Menu */}
             <div className="relative">
               <div className="flex items-center space-x-3 pl-4 border-l border-red-400">
+                {/* Avatar */}
                 <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center text-white font-bold border border-red-400">
-                  A
+                  {getInitial(userData?.nama_lengkap)}
                 </div>
+
+                {/* Nama & Role */}
                 <div>
-                  <p className="text-sm font-bold text-gray-100">Admin Lab</p>
-                  <p className="text-xs text-white">Administrator</p>
+                  <p className="text-sm font-bold text-gray-100">
+                    {userData?.nama_lengkap ?userData?.nama_lengkap: '...'}
+                  </p>
+                  <p className="text-xs text-white">
+                    {formatRole(userData?.role)}
+                  </p>
                 </div>
+
+                {/* Chevron Toggle */}
                 <button
                   onClick={() => setShowUserDropdown(!showUserDropdown)}
                   className="focus:outline-none"
                 >
-                  <ChevronDown className={`w-4 h-4 text-red-200 transition-transform duration-200 ${showUserDropdown ? 'rotate-180' : ''}`} />
+                  <ChevronDown
+                    className={`w-4 h-4 text-red-200 transition-transform duration-200 ${
+                      showUserDropdown ? 'rotate-180' : ''
+                    }`}
+                  />
                 </button>
               </div>
 
@@ -95,31 +188,11 @@ export default function PortalPage() {
                   />
 
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20">
-                    {/* Profile Option */}
-                    <button
-                      onClick={() => {
-                        setShowUserDropdown(false);
-                        setActivePage('pengguna'); // Arahkan ke halaman profil/profile
-                      }}
-                      className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 flex items-center gap-2 transition"
-                    >
-                      <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center">
-                        <span className="text-xs font-semibold text-red-600">A</span>
-                      </div>
-                      <span>Profil Saya</span>
-                    </button>
-
-                    <div className="border-t border-gray-100 my-1"></div>
-
                     {/* Logout Option */}
                     <button
                       onClick={() => {
                         setShowUserDropdown(false);
-                        // Handle logout logic here
-                        if (confirm('Apakah Anda yakin ingin keluar?')) {
-                          // Redirect to login page or clear session
-                          window.location.href = '/login';
-                        }
+                        handleLogout();
                       }}
                       className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition"
                     >
@@ -146,21 +219,10 @@ export default function PortalPage() {
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto pt-4 px-6 text-center">
-          <div className="inline-flex items-center justify-center p-3 mb-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl">
-            <img
-              src="/icon/upi-white.png"
-              alt="UPI Logo"
-              className="w-16 md:w-20 object-contain"
-            />
-          </div>
-
           <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">
             Portal Dashboard <br />
             <span className="text-red-200">Lab Kimia Instrumen</span>
           </h1>
-          {/* <p className="text-red-100 text-lg max-w-2xl mx-auto opacity-90">
-            Sistem terintegrasi untuk efisiensi operasional dan layanan laboratorium yang lebih cerdas.
-          </p> */}
         </div>
       </div>
 
@@ -170,15 +232,17 @@ export default function PortalPage() {
           {portals.map((portal, i) => {
             const Icon = portal.icon;
             return (
-              <a
-                key={i}
+              
+              <a  key={i}
                 href={portal.link}
                 onMouseEnter={() => setHovered(i)}
                 onMouseLeave={() => setHovered(null)}
                 className={`group relative bg-white rounded-3xl p-8 shadow-sm border border-gray-200/60 transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/10 flex flex-col ring-8 ring-transparent ${portal.ringColor}`}
               >
                 {/* Icon Header */}
-                <div className={`w-14 h-14 rounded-2xl ${portal.lightColor} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500`}>
+                <div
+                  className={`w-14 h-14 rounded-2xl ${portal.lightColor} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500`}
+                >
                   <Icon className={`w-7 h-7 ${portal.textColor}`} />
                 </div>
 
@@ -194,16 +258,23 @@ export default function PortalPage() {
 
                 {/* Footer Action */}
                 <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                  </div>
+                  <div className="flex flex-col"></div>
 
-                  <div className={`flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 ${portal.textColor} group-hover:bg-gradient-to-r ${portal.color} group-hover:text-white transition-all duration-300 shadow-inner`}>
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
+                  {portal.link === '#' ? (
+                    <p>Under Development</p>
+                  ) : (
+                    <div
+                      className={`flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 ${portal.textColor} group-hover:bg-gradient-to-r ${portal.color} group-hover:text-white transition-all duration-300 shadow-inner`}
+                    >
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                  )}
                 </div>
 
                 {/* Subtle Glow Effect on Hover */}
-                <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${portal.color} opacity-0 group-hover:opacity-[0.01] transition-opacity`} />
+                <div
+                  className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${portal.color} opacity-0 group-hover:opacity-[0.01] transition-opacity`}
+                />
               </a>
             );
           })}

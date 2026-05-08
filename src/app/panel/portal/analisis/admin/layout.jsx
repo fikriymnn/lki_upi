@@ -1,7 +1,7 @@
 "use client"
-// import { useEffect, useState } from "react"
-// import axios from "axios"
-// import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import { useRouter } from "next/navigation"
 
 
 export default function Layout({ children }) {
@@ -13,7 +13,7 @@ export default function Layout({ children }) {
     //             const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user/${token}`, {
     //                 withCredentials: true
     //             })
-    //             if (data.data.success == "user") {
+    //             if (data.data.success !== "admin") {
     //                 router.replace("/")
     //             }
     //         } catch (err) {

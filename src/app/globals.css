@@ -1,6 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+.hero-gradient {
+  background: radial-gradient(circle at 50% 50%, rgba(254, 242, 242, 0.5) 0%, rgba(255, 255, 255, 0) 70%);
+}
 
 /* :root {
   --foreground-rgb: 0, 0, 0;
@@ -41,8 +53,12 @@ body {
   height: 100%;
   padding-left: 1rem;
   padding-right: 0.5rem;
-  padding-top: 0.5rem /* 8px */;
-  padding-bottom: 0.5rem /* 8px */;
+  padding-top: 0.5rem
+    /* 8px */
+  ;
+  padding-bottom: 0.5rem
+    /* 8px */
+  ;
   --tw-bg-opacity: 1;
   background-color: rgb(244 244 245 / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.8;
@@ -56,8 +72,12 @@ body {
   display: inline-flex;
   --tw-text-opacity: 1;
   color: rgb(113 113 122 / var(--tw-text-opacity));
-  font-size: 0.7rem /* 16px */;
-  line-height: 1.5rem /* 24px */;
+  font-size: 0.7rem
+    /* 16px */
+  ;
+  line-height: 1.5rem
+    /* 24px */
+  ;
   font-weight: 500;
   letter-spacing: 0.025em;
 }
@@ -67,8 +87,12 @@ body {
   height: 1rem;
   padding-left: 1rem;
   padding-right: 0.5rem;
-  padding-top: 0.5rem /* 8px */;
-  padding-bottom: 0.5rem /* 8px */;
+  padding-top: 0.5rem
+    /* 8px */
+  ;
+  padding-bottom: 0.5rem
+    /* 8px */
+  ;
   --tw-bg-opacity: 1;
   background-color: rgb(244 244 245 / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.8;
@@ -82,18 +106,27 @@ body {
   display: inline-flex;
   --tw-text-opacity: 1;
   color: rgb(113 113 122 / var(--tw-text-opacity));
-  font-size: 0.6rem /* 16px */;
-  line-height: 1.5rem /* 24px */;
+  font-size: 0.6rem
+    /* 16px */
+  ;
+  line-height: 1.5rem
+    /* 24px */
+  ;
   font-weight: 500;
   letter-spacing: 0.025em;
 }
+
 .input-style-lki-radio {
   width: 0.2rem;
   height: 0.1rem;
   padding-left: 1rem;
   padding-right: 0.5rem;
-  padding-top: 0.5rem /* 8px */;
-  padding-bottom: 0.5rem /* 8px */;
+  padding-top: 0.5rem
+    /* 8px */
+  ;
+  padding-bottom: 0.5rem
+    /* 8px */
+  ;
   --tw-bg-opacity: 1;
   background-color: rgb(244 244 245 / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.8;
@@ -107,8 +140,12 @@ body {
   display: inline-flex;
   --tw-text-opacity: 1;
   color: rgb(113 113 122 / var(--tw-text-opacity));
-  font-size: 0.6rem /* 16px */;
-  line-height: 1.5rem /* 24px */;
+  font-size: 0.6rem
+    /* 16px */
+  ;
+  line-height: 1.5rem
+    /* 24px */
+  ;
   font-weight: 500;
   letter-spacing: 0.025em;
 }
@@ -119,8 +156,12 @@ body {
   min-height: 100%;
   padding-left: 1rem;
   padding-right: 0.5rem;
-  padding-top: 0.5rem /* 8px */;
-  padding-bottom: 0.5rem /* 8px */;
+  padding-top: 0.5rem
+    /* 8px */
+  ;
+  padding-bottom: 0.5rem
+    /* 8px */
+  ;
   --tw-bg-opacity: 1;
   background-color: rgb(244 244 245 / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.8;
@@ -134,18 +175,27 @@ body {
   display: inline-flex;
   --tw-text-opacity: 1;
   color: rgb(113 113 122 / var(--tw-text-opacity));
-  font-size: 0.6rem /* 16px */;
-  line-height: 1.5rem /* 24px */;
+  font-size: 0.6rem
+    /* 16px */
+  ;
+  line-height: 1.5rem
+    /* 24px */
+  ;
   font-weight: 500;
   letter-spacing: 0.025em;
 }
+
 .input-style-lki-flexible {
   width: 100%;
   height: 100%;
   padding-left: 1rem;
   padding-right: 0.5rem;
-  padding-top: 0.5rem /* 8px */;
-  padding-bottom: 0.5rem /* 8px */;
+  padding-top: 0.5rem
+    /* 8px */
+  ;
+  padding-bottom: 0.5rem
+    /* 8px */
+  ;
   --tw-bg-opacity: 1;
   background-color: rgb(244 244 245 / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.8;
@@ -159,8 +209,12 @@ body {
   display: inline-flex;
   --tw-text-opacity: 1;
   color: rgb(113 113 122 / var(--tw-text-opacity));
-  font-size: 0.6rem /* 16px */;
-  line-height: 1.5rem /* 24px */;
+  font-size: 0.6rem
+    /* 16px */
+  ;
+  line-height: 1.5rem
+    /* 24px */
+  ;
   font-weight: 500;
   letter-spacing: 0.025em;
 }
