@@ -11,11 +11,14 @@ export default function AdminOrderCard({
   riwayat_pengujian, sample_dikembalikan, uuid, jenis_pengujian,
   nama_sample, jumlah_sample, index, wujud_sample, pelarut,
   preparasi_khusus, target_senyawa, metode_parameter, jurnal_pendukung,
-  deskripsi, hasil_analisis, foto_sample, id, kode_pengujian,
+  deskripsi, hasil_analisis: hasil_analisis_init, foto_sample, id, kode_pengujian,
   nama_pembimbing, lama_pengerjaan, no_invoice, status, invoice_id
 }) {
   const [add, setAdd] = useState(false)
-  const [file, setFile] = useState('')
+  const [file, setFile] = useState(null)
+  const [hasilAnalisis, setHasilAnalisis] = useState(hasil_analisis_init)
+  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
 
   useEffect(() => {
     console.log(status)
@@ -23,31 +26,69 @@ export default function AdminOrderCard({
 
   const handleConfirm = async (e) => {
     e.preventDefault()
+
+    if (!file) {
+      alert('Tidak ada file yang dipilih')
+      setAdd(false)
+      return
+    }
+
+    // ✅ Buat FormData dengan benar
+    const formData = new FormData()
+    formData.append('file', file)
+
+    setUploading(true)
+    setUploadProgress(0)
+
     try {
+      // ✅ Step 1: Upload file ke server file
       const downloadURL = await axios.post(
         `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=hasilanalisis`,
-        { file: file },
-        { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } }
-      );
-      if (!file) {
-        alert('no file uploaded')
-        setAdd(a => !a)
-      } else {
-        const data = await axios.post(
-          `${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}?invoice_id=${invoice_id}${status == "Sample Dikerjakan Operator" ? "&task=operator" : ""}`,
-          { hasil_analisis: downloadURL.data.filename },
-          { withCredentials: true }
-        )
-        if (data.data == 'success') {
-          setAdd(a => !a)
-          alert("upload successfully!")
-          window.location.reload()
+        formData,
+        {
+          withCredentials: true,
+          headers: { 'Content-Type': 'multipart/form-data' },
+          timeout: 10 * 60 * 1000, // ✅ Timeout 10 menit
+          onUploadProgress: (progressEvent) => {
+            const percent = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            )
+            setUploadProgress(percent)
+          },
         }
+      )
+
+      // ✅ Step 2: Simpan filename ke database
+      const data = await axios.post(
+        `${process.env.NEXT_PUBLIC_URL}/api/hasil_analisis/${id}?invoice_id=${invoice_id}${status === "Sample Dikerjakan Operator" ? "&task=operator" : ""}`,
+        { hasil_analisis: downloadURL.data.filename },
+        { withCredentials: true }
+      )
+
+      if (data.data === 'success') {
+        setHasilAnalisis(downloadURL.data.filename)
+        setAdd(false)
+        setFile(null)
+        setUploadProgress(0)
+        alert("Upload berhasil!")
       }
     } catch (err) {
-      console.log(err)
-      alert(err.message)
+      console.error(err)
+      if (err.code === 'ECONNABORTED') {
+        alert('Upload timeout. File terlalu besar atau koneksi lambat, coba lagi.')
+      } else {
+        alert(`Upload gagal: ${err.message}`)
+      }
+    } finally {
+      setUploading(false)
     }
+  }
+
+  const handleCancel = () => {
+    if (uploading) return // ✅ Cegah cancel saat sedang upload
+    setAdd(false)
+    setFile(null)
+    setUploadProgress(0)
   }
 
   const Field = ({ label, value, icon }) => (
@@ -66,7 +107,7 @@ export default function AdminOrderCard({
       {/* Header */}
       <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 border-b border-gray-200">
         <div>
-          <Field value={nama_sample || 'Sampel tanpa nama'}/>
+          <Field value={nama_sample || 'Sampel tanpa nama'} />
           <p className="text-sm text-gray-400 mt-0.5">{kode_pengujian || '—'} · {jenis_pengujian || '—'}</p>
         </div>
         <span className={`ml-auto inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${sample_dikembalikan ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
@@ -125,8 +166,7 @@ export default function AdminOrderCard({
                 </div>
               </div>
               {foto_sample
-                ?
-                <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/fotosample/${foto_sample}`}
+                ? <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/fotosample/${foto_sample}`}
                   target="_blank"
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium hover:bg-amber-100 transition"
                 >
@@ -148,8 +188,7 @@ export default function AdminOrderCard({
                 </div>
               </div>
               {jurnal_pendukung
-                ?
-                <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/jurnalpendukung/${jurnal_pendukung}`}
+                ? <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/jurnalpendukung/${jurnal_pendukung}`}
                   target="_blank"
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium hover:bg-blue-100 transition"
                 >
@@ -172,9 +211,8 @@ export default function AdminOrderCard({
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  {hasil_analisis && !add && (
-
-                    <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${hasil_analisis}`}
+                  {hasilAnalisis && !add && (
+                    <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${hasilAnalisis}`}
                       target="_blank"
                       className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-xs font-medium hover:bg-green-100 transition"
                     >
@@ -187,18 +225,21 @@ export default function AdminOrderCard({
                       className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 text-white rounded-lg text-xs font-medium hover:bg-red-700 transition"
                     >
                       <Upload className="w-3.5 h-3.5" />
-                      {hasil_analisis ? 'Ganti File' : 'Upload File'}
+                      {hasilAnalisis ? 'Ganti File' : 'Upload File'}
                     </button>
                     : <div className="flex items-center gap-2">
                       <button
                         onClick={handleConfirm}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white rounded-lg text-xs font-medium hover:bg-green-700 transition"
+                        disabled={uploading}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white rounded-lg text-xs font-medium hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <Check className="w-3.5 h-3.5" /> Kirim
+                        <Check className="w-3.5 h-3.5" />
+                        {uploading ? `${uploadProgress}%` : 'Kirim'}
                       </button>
                       <button
-                        onClick={() => { setAdd(false); setFile('') }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded-lg text-xs hover:bg-gray-50 transition"
+                        onClick={handleCancel}
+                        disabled={uploading}
+                        className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded-lg text-xs hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <X className="w-3.5 h-3.5" /> Batal
                       </button>
@@ -206,7 +247,25 @@ export default function AdminOrderCard({
                   }
                 </div>
               </div>
-              {add && (
+
+              {/* ✅ Progress Bar */}
+              {uploading && (
+                <div className="mt-1 pt-3 border-t border-gray-100">
+                  <div className="flex justify-between text-xs text-gray-500 mb-1">
+                    <span>Mengupload file...</span>
+                    <span>{uploadProgress}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-1.5">
+                    <div
+                      className="bg-green-500 h-1.5 rounded-full transition-all duration-300"
+                      style={{ width: `${uploadProgress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* ✅ File Input */}
+              {add && !uploading && (
                 <div className="mt-1 pt-3 border-t border-gray-100">
                   <input
                     type="file"
@@ -214,6 +273,11 @@ export default function AdminOrderCard({
                     onChange={(e) => { e.preventDefault(); setFile(e.target.files[0]) }}
                     className="w-full text-sm text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
                   />
+                  {file && (
+                    <p className="text-xs text-gray-400 mt-1">
+                      {file.name} — {(file.size / 1024 / 1024).toFixed(2)} MB
+                    </p>
+                  )}
                 </div>
               )}
             </div>

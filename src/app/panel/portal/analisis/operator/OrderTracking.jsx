@@ -15,47 +15,6 @@ export default function OrderTracking({ setActivePage, idInvoice }) {
   const [form, setForm] = useState({ status: "", catatan: "" });
   const [invoice, setInvoice] = useState({});
 
-  const handleConfirm = async (e) => {
-    e.preventDefault();
-    setEdit(false);
-    let obj = { status: form.status, catatan: form.catatan };
-    try {
-      function timeNow() {
-        var d = new Date(),
-          h = (d.getHours() < 10 ? "0" : "") + d.getHours(),
-          m = (d.getMinutes() < 10 ? "0" : "") + d.getMinutes();
-        return h + ":" + m;
-      }
-      const date_format = `${timeNow()} ${new Date().getDate()} ${month_bahasa(new Date().getMonth())} ${new Date().getFullYear()}`;
-
-      function selection() {
-        switch (form.status) {
-          case "Menunggu Form Dikonfirmasi": obj.s1_date = date_format; return true;
-          case "Form Dikonfirmasi": obj.s2_date = date_format; return true;
-          case "Sample Diterima Admin": obj.s3_date = date_format; return true;
-          case "Sample Dikerjakan Operator": obj.s4_date = date_format; return true;
-          case "Menunggu Verifikasi": obj.s5_date = date_format; return true;
-          case "Menunggu Pembayaran": obj.success = true; obj.s6_date = date_format; return true;
-          case "Menunggu Konfirmasi Pembayaran": obj.s7_date = date_format; obj.success = true; return true;
-          case "Selesai": obj.s8_date = date_format; obj.success = true; return true;
-        }
-      }
-      if (selection() == true) {
-        const data = await axios.put(
-          `${process.env.NEXT_PUBLIC_URL}/api/invoice/${id}`,
-          obj,
-          { withCredentials: true }
-        );
-        alert("update successfully");
-        if (data.data.success) {
-          window.location.replace(`/notifikasi?url=${path}`);
-        }
-      }
-    } catch (err) {
-      alert(err.message);
-    }
-  };
-
   useEffect(() => {
     async function getInvoice() {
       try {

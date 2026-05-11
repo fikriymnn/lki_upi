@@ -36,13 +36,25 @@ const LoginPage = () => {
 
       if (data.success) {
         console.trace("4")
+
+        if (data.token) {
+          localStorage.setItem('access_token', data.token);
+        }
         if (data.data) {
           console.trace("5")
           const userRole = data.data.role;
-          if (['admin', 'operator', 'pj'].includes(userRole)) {
-            router.push('/panel/portal');
+
+          const roleRedirectMap = {
+            admin: '/panel/portal',
+            operator: '/panel/portal/analisis/operator',
+            pj: '/panel/portal/analisis/pj',
+            superadmin: '/panel/portal/analisis/superadmin',
+          };
+
+          if (roleRedirectMap[userRole]) {
+            router.push(roleRedirectMap[userRole]);
           } else {
-            setErrorMessage('Akses terbatas untuk Admin, Operator, dan PJ.');
+            setErrorMessage('Akses terbatas untuk Admin, Operator, PJ, dan Super Admin.');
           }
         }
       } else {
@@ -59,7 +71,7 @@ const LoginPage = () => {
     <div className="min-h-screen flex bg-white font-sans">
       {/* Left Panel - Hero Branding (Sesuai Portal) */}
       <div className="hidden lg:flex lg:w-1/2 bg-[#b91c1c] relative overflow-hidden flex-col items-center justify-center p-12">
-        
+
         {/* Abstract Background (Matching Portal Page) */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] rounded-full bg-red-500/20 blur-[100px]" />
@@ -100,7 +112,7 @@ const LoginPage = () => {
       {/* Right Panel - Login Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center bg-[#f8fafc] p-8">
         <div className="w-full max-w-md space-y-8">
-          
+
           {/* Mobile Logo Only */}
           <div className="flex lg:hidden justify-center mb-10">
             <div className="bg-red-600 rounded-3xl p-5 shadow-xl shadow-red-600/20">
@@ -116,9 +128,7 @@ const LoginPage = () => {
           </div>
 
           {/* Form Card */}
-          <div className="bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-gray-100 p-10 relative overflow-hidden">
-            {/* Design Element */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-bl-full opacity-50 -mr-16 -mt-16" />
+          <div className="bg-white rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-gray-100 p-10 relative overflow-hidden">
 
             {errorMessage && (
               <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-xl text-sm font-medium animate-shake">
@@ -131,7 +141,7 @@ const LoginPage = () => {
                 <label className="block text-[13px] font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">
                   Email Address
                 </label>
-                <div className="group relative">
+                <div className="group border border-gray-200 rounded-2xl relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <User className="w-5 h-5 text-gray-300 group-focus-within:text-red-500 transition-colors" />
                   </div>
@@ -139,7 +149,7 @@ const LoginPage = () => {
                     type="email"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm focus:ring-4 focus:ring-red-500/10 focus:border-red-500 focus:bg-white transition-all outline-none placeholder:text-gray-300 font-medium"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl text-sm focus:ring-4 focus:ring-red-500/10 focus:border-red-500 focus:bg-white transition-all outline-none placeholder:text-gray-300 font-medium"
                     placeholder="nama@email.com"
                     required
                   />
@@ -150,7 +160,7 @@ const LoginPage = () => {
                 <label className="block text-[13px] font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">
                   Security Password
                 </label>
-                <div className="group relative">
+                <div className="group border border-gray-200 rounded-2xl relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <Lock className="w-5 h-5 text-gray-300 group-focus-within:text-red-500 transition-colors" />
                   </div>
@@ -158,7 +168,7 @@ const LoginPage = () => {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-12 pr-12 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm focus:ring-4 focus:ring-red-500/10 focus:border-red-500 focus:bg-white transition-all outline-none placeholder:text-gray-300 font-medium"
+                    className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:ring-4 focus:ring-red-500/10 focus:border-red-500 focus:bg-white transition-all outline-none placeholder:text-gray-300 font-medium [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden"
                     placeholder="••••••••"
                     required
                   />
@@ -175,7 +185,7 @@ const LoginPage = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-xl grad hover:shadow-red-600/30 flex items-center justify-center gap-3 group"
+                className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white py-3 rounded-2xl font-bold text-sm transition-all shadow-xl hover:shadow-red-600/30 flex items-center justify-center gap-3 group"
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
@@ -184,7 +194,7 @@ const LoginPage = () => {
                   </div>
                 ) : (
                   <>
-                    <span>Masuk ke Dashboard</span>
+                    <span>Submit Login</span>
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
@@ -193,7 +203,7 @@ const LoginPage = () => {
           </div>
 
           <p className="text-center text-gray-400 text-xs font-medium">
-            © 2026 Laboratorium Kimia Instrumen <br/>
+            © 2026 Laboratorium Kimia Instrumen <br />
             FPMIPA Universitas Pendidikan Indonesia
           </p>
         </div>

@@ -87,10 +87,8 @@ export default function History_order() {
 
   return (
     <div>
-      <Navigasi text1={"user"} text2={"history order"} />
-
       <div className="p-6">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto md:px-8 px-4">
 
           {/* ── Header ── */}
           <div className="mb-6">
@@ -214,7 +212,6 @@ export default function History_order() {
                         {/* Status */}
                         <td className="px-4 py-3">
                           <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-green-100 text-green-700 whitespace-nowrap">
-                            <CheckCircle2 className="w-3 h-3" />
                             Selesai
                           </span>
                         </td>

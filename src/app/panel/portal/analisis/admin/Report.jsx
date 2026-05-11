@@ -11,22 +11,22 @@ import {
 
 // ── Constants ────────────────────────────────────────────────────────────────
 const KODE_PENGUJIAN = [
-  { jenis_pengujian: "GCFID",    kode_pengujian: "FID" },
-  { jenis_pengujian: "GCMS",     kode_pengujian: "MS"  },
-  { jenis_pengujian: "NMR",      kode_pengujian: "NMR" },
-  { jenis_pengujian: "AAS",      kode_pengujian: "AS"  },
-  { jenis_pengujian: "FTIR",     kode_pengujian: "IR"  },
-  { jenis_pengujian: "TG DTA",   kode_pengujian: "TG"  },
-  { jenis_pengujian: "HPLC",     kode_pengujian: "HP"  },
-  { jenis_pengujian: "UV VIS",   kode_pengujian: "UV"  },
-  { jenis_pengujian: "Freezdry", kode_pengujian: "FD"  },
-  { jenis_pengujian: "LCMSMS",   kode_pengujian: "LC"  },
-  { jenis_pengujian: "XRD",      kode_pengujian: "XRD" },
+  { jenis_pengujian: "GCFID", kode_pengujian: "FID" },
+  { jenis_pengujian: "GCMS", kode_pengujian: "MS" },
+  { jenis_pengujian: "NMR", kode_pengujian: "NMR" },
+  { jenis_pengujian: "AAS", kode_pengujian: "AS" },
+  { jenis_pengujian: "FTIR", kode_pengujian: "IR" },
+  { jenis_pengujian: "TG DTA", kode_pengujian: "TG" },
+  { jenis_pengujian: "HPLC", kode_pengujian: "HP" },
+  { jenis_pengujian: "UV VIS", kode_pengujian: "UV" },
+  { jenis_pengujian: "Freezdry", kode_pengujian: "FD" },
+  { jenis_pengujian: "LCMSMS", kode_pengujian: "LC" },
+  { jenis_pengujian: "XRD", kode_pengujian: "XRD" },
 ];
 
 const MONTHS = [
-  "Januari","Februari","Maret","April","Mei","Juni",
-  "Juli","Agustus","September","Oktober","November","Desember",
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember",
 ];
 
 const ROWS_PER_PAGE = 20;
@@ -54,7 +54,7 @@ const TableSkeleton = () => (
       <table className="w-full">
         <thead className="bg-gray-50 border-b border-gray-200">
           <tr>
-            {["w-10","w-24","w-28","w-24","w-28","w-20","w-20","w-20"].map((w, i) => (
+            {["w-10", "w-24", "w-28", "w-24", "w-28", "w-20", "w-20", "w-20"].map((w, i) => (
               <th key={i} className={`px-4 py-3 ${w}`}>
                 <Shimmer className="h-3 w-full" />
               </th>
@@ -82,15 +82,15 @@ const TableSkeleton = () => (
 
 // ── Main Component ────────────────────────────────────────────────────────────
 export default function Report() {
-  const [order, setOrder]                     = useState([]);
-  const [invoice, setInvoice]                 = useState([]);
-  const [loading, setLoading]                 = useState(true);
-  const [yearOption, setYearOption]           = useState([]);
-  const [year, setYear]                       = useState("");
-  const [month, setMonth]                     = useState("");
-  const [jenis_pengujian, setJenisPengujian]  = useState("");
-  const [searchTerm, setSearchTerm]           = useState("");
-  const [page, setPage]                       = useState(0);
+  const [order, setOrder] = useState([]);
+  const [invoice, setInvoice] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [yearOption, setYearOption] = useState([]);
+  const [year, setYear] = useState("");
+  const [month, setMonth] = useState("");
+  const [jenis_pengujian, setJenisPengujian] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(0);
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   // ── Build year options ──────────────────────────────────────────────────────
@@ -109,14 +109,14 @@ export default function Report() {
         const params = new URLSearchParams({
           status_pengujian: "success",
           status_report: "success",
-          ...(month            && { month }),
-          ...(year             && { year }),
-          ...(jenis_pengujian  && { jenis_pengujian }),
+          ...(month && { month }),
+          ...(year && { year }),
+          ...(jenis_pengujian && { jenis_pengujian }),
         });
 
         const invoiceParams = new URLSearchParams({
-          ...(month           && { month }),
-          ...(year            && { year }),
+          ...(month && { month }),
+          ...(year && { year }),
           ...(jenis_pengujian && { jenis_pengujian }),
         });
         invoiceParams.append("status", "Selesai");
@@ -147,16 +147,16 @@ export default function Report() {
     if (!searchTerm) return true;
     const q = searchTerm.toLowerCase();
     return (
-      a.nama_lengkap?.toLowerCase().includes(q)    ||
-      a.no_invoice?.toLowerCase().includes(q)       ||
-      a.kode_pengujian?.toLowerCase().includes(q)   ||
-      a.jenis_pengujian?.toLowerCase().includes(q)  ||
+      a.nama_lengkap?.toLowerCase().includes(q) ||
+      a.no_invoice?.toLowerCase().includes(q) ||
+      a.kode_pengujian?.toLowerCase().includes(q) ||
+      a.jenis_pengujian?.toLowerCase().includes(q) ||
       a.nama_sample?.toLowerCase().includes(q)
     );
   });
 
-  const totalPages  = Math.ceil(filtered.length / ROWS_PER_PAGE);
-  const paginated   = filtered.slice(page * ROWS_PER_PAGE, (page + 1) * ROWS_PER_PAGE);
+  const totalPages = Math.ceil(filtered.length / ROWS_PER_PAGE);
+  const paginated = filtered.slice(page * ROWS_PER_PAGE, (page + 1) * ROWS_PER_PAGE);
 
   // ── Stats ───────────────────────────────────────────────────────────────────
   const totalHarga = invoice.reduce((sum, inv) => sum + (Number(inv?.total_harga) || 0), 0);
@@ -165,37 +165,37 @@ export default function Report() {
   // ── Export to Excel ─────────────────────────────────────────────────────────
   const handleExport = () => {
     const rows = order.map((a, i) => ({
-      "No":                  i + 1,
-      "Tanggal":             a.date_format,
-      "No Invoice":          a.no_invoice,
-      "Kode Pengujian":      a.kode_pengujian,
-      "Harga":               invoice[i]?.total_harga ?? "",
-      "Catatan":             invoice[i]?.catatan ?? "",
-      "Lama Pengerjaan":     a.lama_pengerjaan,
-      "Operator":            a.operator_date ? a.operator_date.split(" ").slice(1).join(" ") : a.pj_date?.split(" ").slice(1).join(" ") ?? "",
-      "PJ":                  a.pj_date ? a.pj_date.split(" ").slice(1).join(" ") : a.operator_date?.split(" ").slice(1).join(" ") ?? "",
-      "Admin":               invoice[i]?.s8_date ? invoice[i].s8_date.split(" ").slice(1).join(" ") : a.pj_date?.split(" ").slice(1).join(" ") ?? "",
-      "Nama":                a.nama_lengkap,
-      "Jenis Institusi":     a.id_user?.[0]?.jenis_institusi ?? "",
-      "Nama Institusi":      a.id_user?.[0]?.nama_institusi ?? "",
-      "Fakultas":            a.id_user?.[0]?.fakultas ?? "",
-      "Program Studi":       a.id_user?.[0]?.program_studi ?? "",
-      "Nama Pembimbing":     a.nama_pembimbing ?? "",
-      "Email":               a.id_user?.[0]?.email ?? "",
-      "No Telepon":          a.id_user?.[0]?.no_telp ?? "",
-      "No WhatsApp":         a.id_user?.[0]?.no_whatsapp ?? "",
-      "Nama Sample":         a.nama_sample,
-      "Jenis Pengujian":     a.jenis_pengujian,
-      "Jumlah Sample":       a.jumlah_sample,
-      "Wujud Sample":        a.wujud_sample,
-      "Pelarut":             a.pelarut,
-      "Preparasi Khusus":    a.preparasi_khusus ? "Ya" : "Tidak",
-      "Target Senyawa":      a.target_senyawa,
-      "Metode Parameter":    a.metode_parameter,
+      "No": i + 1,
+      "Tanggal": a.date_format,
+      "No Invoice": a.no_invoice,
+      "Kode Pengujian": a.kode_pengujian,
+      "Harga": invoice[i]?.total_harga ?? "",
+      "Catatan": invoice[i]?.catatan ?? "",
+      "Lama Pengerjaan": a.lama_pengerjaan,
+      "Operator": a.operator_date ? a.operator_date.split(" ").slice(1).join(" ") : a.pj_date?.split(" ").slice(1).join(" ") ?? "",
+      "PJ": a.pj_date ? a.pj_date.split(" ").slice(1).join(" ") : a.operator_date?.split(" ").slice(1).join(" ") ?? "",
+      "Admin": invoice[i]?.s8_date ? invoice[i].s8_date.split(" ").slice(1).join(" ") : a.pj_date?.split(" ").slice(1).join(" ") ?? "",
+      "Nama": a.nama_lengkap,
+      "Jenis Institusi": a.id_user?.[0]?.jenis_institusi ?? "",
+      "Nama Institusi": a.id_user?.[0]?.nama_institusi ?? "",
+      "Fakultas": a.id_user?.[0]?.fakultas ?? "",
+      "Program Studi": a.id_user?.[0]?.program_studi ?? "",
+      "Nama Pembimbing": a.nama_pembimbing ?? "",
+      "Email": a.id_user?.[0]?.email ?? "",
+      "No Telepon": a.id_user?.[0]?.no_telp ?? "",
+      "No WhatsApp": a.id_user?.[0]?.no_whatsapp ?? "",
+      "Nama Sample": a.nama_sample,
+      "Jenis Pengujian": a.jenis_pengujian,
+      "Jumlah Sample": a.jumlah_sample,
+      "Wujud Sample": a.wujud_sample,
+      "Pelarut": a.pelarut,
+      "Preparasi Khusus": a.preparasi_khusus ? "Ya" : "Tidak",
+      "Target Senyawa": a.target_senyawa,
+      "Metode Parameter": a.metode_parameter,
       "Sample Dikembalikan": a.sample_dikembalikan,
-      "Deskripsi":           a.deskripsi_sample,
-      "Riwayat Pengujian":   a.riwayat_pengujian,
-      "Status":              invoice[i]?.status ?? "",
+      "Deskripsi": a.deskripsi_sample,
+      "Riwayat Pengujian": a.riwayat_pengujian,
+      "Status": invoice[i]?.status ?? "",
     }));
 
     const ws = XLSX.utils.json_to_sheet(rows);
@@ -248,9 +248,9 @@ export default function Report() {
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               {[
-                { label: "Total Data",         value: order.length,                      sub: "Pengujian selesai",      color: "text-gray-900" },
-                { label: "Hasil Filter",        value: filtered.length,                   sub: "Sesuai pencarian",       color: "text-blue-600" },
-                { label: "Jenis Pengujian",     value: uniqueJenis,                       sub: "Tipe berbeda",           color: "text-purple-600" },
+                { label: "Total Data", value: order.length, sub: "Pengujian selesai", color: "text-gray-900" },
+                { label: "Hasil Filter", value: filtered.length, sub: "Sesuai pencarian", color: "text-blue-600" },
+                { label: "Jenis Pengujian", value: uniqueJenis, sub: "Tipe berbeda", color: "text-purple-600" },
                 {
                   label: "Total Pendapatan",
                   value: `Rp ${totalHarga.toLocaleString("id-ID")}`,
@@ -345,15 +345,15 @@ export default function Report() {
                   <thead className="bg-gray-50 border-b border-gray-200 sticky top-0">
                     <tr>
                       {[
-                        { label: "No",               w: "w-10"  },
-                        { label: "Tanggal",           w: "w-28"  },
-                        { label: "No Invoice",        w: "w-36"  },
-                        { label: "Nama",              w: ""      },
-                        { label: "Jenis Pengujian",   w: "w-36"  },
-                        { label: "Nama Sample",       w: "w-36"  },
-                        { label: "Harga",             w: "w-32"  },
-                        { label: "Status",            w: "w-40"  },
-                        { label: "Operator",          w: "w-28"  },
+                        { label: "No", w: "w-10" },
+                        { label: "Tanggal", w: "w-28" },
+                        { label: "No Invoice", w: "w-36" },
+                        { label: "Nama", w: "" },
+                        { label: "Jenis Pengujian", w: "w-36" },
+                        { label: "Nama Sample", w: "w-36" },
+                        { label: "Harga", w: "w-32" },
+                        { label: "Status", w: "w-40" },
+                        { label: "Operator", w: "w-28" },
                       ].map((h, i) => (
                         <th key={i} className={`px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${h.w}`}>
                           {h.label}
@@ -364,12 +364,12 @@ export default function Report() {
                   <tbody className="divide-y divide-gray-200">
                     {paginated.length > 0 ? paginated.map((a, i) => {
                       const globalIdx = page * ROWS_PER_PAGE + i;
-                      const inv       = invoice[globalIdx];
+                      const inv = invoice[globalIdx];
 
                       const statusColors = {
-                        "Selesai":                         "bg-green-100 text-green-700",
-                        "Menunggu Konfirmasi Pembayaran":   "bg-yellow-100 text-yellow-700",
-                        "Menunggu Pembayaran":              "bg-orange-100 text-orange-700",
+                        "Selesai": "bg-green-100 text-green-700",
+                        "Menunggu Konfirmasi Pembayaran": "bg-yellow-100 text-yellow-700",
+                        "Menunggu Pembayaran": "bg-orange-100 text-orange-700",
                       };
                       const statusClass = statusColors[inv?.status] ?? "bg-gray-100 text-gray-600";
 
@@ -377,23 +377,22 @@ export default function Report() {
                         <tr key={i} className="hover:bg-gray-50 transition">
                           <td className="px-4 py-3 text-xs text-gray-400">{globalIdx + 1}</td>
                           <td className="px-4 py-3">
-                            <div className="flex items-center gap-1 text-xs text-gray-600">
+                            <div className="flex items-center gap-1 text-xs text-gray-600 whitespace-nowrap">
                               <Calendar className="w-3 h-3 flex-shrink-0" />
                               {a.date_format}
                             </div>
                           </td>
                           <td className="px-4 py-3 text-xs font-mono text-gray-700">{a.no_invoice}</td>
-                          <td className="px-4 py-3">
-                            <p className="text-sm font-medium text-gray-900 leading-tight">{a.nama_lengkap}</p>
-                            <p className="text-xs text-gray-400 mt-0.5">{a.id_user?.[0]?.nama_institusi ?? "—"}</p>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <p className="text-xs font-medium text-gray-900 leading-tight">{a.nama_lengkap}</p>
                           </td>
                           <td className="px-4 py-3">
                             <span className="inline-block px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-medium rounded-full">
                               {a.jenis_pengujian}
                             </span>
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-700">{a.nama_sample}</td>
-                          <td className="px-4 py-3 text-sm text-gray-700 font-medium">
+                          <td className="px-4 py-3 text-xs text-gray-700">{a.nama_sample}</td>
+                          <td className="px-4 py-3 text-xs text-gray-700 font-medium whitespace-nowrap">
                             {inv?.total_harga
                               ? `Rp ${Number(inv.total_harga).toLocaleString("id-ID")}`
                               : "—"}
@@ -403,7 +402,7 @@ export default function Report() {
                               ? <span className={`inline-block px-2 py-0.5 text-xs font-medium rounded-full ${statusClass}`}>{inv.status}</span>
                               : <span className="text-xs text-gray-400">—</span>}
                           </td>
-                          <td className="px-4 py-3 text-xs text-gray-600">
+                          <td className="px-4 py-3 text-xs text-gray-600 whitespace-nowrap">
                             {a.operator_date
                               ? a.operator_date.split(" ").slice(1).join(" ")
                               : a.pj_date?.split(" ").slice(1).join(" ") ?? "—"}
@@ -443,11 +442,10 @@ export default function Report() {
                         <button
                           key={i}
                           onClick={() => setPage(i)}
-                          className={`w-9 h-9 text-sm rounded-lg border transition ${
-                            page === i
-                              ? "bg-red-600 text-white border-red-600"
-                              : "border-gray-300 hover:bg-gray-50 text-gray-700"
-                          }`}
+                          className={`w-9 h-9 text-sm rounded-lg border transition ${page === i
+                            ? "bg-red-600 text-white border-red-600"
+                            : "border-gray-300 hover:bg-gray-50 text-gray-700"
+                            }`}
                         >
                           {i + 1}
                         </button>

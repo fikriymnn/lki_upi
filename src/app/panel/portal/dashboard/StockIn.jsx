@@ -37,6 +37,16 @@ const mockTransactionsIN = [
 ];
 
 // ============================================================
+// FORMAT TANGGAL
+// ============================================================
+const formatTanggal = (dateStr) => {
+  if (!dateStr) return '-';
+  return new Date(dateStr).toLocaleDateString('id-ID', {
+    day: 'numeric', month: 'long', year: 'numeric'
+  });
+};
+
+// ============================================================
 // BADGE ITEM MODEL
 // ============================================================
 const ItemModelBadge = ({ itemModel }) => {
@@ -65,14 +75,14 @@ const DetailModal = ({ transaction, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl">
-        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+      <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] flex flex-col">
+        <div className="p-6 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
           <h2 className="text-xl font-bold text-gray-900">Detail Transaksi Stock In</h2>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition">
             <X className="w-5 h-5 text-gray-500" />
           </button>
         </div>
-        <div className="p-6 space-y-4">
+        <div className="p-6 space-y-4 overflow-y-auto flex-1">
           <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-xl">
             <span className="text-sm text-gray-500">Tipe Transaksi</span>
             <span className="px-3 py-1 rounded-full text-sm font-semibold bg-emerald-100 text-emerald-700">
@@ -97,25 +107,12 @@ const DetailModal = ({ transaction, onClose }) => {
               <p className="text-sm font-bold text-emerald-600">+{transaction.quantity}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 mb-1">Stok Sebelum</p>
-              <p className="text-sm text-gray-700">{transaction.previousStock}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 mb-1">Stok Sesudah</p>
-              <p className="text-sm font-semibold text-gray-900">{transaction.newStock}</p>
-            </div>
-            <div>
               <p className="text-xs text-gray-500 mb-1">Oleh</p>
               <p className="text-sm text-gray-700">{transaction.createdBy?.name || '-'}</p>
             </div>
             <div>
               <p className="text-xs text-gray-500 mb-1">Tanggal</p>
-              <p className="text-sm text-gray-700">
-                {new Date(transaction.createdAt).toLocaleDateString('id-ID', {
-                  day: '2-digit', month: 'short', year: 'numeric',
-                  hour: '2-digit', minute: '2-digit'
-                })}
-              </p>
+              <p className="text-sm text-gray-700">{formatTanggal(transaction.createdAt)}</p>
             </div>
           </div>
           {transaction.note && (
@@ -125,7 +122,7 @@ const DetailModal = ({ transaction, onClose }) => {
             </div>
           )}
         </div>
-        <div className="p-6 border-t border-gray-200">
+        <div className="p-6 border-t border-gray-200 flex-shrink-0">
           <button onClick={onClose} className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
             Tutup
           </button>
@@ -136,7 +133,7 @@ const DetailModal = ({ transaction, onClose }) => {
 };
 
 // ============================================================
-// ADD STOCK IN MODAL — tidak ada tab, terima itemModel dari props
+// ADD STOCK IN MODAL
 // ============================================================
 const AddStockInModal = ({ itemModel, onClose, onSubmit }) => {
   const [searchItem, setSearchItem] = useState('');
@@ -175,10 +172,8 @@ const AddStockInModal = ({ itemModel, onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
-
-        {/* Header */}
-        <div className="p-6 border-b border-gray-200 bg-emerald-50 rounded-t-2xl">
+      <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] flex flex-col">
+        <div className="p-6 border-b border-gray-200 bg-emerald-50 rounded-t-2xl flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-emerald-100">
@@ -186,7 +181,6 @@ const AddStockInModal = ({ itemModel, onClose, onSubmit }) => {
               </div>
               <div>
                 <h2 className="text-xl font-bold text-gray-900">Tambah Stock In</h2>
-                {/* Konteks jenis item pengganti tab */}
                 <div className="flex items-center gap-1.5 mt-0.5">
                   {itemModel === 'AlatLab' ? (
                     <>
@@ -208,9 +202,7 @@ const AddStockInModal = ({ itemModel, onClose, onSubmit }) => {
           </div>
         </div>
 
-        <div className="p-6 space-y-5">
-
-          {/* Item Search Dropdown */}
+        <div className="p-6 space-y-5 overflow-y-auto flex-1">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               {itemModel === 'AlatLab' ? 'Nama Alat' : 'Nama Bahan'} <span className="text-red-500">*</span>
@@ -258,7 +250,6 @@ const AddStockInModal = ({ itemModel, onClose, onSubmit }) => {
             </div>
           </div>
 
-          {/* Selected Item Preview */}
           {selectedItem && (
             <div className="p-3 rounded-xl border bg-emerald-50 border-emerald-200">
               <div className="flex items-center gap-2 mb-2">
@@ -279,7 +270,6 @@ const AddStockInModal = ({ itemModel, onClose, onSubmit }) => {
             </div>
           )}
 
-          {/* Quantity */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Jumlah Masuk <span className="text-red-500">*</span>
@@ -302,7 +292,6 @@ const AddStockInModal = ({ itemModel, onClose, onSubmit }) => {
             )}
           </div>
 
-          {/* Note */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Catatan <span className="text-gray-400 text-xs">(Opsional)</span>
@@ -317,7 +306,7 @@ const AddStockInModal = ({ itemModel, onClose, onSubmit }) => {
           </div>
         </div>
 
-        <div className="p-6 border-t border-gray-200 flex gap-3">
+        <div className="p-6 border-t border-gray-200 flex gap-3 flex-shrink-0">
           <button type="button" onClick={onClose}
             className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium">
             Batal
@@ -333,15 +322,67 @@ const AddStockInModal = ({ itemModel, onClose, onSubmit }) => {
 };
 
 // ============================================================
+// FILTER MODAL
+// ============================================================
+const FilterModal = ({ fromDate, toDate, setFromDate, setToDate, onClose, onReset }) => (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl">
+      <div className="p-5 border-b border-gray-200 flex items-center justify-between">
+        <h2 className="text-lg font-bold text-gray-900">Filter Tanggal</h2>
+        <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition">
+          <X className="w-5 h-5 text-gray-500" />
+        </button>
+      </div>
+      <div className="p-5 space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">Dari Tanggal</label>
+          <input
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">Sampai Tanggal</label>
+          <input
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          />
+        </div>
+        <div className="flex gap-3 pt-2 border-t border-gray-200">
+          <button
+            type="button"
+            onClick={() => { onReset(); onClose(); }}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm"
+          >
+            Reset
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition text-sm"
+          >
+            Terapkan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// ============================================================
 // MAIN PAGE: STOCK IN
 // ============================================================
 const StockInPage = () => {
   const [transactions, setTransactions] = useState(mockTransactionsIN);
-  const [activeTab, setActiveTab] = useState('BahanKimia'); // tab di level page
+  const [activeTab, setActiveTab] = useState('BahanKimia');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
   const [selectedTrx, setSelectedTrx] = useState(null);
-  const [showFilter, setShowFilter] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [fromDate, setFromDate] = useState('');
@@ -394,72 +435,57 @@ const StockInPage = () => {
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
-        <div className="mb-6 flex items-center gap-4">
-          {/* <div className="p-3 rounded-xl bg-emerald-100">
-            <ArrowDownCircle className="w-6 h-6 text-emerald-600 rotate-180" />
-          </div> */}
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Stock In</h1>
-            <p className="text-gray-500 text-sm">Riwayat penambahan stok alat lab & bahan kimia</p>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">Stock In</h1>
+          <p className="text-gray-500 text-sm">Riwayat penambahan stok alat lab & bahan kimia</p>
+        </div>
+
+        {/* Stat Cards — konsisten dengan AlatRusak */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="bg-white rounded-xl p-5 border border-gray-200">
+            <p className="text-sm text-gray-500 mb-1">Total Transaksi</p>
+            <p className="text-2xl font-bold text-gray-900">{filtered.length}</p>
+            <p className="text-xs text-gray-400 mt-0.5">
+              {activeTab === 'BahanKimia' ? 'Bahan kimia' : 'Alat lab'}
+            </p>
+          </div>
+          <div className="bg-white rounded-xl p-5 border border-gray-200">
+            <p className="text-sm text-gray-500 mb-1">
+              Total Qty {activeTab === 'BahanKimia' ? 'Bahan' : 'Alat'} Masuk
+            </p>
+            <p className="text-2xl font-bold text-emerald-600">
+              {filtered.reduce((sum, t) => sum + t.quantity, 0)}
+            </p>
+            <p className="text-xs text-emerald-500 mt-0.5">Unit ditambahkan</p>
           </div>
         </div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-emerald-100">
-              <ArrowDownCircle className="w-5 h-5 text-emerald-600 rotate-180" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">Total Transaksi</p>
-              <p className="text-2xl font-bold text-gray-900">{filtered.length}</p>
-            </div>
-          </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-blue-100">
-              <Package className="w-5 h-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">
-                Total Qty {activeTab === 'BahanKimia' ? 'Bahan' : 'Alat'} Masuk
-              </p>
-              <p className="text-2xl font-bold text-gray-900">
-                {filtered.reduce((sum, t) => sum + t.quantity, 0)}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Tab Bahan Kimia | Alat Lab */}
+        {/* Tab */}
         <div className="bg-white rounded-xl border border-gray-200 mb-6">
           <div className="flex border-b border-gray-200">
             {[
-              { key: 'BahanKimia', label: 'bahan kimia', icon: <FlaskConical className="w-4 h-4" /> },
-              { key: 'AlatLab',    label: 'alat lab',    icon: <Wrench className="w-4 h-4" /> },
-            ].map((tab, idx) => (
+              { key: 'BahanKimia', label: 'Bahan Kimia', icon: <FlaskConical className="w-4 h-4" /> },
+              { key: 'AlatLab',    label: 'Alat Lab',    icon: <Wrench className="w-4 h-4" /> },
+            ].map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => { setActiveTab(tab.key); setCurrentPage(1); }}
-                className={`flex-1 px-6 py-3 text-sm font-medium transition border-b-2 border-red-600 ${
-                  idx === 0 ? 'rounded-tl-xl' : ''
-                } ${
+                className={`flex-1 px-6 py-3 text-sm font-medium transition flex items-center justify-center gap-2 border-b-2 ${
                   activeTab === tab.key
-                    ? 'border-red-500 text-red-600 bg-red-50'
-                    : 'border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                    ? 'border-red-600 text-red-600 bg-red-50'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                 }`}
               >
+                {tab.icon}
                 {tab.label}
               </button>
             ))}
           </div>
         </div>
 
-
-        {/* Search + Filter Tanggal + Tambah */}
-        <div className="bg-white border border-gray-200 p-4 mb-6">
+        {/* Search + Filter + Tambah */}
+        <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
           <div className="flex flex-col md:flex-row md:items-center gap-3">
-
-            {/* Search */}
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
@@ -467,62 +493,37 @@ const StockInPage = () => {
                 placeholder={`Cari nama ${activeTab === 'BahanKimia' ? 'bahan' : 'alat'} atau catatan...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
-
-            {/* Filter Tanggal toggle */}
             <button
-              onClick={() => setShowFilter(!showFilter)}
-              className={`flex items-center gap-2 px-4 py-2.5 border rounded-lg transition whitespace-nowrap ${
-                hasActiveFilter
-                  ? 'border-emerald-300 bg-emerald-50 text-emerald-600'
-                  : 'border-gray-300 hover:bg-gray-50 text-gray-700'
-              }`}
+              onClick={() => setShowFilterModal(true)}
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
             >
               <Filter className="w-4 h-4" />
-              <span className="font-medium">Filter Tanggal</span>
+              Filter Tanggal
               {hasActiveFilter && (
-                <span className="w-4 h-4 flex items-center justify-center bg-emerald-600 text-white text-xs rounded-full">!</span>
+                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-600 text-xs rounded-full">1</span>
               )}
             </button>
-
-            {/* Tambah button */}
             <button
               onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition whitespace-nowrap font-medium"
+              className="flex items-center gap-2 px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition whitespace-nowrap font-medium"
             >
               <Plus className="w-4 h-4" />
-              <span>Tambah Stock In</span>
+              Tambah Stock In
             </button>
           </div>
 
-          {/* Filter Panel: hanya date range */}
-          {showFilter && (
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Calendar className="w-4 h-4 inline mr-1" />Dari Tanggal
-                  </label>
-                  <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Calendar className="w-4 h-4 inline mr-1" />Sampai Tanggal
-                  </label>
-                  <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
-                </div>
-              </div>
-              {hasActiveFilter && (
-                <div className="mt-3 flex justify-end">
-                  <button onClick={clearFilter} className="flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700">
-                    <X className="w-4 h-4" /> Reset Filter
-                  </button>
-                </div>
-              )}
+          {hasActiveFilter && (
+            <div className="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+              <span className="text-sm text-gray-500">Filter aktif:</span>
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs">
+                {fromDate && formatTanggal(fromDate)}{fromDate && toDate && ' – '}{toDate && formatTanggal(toDate)}
+                <button onClick={clearFilter} className="hover:bg-emerald-200 rounded-full p-0.5">
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
             </div>
           )}
         </div>
@@ -533,12 +534,13 @@ const StockInPage = () => {
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">No</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Item</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Masuk</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">No</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Item</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Spesifikasi</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Masuk</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[80px]">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -546,39 +548,43 @@ const StockInPage = () => {
                   const itemName = trx.itemModel === 'AlatLab' ? trx.item?.nama_alat : trx.item?.nama_bahan;
                   return (
                     <tr key={trx._id} className="hover:bg-gray-50 transition">
-                      <td className="px-6 py-4 text-sm text-gray-500">{(currentPage - 1) * perPage + idx + 1}</td>
-                      <td className="px-6 py-4">
-                        <p className="text-sm font-semibold text-gray-900">{itemName}</p>
+                      <td className="px-4 py-4">
+                        <span className="text-xs text-gray-500">{(currentPage - 1) * perPage + idx + 1}</span>
                       </td>
-                      <td className="px-6 py-4">
-                        <span className="px-3 py-1 text-sm text-center mx-auto font-semibold rounded-full bg-emerald-100 text-emerald-700">
-                          +{trx.quantity}
-                        </span>
+                      <td className="px-4 py-4">
+                        <span className="text-xs text-gray-900">{itemName}</span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
-                        {new Date(trx.createdAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
-                        <br />
-                        <span className="text-xs text-gray-400">
-                          {new Date(trx.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
-                        </span>
+                      <td className="px-4 py-4">
+                        <span className="text-xs text-gray-600">{trx.item?.spesifikasi || '-'}</span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-600 max-w-[160px]">
-                        <p className="truncate">{trx.note || '-'}</p>
+                      <td className="px-4 py-4">
+                        <span className="text-xs font-semibold text-emerald-600">+{trx.quantity}</span>
                       </td>
-                      <td className="px-6 py-4">
-                        <button
-                          onClick={() => { setSelectedTrx(trx); setShowDetailModal(true); }}
-                          className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
-                          title="Lihat Detail"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                          <Calendar className="w-3 h-3 flex-shrink-0 text-gray-400" />
+                          <span>{formatTanggal(trx.createdAt)}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <span className="text-xs text-gray-600 line-clamp-1">{trx.note || '-'}</span>
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="flex justify-center">
+                          <button
+                            onClick={() => { setSelectedTrx(trx); setShowDetailModal(true); }}
+                            title="Lihat Detail"
+                            className="p-1.5 rounded-md text-green-600 hover:bg-green-50 transition"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
                 }) : (
                   <tr>
-                    <td colSpan={8} className="px-6 py-16 text-center">
+                    <td colSpan={7} className="px-6 py-16 text-center">
                       <div className="flex flex-col items-center gap-3 text-gray-400">
                         <Package className="w-12 h-12 opacity-30" />
                         <p className="text-sm">
@@ -632,7 +638,17 @@ const StockInPage = () => {
         </div>
       </div>
 
-      {/* Modal — pass activeTab sebagai itemModel */}
+      {showFilterModal && (
+        <FilterModal
+          fromDate={fromDate}
+          toDate={toDate}
+          setFromDate={setFromDate}
+          setToDate={setToDate}
+          onClose={() => setShowFilterModal(false)}
+          onReset={clearFilter}
+        />
+      )}
+
       {showAddModal && (
         <AddStockInModal
           itemModel={activeTab}
@@ -640,6 +656,7 @@ const StockInPage = () => {
           onSubmit={handleSubmit}
         />
       )}
+
       {showDetailModal && (
         <DetailModal
           transaction={selectedTrx}
