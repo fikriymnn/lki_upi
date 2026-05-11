@@ -328,15 +328,13 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
             <Edit2 className="w-3.5 h-3.5" /> Update Progress Order
           </p>
 
-          {/* Warning */}
-          {!order[0]?.hasil_analisis && (
-            <div className="flex items-start gap-2 bg-red-50 border border-red-100 rounded-lg px-4 py-3 mb-6">
-              <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-red-600 font-medium">
-                * Upload hasil analisis terlebih dahulu sebelum verifikasi
-              </p>
-            </div>
-          )}
+          {/* Warning — ubah jadi kuning, hapus validasi disabled */}
+          <div className="flex items-start gap-2 bg-yellow-50 border border-yellow-100 rounded-lg px-4 py-3 mb-6">
+            <AlertCircle className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+            <p className="text-xs text-yellow-600 font-medium">
+              * Upload hasil analisis terlebih dahulu sebelum verifikasi
+            </p>
+          </div>
 
           <div className="space-y-4 divide-y divide-gray-100">
 
@@ -405,7 +403,6 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
               <button
                 onClick={() => setEditVerif(true)}
                 className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 transition"
-                disabled={!order[0]?.hasil_analisis} 
               >
                 <Edit2 className="w-4 h-4" /> Edit
               </button>
