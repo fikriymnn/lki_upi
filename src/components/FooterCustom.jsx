@@ -22,7 +22,7 @@ function FooterCustom() {
           {/* Top row */}
           <div className="flex flex-col items-center mb-16">
             <div className="w-36 flex items-center justify-center rounded-2xl font-black text-xl mb-8">
-              <img src="UPI.png"/>
+              <img src="/UPI.png" alt="logo upi"/>
             </div>
             <p className="text-zinc-400 text-sm font-light text-center max-w-sm leading-relaxed">
               Laboratorium Kimia Instrumen UPI — Mendukung riset dan pendidikan
