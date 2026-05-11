@@ -46,9 +46,11 @@ const LoginPage = () => {
         };
 
         if (roleRedirectMap[userRole]) {
-          // ✅ Pakai window.location agar tidak tertahan re-render
+          localStorage.setItem('access_token', data.token); // ← pindah ke sini, pastikan jalan dulu
+          // Tambah delay kecil agar storage flush
+          await new Promise(resolve => setTimeout(resolve, 100));
           window.location.href = roleRedirectMap[userRole];
-          return; // ✅ Stop eksekusi, jangan setIsLoading(false)
+          return;
         } else {
           setErrorMessage('Akses terbatas untuk Admin, Operator, PJ, dan Super Admin.');
           setIsLoading(false); // ✅ Hanya set false kalau tidak redirect

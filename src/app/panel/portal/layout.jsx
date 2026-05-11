@@ -11,11 +11,11 @@ export default function Layout({ children }) {
             try {
                 const token = localStorage.getItem('access_token')
                 if (!token) {
-                    router.replace("/")
+                    router.replace("/panel") // ✅ Ganti "/" → "/panel" (halaman login admin)
+                    return
                 }
             } catch (err) {
-
-                router.replace("/")
+                router.replace("/panel") // ✅ Sama
             }
         }
         user()
