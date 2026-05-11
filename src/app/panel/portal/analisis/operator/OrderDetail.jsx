@@ -347,15 +347,8 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
                   onChange={(e) => setForm((a) => ({ ...a, [e.target.name]: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 >
-                  <option value="Menunggu Form Dikonfirmasi">Menunggu Form Dikonfirmasi</option>
-                  <option value="Form Dikonfirmasi">Form Dikonfirmasi</option>
-                  <option value="Sample Diterima Admin">Sample Diterima Admin</option>
                   <option value="Sample Dikerjakan Operator">Sample Dikerjakan Operator</option>
-                  <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
-                  <option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
-                  <option value="Menunggu Konfirmasi Pembayaran">Menunggu Konfirmasi Pembayaran</option>
-                  <option value="Selesai">Selesai</option>
-                  <option value="Order Dibatalkan">Order Dibatalkan</option>
+                  <option value="Menunggu Verifikasi">Verifikasi</option>
                 </select>
               ) : (
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold w-fit ${statusBadge(form.status)}`}>
