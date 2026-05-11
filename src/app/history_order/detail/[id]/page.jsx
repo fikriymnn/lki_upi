@@ -82,30 +82,6 @@ export default function Hdetail({ params, searchParams }) {
     }
   };
 
-  const downloadBuktiTransfer = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_URL}/api/download_bukti_pembayaran/${id}`,
-        {
-          withCredentials: true,
-          responseType: "arraybuffer",
-          withCredentials: true,
-        }
-      );
-      const blob = new Blob([response.data], {
-        type: "application/octet-stream",
-      });
-
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = invoice?.bukti_pembayaran;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error("Error downloading file:", error);
-    }
-  };
 
   useEffect(() => {
     async function getInvoice() {
@@ -333,13 +309,12 @@ export default function Hdetail({ params, searchParams }) {
                 </div>
               </div>
               {invoice?.bukti_pembayaran ? (
-                // MODIFIKASI: tombol unduh bukti pembayaran → bg-amber-500 selaras ikon amber
-                <button
-                  onClick={downloadBuktiTransfer}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-lg text-xs font-medium transition"
-                >
+                <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${invoice.bukti_pembayaran}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-lg text-xs font-medium transition">
                   <Download className="w-3.5 h-3.5" /> Unduh
-                </button>
+                </a>
               ) : (
                 <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg">
                   Belum tersedia
@@ -381,7 +356,7 @@ export default function Hdetail({ params, searchParams }) {
           })}
         </div>
 
-      </div>
+      </div >
     </>
   );
 }
