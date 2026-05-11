@@ -10,7 +10,7 @@ import {
 import axios from 'axios';
 
 const portals = [
-    {
+  {
     title: 'Layanan Analisis',
     description: 'Pengajuan, pemantauan, dan pelaporan layanan analisis kimia instrumen.',
     link: '/panel/portal/analisis/admin',
@@ -60,23 +60,18 @@ export default function PortalPage() {
           return;
         }
 
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user`, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_URL}/api/user/${token}`,
+          { withCredentials: true }
+        )
 
         if (res.data.success) {
-          const user = res.data.data;
-
-          // ── Validasi role: hanya admin yang boleh akses ──
+          const user = res.data.data
           if (user.role !== 'admin') {
-            window.location.href = '/panel';
-            return;
+            window.location.href = '/panel'
+            return
           }
-
-          setUserData(user);
+          setUserData(user)
         } else {
           window.location.href = '/panel';
         }
@@ -158,7 +153,7 @@ export default function PortalPage() {
                 {/* Nama & Role */}
                 <div>
                   <p className="text-sm font-bold text-gray-100">
-                    {userData?.nama_lengkap ?userData?.nama_lengkap: '...'}
+                    {userData?.nama_lengkap ? userData?.nama_lengkap : '...'}
                   </p>
                   <p className="text-xs text-white">
                     {formatRole(userData?.role)}
@@ -171,9 +166,8 @@ export default function PortalPage() {
                   className="focus:outline-none"
                 >
                   <ChevronDown
-                    className={`w-4 h-4 text-red-200 transition-transform duration-200 ${
-                      showUserDropdown ? 'rotate-180' : ''
-                    }`}
+                    className={`w-4 h-4 text-red-200 transition-transform duration-200 ${showUserDropdown ? 'rotate-180' : ''
+                      }`}
                   />
                 </button>
               </div>
@@ -232,8 +226,8 @@ export default function PortalPage() {
           {portals.map((portal, i) => {
             const Icon = portal.icon;
             return (
-              
-              <a  key={i}
+
+              <a key={i}
                 href={portal.link}
                 onMouseEnter={() => setHovered(i)}
                 onMouseLeave={() => setHovered(null)}

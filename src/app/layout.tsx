@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import NavbarCustom from "@/components/Navbar";
 import FooterCustom from "@/components/FooterCustom";
 import { UserProvider } from "@/context/userContext";
 
-const poppins = Poppins({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-poppins',
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
+  variable: '--font-jakarta',
+  weight: ['200', '300', '400', '500', '600', '700', '800']
 });
 
 export const metadata: Metadata = {
@@ -58,7 +58,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/logo.svg" sizes="any" />
       </head>
-      <body className={poppins.className}>
+      <body className={jakarta.className}>
         <UserProvider>
           <NavbarCustom />
           <div>{children}</div>

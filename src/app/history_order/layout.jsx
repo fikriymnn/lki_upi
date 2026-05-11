@@ -6,28 +6,27 @@ import { useRouter } from "next/navigation"
 
 export default function Layout({ children }) {
     const router = useRouter()
+
     useEffect(() => {
-        async function user() {
+        async function checkUser() {
             try {
                 const token = localStorage.getItem('access_token')
-                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user/${token}`, {
-                    withCredentials: true
-                })
-                if (data.data.success == "user") {
+                if (!token) { router.replace("/"); return }
+
+                const data = await axios.get(
+                    `${process.env.NEXT_PUBLIC_URL}/api/user/${token}`,
+                    { withCredentials: true }
+                )
+
+                if (!data.data.success) {
                     router.replace("/")
                 }
             } catch (err) {
-
                 router.replace("/")
             }
         }
-        user()
+        checkUser()
     }, [])
 
-
-    return (
-        <>
-            {children}
-        </>
-    )
+    return <>{children}</>
 }

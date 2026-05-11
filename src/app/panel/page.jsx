@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Eye, EyeOff, FlaskConical, Lock, User, Beaker, Atom, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -22,22 +23,20 @@ const LoginPage = () => {
     setErrorMessage('');
 
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-      const response = await fetch(`${API_URL}/api/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ email: username, password: password })
-      });
+      // ✅ Ganti fetch → axios, samakan env variable
+      const data = await axios.post(
+        `${process.env.NEXT_PUBLIC_URL}/api/login`,
+        { email: username, password: password },
+        { withCredentials: true }
+      )
 
-      const data = await response.json();
-
-      if (data.success) {
-        if (data.token) {
-          localStorage.setItem('access_token', data.token);
+      if (data.data.success) {
+        // ✅ Simpan token
+        if (data.data.token) {
+          localStorage.setItem('access_token', data.data.token)
         }
 
-        const userRole = data.data?.role;
+        const userRole = data.data.data?.role;
         const roleRedirectMap = {
           admin: '/panel/portal',
           operator: '/panel/portal/analisis/operator',
@@ -46,24 +45,20 @@ const LoginPage = () => {
         };
 
         if (roleRedirectMap[userRole]) {
-          localStorage.setItem('access_token', data.token); // ← pindah ke sini, pastikan jalan dulu
-          // Tambah delay kecil agar storage flush
-          await new Promise(resolve => setTimeout(resolve, 100));
           window.location.href = roleRedirectMap[userRole];
           return;
         } else {
           setErrorMessage('Akses terbatas untuk Admin, Operator, PJ, dan Super Admin.');
-          setIsLoading(false); // ✅ Hanya set false kalau tidak redirect
+          setIsLoading(false);
         }
       } else {
-        setErrorMessage(data.message || 'Login gagal. Periksa kembali email dan password.');
+        setErrorMessage(data.data.message || 'Login gagal.');
         setIsLoading(false);
       }
     } catch (error) {
       setErrorMessage('Terjadi kesalahan koneksi. Silakan coba lagi.');
       setIsLoading(false);
     }
-    // ✅ Hapus finally sepenuhnya
   };
 
   return (

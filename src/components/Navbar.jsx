@@ -18,33 +18,62 @@ export default function NavbarCustom() {
   const pathname = usePathname();
   const router = useRouter();
 
-  // ── INIT AUTH (HANYA CEK TOKEN) ──
+  // ── INIT AUTH (CEK TOKEN + ROLE) ──
   useEffect(() => {
-    const initAuth = () => {
+    const initAuth = async () => {
       const token = localStorage.getItem("access_token");
-      
-      if (token) {
-        setIsLoggedIn(true);
-      } else {
+
+      if (!token) {
+        setIsLoggedIn(false);
+        setIsAuthLoaded(true);
+        return;
+      }
+
+      try {
+        const data = await axios.get(
+          `${process.env.NEXT_PUBLIC_URL}/api/user/${token}`,
+          { withCredentials: true }
+        )
+
+        if (data.data.success && data.data.data?.role === 'user') {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+          // ✅ Jangan hapus token — mungkin role admin/operator/pj
+          // localStorage.removeItem("access_token") ← HAPUS baris ini
+        }
+      } catch {
         setIsLoggedIn(false);
       }
-      
+
       setIsAuthLoaded(true);
     };
 
     initAuth();
   }, []);
 
-  // ── Auth Change Listener (Update saat login/logout) ──
+ // ── Auth Change Listener ──
   useEffect(() => {
-    const onAuthChange = () => {
+    const onAuthChange = async () => {
       const token = localStorage.getItem("access_token");
-      setIsLoggedIn(!!token);
+      if (!token) { setIsLoggedIn(false); return; }
+
+      try {
+        const data = await axios.get(
+          `${process.env.NEXT_PUBLIC_URL}/api/user/${token}`,
+          { withCredentials: true }
+        )
+        setIsLoggedIn(data.data.success && data.data.data?.role === 'user');
+        // ✅ Tidak hapus token di sini juga
+      } catch {
+        setIsLoggedIn(false);
+      }
     };
     
     window.addEventListener("authChange", onAuthChange);
     return () => window.removeEventListener("authChange", onAuthChange);
   }, []);
+
 
   // ── Scroll ──
   useEffect(() => {
@@ -76,11 +105,11 @@ export default function NavbarCustom() {
       localStorage.removeItem("access_token");
       localStorage.removeItem("user_data");
       setIsLoggedIn(false);
-      
+
       await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/logout`, {
         withCredentials: true,
       });
-      
+
       window.dispatchEvent(new Event("authChange"));
       router.push("/");
     } catch {
@@ -95,7 +124,7 @@ export default function NavbarCustom() {
     if (path === "/") return pathname === "/";
     return pathname.startsWith(path);
   };
-  
+
   const getLinkClass = (path) =>
     isActive(path) ? activeLinkCls : mutedLinkCls;
 
@@ -142,11 +171,10 @@ export default function NavbarCustom() {
   return (
     <>
       <nav
-        className={`fixed w-full z-50 transition-all duration-500 ${
-          isScrolled
-            ? "bg-white/80 backdrop-blur-xl py-4 border-b border-gray-100 shadow-sm"
-            : "bg-white py-4"
-        }`}
+        className={`fixed w-full z-50 transition-all duration-500 ${isScrolled
+          ? "bg-white/80 backdrop-blur-xl py-4 border-b border-gray-100 shadow-sm"
+          : "bg-white py-4"
+          }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
           <a href="/" className="flex items-center gap-3">
@@ -160,16 +188,14 @@ export default function NavbarCustom() {
             <div ref={layananRef} className="relative">
               <button
                 onClick={() => setLayananDesktopOpen((v) => !v)}
-                className={`${
-                  isLayananActive ? activeLinkCls : mutedLinkCls
-                } flex items-center gap-1 cursor-pointer`}
+                className={`${isLayananActive ? activeLinkCls : mutedLinkCls
+                  } flex items-center gap-1 cursor-pointer`}
               >
                 Layanan
                 <ChevronDown
                   size={12}
-                  className={`transition-transform duration-300 ${
-                    layananDesktopOpen ? "rotate-180" : ""
-                  }`}
+                  className={`transition-transform duration-300 ${layananDesktopOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
@@ -180,11 +206,10 @@ export default function NavbarCustom() {
                       key={item.href}
                       href={item.href}
                       onClick={() => setLayananDesktopOpen(false)}
-                      className={`block px-5 py-3 text-[9px] font-semibold tracking-[0.2em] uppercase ${
-                        isActive(item.href)
-                          ? "text-red-700 bg-red-50"
-                          : "text-zinc-400 hover:text-red-700 hover:bg-red-50/50"
-                      }`}
+                      className={`block px-5 py-3 text-[9px] font-semibold tracking-[0.2em] uppercase ${isActive(item.href)
+                        ? "text-red-700 bg-red-50"
+                        : "text-zinc-400 hover:text-red-700 hover:bg-red-50/50"
+                        }`}
                     >
                       {item.label}
                     </a>
@@ -224,9 +249,8 @@ export default function NavbarCustom() {
 
         {/* MOBILE MENU */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-500 ${
-            mobileMenuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
-          }`}
+          className={`md:hidden overflow-hidden transition-all duration-500 ${mobileMenuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
+            }`}
         >
           <div className="bg-white px-6 py-6 flex flex-col gap-5">
             <a href="/" className={getLinkClass("/")}>Home</a>
@@ -234,16 +258,14 @@ export default function NavbarCustom() {
             <div>
               <button
                 onClick={() => setLayananMobileOpen((v) => !v)}
-                className={`${
-                  isLayananActive ? activeLinkCls : mutedLinkCls
-                } flex items-center gap-2 w-full`}
+                className={`${isLayananActive ? activeLinkCls : mutedLinkCls
+                  } flex items-center gap-2 w-full`}
               >
                 Layanan
                 <ChevronDown
                   size={12}
-                  className={`transition-transform ${
-                    layananMobileOpen ? "rotate-180" : ""
-                  }`}
+                  className={`transition-transform ${layananMobileOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
