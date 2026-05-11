@@ -327,12 +327,12 @@ export default function OrderDetail({ setActivePage, idInvoice, noInvoice }) {
           </p>
 
           {/* Warning — ubah jadi kuning, hapus validasi disabled */}
-          <div className="flex items-start gap-2 bg-yellow-50 border border-yellow-100 rounded-lg px-4 py-3 mb-6">
+          {/* <div className="flex items-start gap-2 bg-yellow-50 border border-yellow-100 rounded-lg px-4 py-3 mb-6">
             <AlertCircle className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
             <p className="text-xs text-yellow-600 font-medium">
               * Upload hasil analisis terlebih dahulu sebelum verifikasi
             </p>
-          </div>
+          </div> */}
 
           <div className="space-y-4 divide-y divide-gray-100">
             {/* Status Verifikasi */}
