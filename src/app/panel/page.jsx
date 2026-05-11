@@ -13,13 +13,11 @@ const LoginPage = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.trace("1")
     if (!username || !password) {
       setErrorMessage('Username dan password harus diisi');
       return;
     }
 
-    console.trace("2")
     setIsLoading(true);
     setErrorMessage('');
 
@@ -31,40 +29,39 @@ const LoginPage = () => {
         credentials: 'include',
         body: JSON.stringify({ email: username, password: password })
       });
-      console.trace("3")
+
       const data = await response.json();
 
       if (data.success) {
-        console.trace("4")
-
         if (data.token) {
           localStorage.setItem('access_token', data.token);
         }
-        if (data.data) {
-          console.trace("5")
-          const userRole = data.data.role;
 
-          const roleRedirectMap = {
-            admin: '/panel/portal',
-            operator: '/panel/portal/analisis/operator',
-            pj: '/panel/portal/analisis/pj',
-            superadmin: '/panel/portal/analisis/superadmin',
-          };
+        const userRole = data.data?.role;
+        const roleRedirectMap = {
+          admin: '/panel/portal',
+          operator: '/panel/portal/analisis/operator',
+          pj: '/panel/portal/analisis/pj',
+          superadmin: '/panel/portal/analisis/superadmin',
+        };
 
-          if (roleRedirectMap[userRole]) {
-            router.push(roleRedirectMap[userRole]);
-          } else {
-            setErrorMessage('Akses terbatas untuk Admin, Operator, PJ, dan Super Admin.');
-          }
+        if (roleRedirectMap[userRole]) {
+          // ✅ Pakai window.location agar tidak tertahan re-render
+          window.location.href = roleRedirectMap[userRole];
+          return; // ✅ Stop eksekusi, jangan setIsLoading(false)
+        } else {
+          setErrorMessage('Akses terbatas untuk Admin, Operator, PJ, dan Super Admin.');
+          setIsLoading(false); // ✅ Hanya set false kalau tidak redirect
         }
       } else {
         setErrorMessage(data.message || 'Login gagal. Periksa kembali email dan password.');
+        setIsLoading(false);
       }
     } catch (error) {
       setErrorMessage('Terjadi kesalahan koneksi. Silakan coba lagi.');
-    } finally {
       setIsLoading(false);
     }
+    // ✅ Hapus finally sepenuhnya
   };
 
   return (
