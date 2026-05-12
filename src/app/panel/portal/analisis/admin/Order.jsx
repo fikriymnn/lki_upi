@@ -142,7 +142,7 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
 
     return (
         <div className="p-6">
-            <div className="min-w-6xl max-w-7xl mx-auto">
+            <div className="min-w-6xl max-w-[90rem] mx-auto">
 
                 {/* ── Header ── */}
                 <div className="mb-6">

@@ -151,7 +151,7 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
     // ── Render ─────────────────────────────────────────────────
     return (
         <div className="p-6">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-[90rem] mx-auto">
 
                 {/* Page Title */}
                 <div className="mb-6">

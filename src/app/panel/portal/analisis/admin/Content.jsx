@@ -203,7 +203,7 @@ export default function Adminn() {
   // ── Render ───────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto md:px-10 pb-16">
+      <div className="max-w-[90rem] mx-auto md:px-10 pb-16">
 
         {/* Header */}
         <div className="my-6">

@@ -93,7 +93,7 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
 
   return (
     <div className="p-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[90rem] mx-auto">
 
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Order Penanggung Jawab</h1>

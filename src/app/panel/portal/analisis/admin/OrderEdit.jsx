@@ -11,37 +11,36 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
   const no_invoice = noInvoice
   const uid = uuidv4()
   const [iD, setID] = useState('')
-  const [jenis_pengujian, setJenis_pengujian] = useState([[]])
-  const [kode_pengujian, setKode_pengujian] = useState([[]])
-  const [nama_sample, setNama_sample] = useState([])
-  const [jumlah_sample, setJumlah_sample] = useState([])
-  const [wujud_sample, setWujud_sample] = useState([])
-  const [pelarut, setPelarut] = useState([])
-  const [preparasi_khusus, setPreparasi_khusus] = useState([])
-  const [target_senyawa, setTarget_senyawa] = useState([])
-  const [sample_dikembalikan, setSample_dikembalikan] = useState([])
-  const [metode_parameter, setMetode_parameter] = useState([])
-  const [deskripsi_sample, setDeskripsi_sample] = useState([])
-  const [riwayat_pengujian, setRiwayat_pengujian] = useState([])
-  const [lama_pengerjaan, setLama_pengerjaan] = useState([])
-  const [uuid, setUuid] = useState([uid])
+  const [jenisPengujian, setJenisPengujian] = useState('')
+
+  // ✅ Ganti semua state array dengan satu object form
+  const [form, setForm] = useState({
+    nama_sample: '',
+    jumlah_sample: '',
+    wujud_sample: 'padat',
+    pelarut: '',
+    preparasi_khusus: false,
+    target_senyawa: '',
+    metode_parameter: '',
+    sample_dikembalikan: 'ya',
+    lama_pengerjaan: '',
+    deskripsi_sample: '',
+    riwayat_pengujian: '',
+  })
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setForm(prev => ({ ...prev, [name]: value }))
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      let obj = {}
-      obj.nama_sample = nama_sample[0]
-      obj.jumlah_sample = jumlah_sample[0]
-      obj.wujud_sample = wujud_sample[0]
-      obj.pelarut = pelarut[0]
-      obj.preparasi_khusus = preparasi_khusus[0]
-      obj.target_senyawa = target_senyawa[0]
-      obj.metode_parameter = metode_parameter[0]
-      obj.deskripsi_sample = deskripsi_sample[0]
-      obj.riwayat_pengujian = riwayat_pengujian[0]
-      obj.sample_dikembalikan = sample_dikembalikan[0]
-      obj.lama_pengerjaan = lama_pengerjaan[0]
-      const data = await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/order/${iD}`, obj, { withCredentials: true })
+      const data = await axios.put(
+        `${process.env.NEXT_PUBLIC_URL}/api/order/${iD}`,
+        form,
+        { withCredentials: true }
+      )
       if (data.data.success) {
         alert("update success")
         setActivePage('order')
@@ -53,27 +52,32 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
 
   useEffect(() => {
     async function cek() {
-        console.log(no_invoice)
+      console.log(no_invoice)
       try {
-        const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?no_invoice=${no_invoice}&skip=0&limit=10`, { withCredentials: true })
+        const data = await axios.get(
+          `${process.env.NEXT_PUBLIC_URL}/api/order?no_invoice=${no_invoice}&skip=0&limit=10`,
+          { withCredentials: true }
+        )
         if (data.data.success) {
           const datas = data.data.data[0]
           console.log(data)
           console.log(datas)
           setID(datas._id)
-          jenis_pengujian[0][0] = datas.jenis_pengujian
-          kode_pengujian[0] = datas.kode_pengujian
-          nama_sample[0] = datas.nama_sample
-          jumlah_sample[0] = datas.jumlah_sample
-          wujud_sample[0] = datas.wujud_sample
-          pelarut[0] = datas.pelarut
-          preparasi_khusus[0] = datas.preparasi_khusus
-          target_senyawa[0] = datas.target_senyawa
-          sample_dikembalikan[0] = datas.sample_dikembalikan
-          metode_parameter[0] = datas.metode_parameter
-          deskripsi_sample[0] = datas.deskripsi_sample
-          riwayat_pengujian[0] = datas.riwayat_pengujian
-          lama_pengerjaan[0] = datas.lama_pengerjaan
+          setJenisPengujian(datas.jenis_pengujian)
+          // ✅ Set semua nilai ke state form
+          setForm({
+            nama_sample: datas.nama_sample || '',
+            jumlah_sample: datas.jumlah_sample || '',
+            wujud_sample: datas.wujud_sample || 'padat',
+            pelarut: datas.pelarut || '',
+            preparasi_khusus: datas.preparasi_khusus || false,
+            target_senyawa: datas.target_senyawa || '',
+            metode_parameter: datas.metode_parameter || '',
+            sample_dikembalikan: datas.sample_dikembalikan || 'ya',
+            lama_pengerjaan: datas.lama_pengerjaan || '',
+            deskripsi_sample: datas.deskripsi_sample || '',
+            riwayat_pengujian: datas.riwayat_pengujian || '',
+          })
         }
       } catch (err) {
         alert(err.message)
@@ -115,7 +119,7 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
           <p className="text-xs text-gray-400 mb-1 flex items-center gap-1">
             <FlaskConical className="w-3 h-3" /> Jenis Pengujian
           </p>
-          <p className="text-sm font-semibold text-gray-900">{jenis_pengujian[0][0] || '—'}</p>
+          <p className="text-sm font-semibold text-gray-900">{jenisPengujian || '—'}</p>
         </div>
       </div>
 
@@ -135,7 +139,7 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
                 className={`${inputClass} bg-gray-50 text-gray-500 cursor-not-allowed`}
                 type="text"
                 readOnly
-                value={jenis_pengujian[0][0] || ''}
+                value={jenisPengujian}
               />
             </div>
 
@@ -145,9 +149,10 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
               <input
                 className={inputClass}
                 type="text"
-                defaultValue={nama_sample[0]}
+                name="nama_sample"
+                value={form.nama_sample}
                 placeholder="Masukkan nama sample"
-                onChange={(e) => { nama_sample[0] = e.target.value }}
+                onChange={handleChange}
               />
             </div>
 
@@ -157,9 +162,10 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
               <input
                 className={inputClass}
                 type="number"
-                defaultValue={jumlah_sample[0]}
+                name="jumlah_sample"
+                value={form.jumlah_sample}
                 placeholder="Masukkan jumlah sample"
-                onChange={(e) => { jumlah_sample[0] = e.target.value }}
+                onChange={handleChange}
               />
             </div>
 
@@ -168,8 +174,9 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
               <p className={labelClass}>Wujud Sample</p>
               <select
                 className={inputClass}
-                defaultValue={wujud_sample[0]}
-                onChange={(e) => { wujud_sample[0] = e.target.value }}
+                name="wujud_sample"
+                value={form.wujud_sample}
+                onChange={handleChange}
               >
                 <option value="padat">Padat</option>
                 <option value="cair">Cair</option>
@@ -183,9 +190,10 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
               <input
                 className={inputClass}
                 type="text"
-                defaultValue={pelarut[0]}
+                name="pelarut"
+                value={form.pelarut}
                 placeholder="Masukkan pelarut yang digunakan"
-                onChange={(e) => { pelarut[0] = e.target.value }}
+                onChange={handleChange}
               />
             </div>
 
@@ -194,8 +202,9 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
               <p className={labelClass}>Preparasi Khusus</p>
               <select
                 className={inputClass}
-                defaultValue={preparasi_khusus[0]}
-                onChange={(e) => { preparasi_khusus[0] = e.target.value }}
+                name="preparasi_khusus"
+                value={form.preparasi_khusus}
+                onChange={handleChange}
               >
                 <option value={true}>Ya (esterifikasi/destruksi)</option>
                 <option value={false}>Tidak</option>
@@ -208,9 +217,10 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
               <input
                 className={inputClass}
                 type="text"
-                defaultValue={target_senyawa[0]}
+                name="target_senyawa"
+                value={form.target_senyawa}
                 placeholder="Contoh: analisis logam natrium (Na) untuk AAS"
-                onChange={(e) => { target_senyawa[0] = e.target.value }}
+                onChange={handleChange}
               />
             </div>
 
@@ -220,9 +230,10 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
               <input
                 className={inputClass}
                 type="text"
-                defaultValue={metode_parameter[0]}
+                name="metode_parameter"
+                value={form.metode_parameter}
                 placeholder="Suhu / flow / panjang gelombang / fasa gerak, gas, dsb."
-                onChange={(e) => { metode_parameter[0] = e.target.value }}
+                onChange={handleChange}
               />
             </div>
 
@@ -231,8 +242,9 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
               <p className={labelClass}>Sample Diambil Setelah Pengujian?</p>
               <select
                 className={inputClass}
-                defaultValue={sample_dikembalikan[0]}
-                onChange={(e) => { sample_dikembalikan[0] = e.target.value }}
+                name="sample_dikembalikan"
+                value={form.sample_dikembalikan}
+                onChange={handleChange}
               >
                 <option value="ya">Ya</option>
                 <option value="tidak">Tidak</option>
@@ -244,8 +256,9 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
               <p className={labelClass}>Lama Pengerjaan</p>
               <select
                 className={inputClass}
-                defaultValue={lama_pengerjaan[0]}
-                onChange={(e) => { lama_pengerjaan[0] = e.target.value }}
+                name="lama_pengerjaan"
+                value={form.lama_pengerjaan}
+                onChange={handleChange}
               >
                 <option value="">Pilih</option>
                 <option value="3 hari">3 hari</option>
@@ -261,9 +274,10 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
               <textarea
                 className={`${inputClass} resize-none`}
                 rows={3}
-                defaultValue={deskripsi_sample[0]}
+                name="deskripsi_sample"
+                value={form.deskripsi_sample}
                 placeholder="Sifat fisik, jumlah (gram/volume), penyimpanan, dan bagaimana sampel diperoleh"
-                onChange={(e) => { deskripsi_sample[0] = e.target.value }}
+                onChange={handleChange}
               />
             </div>
 
@@ -273,9 +287,10 @@ export default function OrderEdit({ setActivePage, noInvoice }) {
               <textarea
                 className={`${inputClass} resize-none`}
                 rows={3}
-                defaultValue={riwayat_pengujian[0]}
+                name="riwayat_pengujian"
+                value={form.riwayat_pengujian}
                 placeholder="Apakah pernah diuji di tempat lain dan bagaimana hasilnya"
-                onChange={(e) => { riwayat_pengujian[0] = e.target.value }}
+                onChange={handleChange}
               />
             </div>
 
