@@ -1,13 +1,10 @@
 "use client";
-import AdminInvoiceCard from "@/components/AdminInvoiceCard";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import { Pagination } from "flowbite-react";
-import Navigasi from "@/components/Navigasi";
 import {
     Search, ChevronDown, Filter, FileText,
-    Calendar, FlaskConical, Tag, Pencil,
-    RouteIcon, MapPin
+    Calendar, FlaskConical, Tag, Pencil, MapPin
 } from "lucide-react";
 
 const kode = [
@@ -49,12 +46,10 @@ const getStatusStyle = (status) => {
     }
 };
 
-// ── Filter Select ─────────────────────────────────────────────────────────
 const FilterSelect = ({ icon: Icon, label, value, onChange, children }) => (
     <div className="flex flex-col gap-1.5">
         <label className="text-xs font-medium text-gray-500 flex items-center gap-1.5">
-            <Icon className="w-3.5 h-3.5" />
-            {label}
+            <Icon className="w-3.5 h-3.5" />{label}
         </label>
         <div className="relative">
             <select
@@ -69,86 +64,167 @@ const FilterSelect = ({ icon: Icon, label, value, onChange, children }) => (
     </div>
 );
 
-export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
-    const [invoice, setInvoice] = useState([]);
-    const [page, setPage] = useState(0);
-    const [length, setLength] = useState(0);
-    const [year, setYear] = useState(0);
-    const [month, setMonth] = useState(0);
-    const [jenis_pengujian, setJenis_pengujian] = useState("");
-    const [status, setStatus] = useState("");
-    const [yearOption, setYearOption] = useState([]);
-    const [search, setSearch] = useState("");
-    const [loading, setLoading] = useState(false);
+export default function Order({
+    setActivePage, setNoInvoice, setIdInvoice,
+    orderState, setOrderState
+}) {
+    const [invoice, setInvoice]                 = useState(orderState.invoice);
+    const [page, setPage]                       = useState(orderState.page);
+    const [length, setLength]                   = useState(orderState.length);
+    const [year, setYear]                       = useState(orderState.year);
+    const [month, setMonth]                     = useState(orderState.month);
+    const [jenis_pengujian, setJenis_pengujian] = useState(orderState.jenis_pengujian);
+    const [status, setStatus]                   = useState(orderState.status);
+    const [search, setSearch]                   = useState(orderState.search);
+    const [yearOption, setYearOption]           = useState([]);
+    const [loading, setLoading]                 = useState(false);
+    const [error, setError]                     = useState(null); // ← tambah error state
+
+    // ── Refs ──────────────────────────────────────────────────────────────
+    const abortControllerRef = useRef(null);  // ← cancel request lama
+    const isFirstMount       = useRef(true);  // ← skip fetch saat kembali jika data ada
 
     const convertRupiah = (angka = 0) => {
-        let s = angka?.toString();
-        let parts = s?.split("").reverse().join("").match(/\d{1,3}/g);
-        return parts?.join(".").split("").reverse().join("");
+        const parts = angka?.toString().split("").reverse().join("").match(/\d{1,3}/g);
+        return parts?.join(".").split("").reverse().join("") ?? "0";
     };
 
-    const getInvoice = useCallback(async () => {
+    // ── Core fetch — pakai AbortController ───────────────────────────────
+    const getInvoice = useCallback(async (currentPage = page) => {
+        // Cancel request sebelumnya jika masih berjalan
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+        const controller = new AbortController();
+        abortControllerRef.current = controller;
+
         setLoading(true);
+        setError(null);
+
         try {
-            const data = await axios.get(
-                `${process.env.NEXT_PUBLIC_URL}/api/invoice?skip=${page * 15}&limit=15`
-                + (year ? `&year=${year}` : "")
-                + (month ? `&month=${month}` : "")
-                + (jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : "")
-                + (status ? `&status=${status}` : "&status=menunggu form dikonfirmasi&status=Form Dikonfirmasi&status=Sample Diterima Admin&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai")
-                + (search ? `&nama_lengkap=${search}` : ""),
-                { withCredentials: true }
-            );
-            const data2 = await axios.get(
-                `${process.env.NEXT_PUBLIC_URL}/api/order?status_pengujian=${jenis_pengujian}`
-                + (month ? `&month=${month}` : "")
-                + (year ? `&year=${year}` : "")
-                + (jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""),
-                { withCredentials: true }
-            );
+            const statusQuery = status
+                ? `&status=${status}`
+                : "&status=menunggu form dikonfirmasi&status=Form Dikonfirmasi&status=Sample Diterima Admin&status=Sample Dikerjakan Operator&status=Menunggu Verifikasi&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&status=Selesai";
+
+            const [data, data2] = await Promise.all([
+                axios.get(
+                    `${process.env.NEXT_PUBLIC_URL}/api/invoice`
+                    + `?skip=${currentPage * 15}&limit=15`
+                    + (year   ? `&year=${year}`   : "")
+                    + (month  ? `&month=${month}`  : "")
+                    + (jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : "")
+                    + statusQuery
+                    + (search ? `&nama_lengkap=${search}` : ""),
+                    { withCredentials: true, signal: controller.signal }
+                ),
+                axios.get(
+                    `${process.env.NEXT_PUBLIC_URL}/api/order`
+                    + `?status_pengujian=${jenis_pengujian}`
+                    + (month  ? `&month=${month}`  : "")
+                    + (year   ? `&year=${year}`    : "")
+                    + (jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""),
+                    { withCredentials: true, signal: controller.signal }
+                ),
+            ]);
+
             if (data.data.success && data2.data) {
                 setInvoice(data.data.data);
                 setLength(data.data.length_total);
             }
         } catch (err) {
-            alert(err.message);
+            // Abaikan error dari abort (bukan network error sungguhan)
+            if (axios.isCancel(err) || err.name === "CanceledError") return;
+            console.error("Fetch invoice error:", err.message);
+            setError("Gagal memuat data. Periksa koneksi dan coba lagi.");
         } finally {
-            setLoading(false);
+            // Hanya set loading false jika request ini tidak di-abort
+            if (!controller.signal.aborted) {
+                setLoading(false);
+            }
         }
     }, [page, month, year, jenis_pengujian, status, search]);
 
-    // Reset page ke 0 saat filter berubah (kecuali page itu sendiri)
+    // ── Sync state lokal → parent (pakai ref agar tidak trigger re-render loop) ──
+    // Simpan ke parent hanya saat unmount, bukan setiap render
     useEffect(() => {
+        return () => {
+            // Cleanup: cancel request & simpan state ke parent saat unmount
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+        };
+    }, []);
+
+    // Sync ke parent setiap perubahan (gunakan ref untuk bandingkan nilai lama)
+    const prevOrderStateRef = useRef(orderState);
+    useEffect(() => {
+        const next = { invoice, page, length, year, month, jenis_pengujian, status, search };
+        // Hanya update jika ada nilai yang benar-benar berubah
+        const prev = prevOrderStateRef.current;
+        const changed = Object.keys(next).some(k =>
+            k === 'invoice'
+                ? next[k].length !== prev[k].length
+                : next[k] !== prev[k]
+        );
+        if (changed) {
+            prevOrderStateRef.current = next;
+            setOrderState(next);
+        }
+    }, [invoice, page, length, year, month, jenis_pengujian, status, search]);
+
+    // ── Filter berubah → reset page ke 0, lalu fetch ─────────────────────
+    // Pisah dari useEffect(getInvoice) agar tidak double-fetch
+    useEffect(() => {
+        if (isFirstMount.current) {
+            isFirstMount.current = false;
+            // Kalau data sudah ada dari parent (kembali dari detail), skip fetch
+            if (orderState.invoice.length > 0) return;
+            getInvoice(0);
+            return;
+        }
+        // Saat filter berubah: reset page & fetch dengan page=0 sekaligus
         setPage(0);
+        getInvoice(0);
     }, [month, year, jenis_pengujian, status]);
 
-    // Fetch saat getInvoice berubah (mencakup semua deps)
+    // ── Page berubah (klik pagination) → fetch ────────────────────────────
     useEffect(() => {
-        getInvoice();
-    }, [getInvoice]);
+        if (isFirstMount.current) return;
+        getInvoice(page);
+    }, [page]);
 
-    // Inisialisasi yearOption
+    // ── Inisialisasi yearOption ───────────────────────────────────────────
     useEffect(() => {
-        let arr = [];
         const yearMax = new Date().getFullYear() - 2023;
-        for (let i = 0; i < yearMax; i++) { arr.push(2024 + i); }
-        setYearOption(arr);
+        setYearOption(Array.from({ length: yearMax }, (_, i) => 2024 + i));
     }, []);
 
     const handleSearch = () => {
         setPage(0);
-        getInvoice();
+        getInvoice(0);
     };
 
     return (
         <div className="p-6">
             <div className="min-w-6xl max-w-[90rem] mx-auto">
 
-                {/* ── Header ── */}
                 <div className="mb-6">
                     <h1 className="text-2xl font-bold text-gray-900">Order</h1>
                     <p className="text-gray-500 text-sm mt-1">Manajemen dan pemantauan order layanan analisis</p>
                 </div>
+
+                {/* ── Error Banner ── */}
+                {error && (
+                    <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg flex items-center justify-between">
+                        <p className="text-sm text-red-600">{error}</p>
+                        <button
+                            onClick={() => { setError(null); getInvoice(page); }}
+                            className="text-xs text-red-600 font-medium underline ml-4"
+                        >
+                            Coba lagi
+                        </button>
+                    </div>
+                )}
 
                 {/* ── Filter Panel ── */}
                 <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
@@ -156,10 +232,7 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                         <Filter className="w-4 h-4 text-gray-400" />
                         <p className="text-sm font-semibold text-gray-700">Filter & Pencarian</p>
                     </div>
-
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-
-                        {/* Search — spans 2 cols on xl */}
                         <div className="flex flex-col gap-1.5 xl:col-span-2">
                             <label className="text-xs font-medium text-gray-500 flex items-center gap-1.5">
                                 <Search className="w-3.5 h-3.5" /> Cari Nama
@@ -192,7 +265,7 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
 
                         <FilterSelect icon={Calendar} label="Bulan" value={month} onChange={(e) => setMonth(e.target.value)}>
                             <option value="">Semua Bulan</option>
-                            {monthOption.map((v, i) => <option key={i} value={i}>{v}</option>)}
+                            {monthOption.map((v, i) => <option key={i} value={i + 1}>{v}</option>)}
                         </FilterSelect>
 
                         <FilterSelect icon={FlaskConical} label="Jenis Pengujian" value={jenis_pengujian} onChange={(e) => setJenis_pengujian(e.target.value)}>
@@ -204,7 +277,6 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                             <option value="">Semua Status</option>
                             {stats.map((v, i) => <option key={i} value={v.status}>{v.status}</option>)}
                         </FilterSelect>
-
                     </div>
                 </div>
 
@@ -226,16 +298,12 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                         { label: "Status", w: "w-44" },
                                         { label: "Aksi", w: "w-24" },
                                     ].map((h) => (
-                                        <th
-                                            key={h.label}
-                                            className={`px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap ${h.w}`}
-                                        >
+                                        <th key={h.label} className={`px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap ${h.w}`}>
                                             {h.label}
                                         </th>
                                     ))}
                                 </tr>
                             </thead>
-
                             <tbody className="divide-y divide-gray-100">
                                 {loading ? (
                                     Array.from({ length: 8 }).map((_, i) => (
@@ -259,106 +327,47 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                                         </tr>
                                     ))
                                 ) : invoice.length > 0 ? invoice.map((v, i) => (
-                                    <tr key={i} className="hover:bg-gray-50 transition">
-
-                                        {/* No */}
+                                    <tr key={v._id ?? i} className="hover:bg-gray-50 transition">
+                                        <td className="px-4 py-3"><span className="text-xs text-gray-400">{i + 1 + page * 15}</span></td>
+                                        <td className="px-4 py-3 whitespace-nowrap">
+                                            <span className="text-xs font-mono font-medium text-gray-800 bg-gray-100 px-2 py-0.5 rounded">{v.no_invoice}</span>
+                                        </td>
+                                        <td className="px-4 py-3 whitespace-nowrap"><span className="text-xs text-gray-600">{v.date_format}</span></td>
+                                        <td className="px-4 py-3 whitespace-nowrap"><span className="text-xs font-medium text-gray-900">{v.nama_lengkap}</span></td>
                                         <td className="px-4 py-3">
-                                            <span className="text-xs text-gray-400">{i + 1 + page * 15}</span>
+                                            <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 rounded font-medium">{v?.jenis_pengujian}</span>
                                         </td>
-
-                                        {/* Invoice */}
                                         <td className="px-4 py-3 whitespace-nowrap">
-                                            <span className="text-xs font-mono font-medium text-gray-800 bg-gray-100 px-2 py-0.5 rounded">
-                                                {v.no_invoice}
-                                            </span>
+                                            {v.s5_date ? <span className="text-xs text-gray-700">{v.s5_date}</span> : <span className="text-xs text-gray-400 italic">Belum dikerjakan</span>}
                                         </td>
-
-                                        {/* Tanggal */}
                                         <td className="px-4 py-3 whitespace-nowrap">
-                                            <span className="text-xs text-gray-600">{v.date_format}</span>
+                                            {v.s6_date ? <span className="text-xs text-gray-700">{v.s6_date}</span> : <span className="text-xs text-gray-400 italic">Belum diverifikasi</span>}
                                         </td>
-
-                                        {/* Nama Customer */}
                                         <td className="px-4 py-3 whitespace-nowrap">
-                                            <span className="text-xs font-medium text-gray-900">{v.nama_lengkap}</span>
+                                            {v.total_harga ? <span className="text-xs font-medium text-gray-800">Rp {convertRupiah(v.total_harga)}</span> : <span className="text-gray-400 text-xs">—</span>}
                                         </td>
-
-                                        {/* Jenis Pengujian */}
                                         <td className="px-4 py-3">
-                                            <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 rounded font-medium">
-                                                {v?.jenis_pengujian}
-                                            </span>
+                                            <span className={`text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap ${getStatusStyle(v.status)}`}>{v.status}</span>
                                         </td>
-
-                                        {/* Operator */}
-                                        <td className="px-4 py-3 whitespace-nowrap">
-                                            {v.s5_date
-                                                ? <span className="text-xs text-gray-700">{v.s5_date}</span>
-                                                : <span className="text-xs text-gray-400 italic">Belum dikerjakan</span>
-                                            }
-                                        </td>
-
-                                        {/* PJ */}
-                                        <td className="px-4 py-3 whitespace-nowrap">
-                                            {v.s6_date
-                                                ? <span className="text-xs text-gray-700">{v.s6_date}</span>
-                                                : <span className="text-xs text-gray-400 italic">Belum diverifikasi</span>
-                                            }
-                                        </td>
-
-                                        {/* Harga */}
-                                        <td className="px-4 py-3 whitespace-nowrap">
-                                            {v.total_harga
-                                                ? <span className="text-xs font-medium text-gray-800">Rp {convertRupiah(v.total_harga)}</span>
-                                                : <span className="text-gray-400 text-xs">—</span>
-                                            }
-                                        </td>
-
-                                        {/* Status */}
-                                        <td className="px-4 py-3">
-                                            <span className={`text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap ${getStatusStyle(v.status)}`}>
-                                                {v.status}
-                                            </span>
-                                        </td>
-
-                                        {/* Aksi */}
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-1.5">
-                                                <span onClick={() => {
-                                                    setNoInvoice(v.no_invoice)
-                                                    setIdInvoice(v._id)
-                                                    setActivePage('order-detail')
-                                                }}
+                                                <span onClick={() => { setNoInvoice(v.no_invoice); setIdInvoice(v._id); setActivePage('order-detail'); }}
                                                     title="Detail Order"
-                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer"
-                                                >
+                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer">
                                                     <FileText className="w-4 h-4" />
                                                 </span>
-
-                                                <a onClick={() => {
-                                                    setNoInvoice(v.no_invoice)
-                                                    setIdInvoice(v._id)
-                                                    setActivePage('order-tracking')
-                                                }}
+                                                <span onClick={() => { setNoInvoice(v.no_invoice); setIdInvoice(v._id); setActivePage('order-tracking'); }}
                                                     title="Tracking Status"
-                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition cursor-pointer"
-                                                >
+                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition cursor-pointer">
                                                     <MapPin className="w-4 h-4" />
-                                                </a>
-
-                                                <a onClick={() => {
-                                                    setNoInvoice(v.no_invoice)
-                                                    setIdInvoice(v._id)
-                                                    setActivePage('order-edit')
-                                                }}
+                                                </span>
+                                                <span onClick={() => { setNoInvoice(v.no_invoice); setIdInvoice(v._id); setActivePage('order-edit'); }}
                                                     title="Edit Order"
-                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-600 text-white hover:bg-gray-700 transition cursor-pointer"
-                                                >
+                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-600 text-white hover:bg-gray-700 transition cursor-pointer">
                                                     <Pencil className="w-4 h-4" />
-                                                </a>
+                                                </span>
                                             </div>
                                         </td>
-
                                     </tr>
                                 )) : (
                                     <tr>
@@ -372,7 +381,6 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                         </table>
                     </div>
 
-                    {/* ── Pagination ── */}
                     {length > 0 && (
                         <div className="px-5 py-3 border-t border-gray-100 flex items-center justify-between gap-4 flex-wrap">
                             <p className="text-xs text-gray-500">
@@ -389,7 +397,6 @@ export default function Order({ setActivePage, setNoInvoice, setIdInvoice }) {
                         </div>
                     )}
                 </div>
-
             </div>
         </div>
     );

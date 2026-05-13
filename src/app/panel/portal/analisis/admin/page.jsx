@@ -243,6 +243,16 @@ const MainPage = () => {
   const [noInvoice, setNoInvoice] = useState('');
   const [idInvoice, setIdInvoice] = useState('');
   const [userData, setUserData] = useState(null);
+  const [orderState, setOrderState] = useState({
+    invoice: [],
+    page: 0,
+    length: 0,
+    year: "",
+    month: "",
+    jenis_pengujian: "",
+    status: "",
+    search: "",
+  });
 
   // ── Fetch user data ──────────────────────────────────────────────────
   useEffect(() => {
@@ -382,10 +392,18 @@ const MainPage = () => {
 
         <main className="flex-1 overflow-y-auto">
           {activePage === 'dashboard' && <DashboardContent />}
-          {activePage === 'order' && <OrderPage setActivePage={setActivePage} setNoInvoice={setNoInvoice} setIdInvoice={setIdInvoice} />}
+          {activePage === 'order' && (
+            <OrderPage
+              setActivePage={setActivePage}
+              setNoInvoice={setNoInvoice}
+              setIdInvoice={setIdInvoice}
+              orderState={orderState}
+              setOrderState={setOrderState}
+            />
+          )}
           {activePage === 'order-detail' && <OrderDetail setActivePage={setActivePage} noInvoice={noInvoice} idInvoice={idInvoice} />}
           {activePage === 'order-tracking' && <OrderTracking setActivePage={setActivePage} noInvoice={noInvoice} idInvoice={idInvoice} />}
-          {activePage === 'order-edit' && <OrderEdit setActivePage={setActivePage} noInvoice={noInvoice}/>}
+          {activePage === 'order-edit' && <OrderEdit setActivePage={setActivePage} noInvoice={noInvoice} />}
           {activePage === 'report' && <ReportPage />}
           {activePage === 'content' && <ContentPage />}
         </main>

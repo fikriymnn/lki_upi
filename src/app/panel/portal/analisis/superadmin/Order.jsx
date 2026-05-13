@@ -94,7 +94,7 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
                 window.location.reload();
             }
         } catch (err) {
-            alert(err.message);
+            console.log(err.message);
         }
     };
 
