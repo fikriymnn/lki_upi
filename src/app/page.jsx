@@ -240,7 +240,6 @@ export default function Home() {
               >
                 {/* Tag badge */}
                 <div className="mb-8 inline-flex items-center gap-3 px-4 py-1.5 border border-red-100 bg-red-50/30 rounded-full">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-700 animate-pulse" />
                   <span className="text-[9px] font-semibold tracking-[0.25em] uppercase text-red-700">
                     {slide.tag}
                   </span>
@@ -374,7 +373,7 @@ export default function Home() {
             {/* Left — image / decorative */}
             <div className="relative">
               <Parallax speed={0.05}>
-                <div className="aspect-[4/5] bg-zinc-50 rounded-[4rem] relative overflow-hidden border border-gray-100">
+                <div className="aspect-[4/5] bg-zinc-50 rounded-xl relative overflow-hidden border border-gray-100">
                   <Image
                     src="https://images.pexels.com/photos/2280568/pexels-photo-2280568.jpeg?auto=compress&cs=tinysrgb&w=1600"
                     alt="Laboratorium Kimia"
@@ -454,7 +453,7 @@ export default function Home() {
       {/* ── CTA ── */}
       <section
         id="pesan"
-        className="py-32 relative bg-zinc-900 overflow-hidden rounded-[4rem] mx-6 mb-6"
+        className="py-32 relative bg-zinc-900 overflow-hidden rounded-2xl mx-6 mb-6"
       >
         {/* Decorative blur orbs */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-900/20 rounded-full blur-3xl pointer-events-none" />

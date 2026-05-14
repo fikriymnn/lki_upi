@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import { Pagination } from "flowbite-react";
 import {
@@ -8,38 +8,37 @@ import {
 } from "lucide-react";
 
 const kode = [
-  { jenis_pengujian: "GCFID" }, { jenis_pengujian: "GCMS" },
-  { jenis_pengujian: "NMR" }, { jenis_pengujian: "AAS" },
-  { jenis_pengujian: "FTIR" }, { jenis_pengujian: "TG DTA" },
-  { jenis_pengujian: "HPLC" }, { jenis_pengujian: "UV VIS" },
-  { jenis_pengujian: "Freezdry" }, { jenis_pengujian: "LCMSMS" },
-  { jenis_pengujian: "XRD" },
+  { jenis_pengujian: "GCFID"   }, { jenis_pengujian: "GCMS"   },
+  { jenis_pengujian: "NMR"     }, { jenis_pengujian: "AAS"    },
+  { jenis_pengujian: "FTIR"    }, { jenis_pengujian: "TG DTA" },
+  { jenis_pengujian: "HPLC"    }, { jenis_pengujian: "UV VIS" },
+  { jenis_pengujian: "Freezdry"}, { jenis_pengujian: "LCMSMS" },
+  { jenis_pengujian: "XRD"     },
 ];
 
 const monthOption = [
-  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-  "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+  "Januari","Februari","Maret","April","Mei","Juni",
+  "Juli","Agustus","September","Oktober","November","Desember",
 ];
 
 const getStatusStyle = (status) => {
   switch (status) {
-    case "Selesai": return "bg-green-100 text-green-700";
+    case "Selesai":                         return "bg-green-100 text-green-700";
     case "Menunggu Pembayaran":
-    case "Menunggu Konfirmasi Pembayaran": return "bg-amber-100 text-amber-700";
+    case "Menunggu Konfirmasi Pembayaran":  return "bg-amber-100 text-amber-700";
     case "menunggu form dikonfirmasi":
-    case "Form Dikonfirmasi": return "bg-blue-100 text-blue-700";
+    case "Form Dikonfirmasi":               return "bg-blue-100 text-blue-700";
     case "Sample Dikerjakan Operator":
-    case "Sample Diterima Admin": return "bg-purple-100 text-purple-700";
-    case "Menunggu Verifikasi": return "bg-orange-100 text-orange-700";
-    default: return "bg-gray-100 text-gray-600";
+    case "Sample Diterima Admin":           return "bg-purple-100 text-purple-700";
+    case "Menunggu Verifikasi":             return "bg-orange-100 text-orange-700";
+    default:                                return "bg-gray-100 text-gray-600";
   }
 };
 
 const FilterSelect = ({ icon: Icon, label, value, onChange, children }) => (
   <div className="flex flex-col gap-1.5">
     <label className="text-xs font-medium text-gray-500 flex items-center gap-1.5">
-      <Icon className="w-3.5 h-3.5" />
-      {label}
+      <Icon className="w-3.5 h-3.5" />{label}
     </label>
     <div className="relative">
       <select
@@ -54,42 +53,102 @@ const FilterSelect = ({ icon: Icon, label, value, onChange, children }) => (
   </div>
 );
 
-export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice }) {
-  const [invoice, setInvoice] = useState([]);
-  const [year, setYear] = useState(0);
-  const [month, setMonth] = useState(0);
-  const [page, setPage] = useState(0);
-  const [length, setLength] = useState(0);
-  const [yearOption, setYearOption] = useState([]);
-  const [jenis_pengujian, setJenis_pengujian] = useState("");
-  const [loading, setLoading] = useState(false);
+export default function OrderList({
+  setActivePage, setNoInvoice, setIdInvoice,
+  orderState, setOrderState
+}) {
+  // ── Init dari parent state ───────────────────────────────
+  const [invoice, setInvoice]                 = useState(orderState.invoice);
+  const [page, setPage]                       = useState(orderState.page);
+  const [length, setLength]                   = useState(orderState.length);
+  const [year, setYear]                       = useState(orderState.year);
+  const [month, setMonth]                     = useState(orderState.month);
+  const [jenis_pengujian, setJenis_pengujian] = useState(orderState.jenis_pengujian);
+  const [yearOption, setYearOption]           = useState([]);
+  const [loading, setLoading]                 = useState(false);
+  const [error, setError]                     = useState(null);
 
+  // ── Refs ─────────────────────────────────────────────────
+  const abortControllerRef = useRef(null);
+  const isFirstMount       = useRef(true);
+  const prevStateRef       = useRef(orderState);
+
+  // ── yearOption ───────────────────────────────────────────
   useEffect(() => {
-    let arr = [];
     const yearMax = new Date().getFullYear() - 2023;
-    for (let i = 0; i < yearMax; i++) {
-      arr.push(2024 + i);
-      setYearOption(arr);
+    setYearOption(Array.from({ length: yearMax }, (_, i) => 2024 + i));
+  }, []);
+
+  // ── Cleanup abort saat unmount ───────────────────────────
+  useEffect(() => {
+    return () => { abortControllerRef.current?.abort(); };
+  }, []);
+
+  // ── Sync lokal → parent (hanya jika ada perubahan nyata) ─
+  useEffect(() => {
+    const next = { invoice, page, length, year, month, jenis_pengujian };
+    const prev = prevStateRef.current;
+    const changed = Object.keys(next).some(k =>
+      k === 'invoice' ? next[k].length !== prev[k].length : next[k] !== prev[k]
+    );
+    if (changed) {
+      prevStateRef.current = next;
+      setOrderState(next);
     }
-    async function getInvoice() {
-      setLoading(true);
-      try {
-        const data = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Menunggu Verifikasi&skip=${page * 15}&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""}${jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""}`,
-          { withCredentials: true }
-        );
-        if (data.data.success) {
-          setInvoice(data.data.data);
-          setLength(data.data.length_total);
-        }
-      } catch (err) {
-        console.log(err.message);
-      } finally {
-        setLoading(false);
+  }, [invoice, page, length, year, month, jenis_pengujian]);
+
+  // ── Core fetch ───────────────────────────────────────────
+  const getInvoice = useCallback(async (currentPage = page) => {
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_URL}/api/invoice`
+        + `?status=Menunggu Verifikasi`
+        + `&skip=${currentPage * 15}&limit=15`
+        + (year            ? `&year=${year}`                       : "")
+        + (month           ? `&month=${month}`                     : "")
+        + (jenis_pengujian ? `&jenis_pengujian=${jenis_pengujian}` : ""),
+        { withCredentials: true, signal: controller.signal }
+      );
+
+      if (res.data.success) {
+        setInvoice(res.data.data);
+        setLength(res.data.length_total);
       }
+    } catch (err) {
+      if (axios.isCancel(err) || err.name === "CanceledError") return;
+      console.error("Fetch order PJ error:", err.message);
+      setError("Gagal memuat data. Periksa koneksi dan coba lagi.");
+    } finally {
+      if (!controller.signal.aborted) setLoading(false);
     }
-    getInvoice();
-  }, [page, month, year, jenis_pengujian]);
+  }, [page, year, month, jenis_pengujian]);
+
+  // ── Mount pertama ────────────────────────────────────────
+  // Jika data sudah ada dari parent (balik dari detail), skip fetch
+  // ── Filter berubah → reset page & fetch ulang ────────────
+  useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      if (orderState.invoice.length > 0) return;
+      getInvoice(0);
+      return;
+    }
+    setPage(0);
+    getInvoice(0);
+  }, [year, month, jenis_pengujian]);
+
+  // ── Pagination berubah → fetch ───────────────────────────
+  useEffect(() => {
+    if (isFirstMount.current) return;
+    getInvoice(page);
+  }, [page]);
 
   return (
     <div className="p-6">
@@ -99,6 +158,19 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
           <h1 className="text-2xl font-bold text-gray-900">Order Penanggung Jawab</h1>
           <p className="text-gray-500 text-sm mt-1">Daftar order yang menunggu verifikasi</p>
         </div>
+
+        {/* ── Error Banner ── */}
+        {error && (
+          <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg flex items-center justify-between">
+            <p className="text-sm text-red-600">{error}</p>
+            <button
+              onClick={() => { setError(null); getInvoice(page); }}
+              className="text-xs text-red-600 font-medium underline ml-4 flex-shrink-0"
+            >
+              Coba lagi
+            </button>
+          </div>
+        )}
 
         {/* ── Filter Panel ── */}
         <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
@@ -114,7 +186,7 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
 
             <FilterSelect icon={Calendar} label="Bulan" value={month} onChange={(e) => setMonth(e.target.value)}>
               <option value="">Semua Bulan</option>
-              {monthOption.map((v, i) => <option key={i} value={i}>{v}</option>)}
+              {monthOption.map((v, i) => <option key={i} value={i + 1}>{v}</option>)}
             </FilterSelect>
 
             <FilterSelect icon={FlaskConical} label="Jenis Pengujian" value={jenis_pengujian} onChange={(e) => setJenis_pengujian(e.target.value)}>
@@ -131,18 +203,15 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   {[
-                    { label: "No", w: "w-10" },
-                    { label: "Tanggal", w: "w-32" },
-                    { label: "No. Invoice", w: "w-48" },
-                    { label: "Nama Customer", w: "" },
+                    { label: "No",              w: "w-10" },
+                    { label: "Tanggal",         w: "w-32" },
+                    { label: "No. Invoice",     w: "w-48" },
+                    { label: "Nama Customer",   w: ""     },
                     { label: "Jenis Pengujian", w: "w-36" },
-                    { label: "Status", w: "w-44" },
-                    { label: "Aksi", w: "w-24" },
+                    { label: "Status",          w: "w-44" },
+                    { label: "Aksi",            w: "w-24" },
                   ].map((h) => (
-                    <th
-                      key={h.label}
-                      className={`px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap ${h.w}`}
-                    >
+                    <th key={h.label} className={`px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap ${h.w}`}>
                       {h.label}
                     </th>
                   ))}
@@ -168,11 +237,10 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
                     </tr>
                   ))
                 ) : invoice.length > 0 ? invoice.map((v, i) => (
-                  <tr key={i} className="hover:bg-gray-50 transition">
+                  <tr key={v._id ?? i} className="hover:bg-gray-50 transition">
                     <td className="px-4 py-3">
                       <span className="text-xs text-gray-400">{i + 1 + page * 15}</span>
                     </td>
-                    {/* ← tambah ini */}
                     <td className="px-4 py-3">
                       <span className="text-xs text-gray-600 whitespace-nowrap">{v.date_format}</span>
                     </td>
@@ -197,22 +265,14 @@ export default function OrderList({ setActivePage, setNoInvoice, setIdInvoice })
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1.5">
                         <button
-                          onClick={() => {
-                            setNoInvoice(v.no_invoice);
-                            setIdInvoice(v._id);
-                            setActivePage('order-detail');
-                          }}
+                          onClick={() => { setNoInvoice(v.no_invoice); setIdInvoice(v._id); setActivePage('order-detail'); }}
                           title="Detail Order"
                           className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
                         >
                           <FileText className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => {
-                            setNoInvoice(v.no_invoice);
-                            setIdInvoice(v._id);
-                            setActivePage('order-tracking');
-                          }}
+                          onClick={() => { setNoInvoice(v.no_invoice); setIdInvoice(v._id); setActivePage('order-tracking'); }}
                           title="Konfirmasi / Tracking"
                           className="w-8 h-8 flex items-center justify-center rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition"
                         >

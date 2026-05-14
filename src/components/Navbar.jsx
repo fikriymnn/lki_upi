@@ -52,7 +52,7 @@ export default function NavbarCustom() {
     initAuth();
   }, []);
 
- // ── Auth Change Listener ──
+  // ── Auth Change Listener ──
   useEffect(() => {
     const onAuthChange = async () => {
       const token = localStorage.getItem("access_token");
@@ -69,7 +69,7 @@ export default function NavbarCustom() {
         setIsLoggedIn(false);
       }
     };
-    
+
     window.addEventListener("authChange", onAuthChange);
     return () => window.removeEventListener("authChange", onAuthChange);
   }, []);
@@ -269,12 +269,18 @@ export default function NavbarCustom() {
                 />
               </button>
 
-              <div className={`${layananMobileOpen ? "mt-3" : ""}`}>
+              <div
+                className={`overflow-hidden transition-all duration-300 flex flex-col ${layananMobileOpen ? "max-h-40 opacity-100 mt-3 gap-4" : "max-h-0 opacity-0"
+                  }`}
+              >
                 {layananItems.map((item) => (
-                  <a
-                    key={item.href}
+
+                  <a key={item.href}
                     href={item.href}
-                    className={getLinkClass(item.href)}
+                    className={`pl-3 border-l-2 ${isActive(item.href)
+                      ? "border-red-700 text-zinc-900"
+                      : "border-transparent text-zinc-400 hover:text-red-700 hover:border-red-300"
+                      } text-[9px] font-semibold tracking-[0.2em] uppercase transition-all duration-200`}
                   >
                     {item.label}
                   </a>
@@ -302,7 +308,7 @@ export default function NavbarCustom() {
             )}
           </div>
         </div>
-      </nav>
+      </nav >
 
       <div className="h-16" />
     </>

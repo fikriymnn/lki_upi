@@ -220,7 +220,7 @@ export default function Report() {
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-[90rem] mx-auto px-5 md:px-10 pb-16">
+      <div className="max-w-[90rem] mx-auto px-5 md:px-8 pb-16">
 
         {/* Header */}
         <div className="my-6">

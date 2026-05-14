@@ -61,7 +61,7 @@ export default function MainPage() {
     <div className="flex flex-col min-h-screen bg-gray-50">
       <header className="fixed z-40 w-full bg-[#b91c1c] border-b border-red-700 px-6 py-4">
         <div className="flex items-center justify-between">
-          <p className="text-white font-bold text-2xl">LAYANAN ANALISIS</p>
+          <p className="text-white font-bold md:text-2xl text-sm">LAYANAN ANALISIS</p>
           <div className="flex items-center space-x-4">
             <div className="relative">
               <div className="flex items-center space-x-3 pl-4 border-l border-red-400">

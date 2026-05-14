@@ -198,7 +198,7 @@ export default function OrderList({
         </div>
 
         {/* ── Table ── */}
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[800px]">
               <thead>
@@ -239,31 +239,31 @@ export default function OrderList({
                   ))
                 ) : invoice.length > 0 ? invoice.map((v, i) => (
                   <tr key={v._id ?? i} className="hover:bg-gray-50 transition">
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <span className="text-xs text-gray-400">{i + 1 + page * 15}</span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <span className="text-xs text-gray-600">{v.date_format}</span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <span className="text-xs font-mono font-medium px-2.5 py-1 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">
                         {v.no_invoice || "—"}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
-                      <span className="text-sm font-medium text-gray-900">{v.nama_lengkap}</span>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-sm font-medium text-gray-900 whitespace-nowrap">{v.nama_lengkap}</span>
                     </td>
-                    <td className="px-4 py-3">
-                      <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 rounded font-medium">
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 rounded font-medium whitespace-nowrap">
                         {v.jenis_pengujian}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <span className={`text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap ${getStatusStyle(v.status)}`}>
                         {v.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <button
                           onClick={() => { setNoInvoice(v.no_invoice); setIdInvoice(v._id); setActivePage('order-detail'); }}
@@ -296,7 +296,7 @@ export default function OrderList({
 
           {length > 0 && (
             <div className="px-5 py-3 border-t border-gray-100 flex items-center justify-between gap-4 flex-wrap">
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 whitespace-nowrap">
                 Menampilkan{" "}
                 <span className="font-medium text-gray-700">{page * 15 + 1}–{Math.min((page + 1) * 15, length)}</span>
                 {" "}dari{" "}
