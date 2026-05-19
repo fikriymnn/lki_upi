@@ -179,7 +179,7 @@ const Analisis = () => {
       ],
     },
     {
-      alatPengukuran: "TGA",
+      alatPengukuran: "TGA (dalam proses perbaikan)",
       jenisPengukuran: [
         {
           jenis: "a. Suhu 25℃ - 550℃",

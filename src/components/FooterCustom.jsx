@@ -54,7 +54,7 @@ function FooterCustom() {
             </div>
             <div className="flex items-center gap-2 text-xs text-zinc-400">
               <Phone size={14} className="text-red-700" />
-              (022) 2013163
+              +62 851-6885-1789
             </div>
             <div className="flex items-center gap-2 text-xs text-zinc-400">
               <Mail size={14} className="text-red-700" />
