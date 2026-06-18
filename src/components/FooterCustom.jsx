@@ -50,7 +50,7 @@ function FooterCustom() {
           <div className="flex flex-wrap justify-center gap-8 mb-12">
             <div className="flex items-center gap-2 text-xs text-zinc-400">
               <MapPin size={14} className="text-red-700" />
-              Jl. Dr. Setiabudhi No.229, Bandung
+              Jl. Dr. Setiabudhi No. 229 Bandung 40154 Gedung JICA (FPMIPA-A) Lt. 5
             </div>
             <div className="flex items-center gap-2 text-xs text-zinc-400">
               <Phone size={14} className="text-red-700" />
