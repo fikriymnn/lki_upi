@@ -92,9 +92,6 @@ const MasterLokasiPage = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 align-middle">{index + 1}</td>
                     <td className="px-6 py-4 whitespace-nowrap align-middle">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                          <MapPin className="w-4 h-4 text-blue-600" />
-                        </div>
                         <span className="text-sm font-medium text-gray-900">{item.penyimpanan}</span>
                       </div>
                     </td>

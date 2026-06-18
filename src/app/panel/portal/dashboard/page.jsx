@@ -17,6 +17,9 @@ import StockInPage from './StockIn';
 import StockOutPage from './StockOut';
 import StockOpnamePage from './StockOpname';
 import StockMovementPage from './StockMovement';
+import PraktikumPage from './Praktikum';
+import PembelianAlatPage from './PembelianAlat';
+import PembelianBahanPage from './PembelianBahan';
 import {
   Chart,
   LineElement,
@@ -175,6 +178,9 @@ const DashboardPage = () => {
           {activePage === 'master-lokasi' && <Penyimpanan />}
           {activePage === 'pengguna' && <PenggunaPage />}
           {activePage === 'master-peminjam' && <MasterPeminjamPage />}
+          {activePage === 'praktikum' && <PraktikumPage />}
+          {activePage === 'pembelian-alat' && <PembelianAlatPage />}
+          {activePage === 'pembelian-bahan' && <PembelianBahanPage />}
         </main>
       </div>
     </div>

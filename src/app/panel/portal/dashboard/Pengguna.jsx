@@ -235,22 +235,12 @@ const PenggunaPage = () => {
                           <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
                             {user.name.charAt(0)}
                           </div>
-                          <div>
-                            <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                            <div className="text-xs text-gray-500">
-                              {user.nim !== '-' ? `NIM: ${user.nim}` : user.prodi}
-                            </div>
-                          </div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-900 flex items-center gap-1">
                           <Mail className="w-3 h-3" />
                           {user.email}
-                        </div>
-                        <div className="text-xs text-gray-500 flex items-center gap-1">
-                          <Phone className="w-3 h-3" />
-                          {user.phone}
                         </div>
                       </td>
                       <td className="px-6 py-4">

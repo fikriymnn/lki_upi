@@ -5,7 +5,7 @@ import {
   ChevronDown, ChevronRight, FlaskRound, Microscope,
   ClipboardList, Layers, Database, Home,
   Wrench, Package2, PackageCheck, PackageMinus, PackagePlus,
-  ShoppingCart
+  ShoppingCart, BookOpen
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -27,6 +27,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage }) => 
       submenu: [
         { icon: FlaskRound, label: 'Penggunaan Bahan', page: 'peminjaman-bahan' },
         { icon: Microscope, label: 'Peminjaman Alat', page: 'peminjaman-alat' },
+        { icon: BookOpen, label: 'Praktikum', page: 'praktikum' },
       ]
     },
     {
@@ -37,6 +38,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage }) => 
         { icon: FlaskRound, label: 'Bahan Kimia', page: 'bahan' },
         { icon: Microscope, label: 'Alat Lab', page: 'alat' },
         { icon: Wrench, label: 'Alat Lab Rusak', page: 'alat-rusak' },
+        { icon: ShoppingCart, label: 'Pembelian Alat', page: 'pembelian-alat' },
+        { icon: Package, label: 'Pembelian Bahan', page: 'pembelian-bahan' },
       ]
     },
     {
@@ -44,8 +47,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage }) => 
       label: 'Aktivitas',
       type: 'dropdown',
       submenu: [
-        { icon: PackagePlus, label: 'Stok Masuk', page: 'stock-in' },
-        { icon: PackageMinus, label: 'Stok Keluar', page: 'stock-out' },
+        // { icon: PackagePlus, label: 'Stok Masuk', page: 'stock-in' },
+        // { icon: PackageMinus, label: 'Stok Keluar', page: 'stock-out' },
         { icon: PackageCheck, label: 'Stok Opname', page: 'stock-opname' },
         { icon: Package2, label: 'Stok Movement', page: 'stock-movement' },
       ]
@@ -60,7 +63,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage }) => 
         { icon: Box, label: 'Lokasi Penyimpanan', page: 'master-lokasi' }
       ]
     },
-    { icon: FileText, label: 'Laporan', page: 'laporan', type: 'single' },
+    // { icon: FileText, label: 'Laporan', page: 'laporan', type: 'single' },
     { icon: Users, label: 'Pengguna', page: 'pengguna', type: 'single' },
   ];
 
@@ -81,8 +84,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activePage, setActivePage }) => 
   };
 
   const isActiveDropdown = (label) => {
-    if (label === 'Inventaris') return ['bahan', 'alat', 'alat-rusak'].includes(activePage);
-    if (label === 'Transaksi') return ['peminjaman-bahan', 'peminjaman-alat'].includes(activePage);
+    if (label === 'Inventaris') return ['bahan', 'alat', 'alat-rusak', 'pembelian-alat', 'pembelian-bahan'].includes(activePage);
+    if (label === 'Transaksi') return ['peminjaman-bahan', 'peminjaman-alat', 'praktikum'].includes(activePage);
     if (label === 'Aktivitas') return ['stock-in', 'stock-out', 'stock-opname', 'stock-movement'].includes(activePage);
     if (label === 'Master') return ['master-supplier', 'master-peminjam', 'master-lokasi'].includes(activePage);
     return false;

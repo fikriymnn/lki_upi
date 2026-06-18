@@ -309,39 +309,19 @@ const MasterPeminjamPage = () => {
                         <td className="px-6 py-4 text-sm text-gray-500">{index + 1}</td>
                         <td className="px-6 py-4">
                           <div className="text-sm font-medium text-gray-900">{peminjam.name}</div>
-                          <div className="text-xs text-gray-500 mt-0.5">NIK/NIM: {peminjam.nik}</div>
-                          <span className={`inline-block mt-1 px-2 py-0.5 text-xs font-medium rounded ${getStatusBadgeColor(peminjam.status)}`}>
-                            {peminjam.status}
-                          </span>
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-1 text-xs text-gray-600 mb-1">
                             <Phone className="w-3 h-3" />
                             {peminjam.phone}
                           </div>
-                          <div className="flex items-center gap-1 text-xs text-gray-600">
-                            <Mail className="w-3 h-3" />
-                            {peminjam.email}
-                          </div>
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-900">{peminjam.institusi}</div>
-                          {peminjam.fakultas && <div className="text-xs text-gray-500 mt-0.5">{peminjam.fakultas}</div>}
-                          {peminjam.jurusan && <div className="text-xs text-gray-500">{peminjam.jurusan}</div>}
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex flex-col gap-1">
                             <span className="text-xs text-gray-600">Total: <span className="font-semibold text-gray-900">{total}</span> transaksi</span>
-                            {aktif > 0 && (
-                              <span className="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-700 w-fit">
-                                {aktif} aktif
-                              </span>
-                            )}
-                            {terlambat > 0 && (
-                              <span className="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-red-100 text-red-700 w-fit">
-                                {terlambat}x terlambat
-                              </span>
-                            )}
                           </div>
                         </td>
                         <td className="px-6 py-4">
