@@ -265,7 +265,7 @@ export default function Order({
 
                         <FilterSelect icon={Calendar} label="Bulan" value={month} onChange={(e) => setMonth(e.target.value)}>
                             <option value="">Semua Bulan</option>
-                            {monthOption.map((v, i) => <option key={i} value={i + 1}>{v}</option>)}
+                            {monthOption.map((v, i) => <option key={i} value={i}>{v}</option>)}
                         </FilterSelect>
 
                         <FilterSelect icon={FlaskConical} label="Jenis Pengujian" value={jenis_pengujian} onChange={(e) => setJenis_pengujian(e.target.value)}>

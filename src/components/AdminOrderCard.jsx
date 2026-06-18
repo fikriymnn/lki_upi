@@ -111,7 +111,7 @@ export default function AdminOrderCard({
           <p className="text-sm text-gray-400 mt-0.5">{kode_pengujian || '—'} · {jenis_pengujian || '—'}</p>
         </div>
         <span className={`ml-auto inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${sample_dikembalikan ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
-          {sample_dikembalikan ? 'Dikembalikan' : 'Tidak Dikembalikan'}
+          {sample_dikembalikan ? "Sample Diambil Kembali" : "Tidak Diambil Kembali"}
         </span>
       </div>
 
