@@ -370,7 +370,7 @@ export default function Order_analisis() {
                 </FieldRow>
 
                 {/* Sample Dikembalikan */}
-                <FieldRow icon={PackageCheck} label="Apakah sampel akan diambil setelah pengujian? *jika jika iya dan lebih dari 14 hari sample tidak diambil, maka sample akan dimusnahkan
+                <FieldRow icon={PackageCheck} label="Apakah sampel akan diambil setelah pengujian? *jika iya dan lebih dari 14 hari sample tidak diambil, maka sample akan dimusnahkan
 )">
                   <div className="relative">
                     <select
