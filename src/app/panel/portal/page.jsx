@@ -24,7 +24,7 @@ const portals = [
   {
     title: 'Inventory',
     description: 'Manajemen stok, reagen, peralatan, dan aset laboratorium secara terpadu.',
-    link: '/panel/portal/dashboard',
+    link: '#',
     icon: Package,
     stats: '1,240 Item Tersedia',
     color: 'from-red-500 to-red-600',
