@@ -451,10 +451,10 @@ export default function Order_analisis() {
                       onChange={(e) => { lama_pengerjaan[i] = e.target.value; }}
                     >
                       <option value="">Pilih</option>
-                      <option value="3 hari">3 hari</option>
-                      <option value="7 hari">7 hari</option>
-                      <option value="14 hari">14 hari</option>
-                      <option value="normal">normal</option>
+                      <option value="3 hari">3 hari dari sampel diterima</option>
+                      <option value="7 hari">7 hari dari sampel diterima</option>
+                      <option value="14 hari">14 hari dari sampel diterima</option>
+
                     </select>
                     <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
                   </div>
@@ -557,8 +557,7 @@ export default function Order_analisis() {
                   className="mt-0.5 accent-red-500 w-4 h-4 flex-shrink-0"
                 />
                 <span className="text-sm text-gray-600 leading-relaxed">
-                  Saya telah memahami proses pengujian yang akan dilakukan dan memahami syarat
-                  dan ketentuan yang telah dijelaskan oleh staff/pengelola laboratorium.
+                  Saya telah memahami proses pengujian serta syarat dan ketentuan yang berlaku pada laboratorium.
                 </span>
               </label>
             </div>
