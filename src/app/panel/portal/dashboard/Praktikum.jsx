@@ -559,7 +559,7 @@ const PraktikumPage = () => {
                                     <p className="text-sm text-gray-500 mt-0.5">Tindakan ini tidak dapat dibatalkan</p>
                                 </div>
                             </div>
-                            <p className="text-sm text-gray-700 mb-6">Apakah Anda yakin ingin menghapus praktikum <span className="font-semibold">"{selectedPraktikum.judul}"</span>?</p>
+                            <p className="text-sm text-gray-700 mb-6">Apakah Anda yakin ingin menghapus praktikum <span className="font-semibold">&ldquo;{selectedPraktikum.judul}&rdquo;</span>?</p>
                             <div className="flex gap-3">
                                 <button onClick={() => setShowHapusConfirm(false)} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm">Batal</button>
                                 <button onClick={handleHapus} className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm">Ya, Hapus</button>
