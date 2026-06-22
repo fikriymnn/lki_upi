@@ -122,7 +122,7 @@ export default function OrderCard({
         </div>
         <span className={`ml-auto inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${sample_dikembalikan ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"
           }`}>
-          {sample_dikembalikan ? "Sample diambil ke laboratorium" : "Sample tidak diambil kembali"}
+          {sample_dikembalikan == "ya" ? "Sample diambil ke laboratorium" : "Sample tidak diambil kembali"}
         </span>
       </div>
 
