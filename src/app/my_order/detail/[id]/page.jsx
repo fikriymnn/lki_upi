@@ -17,7 +17,12 @@ import {
   Edit2,
   Send,
   Check,
-  X
+  X,
+  User,
+  Building2,
+  Phone,
+  Mail,
+  BookOpen,
 } from "lucide-react";
 
 export default function Detail({ params, searchParams }) {
@@ -38,7 +43,6 @@ export default function Detail({ params, searchParams }) {
     return h + ":" + m;
   }
 
-  // Ganti handleBukti — sesuaikan karena buktiPembayaran sekarang File, bukan array
   const handleBukti = async (e) => {
     e.preventDefault();
     if (!buktiPembayaran) {
@@ -49,7 +53,7 @@ export default function Detail({ params, searchParams }) {
     try {
       const downloadURL = await axios.post(
         `${process.env.NEXT_PUBLIC_FILE_URL}/api/file?category=hasilanalisis`,
-        { file: buktiPembayaran }, // ← langsung file, bukan [0]
+        { file: buktiPembayaran },
         {
           withCredentials: true,
           headers: { "Content-Type": "multipart/form-data" },
@@ -138,7 +142,6 @@ export default function Detail({ params, searchParams }) {
       });
   };
 
-  // Ganti handleBP — wrapped dalam Promise agar resize selesai sebelum state diset
   const handleBP = (event) => {
     const imageFile = event.target.files[0];
     if (!imageFile) return;
@@ -166,14 +169,13 @@ export default function Detail({ params, searchParams }) {
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
 
-        // toBlob async — set state di dalam callback ini
         canvas.toBlob(
           (blob) => {
             const file = new File([blob], imageFilname, {
               type: imageFile.type,
               lastModified: Date.now(),
             });
-            setBuktiPembayaran(file) // ← setState, bukan mutasi array langsung
+            setBuktiPembayaran(file)
           },
           imageFile.type,
           1
@@ -249,6 +251,9 @@ export default function Detail({ params, searchParams }) {
     { key: "dokumen", label: "Dokumen & Pembayaran", icon: <CreditCard className="w-4 h-4" /> },
   ];
 
+  // Helper ambil data user dari id_user (object) atau user_data sebagai fallback
+  const userData = invoice?.id_user || {};
+
   return (
     <>
       <div className="p-6 max-w-5xl mx-auto">
@@ -322,6 +327,53 @@ export default function Detail({ params, searchParams }) {
         {/* Tab: Ringkasan Order */}
         {activeTab === "info" && (
           <div className="space-y-4">
+
+            {/* ── NEW: Data Pemesan ── */}
+            <div className="bg-white rounded-xl border border-gray-200 p-5">
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-4 flex items-center gap-2">
+                <User className="w-3.5 h-3.5" /> Data Pemesan
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <p className="text-xs text-gray-400">Nama Lengkap</p>
+                  <p className="text-sm font-medium mt-0.5">{userData?.nama_lengkap || invoice?.nama_lengkap || "—"}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">Email</p>
+                  <p className="text-sm font-medium mt-0.5">{userData?.email || "—"}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">No. WhatsApp</p>
+                  <p className="text-sm font-medium mt-0.5">{userData?.no_whatsapp || "—"}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">No. Telepon</p>
+                  <p className="text-sm font-medium mt-0.5">{userData?.no_telp || "—"}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">Jenis Institusi</p>
+                  <p className="text-sm font-medium mt-0.5">{userData?.jenis_institusi || "—"}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">Nama Institusi</p>
+                  <p className="text-sm font-medium mt-0.5">{userData?.nama_institusi || "—"}</p>
+                </div>
+                {userData?.program_studi && (
+                  <div>
+                    <p className="text-xs text-gray-400">Program Studi</p>
+                    <p className="text-sm font-medium mt-0.5">{userData.program_studi}</p>
+                  </div>
+                )}
+                {userData?.fakultas && (
+                  <div>
+                    <p className="text-xs text-gray-400">Fakultas</p>
+                    <p className="text-sm font-medium mt-0.5">{userData.fakultas}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* ── END NEW ── */}
+
             <div className="bg-white rounded-xl border border-gray-200 p-5">
               <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-4">
                 Informasi Order
@@ -431,8 +483,7 @@ export default function Detail({ params, searchParams }) {
               {/* Bukti Pembayaran */}
               <div className="border border-gray-200 rounded-xl overflow-hidden">
                 <div className="flex items-center gap-2 flex-wrap px-4 py-3">
-                  <div className={`flex items-center gap-3 flex-1 min-w-0 ${!buktiPembayaranEditable ? 'opacity-50' : ''
-                    }`}>
+                  <div className={`flex items-center gap-3 flex-1 min-w-0 ${!buktiPembayaranEditable ? 'opacity-50' : ''}`}>
                     <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
                       <CreditCard className="w-4 h-4 text-amber-600" />
                     </div>
@@ -445,9 +496,7 @@ export default function Detail({ params, searchParams }) {
                   </div>
 
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    {/* Tombol Unduh — tampil kalau sudah ada file & tidak sedang edit */}
                     {invoice?.bukti_pembayaran && !addBukti && (
-
                       <a href={`${process.env.NEXT_PUBLIC_FILE_URL}/file/hasilanalisis/${invoice.bukti_pembayaran}`}
                         target="_blank"
                         rel="noreferrer"
@@ -458,14 +507,11 @@ export default function Detail({ params, searchParams }) {
                       </a>
                     )}
 
-                    {/* State: uploading */}
                     {isUploading ? (
                       <div className="flex items-center gap-1.5 px-3 py-1.5">
                         <div className="w-4 h-4 border-2 border-t-transparent border-amber-500 rounded-full animate-spin" />
                         <span className="text-xs text-gray-500 hidden sm:inline">Mengirim...</span>
                       </div>
-
-                      /* State: form upload aktif → tampilkan Kirim + Batal */
                     ) : addBukti ? (
                       <div className="flex items-center gap-2">
                         <button
@@ -484,8 +530,6 @@ export default function Detail({ params, searchParams }) {
                           <span className="hidden sm:inline">Batal</span>
                         </button>
                       </div>
-
-                      /* State: default → tombol Upload/Update */
                     ) : buktiPembayaranEditable ? (
                       <button
                         onClick={() => setAddBukti(true)}
@@ -502,7 +546,6 @@ export default function Detail({ params, searchParams }) {
                   </div>
                 </div>
 
-                {/* Area file input — muncul saat addBukti aktif & tidak sedang upload */}
                 {addBukti && !isUploading && (
                   <div className="px-4 py-3 border-t border-gray-100">
                     <input
@@ -557,7 +600,7 @@ export default function Detail({ params, searchParams }) {
           </div>
         </div>
 
-      </div >
+      </div>
     </>
   );
 }

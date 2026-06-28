@@ -15,6 +15,9 @@ import {
 const inputClass =
   "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition bg-white";
 
+const inputReadOnlyClass =
+  "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-500 bg-gray-50 cursor-not-allowed";
+
 const selectClass =
   "w-full appearance-none border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition bg-white cursor-pointer";
 
@@ -41,9 +44,20 @@ export default function Order_analisis() {
   const [user, setUser] = useState({});
   const [uuid] = useState([uid]);
 
+  const [untukOrangLain, setUntukOrangLain] = useState(false);
+  const [userData, setUserData] = useState({
+    nama_lengkap: "",
+    email: "",
+    no_telp: "",
+    no_whatsapp: "",
+    jenis_institusi: "",
+    nama_institusi: "",
+    program_studi: "",
+    fakultas: "",
+  });
+
   const [fotoSampleUrl, setFotoSampleUrl] = useState("");
   const [jurnalUrl, setJurnalUrl] = useState("");
-  // Ref untuk memastikan nilai terbaru terbaca saat handleSubmit (hindari stale closure)
   const fotoSampleUrlRef = useRef("");
   const jurnalUrlRef = useRef("");
 
@@ -77,6 +91,63 @@ export default function Order_analisis() {
     { jenis_pengujian: "LCMSMS", kode_pengujian: "LC" },
     { jenis_pengujian: "XRD", kode_pengujian: "XRD" },
   ];
+
+  useEffect(() => {
+    async function getData() {
+      try {
+        const token = localStorage.getItem("access_token");
+        const data = await axios(
+          `${process.env.NEXT_PUBLIC_URL}/api/user/${token}`,
+          { withCredentials: true }
+        );
+        if (data.data.success == true) {
+          const u = data.data.data;
+          setUser(u);
+          setUserData({
+            nama_lengkap: u.nama_lengkap || "",
+            email: u.email || "",
+            no_telp: u.no_telp || "",
+            no_whatsapp: u.no_whatsapp || "",
+            jenis_institusi: u.jenis_institusi || "",
+            nama_institusi: u.nama_institusi || "",
+            program_studi: u.program_studi || "",
+            fakultas: u.fakultas || "",
+          });
+        }
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+    getData();
+  }, []);
+
+  const handleUntukOrangLain = (e) => {
+    const checked = e.target.checked;
+    setUntukOrangLain(checked);
+    if (checked) {
+      setUserData({
+        nama_lengkap: "",
+        email: "",
+        no_telp: "",
+        no_whatsapp: "",
+        jenis_institusi: "",
+        nama_institusi: "",
+        program_studi: "",
+        fakultas: "",
+      });
+    } else {
+      setUserData({
+        nama_lengkap: user.nama_lengkap || "",
+        email: user.email || "",
+        no_telp: user.no_telp || "",
+        no_whatsapp: user.no_whatsapp || "",
+        jenis_institusi: user.jenis_institusi || "",
+        nama_institusi: user.nama_institusi || "",
+        program_studi: user.program_studi || "",
+        fakultas: user.fakultas || "",
+      });
+    }
+  };
 
   const handleFS = (event) => {
     const imageFile = event.target.files[0];
@@ -114,7 +185,6 @@ export default function Order_analisis() {
                 { withCredentials: true, headers: { "Content-Type": "multipart/form-data" } }
               );
               if (downloadURL.data.filename) {
-                // Simpan ke state (untuk indikator UI) dan ref (untuk dibaca saat submit)
                 setFotoSampleUrl(downloadURL.data.filename);
                 fotoSampleUrlRef.current = downloadURL.data.filename;
               }
@@ -132,8 +202,6 @@ export default function Order_analisis() {
     reader.readAsDataURL(imageFile);
   };
 
-  // Perbaikan: hapus e.preventDefault() karena ini onChange bukan onSubmit
-  // Tanpa preventDefault, e.target.files[0] terbaca normal di semua browser
   const onUploadJurnal = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -145,7 +213,6 @@ export default function Order_analisis() {
         { withCredentials: true, headers: { "Content-Type": "multipart/form-data" } }
       );
       if (downloadURL.data.filename) {
-        // Simpan ke state (untuk indikator UI) dan ref (untuk dibaca saat submit)
         setJurnalUrl(downloadURL.data.filename);
         jurnalUrlRef.current = downloadURL.data.filename;
       }
@@ -177,10 +244,10 @@ export default function Order_analisis() {
       obj.nama_pembimbing = nama_pembimbing[0];
       obj.lama_pengerjaan = lama_pengerjaan[0];
       obj.dana_penelitian = dana_penelitian[0];
-      // Baca dari ref bukan state, agar tidak terkena stale closure
       obj.foto_sample = fotoSampleUrlRef.current;
       obj.jurnal_pendukung = jurnalUrlRef.current;
       obj.uuid = uuid[0];
+      obj.user_data = userData;
       arr[0] = obj;
 
       const data = await axios.post(
@@ -202,26 +269,11 @@ export default function Order_analisis() {
     }
   };
 
-  useEffect(() => {
-    async function getData() {
-      try {
-        const token = localStorage.getItem("access_token");
-        const data = await axios(
-          `${process.env.NEXT_PUBLIC_URL}/api/user/${token}`,
-          { withCredentials: true }
-        );
-        if (data.data.success == true) {
-          setUser(data.data.data);
-        }
-      } catch (err) {
-        console.log(err.message);
-      }
-    }
-    getData();
-  }, []);
-
   const isUploading = uploadingFoto || uploadingJurnal;
   const isDisabled = loading || isUploading;
+
+  // Helper: class input berdasarkan mode
+  const iClass = untukOrangLain ? inputClass : inputReadOnlyClass;
 
   return (
     <>
@@ -239,6 +291,153 @@ export default function Order_analisis() {
           </div>
 
           <form onSubmit={handleSubmit}>
+
+            {/* ── Section 0: Data Pemesan ───────────────────────────────── */}
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-5">
+              <div className="flex items-center gap-2 px-5 py-4 border-b border-gray-100 bg-gray-50">
+                <UserRound className="w-4 h-4 text-gray-400" />
+                <p className="text-sm font-semibold text-gray-700">Data Pemesan</p>
+              </div>
+              <div className="p-5 flex flex-col gap-4">
+
+                {/* Checkbox order untuk orang lain */}
+                <label className="flex items-center gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={untukOrangLain}
+                    onChange={handleUntukOrangLain}
+                    className="w-4 h-4 accent-red-500 flex-shrink-0"
+                  />
+                  <span className="text-sm text-gray-600">Order untuk orang lain</span>
+                </label>
+
+                {/* Nama Lengkap */}
+                <FieldRow icon={UserRound} label="Nama Lengkap">
+                  <input
+                    placeholder="Nama lengkap pemesan"
+                    className={iClass}
+                    required
+                    type="text"
+                    readOnly={!untukOrangLain}
+                    value={userData.nama_lengkap}
+                    onChange={(e) =>
+                      untukOrangLain &&
+                      setUserData((prev) => ({ ...prev, nama_lengkap: e.target.value }))
+                    }
+                  />
+                </FieldRow>
+
+                {/* Email */}
+                <FieldRow icon={FileText} label="Email">
+                  <input
+                    placeholder="Email pemesan"
+                    className={iClass}
+                    required
+                    type="email"
+                    readOnly={!untukOrangLain}
+                    value={userData.email}
+                    onChange={(e) =>
+                      untukOrangLain &&
+                      setUserData((prev) => ({ ...prev, email: e.target.value }))
+                    }
+                  />
+                </FieldRow>
+
+                {/* No Telp */}
+                <FieldRow icon={Hash} label="No. Telepon">
+                  <input
+                    placeholder="No. telepon pemesan"
+                    className={iClass}
+                    required
+                    type="text"
+                    readOnly={!untukOrangLain}
+                    value={userData.no_telp}
+                    onChange={(e) =>
+                      untukOrangLain &&
+                      setUserData((prev) => ({ ...prev, no_telp: e.target.value }))
+                    }
+                  />
+                </FieldRow>
+
+                {/* No WhatsApp */}
+                <FieldRow icon={Hash} label="No. WhatsApp">
+                  <input
+                    placeholder="No. WhatsApp pemesan"
+                    className={iClass}
+                    required
+                    type="text"
+                    readOnly={!untukOrangLain}
+                    value={userData.no_whatsapp}
+                    onChange={(e) =>
+                      untukOrangLain &&
+                      setUserData((prev) => ({ ...prev, no_whatsapp: e.target.value }))
+                    }
+                  />
+                </FieldRow>
+
+                {/* Jenis Institusi */}
+                <FieldRow icon={Building2} label="Jenis Institusi">
+                  <input
+                    placeholder="Jenis institusi pemesan"
+                    className={iClass}
+                    required
+                    type="text"
+                    readOnly={!untukOrangLain}
+                    value={userData.jenis_institusi}
+                    onChange={(e) =>
+                      untukOrangLain &&
+                      setUserData((prev) => ({ ...prev, jenis_institusi: e.target.value }))
+                    }
+                  />
+                </FieldRow>
+
+                {/* Nama Institusi */}
+                <FieldRow icon={Building2} label="Nama Institusi">
+                  <input
+                    placeholder="Nama institusi pemesan"
+                    className={iClass}
+                    type="text"
+                    readOnly={!untukOrangLain}
+                    value={userData.nama_institusi}
+                    onChange={(e) =>
+                      untukOrangLain &&
+                      setUserData((prev) => ({ ...prev, nama_institusi: e.target.value }))
+                    }
+                  />
+                </FieldRow>
+
+                {/* Program Studi */}
+                <FieldRow icon={ScrollText} label="Program Studi">
+                  <input
+                    placeholder="Program studi pemesan"
+                    className={iClass}
+                    type="text"
+                    readOnly={!untukOrangLain}
+                    value={userData.program_studi}
+                    onChange={(e) =>
+                      untukOrangLain &&
+                      setUserData((prev) => ({ ...prev, program_studi: e.target.value }))
+                    }
+                  />
+                </FieldRow>
+
+                {/* Fakultas */}
+                <FieldRow icon={ScrollText} label="Fakultas">
+                  <input
+                    placeholder="Fakultas pemesan"
+                    className={iClass}
+                    type="text"
+                    readOnly={!untukOrangLain}
+                    value={userData.fakultas}
+                    onChange={(e) =>
+                      untukOrangLain &&
+                      setUserData((prev) => ({ ...prev, fakultas: e.target.value }))
+                    }
+                  />
+                </FieldRow>
+
+              </div>
+            </div>
 
             {/* ── Section 1: Data Sample ─────────────────────────────────── */}
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-5">
@@ -370,8 +569,7 @@ export default function Order_analisis() {
                 </FieldRow>
 
                 {/* Sample Dikembalikan */}
-                <FieldRow icon={PackageCheck} label="Apakah sampel akan diambil setelah pengujian? *jika iya dan lebih dari 14 hari sample tidak diambil, maka sample akan dimusnahkan
-)">
+                <FieldRow icon={PackageCheck} label="Apakah sampel akan diambil setelah pengujian? *jika iya dan lebih dari 14 hari sample tidak diambil, maka sample akan dimusnahkan">
                   <div className="relative">
                     <select
                       required
@@ -455,7 +653,6 @@ export default function Order_analisis() {
                       <option value="3 hari kerja dari sampel diterima">3 hari kerja dari sampel diterima</option>
                       <option value="7 hari kerja dari sampel diterima">7 hari kerja dari sampel diterima</option>
                       <option value="14 hari kerja dari sampel diterima">14 hari kerja dari sampel diterima</option>
-
                     </select>
                     <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
                   </div>
