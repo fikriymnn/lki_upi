@@ -225,6 +225,19 @@ export default function Order_analisis() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validasi eksplisit untuk field kondisional (jangan cuma andalkan `required` bawaan HTML)
+    if (upi === "ya") {
+      if (!nama_pembimbing[0] || String(nama_pembimbing[0]).trim() === "") {
+        alert("Nama pembimbing wajib diisi.");
+        return;
+      }
+      if (dana_penelitian[0] === undefined || dana_penelitian[0] === "") {
+        alert("Mohon pilih status dana penelitian.");
+        return;
+      }
+    }
+
     setLoading(true);
     try {
       const token = localStorage.getItem("access_token");
@@ -594,7 +607,16 @@ export default function Order_analisis() {
                       name="upi"
                       className={selectClass}
                       defaultValue=""
-                      onChange={(e) => { setUpi(e.target.value); }}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setUpi(val);
+                        // Reset nilai pembimbing/dana penelitian saat jawaban bukan "ya"
+                        // supaya tidak ada data lama yang nyangkut dan ikut terkirim
+                        if (val !== "ya") {
+                          nama_pembimbing[i] = "";
+                          dana_penelitian[i] = "";
+                        }
+                      }}
                     >
                       <option value="">Pilih</option>
                       <option value="ya">Ya</option>
@@ -606,7 +628,7 @@ export default function Order_analisis() {
 
                 {/* Nama Pembimbing — conditional */}
                 {upi === "ya" && (
-                  <FieldRow icon={UserRound} label="Nama Pembimbing">
+                  <FieldRow icon={UserRound} label="Nama Pembimbing" key="nama_pembimbing_field">
                     <input
                       placeholder="Tuliskan nama pembimbing"
                       className={inputClass}
@@ -621,7 +643,7 @@ export default function Order_analisis() {
 
                 {/* Dana Penelitian — conditional */}
                 {upi === "ya" && (
-                  <FieldRow icon={FileText} label="Apakah anda memiliki dana penelitian?">
+                  <FieldRow icon={FileText} label="Apakah anda memiliki dana penelitian?" key="dana_penelitian_field">
                     <div className="relative">
                       <select
                         required
