@@ -226,7 +226,7 @@ export default function Order_analisis() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi eksplisit untuk field kondisional (jangan cuma andalkan `required` bawaan HTML)
+    // Validasi eksplisit: jika dari KIMIA UPI, nama pembimbing & dana penelitian wajib diisi
     if (upi === "ya") {
       if (!nama_pembimbing[0] || String(nama_pembimbing[0]).trim() === "") {
         alert("Nama pembimbing wajib diisi.");
@@ -610,11 +610,11 @@ export default function Order_analisis() {
                       onChange={(e) => {
                         const val = e.target.value;
                         setUpi(val);
-                        // Reset nilai pembimbing/dana penelitian saat jawaban bukan "ya"
-                        // supaya tidak ada data lama yang nyangkut dan ikut terkirim
+                        // Kosongkan slot array (bukan string "") agar field tidak dikirim
+                        // ke backend saat jawaban bukan "ya" — mencegah error cast di server
                         if (val !== "ya") {
-                          nama_pembimbing[i] = "";
-                          dana_penelitian[i] = "";
+                          delete nama_pembimbing[i];
+                          delete dana_penelitian[i];
                         }
                       }}
                     >
@@ -628,7 +628,7 @@ export default function Order_analisis() {
 
                 {/* Nama Pembimbing — conditional */}
                 {upi === "ya" && (
-                  <FieldRow icon={UserRound} label="Nama Pembimbing" key="nama_pembimbing_field">
+                  <FieldRow icon={UserRound} label="Nama Pembimbing">
                     <input
                       placeholder="Tuliskan nama pembimbing"
                       className={inputClass}
@@ -643,7 +643,7 @@ export default function Order_analisis() {
 
                 {/* Dana Penelitian — conditional */}
                 {upi === "ya" && (
-                  <FieldRow icon={FileText} label="Apakah anda memiliki dana penelitian?" key="dana_penelitian_field">
+                  <FieldRow icon={FileText} label="Apakah anda memiliki dana penelitian?">
                     <div className="relative">
                       <select
                         required
