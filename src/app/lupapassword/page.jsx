@@ -1,72 +1,84 @@
-"use client"
-import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
-import { useState } from 'react';
-import axios from 'axios';
+'use client'
+import { useState } from "react"
+import axios from "axios"
 
-export default function Lupapassword() {
-    const [email, setEmail] = useState('')
-    const [message, setMessage] = useState('')
+export default function LupaPassword() {
+    const [email, setEmail] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
+    const [message, setMessage] = useState(null)
 
-    const handleLupaPassword = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setIsLoading(true)
+        setMessage(null)
+
         try {
-            if (!email) {
-                alert('email kosong!')
-            } else {
-                const data = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/lupaPassword/${email}`)
-                console.log(data)
-                if (data.data.success) {
-                    setMessage('sukses')
-                } else {
-                    setMessage('gagal')
-                }
-            }
+            const data = await axios.post(
+                `${process.env.NEXT_PUBLIC_URL}/api/forgot_password`,
+                { email }
+            )
 
+            if (data.data.success) {
+                setMessage({ type: 'success', text: data.data.message })
+            } else {
+                setMessage({ type: 'error', text: data.data.message })
+            }
         } catch (err) {
-            alert('email tidak valid')
+            setMessage({ type: 'error', text: err.message })
+        } finally {
+            setIsLoading(false)
         }
     }
+
     return (
-        <>
-            <div className="md:h-screen sm:h-screen h-[550px]  m-auto flex align-center items-center justify-center">
-
-                <div className='m-auto text-center border-2 md:p-10 sm:p-10 py-10 '>
-                    <p className="text-center font-semibold md:text-xl sm:text-xl text-xs mb-1 ">Masukan email untuk mengubah password</p>
-                    <p className="text-center md:text-base sm:text-base text-xs mb-5 ">pastikan yang inputkan adalah email yang valid dan terdaftar </p>
-                    <form className='m-auto'>
-                        {
-                            message == 'sukses' ? '' : <div className='mx-auto mb-5'>
-                                <input type="email" name="email" placeholder="masukan email..." className=' w-9/12' onChange={(e)=>setEmail(e.target.value)}/>
-                            </div>
-                        }
-
-                        {
-                            !message ? '' : message == 'sukses' ? <center className='text-xs text-green-600 font-semibold text-center my-3'>
-                                Verifikasi email berhasil terkirim!
-                            </center> : <center className='text-xs text-red-600 font-semibold text-center my-3'>
-                                Akun/email tidak valid
-                            </center>
-                        }
-                        {
-                            message == 'sukses' ? '' : <div className=" mx-auto w-full">
-                                <Button
-                                   onClick={handleLupaPassword}
-                                    color=""
-                                    className="mx-auto px-10 text-2xl font-bold bg-gradient-to-r from-red-700 via-red-600 to-rose-300 text-white"
-                                >
-                                    Submit
-                                </Button>
-                            </div>
-
-                        }
-
-
-                    </form>
+        <div className="min-h-screen flex items-center justify-center p-6">
+            <div className="w-full max-w-md space-y-8">
+                <div className="text-center">
+                    <h2 className="text-4xl font-bold text-gray-900">Lupa <span className="text-red-700">Password</span></h2>
+                    <p className="mt-2 text-gray-600">Masukkan email untuk menerima link reset password</p>
                 </div>
 
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                        <label
+                            htmlFor="email"
+                            className="block text-sm font-semibold text-gray-700 uppercase tracking-wide"
+                        >
+                            Email
+                        </label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            required
+                            onChange={(e) => setEmail(e.target.value)}
+                            value={email}
+                            placeholder="contoh@email.com"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent transition-all outline-none"
+                        />
+                    </div>
 
+                    {message && (
+                        <p className={`text-sm text-center ${message.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                            {message.text}
+                        </p>
+                    )}
 
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full py-3 px-6 bg-gradient-to-r from-red-700 via-red-700 to-rose-950 text-white font-bold text-lg rounded-full hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {isLoading ? 'Mengirim...' : 'Kirim Link Reset'}
+                    </button>
+                </form>
+
+                <p className="text-center text-sm">
+                    <a href="/login" className="text-blue-600 hover:text-blue-700 font-semibold">
+                        Kembali ke login
+                    </a>
+                </p>
             </div>
-
-        </>
+        </div>
     )
 }

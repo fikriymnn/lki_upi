@@ -136,15 +136,14 @@ export default function Login({ searchParams }) {
                         </div>
 
                         {/* Forgot Password Link */}
-                        {/* <div className="text-center">
-                            <button
-                                type="button"
-                                onClick={handleLupaPassword}
+                        <div className="text-center">
+
+                            <a href="/lupapassword"
                                 className="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
                             >
                                 Lupa password?
-                            </button>
-                        </div> */}
+                            </a>
+                        </div>
 
                         {/* Action Buttons */}
                         <div className="grid grid-cols-2 gap-4 pt-2">
