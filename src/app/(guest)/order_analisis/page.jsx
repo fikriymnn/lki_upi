@@ -226,16 +226,10 @@ export default function Order_analisis() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi eksplisit: jika dari KIMIA UPI, nama pembimbing & dana penelitian wajib diisi
-    if (upi === "ya") {
-      if (!nama_pembimbing[0] || String(nama_pembimbing[0]).trim() === "") {
-        alert("Nama pembimbing wajib diisi.");
-        return;
-      }
-      if (dana_penelitian[0] === undefined || dana_penelitian[0] === "") {
-        alert("Mohon pilih status dana penelitian.");
-        return;
-      }
+    // Validasi eksplisit: dana penelitian wajib diisi (nama pembimbing bersifat optional)
+    if (dana_penelitian[0] === undefined || dana_penelitian[0] === "") {
+      alert("Mohon pilih status dana penelitian.");
+      return;
     }
 
     setLoading(true);
@@ -608,14 +602,7 @@ export default function Order_analisis() {
                       className={selectClass}
                       defaultValue=""
                       onChange={(e) => {
-                        const val = e.target.value;
-                        setUpi(val);
-                        // Kosongkan slot array (bukan string "") agar field tidak dikirim
-                        // ke backend saat jawaban bukan "ya" — mencegah error cast di server
-                        if (val !== "ya") {
-                          delete nama_pembimbing[i];
-                          delete dana_penelitian[i];
-                        }
+                        setUpi(e.target.value);
                       }}
                     >
                       <option value="">Pilih</option>
@@ -626,40 +613,35 @@ export default function Order_analisis() {
                   </div>
                 </FieldRow>
 
-                {/* Nama Pembimbing — conditional */}
-                {upi === "ya" && (
-                  <FieldRow icon={UserRound} label="Nama Pembimbing">
-                    <input
-                      placeholder="Tuliskan nama pembimbing"
-                      className={inputClass}
-                      name="nama_pembimbing"
-                      required
-                      type="text"
-                      defaultValue={nama_pembimbing[i] ?? ""}
-                      onChange={(e) => { nama_pembimbing[i] = e.target.value; }}
-                    />
-                  </FieldRow>
-                )}
+                {/* Nama Pembimbing — selalu tampil, optional */}
+                <FieldRow icon={UserRound} label="Nama Pembimbing">
+                  <input
+                    placeholder="Tuliskan nama pembimbing"
+                    className={inputClass}
+                    name="nama_pembimbing"
+                    type="text"
+                    defaultValue={nama_pembimbing[i] ?? ""}
+                    onChange={(e) => { nama_pembimbing[i] = e.target.value; }}
+                  />
+                </FieldRow>
 
-                {/* Dana Penelitian — conditional */}
-                {upi === "ya" && (
-                  <FieldRow icon={FileText} label="Apakah anda memiliki dana penelitian?">
-                    <div className="relative">
-                      <select
-                        required
-                        name="dana_penelitian"
-                        className={selectClass}
-                        defaultValue=""
-                        onChange={(e) => { dana_penelitian[i] = e.target.value; }}
-                      >
-                        <option value="">Pilih</option>
-                        <option value={true}>Ya</option>
-                        <option value={false}>Tidak</option>
-                      </select>
-                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
-                    </div>
-                  </FieldRow>
-                )}
+                {/* Dana Penelitian — selalu tampil, wajib diisi */}
+                <FieldRow icon={FileText} label="Apakah anda memiliki dana penelitian?">
+                  <div className="relative">
+                    <select
+                      required
+                      name="dana_penelitian"
+                      className={selectClass}
+                      defaultValue=""
+                      onChange={(e) => { dana_penelitian[i] = e.target.value; }}
+                    >
+                      <option value="">Pilih</option>
+                      <option value={true}>Ya</option>
+                      <option value={false}>Tidak</option>
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
+                  </div>
+                </FieldRow>
 
                 {/* Lama Pengerjaan */}
                 <FieldRow icon={Timer} label="Pilih Lama Pengerjaan">
