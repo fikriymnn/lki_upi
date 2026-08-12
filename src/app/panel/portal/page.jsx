@@ -35,7 +35,7 @@ const portals = [
   {
     title: 'Affiliate',
     description: 'Kelola program kemitraan, affiliasi, dan jaringan kolaborasi laboratorium.',
-    link: '#',
+    link: '/panel/portal/affiliate/admin',
     icon: Users,
     stats: '12 Partner Institusi',
     color: 'from-gray-800 to-gray-900',
