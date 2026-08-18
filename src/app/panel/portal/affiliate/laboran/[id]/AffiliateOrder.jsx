@@ -608,7 +608,7 @@ export default function AffiliateOrder({ affiliateId }) {
               <UploadCloud className="w-3.5 h-3.5" /> Upload Laporan & Rincian Biaya
             </p>
             <p className="text-[11px] text-yellow-700 mb-3">
-              Upload file laporan & rincian biaya. Setelah keduanya terisi, order otomatis lanjut ke tahap "Menunggu Diverifikasi" oleh ketua lab.
+              Upload file laporan & rincian biaya. Setelah keduanya terisi, order otomatis lanjut ke tahap &quot;Menunggu Diverifikasi&quot; oleh ketua lab.
             </p>
             <div className="flex flex-col gap-3">
               <FileUploadField

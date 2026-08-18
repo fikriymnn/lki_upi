@@ -818,7 +818,7 @@ export default function AffiliateOrder({ affiliateId }) {
               <div className="border border-gray-200 rounded-xl p-5 text-center">
                 <Receipt className="w-8 h-8 text-gray-300 mx-auto mb-2" />
                 <p className="text-sm text-gray-400 italic">
-                  Belum ada rincian invoice untuk order ini. Invoice bisa diinput setelah status "Selesai Diverifikasi".
+                  Belum ada rincian invoice untuk order ini. Invoice bisa diinput setelah status &quot;Selesai Diverifikasi&quot;.
                 </p>
               </div>
             )}

@@ -488,7 +488,7 @@ export default function AffiliateOrder({ affiliateId }) {
         {activeOrder.status_pengujian !== 'Menunggu Diverifikasi' && (
           <div className="border border-gray-200 bg-gray-50 rounded-xl p-4 text-center mb-6">
             <p className="text-xs text-gray-500">
-              Order ini sedang ditangani oleh {statusOwnerHint(activeOrder.status_pengujian)}. Sebagai ketua lab, Anda hanya bisa memverifikasi saat status "Menunggu Diverifikasi", namun tetap bisa mengedit data order di tab Rincian Order.
+              Order ini sedang ditangani oleh {statusOwnerHint(activeOrder.status_pengujian)}. Sebagai ketua lab, Anda hanya bisa memverifikasi saat status &quot;Menunggu Diverifikasi&quot;, namun tetap bisa mengedit data order di tab Rincian Order.
             </p>
           </div>
         )}
