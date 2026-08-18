@@ -38,8 +38,59 @@ const emptyItem = (key) => {
   return { jenis_bahan: '', jumlah: '', satuan: '', nomor_produk: '', keterangan: '' }; // pembelian_bahan
 };
 
-const iClass = "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition bg-white";
+const iClass = "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition bg-white placeholder:text-gray-400";
 const iReadOnlyClass = "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-500 bg-gray-50 cursor-not-allowed";
+
+// ══════════════════════ VALIDASI ══════════════════════
+
+// Field wajib di step "Informasi" — sisanya (no_telp, program_studi, fakultas, nama_pembimbing) opsional
+const REQUIRED_INFORMASI_FIELDS = [
+  { key: 'nama_lengkap', label: 'Nama Lengkap' },
+  { key: 'email', label: 'Email' },
+  { key: 'no_whatsapp', label: 'No. WhatsApp' },
+  { key: 'jenis_institusi', label: 'Jenis Institusi' },
+  { key: 'nama_institusi', label: 'Nama Institusi' },
+];
+
+const isFilled = (v) => v !== undefined && v !== null && v.toString().trim() !== '';
+
+const informasiValid = (form) => REQUIRED_INFORMASI_FIELDS.every((f) => isFilled(form[f.key]));
+
+const getInformasiMissing = (form) => REQUIRED_INFORMASI_FIELDS.filter((f) => !isFilled(form[f.key])).map((f) => f.label);
+
+// Field wajib per jenis item (sisanya opsional: keterangan, pelarut, metode_parameter, foto_sample, jurnal_pendukung, nomor_produk)
+const ITEM_REQUIRED_FIELDS = {
+  analisis: [
+    { key: 'jenis_layanan', label: 'Jenis Layanan', isArray: true },
+    { key: 'nama_sample', label: 'Nama Sampel' },
+    { key: 'jumlah_sample', label: 'Jumlah Sampel' },
+  ],
+  sewa_alat: [
+    { key: 'nama_alat', label: 'Nama Alat' },
+    { key: 'jenis_sewa', label: 'Jenis Sewa' },
+    { key: 'tanggal_mulai', label: 'Tanggal Mulai' },
+    { key: 'tanggal_selesai', label: 'Tanggal Selesai' },
+    { key: 'jumlah', label: 'Jumlah' },
+  ],
+  sewa_lab: [
+    { key: 'jenis_sewa', label: 'Jenis Sewa' },
+    { key: 'tanggal_mulai', label: 'Tanggal Mulai' },
+    { key: 'tanggal_selesai', label: 'Tanggal Selesai' },
+    { key: 'jumlah', label: 'Jumlah' },
+  ],
+  pembelian_bahan: [
+    { key: 'jenis_bahan', label: 'Jenis Bahan' },
+    { key: 'jumlah', label: 'Jumlah' },
+    { key: 'satuan', label: 'Satuan' },
+  ],
+};
+
+const validateItem = (itemKey, item) => {
+  const rules = ITEM_REQUIRED_FIELDS[itemKey] || [];
+  const missing = rules.filter((r) => (r.isArray ? (item[r.key] || []).length === 0 : !isFilled(item[r.key])));
+  if (missing.length === 0) return null;
+  return `Mohon lengkapi field wajib: ${missing.map((m) => m.label).join(', ')}`;
+};
 
 export default function AffiliateOrderPage() {
   const { id } = useParams(); // id = id_affiliate (lab tujuan order)
@@ -161,7 +212,11 @@ export default function AffiliateOrderPage() {
 
   const targetOf = (key) => key === 'analisis' ? 'layanan_analisis' : key;
 
+  // ── Validasi field wajib sebelum item disimpan ──
   const saveItem = () => {
+    const err = validateItem(modalKey, modalItem);
+    if (err) { alert(err); return; }
+
     const target = targetOf(modalKey);
     setForm((f) => {
       const arr = [...f[target]];
@@ -172,16 +227,29 @@ export default function AffiliateOrderPage() {
     setShowModal(false);
   };
 
+  // ── Validasi sebelum lanjut ke step berikutnya ──
   const canGoNext = () => {
-    if (currentStep.key === 'informasi') return true;
+    if (currentStep.key === 'informasi') return informasiValid(form);
     if (currentStep.key === 'review') return false;
     // Analisis wajib punya minimal 1 item; Sewa Alat di step yang sama sifatnya opsional
     if (currentStep.key === 'analisis_alat') return form.layanan_analisis.length > 0;
     return currentStep.services.some((s) => form[s.target].length > 0);
   };
 
+  const handleNext = () => {
+    if (currentStep.key === 'informasi' && !informasiValid(form)) {
+      alert(`Mohon lengkapi field wajib: ${getInformasiMissing(form).join(', ')}`);
+      return;
+    }
+    setStepIdx((i) => Math.min(wizardSteps.length - 1, i + 1));
+  };
+
   // ── Submit order ke backend — no_invoice & status_pengujian dibuat otomatis di server ──
   const handleSubmit = async () => {
+    if (!informasiValid(form)) {
+      alert(`Mohon lengkapi field wajib di step Informasi: ${getInformasiMissing(form).join(', ')}`);
+      return;
+    }
     if (!form.syarat_ketentuan) { alert('Mohon setujui syarat dan ketentuan terlebih dahulu.'); return; }
     if (submitting) return;
     setSubmitting(true);
@@ -317,17 +385,28 @@ export default function AffiliateOrderPage() {
             <span className="text-sm text-gray-600">Order untuk orang lain</span>
           </label>
 
-          <TextField label="Nama Lengkap" value={form.nama_lengkap} readOnly={!untukOrangLain} onChange={(v) => setForm((f) => ({ ...f, nama_lengkap: v }))} />
-          <TextField label="Email" value={form.email} readOnly={!untukOrangLain} onChange={(v) => setForm((f) => ({ ...f, email: v }))} />
-          <TextField label="No. Telepon" value={form.no_telp} readOnly={!untukOrangLain} onChange={(v) => setForm((f) => ({ ...f, no_telp: v }))} />
-          <TextField label="No. WhatsApp" value={form.no_whatsapp} readOnly={!untukOrangLain} onChange={(v) => setForm((f) => ({ ...f, no_whatsapp: v }))} />
-          <TextField label="Jenis Institusi" value={form.jenis_institusi} readOnly={!untukOrangLain} onChange={(v) => setForm((f) => ({ ...f, jenis_institusi: v }))} />
-          <TextField label="Nama Institusi" value={form.nama_institusi} readOnly={!untukOrangLain} onChange={(v) => setForm((f) => ({ ...f, nama_institusi: v }))} />
-          <TextField label="Program Studi" value={form.program_studi} readOnly={!untukOrangLain} onChange={(v) => setForm((f) => ({ ...f, program_studi: v }))} />
-          <TextField label="Fakultas" value={form.fakultas} readOnly={!untukOrangLain} onChange={(v) => setForm((f) => ({ ...f, fakultas: v }))} />
+          <p className="text-xs text-gray-400 -mt-2 px-1">Field bertanda <span className="text-red-500">*</span> wajib diisi</p>
 
-          {/* Nama Pembimbing — khusus field order lab, selalu editable (tidak ada di data User) */}
-          <TextField label="Nama Pembimbing" value={form.nama_pembimbing} readOnly={false} onChange={(v) => setForm((f) => ({ ...f, nama_pembimbing: v }))} />
+          <TextField label="Nama Lengkap" required value={form.nama_lengkap} readOnly={!untukOrangLain}
+            placeholder="Contoh: Budi Santoso" onChange={(v) => setForm((f) => ({ ...f, nama_lengkap: v }))} />
+          <TextField label="Email" required type="email" value={form.email} readOnly={!untukOrangLain}
+            placeholder="nama@email.com" onChange={(v) => setForm((f) => ({ ...f, email: v }))} />
+          <TextField label="No. Telepon" value={form.no_telp} readOnly={!untukOrangLain}
+            placeholder="Contoh: 022xxxxxxx" onChange={(v) => setForm((f) => ({ ...f, no_telp: v }))} />
+          <TextField label="No. WhatsApp" required value={form.no_whatsapp} readOnly={!untukOrangLain}
+            placeholder="Contoh: 08xxxxxxxxxx" onChange={(v) => setForm((f) => ({ ...f, no_whatsapp: v }))} />
+          <TextField label="Jenis Institusi" required value={form.jenis_institusi} readOnly={!untukOrangLain}
+            placeholder="Contoh: Perguruan Tinggi / SMA / Instansi Swasta" onChange={(v) => setForm((f) => ({ ...f, jenis_institusi: v }))} />
+          <TextField label="Nama Institusi" required value={form.nama_institusi} readOnly={!untukOrangLain}
+            placeholder="Contoh: Universitas Pendidikan Indonesia" onChange={(v) => setForm((f) => ({ ...f, nama_institusi: v }))} />
+          <TextField label="Program Studi" value={form.program_studi} readOnly={!untukOrangLain}
+            placeholder="Contoh: Pendidikan Kimia" onChange={(v) => setForm((f) => ({ ...f, program_studi: v }))} />
+          <TextField label="Fakultas" value={form.fakultas} readOnly={!untukOrangLain}
+            placeholder="Contoh: FPMIPA" onChange={(v) => setForm((f) => ({ ...f, fakultas: v }))} />
+
+          {/* Nama Pembimbing — khusus field order lab, selalu editable (tidak ada di data User), opsional */}
+          <TextField label="Nama Pembimbing" value={form.nama_pembimbing} readOnly={false}
+            placeholder="Nama dosen/guru pembimbing (opsional)" onChange={(v) => setForm((f) => ({ ...f, nama_pembimbing: v }))} />
         </div>
       )}
 
@@ -338,7 +417,11 @@ export default function AffiliateOrderPage() {
             <div key={s.key}>
               <p className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                 <s.icon className="w-4 h-4 text-gray-400" /> {s.label}
-                {s.key === 'sewa_alat' && <span className="text-xs font-normal text-gray-400">(opsional)</span>}
+                {s.key === 'analisis' ? (
+                  <span className="text-red-500">*</span>
+                ) : (
+                  <span className="text-xs font-normal text-gray-400">(opsional)</span>
+                )}
               </p>
               <button
                 onClick={() => openAddItem(s.key)}
@@ -381,43 +464,30 @@ export default function AffiliateOrderPage() {
         </div>
       )}
 
-      {/* ── Step: Review ── */}
+      {/* ── Step: Review — sekarang menampilkan detail lengkap tiap item + data pemesan lengkap ── */}
       {currentStep.key === 'review' && (
         <div className="flex flex-col gap-5">
-          <div className="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100">
-            {form.layanan_analisis.length > 0 && (
-              <div className="flex items-center justify-between px-4 py-3">
-                <span className="text-sm text-gray-700 flex items-center gap-2"><FlaskConical className="w-4 h-4 text-gray-400" />Analisis</span>
-                <span className="text-sm font-medium text-gray-900">{form.layanan_analisis.length} item</span>
-              </div>
-            )}
-            {form.sewa_alat.length > 0 && (
-              <div className="flex items-center justify-between px-4 py-3">
-                <span className="text-sm text-gray-700 flex items-center gap-2"><Wrench className="w-4 h-4 text-gray-400" />Sewa Alat</span>
-                <span className="text-sm font-medium text-gray-900">{form.sewa_alat.length} item</span>
-              </div>
-            )}
-            {form.sewa_lab.length > 0 && (
-              <div className="flex items-center justify-between px-4 py-3">
-                <span className="text-sm text-gray-700 flex items-center gap-2"><DoorOpen className="w-4 h-4 text-gray-400" />Sewa Lab</span>
-                <span className="text-sm font-medium text-gray-900">{form.sewa_lab.length} item</span>
-              </div>
-            )}
-            {form.pembelian_bahan.length > 0 && (
-              <div className="flex items-center justify-between px-4 py-3">
-                <span className="text-sm text-gray-700 flex items-center gap-2"><Package className="w-4 h-4 text-gray-400" />Pembelian Bahan</span>
-                <span className="text-sm font-medium text-gray-900">{form.pembelian_bahan.length} item</span>
-              </div>
-            )}
-          </div>
 
+          <ReviewItemSection title="Analisis" icon={FlaskConical} items={form.layanan_analisis} itemKey="analisis" />
+          <ReviewItemSection title="Sewa Alat" icon={Wrench} items={form.sewa_alat} itemKey="sewa_alat" />
+          <ReviewItemSection title="Sewa Lab" icon={DoorOpen} items={form.sewa_lab} itemKey="sewa_lab" />
+          <ReviewItemSection title="Pembelian Bahan" icon={Package} items={form.pembelian_bahan} itemKey="pembelian_bahan" />
+
+          {/* Data Pemesan lengkap */}
           <div className="bg-white border border-gray-200 rounded-xl p-4">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Data Pemesan</p>
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div><p className="text-xs text-gray-400">Nama</p><p className="font-medium text-gray-800">{form.nama_lengkap || '—'}</p></div>
-              <div><p className="text-xs text-gray-400">Instansi</p><p className="font-medium text-gray-800">{form.nama_institusi || '—'}</p></div>
-              <div><p className="text-xs text-gray-400">WhatsApp</p><p className="font-medium text-gray-800">{form.no_whatsapp || '—'}</p></div>
-              <div><p className="text-xs text-gray-400">Email</p><p className="font-medium text-gray-800">{form.email || '—'}</p></div>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 flex items-center gap-2">
+              <User className="w-3.5 h-3.5" /> Data Pemesan
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 text-sm">
+              <ReviewField label="Nama Lengkap" value={form.nama_lengkap} />
+              <ReviewField label="Email" value={form.email} />
+              <ReviewField label="No. Telepon" value={form.no_telp} />
+              <ReviewField label="No. WhatsApp" value={form.no_whatsapp} />
+              <ReviewField label="Jenis Institusi" value={form.jenis_institusi} />
+              <ReviewField label="Nama Institusi" value={form.nama_institusi} />
+              <ReviewField label="Program Studi" value={form.program_studi} />
+              <ReviewField label="Fakultas" value={form.fakultas} />
+              <ReviewField label="Nama Pembimbing" value={form.nama_pembimbing} />
             </div>
           </div>
 
@@ -425,16 +495,25 @@ export default function AffiliateOrderPage() {
             <label className="text-xs font-medium text-gray-500">Catatan (opsional)</label>
             <textarea
               value={form.catatan} onChange={(e) => setForm((f) => ({ ...f, catatan: e.target.value }))} rows={3}
-              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none placeholder:text-gray-400"
               placeholder="Tuliskan catatan tambahan jika ada..."
             />
           </div>
+
+          {form.catatan && (
+            <div className="bg-white border border-gray-200 rounded-xl p-4">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Preview Catatan</p>
+              <p className="text-sm text-gray-700 whitespace-pre-wrap">{form.catatan}</p>
+            </div>
+          )}
 
           <label className="flex items-start gap-3 cursor-pointer">
             <input type="checkbox" checked={form.syarat_ketentuan}
               onChange={(e) => setForm((f) => ({ ...f, syarat_ketentuan: e.target.checked }))}
               className="mt-0.5 accent-red-500 w-4 h-4 flex-shrink-0" />
-            <span className="text-sm text-gray-600">Saya telah memahami syarat dan ketentuan yang berlaku di laboratorium.</span>
+            <span className="text-sm text-gray-600">
+              Saya telah memahami syarat dan ketentuan yang berlaku di laboratorium. <span className="text-red-500">*</span>
+            </span>
           </label>
 
           <button
@@ -458,7 +537,7 @@ export default function AffiliateOrderPage() {
         </button>
         {currentStep.key !== 'review' && (
           <button
-            onClick={() => setStepIdx((i) => Math.min(wizardSteps.length - 1, i + 1))}
+            onClick={handleNext}
             disabled={!canGoNext()}
             className="flex items-center gap-1.5 px-5 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition"
           >
@@ -479,13 +558,15 @@ export default function AffiliateOrderPage() {
   );
 }
 
-// ── Field text — mendukung readOnly, sama pola dengan Order_analisis.jsx ──
-function TextField({ label, value, onChange, readOnly = false }) {
+// ── Field text — mendukung readOnly, placeholder, dan indikator wajib ──
+function TextField({ label, value, onChange, readOnly = false, placeholder = '', required = false, type = 'text' }) {
   return (
     <div>
-      <label className="text-xs font-medium text-gray-500">{label}</label>
+      <label className="text-xs font-medium text-gray-500">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
       <input
-        type="text" value={value} readOnly={readOnly}
+        type={type} value={value} readOnly={readOnly} placeholder={placeholder}
         onChange={(e) => !readOnly && onChange(e.target.value)}
         className={`mt-1 ${readOnly ? iReadOnlyClass : iClass}`}
       />
@@ -493,7 +574,7 @@ function TextField({ label, value, onChange, readOnly = false }) {
   );
 }
 
-// ── Card ringkas 1 item dengan tombol Edit/Hapus ──
+// ── Card ringkas 1 item dengan tombol Edit/Hapus (dipakai di step pengisian) ──
 function ItemCard({ itemKey, item, onEdit, onDelete }) {
   const title = () => {
     if (itemKey === 'analisis') return item.jenis_layanan?.join(', ') || '(belum diisi)';
@@ -519,6 +600,86 @@ function ItemCard({ itemKey, item, onEdit, onDelete }) {
       <div className="flex items-center gap-1.5 flex-shrink-0">
         <button onClick={onEdit} className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 transition"><Pencil className="w-3.5 h-3.5 text-gray-600" /></button>
         <button onClick={onDelete} className="w-8 h-8 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 transition"><Trash2 className="w-3.5 h-3.5 text-red-600" /></button>
+      </div>
+    </div>
+  );
+}
+
+// ── Baris label:value kecil di kartu Data Pemesan pada Review ──
+function ReviewField({ label, value }) {
+  return (
+    <div>
+      <p className="text-xs text-gray-400">{label}</p>
+      <p className="font-medium text-gray-800">{value && value.toString().trim() !== '' ? value : '—'}</p>
+    </div>
+  );
+}
+
+// ── Rows detail lengkap per jenis item, dipakai di Review ──
+const getItemDetailRows = (itemKey, item) => {
+  if (itemKey === 'analisis') return [
+    { label: 'Jenis Layanan', value: item.jenis_layanan?.length ? item.jenis_layanan.join(', ') : null },
+    { label: 'Nama Sampel', value: item.nama_sample },
+    { label: 'Pelarut', value: item.pelarut },
+    { label: 'Jumlah Sampel', value: item.jumlah_sample },
+    { label: 'Metode / Parameter', value: item.metode_parameter },
+    { label: 'Foto Sampel', value: item.foto_sample },
+    { label: 'Jurnal Pendukung', value: item.jurnal_pendukung },
+    { label: 'Keterangan', value: item.keterangan },
+  ];
+  if (itemKey === 'sewa_alat') return [
+    { label: 'Nama Alat', value: item.nama_alat },
+    { label: 'Jenis Sewa', value: item.jenis_sewa },
+    { label: 'Tanggal Mulai', value: item.tanggal_mulai },
+    { label: 'Tanggal Selesai', value: item.tanggal_selesai },
+    { label: 'Jumlah', value: item.jumlah },
+    { label: 'Keterangan', value: item.keterangan },
+  ];
+  if (itemKey === 'sewa_lab') return [
+    { label: 'Jenis Sewa', value: item.jenis_sewa },
+    { label: 'Tanggal Mulai', value: item.tanggal_mulai },
+    { label: 'Tanggal Selesai', value: item.tanggal_selesai },
+    { label: 'Jumlah', value: item.jumlah },
+    { label: 'Keterangan', value: item.keterangan },
+  ];
+  if (itemKey === 'pembelian_bahan') return [
+    { label: 'Jenis Bahan', value: item.jenis_bahan },
+    { label: 'Jumlah', value: item.jumlah },
+    { label: 'Satuan', value: item.satuan },
+    { label: 'Nomor Produk', value: item.nomor_produk },
+    { label: 'Keterangan', value: item.keterangan },
+  ];
+  return [];
+};
+
+// ── Section Review per kategori — tampil hanya jika ada item, menampilkan detail penuh tiap item ──
+function ReviewItemSection({ title, icon: Icon, items, itemKey }) {
+  if (!items || items.length === 0) return null;
+
+  return (
+    <div className="bg-white border border-gray-200 rounded-xl p-4">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide flex items-center gap-2">
+          <Icon className="w-3.5 h-3.5" /> {title}
+        </p>
+        <span className="text-xs font-medium text-gray-400">{items.length} item</span>
+      </div>
+      <div className="flex flex-col gap-3">
+        {items.map((item, idx) => {
+          const rows = getItemDetailRows(itemKey, item).filter((r) => r.value && r.value.toString().trim() !== '');
+          return (
+            <div key={idx} className="border border-gray-100 rounded-lg p-3">
+              <p className="text-xs font-semibold text-gray-500 mb-2">Item {idx + 1}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 text-sm text-gray-700">
+                {rows.length > 0 ? rows.map((r) => (
+                  <p key={r.label}><span className="text-gray-400">{r.label}:</span> {r.value}</p>
+                )) : (
+                  <p className="text-gray-400 italic">Tidak ada detail tambahan</p>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -551,14 +712,17 @@ function ItemModal({ itemKey, item, setItem, masterAnalisis, loadingMaster, mast
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <div className="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full relative max-h-[90vh] overflow-y-auto">
         <button onClick={onClose} className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-lg transition text-gray-400"><X className="w-4 h-4" /></button>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">{labelMap[itemKey]}</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-1">{labelMap[itemKey]}</h2>
+        <p className="text-xs text-gray-400 mb-4">Field bertanda <span className="text-red-500">*</span> wajib diisi</p>
 
         <div className="flex flex-col gap-4">
 
           {itemKey === 'analisis' && (
             <>
               <div>
-                <label className="text-xs font-medium text-gray-500 mb-2 block">Jenis Layanan</label>
+                <label className="text-xs font-medium text-gray-500 mb-2 block">
+                  Jenis Layanan <span className="text-red-500">*</span>
+                </label>
                 {loadingMaster ? (
                   <p className="text-xs text-gray-400 italic px-2 py-3">Memuat daftar layanan...</p>
                 ) : masterAnalisis.length === 0 ? (
@@ -576,26 +740,26 @@ function ItemModal({ itemKey, item, setItem, masterAnalisis, loadingMaster, mast
                   </div>
                 )}
               </div>
-              <TextField label="Nama Sampel" value={item.nama_sample} onChange={(v) => set('nama_sample', v)} />
-              <TextField label="Pelarut" value={item.pelarut} onChange={(v) => set('pelarut', v)} />
-              <TextField label="Jumlah Sampel" value={item.jumlah_sample} onChange={(v) => set('jumlah_sample', v)} />
-              <TextField label="Metode / Parameter" value={item.metode_parameter} onChange={(v) => set('metode_parameter', v)} />
-              <FileField label="Foto Sampel" onChange={(e) => uploadFile(e, 'foto_sample', 'fotosample')} uploaded={item.foto_sample} />
-              <FileField label="Jurnal Pendukung" onChange={(e) => uploadFile(e, 'jurnal_pendukung', 'jurnalpendukung')} uploaded={item.jurnal_pendukung} />
+              <TextField label="Nama Sampel" required value={item.nama_sample} placeholder="Contoh: Ekstrak Daun Sirsak" onChange={(v) => set('nama_sample', v)} />
+              <TextField label="Pelarut" value={item.pelarut} placeholder="Contoh: Etanol 96% (opsional)" onChange={(v) => set('pelarut', v)} />
+              <TextField label="Jumlah Sampel" required type="number" value={item.jumlah_sample} placeholder="Contoh: 5" onChange={(v) => set('jumlah_sample', v)} />
+              <TextField label="Metode / Parameter" value={item.metode_parameter} placeholder="Contoh: GC-MS / Kadar Air (opsional)" onChange={(v) => set('metode_parameter', v)} />
+              <FileField label="Foto Sampel (opsional)" onChange={(e) => uploadFile(e, 'foto_sample', 'fotosample')} uploaded={item.foto_sample} />
+              <FileField label="Jurnal Pendukung (opsional)" onChange={(e) => uploadFile(e, 'jurnal_pendukung', 'jurnalpendukung')} uploaded={item.jurnal_pendukung} />
             </>
           )}
 
           {itemKey === 'sewa_alat' && (
             <>
               <div>
-                <label className="text-xs font-medium text-gray-500">Nama Alat</label>
+                <label className="text-xs font-medium text-gray-500">Nama Alat <span className="text-red-500">*</span></label>
                 <select value={item.nama_alat} onChange={(e) => set('nama_alat', e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
                   <option value="">Pilih alat...</option>
                   {masterAlat.map((a) => <option key={a} value={a}>{a}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-xs font-medium text-gray-500">Jenis Sewa</label>
+                <label className="text-xs font-medium text-gray-500">Jenis Sewa <span className="text-red-500">*</span></label>
                 <select value={item.jenis_sewa} onChange={(e) => set('jenis_sewa', e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
                   <option value="">Pilih...</option>
                   <option value="Jam">Jam</option>
@@ -605,22 +769,22 @@ function ItemModal({ itemKey, item, setItem, masterAnalisis, loadingMaster, mast
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-medium text-gray-500">Tanggal Mulai</label>
+                  <label className="text-xs font-medium text-gray-500">Tanggal Mulai <span className="text-red-500">*</span></label>
                   <input type="date" value={item.tanggal_mulai} onChange={(e) => set('tanggal_mulai', e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-gray-500">Tanggal Selesai</label>
+                  <label className="text-xs font-medium text-gray-500">Tanggal Selesai <span className="text-red-500">*</span></label>
                   <input type="date" value={item.tanggal_selesai} onChange={(e) => set('tanggal_selesai', e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
                 </div>
               </div>
-              <TextField label="Jumlah (sesuai jenis sewa)" value={item.jumlah} onChange={(v) => set('jumlah', v)} />
+              <TextField label="Jumlah (sesuai jenis sewa)" required type="number" value={item.jumlah} placeholder="Contoh: 3" onChange={(v) => set('jumlah', v)} />
             </>
           )}
 
           {itemKey === 'sewa_lab' && (
             <>
               <div>
-                <label className="text-xs font-medium text-gray-500">Jenis Sewa</label>
+                <label className="text-xs font-medium text-gray-500">Jenis Sewa <span className="text-red-500">*</span></label>
                 <select value={item.jenis_sewa} onChange={(e) => set('jenis_sewa', e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
                   <option value="">Pilih...</option>
                   <option value="Hari">Hari</option>
@@ -629,32 +793,35 @@ function ItemModal({ itemKey, item, setItem, masterAnalisis, loadingMaster, mast
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-medium text-gray-500">Tanggal Mulai</label>
+                  <label className="text-xs font-medium text-gray-500">Tanggal Mulai <span className="text-red-500">*</span></label>
                   <input type="date" value={item.tanggal_mulai} onChange={(e) => set('tanggal_mulai', e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-gray-500">Tanggal Selesai</label>
+                  <label className="text-xs font-medium text-gray-500">Tanggal Selesai <span className="text-red-500">*</span></label>
                   <input type="date" value={item.tanggal_selesai} onChange={(e) => set('tanggal_selesai', e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
                 </div>
               </div>
+              {/* Jumlah — sebelumnya field ini ada di schema (emptyItem) tapi belum punya input di modal, ditambahkan supaya bisa diisi & divalidasi */}
+              <TextField label="Jumlah (sesuai jenis sewa)" required type="number" value={item.jumlah} placeholder="Contoh: 2" onChange={(v) => set('jumlah', v)} />
             </>
           )}
 
           {itemKey === 'pembelian_bahan' && (
             <>
-              <TextField label="Jenis Bahan" value={item.jenis_bahan} onChange={(v) => set('jenis_bahan', v)} />
+              <TextField label="Jenis Bahan" required value={item.jenis_bahan} placeholder="Contoh: Asam Sulfat (H2SO4)" onChange={(v) => set('jenis_bahan', v)} />
               <div className="grid grid-cols-2 gap-3">
-                <TextField label="Jumlah" value={item.jumlah} onChange={(v) => set('jumlah', v)} />
-                <TextField label="Satuan" value={item.satuan} onChange={(v) => set('satuan', v)} />
+                <TextField label="Jumlah" required type="number" value={item.jumlah} placeholder="Contoh: 2" onChange={(v) => set('jumlah', v)} />
+                <TextField label="Satuan" required value={item.satuan} placeholder="Contoh: Liter / Kg" onChange={(v) => set('satuan', v)} />
               </div>
-              <TextField label="Nomor Produk (opsional)" value={item.nomor_produk} onChange={(v) => set('nomor_produk', v)} />
+              <TextField label="Nomor Produk" value={item.nomor_produk} placeholder="Nomor katalog/produk (opsional)" onChange={(v) => set('nomor_produk', v)} />
             </>
           )}
 
           <div>
             <label className="text-xs font-medium text-gray-500">Keterangan (opsional)</label>
             <textarea value={item.keterangan} onChange={(e) => set('keterangan', e.target.value)} rows={2}
-              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none" />
+              placeholder="Tambahkan catatan untuk item ini jika perlu..."
+              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none placeholder:text-gray-400" />
           </div>
 
           <button onClick={onSave} className="mt-1 w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition">

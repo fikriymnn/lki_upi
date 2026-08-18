@@ -1,5 +1,7 @@
 "use client";
 
+import Image from 'next/image';
+
 const convertRupiah = (angka = 0) => {
   const parts = angka?.toString().split('').reverse().join('').match(/\d{1,3}/g);
   return parts?.join('.').split('').reverse().join('') ?? '0';
@@ -43,10 +45,16 @@ export default function InvoiceTemplate({ order, printId }) {
         fontSize: '13px',
       }}
     >
-      {/* Header */}
+      {/* Header dengan Logo */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', borderBottom: '2px solid #000', paddingBottom: '12px', marginBottom: '16px' }}>
-        <div style={{ width: '56px', height: '56px', border: '1px solid #ccc', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <span style={{ fontSize: '9px', textAlign: 'center', color: '#b91c1c', fontWeight: 'bold' }}>{lab.kode_laboratorium || 'LAB'}</span>
+        <div style={{ width: '60px', height: '60px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Image
+            src="/images/logo/image.png"
+            alt="Logo Laboratorium"
+            width={56}
+            height={56}
+            style={{ objectFit: 'contain' }}
+          />
         </div>
         <div style={{ flex: 1, textAlign: 'center' }}>
           <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', letterSpacing: '0.5px' }}>

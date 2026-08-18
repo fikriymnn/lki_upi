@@ -6,11 +6,11 @@ import html2canvas from 'html2canvas';
 import * as XLSX from 'xlsx';
 import {
   Search, ClipboardList, ArrowLeft, FlaskConical, DoorOpen, Package, Wrench,
-  FileText, Download, Eye, Receipt, CreditCard, Plus, Trash2,
-  Check, Pencil, Save, ChevronDown, Loader2, User, X, Building2, FileSpreadsheet
+  FileText, FileCheck, Download, Eye, Receipt, ShieldCheck, RotateCcw, User, Loader2,
+  Pencil, Save, X, Plus, Trash2, ChevronDown, FileSpreadsheet
 } from 'lucide-react';
-import InvoiceTemplate from '../../../../../components/affiliate/InvoiceTemplate';
-import KwitansiTemplate from '../../../../../components/affiliate/KwitansiTemplate';
+import InvoiceTemplate from '../../../../../../components/affiliate/InvoiceTemplate';
+import KwitansiTemplate from '../../../../../../components/affiliate/KwitansiTemplate';
 
 // ── Status flow (harus sama persis dengan enum status_pengujian di backend) ──
 const STATUS_OPTIONS = [
@@ -37,26 +37,13 @@ const STATUS_CLASS = {
   'Selesai': 'bg-green-50 text-green-700 ring-1 ring-green-200',
 };
 
-const ADMIN_ACTIONABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Verifikasi Pembayaran'];
-
-// ── Status yang invoice-nya masih boleh diinput/dikoreksi (harus sinkron dengan BE) ──
-const INVOICE_EDITABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Pembayaran'];
+// ── Ketua Lab hanya bisa bertindak (verifikasi status) saat order "Menunggu Diverifikasi" ──
+const KETUA_LAB_ACTIONABLE_STATUS = ['Menunggu Diverifikasi'];
 
 const MONTH_NAMES = [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
   'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
 ];
-
-const convertRupiah = (angka = 0) => {
-  const parts = angka?.toString().split('').reverse().join('').match(/\d{1,3}/g);
-  return parts?.join('.').split('').reverse().join('') ?? '0';
-};
-
-const formatDate = (d) => {
-  if (!d) return '—';
-  try { return new Date(d).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }); }
-  catch { return d; }
-};
 
 const MASTER_JENIS_LAYANAN_ANALISIS = [
   'Preparasi Sampel',
@@ -69,68 +56,15 @@ const MASTER_JENIS_LAYANAN_ANALISIS = [
   'Uji Fitokimia (Flavonoid)',
 ];
 
-let rowSeq = 0;
-const newRowId = () => `row_${Date.now()}_${rowSeq++}`;
+const convertRupiah = (angka = 0) => {
+  const parts = angka?.toString().split('').reverse().join('').match(/\d{1,3}/g);
+  return parts?.join('.').split('').reverse().join('') ?? '0';
+};
 
-const buildInvoiceRows = (order) => {
-  const rows = [];
-
-  (order.layanan_analisis || []).forEach((item) => {
-    const jenisList = item.jenis_layanan?.length ? item.jenis_layanan : ['Layanan Analisis'];
-    jenisList.forEach((jenis) => {
-      rows.push({
-        id: newRowId(),
-        tanggal: order.date,
-        deskripsi: jenis,
-        keterangan: item.nama_sample || '',
-        jumlah: Number(item.jumlah_sample) || 1,
-        satuan: 'sampel',
-        harga_satuan: 0,
-        total: 0,
-      });
-    });
-  });
-
-  (order.sewa_lab || []).forEach((item) => {
-    rows.push({
-      id: newRowId(),
-      tanggal: item.tanggal_mulai || order.date,
-      deskripsi: `Sewa Lab (${item.jenis_sewa || '-'})`,
-      keterangan: item.keterangan || '',
-      jumlah: Number(item.jumlah) || 1,
-      satuan: item.jenis_sewa === 'Harian' ? 'hari' : 'OH',
-      harga_satuan: 0,
-      total: 0,
-    });
-  });
-
-  (order.sewa_alat || []).forEach((item) => {
-    rows.push({
-      id: newRowId(),
-      tanggal: item.tanggal_mulai || order.date,
-      deskripsi: item.nama_alat || 'Sewa Alat',
-      keterangan: item.keterangan || '',
-      jumlah: Number(item.jumlah) || 1,
-      satuan: (item.jenis_sewa || '').toLowerCase() || 'unit',
-      harga_satuan: 0,
-      total: 0,
-    });
-  });
-
-  (order.pembelian_bahan || []).forEach((item) => {
-    rows.push({
-      id: newRowId(),
-      tanggal: order.date,
-      deskripsi: item.jenis_bahan || 'Bahan',
-      keterangan: item.keterangan || '',
-      jumlah: 1,
-      satuan: item.satuan || '-',
-      harga_satuan: 0,
-      total: 0,
-    });
-  });
-
-  return rows;
+const formatDate = (d) => {
+  if (!d) return '—';
+  try { return new Date(d).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }); }
+  catch { return d; }
 };
 
 const FIELD_CONFIG = {
@@ -194,7 +128,6 @@ const APPLICANT_FIELDS = [
 
 const DETAIL_TABS = [
   { key: 'ringkasan', label: 'Rincian Order', icon: User },
-  { key: 'invoice', label: 'Invoice', icon: Receipt },
   { key: 'dokumen', label: 'Dokumen', icon: FileText },
 ];
 
@@ -208,15 +141,12 @@ export default function AffiliateOrder({ affiliateId }) {
 
   // ── Filter bulan + tahun (client-side, cocok dengan field `year`/`month` di dokumen order) ──
   const [yearFilter, setYearFilter] = useState('');
-  const [monthFilter, setMonthFilter] = useState(''); // disimpan 0-indexed (string), sama seperti field `month` di DB
+  const [monthFilter, setMonthFilter] = useState(''); // 0-indexed (string), sama seperti field `month` di DB
 
   // ── activeOrder != null → tampilkan halaman detail inline (bukan modal) ──
   const [activeOrder, setActiveOrder] = useState(null);
   const [activeTab, setActiveTab] = useState('ringkasan');
   const [detailLoading, setDetailLoading] = useState(false);
-
-  const [invoiceRows, setInvoiceRows] = useState(null);
-  const [invoiceEditing, setInvoiceEditing] = useState(false); // ← toggle tampilan form edit vs tabel read-only invoice
 
   const [editMode, setEditMode] = useState(false);
   const [editDraft, setEditDraft] = useState(null);
@@ -262,24 +192,12 @@ export default function AffiliateOrder({ affiliateId }) {
     setActiveTab('ringkasan');
     setEditMode(false);
     setEditDraft(null);
-
     // Tampilkan data list dulu (langsung terasa responsif), lalu refresh dengan data lengkap
     setActiveOrder(order);
     setDetailLoading(true);
     try {
       const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order_affiliate/${order._id}`, { withCredentials: true });
-      const full = res.data.success ? res.data.data : order;
-      setActiveOrder(full);
-
-      if (INVOICE_EDITABLE_STATUS.includes(full.status_pengujian)) {
-        const rows = full.rincian_harga_invoice?.length ? full.rincian_harga_invoice : buildInvoiceRows(full);
-        setInvoiceRows(rows);
-        // buka form edit otomatis hanya kalau ini pertama kali input invoice (belum ada rincian)
-        setInvoiceEditing(!full.rincian_harga_invoice?.length);
-      } else {
-        setInvoiceRows(null);
-        setInvoiceEditing(false);
-      }
+      setActiveOrder(res.data.success ? res.data.data : order);
     } catch (err) {
       // biarkan tetap pakai data dari list kalau fetch detail gagal
     } finally {
@@ -289,91 +207,24 @@ export default function AffiliateOrder({ affiliateId }) {
 
   const closeDetail = () => {
     setActiveOrder(null);
-    setInvoiceRows(null);
-    setInvoiceEditing(false);
     setEditMode(false);
     setEditDraft(null);
   };
 
-  // ─────────────────────────── Rincian invoice (tabel) ───────────────────────────
-  const updateInvoiceRow = (idx, key, value) => {
-    setInvoiceRows((rows) => rows.map((r, i) => {
-      if (i !== idx) return r;
-      const next = { ...r, [key]: value };
-      if (key === 'jumlah' || key === 'harga_satuan') {
-        const jumlah = key === 'jumlah' ? Number(value) || 0 : Number(next.jumlah) || 0;
-        const harga = key === 'harga_satuan' ? Number(value) || 0 : Number(next.harga_satuan) || 0;
-        next.total = jumlah * harga;
-      }
-      return next;
-    }));
-  };
-
-  const addInvoiceRow = () => {
-    setInvoiceRows((rows) => [...rows, { id: newRowId(), tanggal: activeOrder.date, deskripsi: '', keterangan: '', jumlah: 1, satuan: '', harga_satuan: 0, total: 0 }]);
-  };
-
-  const removeInvoiceRow = (idx) => {
-    setInvoiceRows((rows) => rows.filter((_, i) => i !== idx));
-  };
-
-  const startEditInvoice = () => {
-    setInvoiceRows(activeOrder.rincian_harga_invoice?.length ? activeOrder.rincian_harga_invoice : buildInvoiceRows(activeOrder));
-    setInvoiceEditing(true);
-  };
-
-  const cancelEditInvoice = () => {
-    setInvoiceEditing(false);
-    setInvoiceRows(activeOrder.rincian_harga_invoice?.length ? activeOrder.rincian_harga_invoice : null);
-  };
-
-  // ── Aksi admin: simpan/koreksi rincian invoice. Endpoint BE mengizinkan ini selama status
-  // "Selesai Diverifikasi" ATAU "Menunggu Pembayaran" (lihat INVOICE_EDITABLE_STATUS) ──
-  const handleSimpanInvoice = async () => {
+  // ─────────────────────────── Aksi Verifikasi (Ketua Lab) ───────────────────────────
+  const changeStatus = async (status_pengujian) => {
     if (saving) return;
-    try {
-      setSaving(true);
-      const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_URL}/api/order_affiliate/${activeOrder._id}/invoice`,
-        { rincian_harga_invoice: invoiceRows },
-        { withCredentials: true }
-      );
-      if (res.data.success) {
-        const updated = { ...res.data.data, id_affiliate: activeOrder.id_affiliate };
-        setData((prev) => prev.map((v) => (v._id === updated._id ? updated : v)));
-        setActiveOrder(updated);
-        setInvoiceRows(updated.rincian_harga_invoice);
-        setInvoiceEditing(false);
-      } else {
-        alert(res.data.message || 'Gagal menyimpan invoice');
-      }
-    } catch (err) {
-      alert(err.response?.data?.message || err.message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  // ── Aksi admin: transisi status "Menunggu Verifikasi Pembayaran" → "Selesai" (satu-satunya
-  // perubahan status yang boleh dilakukan admin di halaman ini — tidak ada dropdown bebas lagi) ──
-  const handleSelesaikanOrder = async () => {
-    if (saving) return;
-    if (!window.confirm('Yakin ingin menandai order ini sebagai "Selesai"? User akan bisa mengunduh hasil analisis serta kuitansi setelah ini.')) return;
     try {
       setSaving(true);
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_URL}/api/order_affiliate/${activeOrder._id}/status`,
-        { status_pengujian: 'Selesai' },
+        { status_pengujian },
         { withCredentials: true }
       );
       if (res.data.success) {
         const updated = { ...res.data.data, id_affiliate: activeOrder.id_affiliate };
         setData((prev) => prev.map((v) => (v._id === updated._id ? updated : v)));
         setActiveOrder(updated);
-        setInvoiceRows(null);
-        setInvoiceEditing(false);
-      } else {
-        alert(res.data.message || 'Gagal memperbarui status');
       }
     } catch (err) {
       alert(err.response?.data?.message || err.message);
@@ -382,7 +233,10 @@ export default function AffiliateOrder({ affiliateId }) {
     }
   };
 
-  // ─────────────────────────── Edit data order ───────────────────────────
+  const handleAcc = () => changeStatus('Selesai Diverifikasi');
+  const handleKembalikan = () => changeStatus('Order Diproses');
+
+  // ─────────────────────────── Edit data order (data pemohon + rincian layanan) ───────────────────────────
   const startEdit = () => {
     setEditDraft(JSON.parse(JSON.stringify(activeOrder)));
     setEditMode(true);
@@ -425,6 +279,8 @@ export default function AffiliateOrder({ affiliateId }) {
         setActiveOrder(updated);
         setEditMode(false);
         setEditDraft(null);
+      } else {
+        alert(res.data.message || 'Gagal menyimpan data');
       }
     } catch (err) {
       alert(err.response?.data?.message || err.message);
@@ -450,7 +306,7 @@ export default function AffiliateOrder({ affiliateId }) {
     [jenis]: d[jenis].filter((_, i) => i !== idx),
   }));
 
-  // ─────────────────────────── Download Invoice PDF (generate di FE) ───────────────────────────
+  // ─────────────────────────── Download Invoice PDF (view-only, ketua_lab tidak boleh edit invoice) ───────────────────────────
   const handleDownloadInvoice = async () => {
     if (downloadingInvoice || !activeOrder?.rincian_harga_invoice?.length) return;
     try {
@@ -472,20 +328,20 @@ export default function AffiliateOrder({ affiliateId }) {
     }
   };
 
-  // ─────────────────────────── Download Kwitansi PDF (fetch data → render tersembunyi → capture) ───────────────────────────
-  const handleDownloadKwitansi = async () => {
+  // ─────────────────────────── Download Kuitansi PDF (hanya saat status "Selesai") ───────────────────────────
+  const handleDownloadKuitansi = async () => {
     if (downloadingKwitansi || !activeOrder?._id) return;
     try {
       setDownloadingKwitansi(true);
       const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order_affiliate/${activeOrder._id}/kwitansi`, { withCredentials: true });
       if (!res.data.success) {
-        alert(res.data.message || 'Gagal mengambil data kwitansi');
+        alert(res.data.message || 'Gagal mengambil data kuitansi');
         return;
       }
       const kwitansi = res.data.data;
       setKwitansiData(kwitansi);
 
-      // beri waktu satu tick agar template kwitansi sempat ter-render ke DOM sebelum di-capture
+      // beri waktu satu tick agar template kuitansi sempat ter-render ke DOM sebelum di-capture
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       const el = document.getElementById('kwitansi-print-area');
@@ -508,7 +364,7 @@ export default function AffiliateOrder({ affiliateId }) {
 
   // ─────────────────────────── Download Laporan Excel (list order, ikut filter aktif) ───────────────────────────
   const handleDownloadExcel = async () => {
-    if (downloadingExcel || !affiliateId) return;
+    if (downloadingExcel) return;
     try {
       setDownloadingExcel(true);
       const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order_affiliate_export`, {
@@ -550,11 +406,8 @@ export default function AffiliateOrder({ affiliateId }) {
     }
   };
 
-  const actionLabel = (order) => {
-    if (order.status_pengujian === 'Selesai Diverifikasi') return 'Input Invoice';
-    if (order.status_pengujian === 'Menunggu Verifikasi Pembayaran') return 'Verifikasi Bayar';
-    return 'Detail';
-  };
+  const actionLabel = (order) =>
+    KETUA_LAB_ACTIONABLE_STATUS.includes(order.status_pengujian) ? 'Verifikasi' : 'Detail';
 
   // ══════════════════════════════ DETAIL: halaman order terpilih ══════════════════════════════
   if (activeOrder) {
@@ -564,87 +417,84 @@ export default function AffiliateOrder({ affiliateId }) {
       (activeOrder.sewa_alat?.length || 0) +
       (activeOrder.pembelian_bahan?.length || 0);
 
-    const isInvoiceEditableWindow = INVOICE_EDITABLE_STATUS.includes(activeOrder.status_pengujian);
-    const isCorrectingInvoice = !!activeOrder.rincian_harga_invoice?.length;
-
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-5">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-5">
+      <div className="p-6 max-w-5xl mx-auto">
+        {/* Page Header */}
+        <div className="mb-6 flex items-center gap-3">
           <button
             onClick={closeDetail}
-            className="p-2 hover:bg-gray-100 rounded-lg transition text-gray-500 flex-shrink-0"
+            className="p-2 hover:bg-gray-100 rounded-lg transition text-gray-500"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-2">
-              <ClipboardList className="w-3.5 h-3.5" /> {activeOrder.no_invoice}
-              {detailLoading && <Loader2 className="w-3.5 h-3.5 text-gray-300 animate-spin" />}
-            </p>
-            <p className="text-[11px] text-gray-400 mt-1">Detail order — kelola invoice, data, dan status order</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-1 flex items-center gap-2">
+              {activeOrder.no_invoice}
+              {detailLoading && <Loader2 className="w-4 h-4 text-gray-300 animate-spin" />}
+            </h1>
+            <p className="text-sm text-gray-500">Detail order — verifikasi laporan sebelum lanjut ke tahap invoice</p>
           </div>
         </div>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-          <div className="border border-gray-200 rounded-xl p-4">
-            <p className="text-xs text-gray-500 mb-1 flex items-center gap-1"><Building2 className="w-3 h-3" /> Pemohon</p>
-            <p className="text-sm font-semibold text-gray-900 truncate">{activeOrder.nama_lengkap || '—'}</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <p className="text-sm text-gray-500 mb-1">Pemohon</p>
+            <p className="text-base font-semibold text-gray-900 truncate">{activeOrder.nama_lengkap || '—'}</p>
             <p className="text-xs text-gray-400 mt-1 truncate">{activeOrder.nama_institusi || '—'}</p>
           </div>
-          <div className="border border-gray-200 rounded-xl p-4">
-            <p className="text-xs text-gray-500 mb-1">Total Keseluruhan</p>
-            <p className="text-xl font-bold text-blue-600">Rp {convertRupiah(activeOrder.total_keseluruhan)}</p>
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <p className="text-sm text-gray-500 mb-1">Total Keseluruhan</p>
+            <p className="text-2xl font-bold text-blue-600">Rp {convertRupiah(activeOrder.total_keseluruhan)}</p>
             <p className="text-xs text-gray-400 mt-1">{itemCount} item layanan</p>
           </div>
-
-          {/* ── Status Order — tampilan baca-saja, tidak ada lagi dropdown ubah manual ── */}
-          <div className="border border-gray-200 rounded-xl p-4">
-            <p className="text-xs text-gray-500 mb-1.5">Status Order</p>
-            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${STATUS_CLASS[activeOrder.status_pengujian] || 'bg-gray-100 text-gray-600'}`}>
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <p className="text-sm text-gray-500 mb-1">Status Order</p>
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold mt-1 ${STATUS_CLASS[activeOrder.status_pengujian] || 'bg-gray-100 text-gray-600'}`}>
               {activeOrder.status_pengujian}
             </span>
             <p className="text-xs text-gray-400 mt-2">{formatDate(activeOrder.date)}</p>
           </div>
         </div>
 
-        {/* Hint box: verifikasi pembayaran — satu-satunya aksi ubah status admin di halaman ini */}
-        {activeOrder.status_pengujian === 'Menunggu Verifikasi Pembayaran' && (
-          <div className="border border-amber-200 bg-amber-50 rounded-xl p-4 mb-5">
-            <p className="text-xs font-semibold text-amber-800 mb-1.5 flex items-center gap-1.5">
-              <CreditCard className="w-3.5 h-3.5" /> Verifikasi Pembayaran
+        {/* Panel aksi verifikasi — hanya muncul saat "Menunggu Diverifikasi" */}
+        {activeOrder.status_pengujian === 'Menunggu Diverifikasi' && (
+          <div className="border border-yellow-200 bg-yellow-50 rounded-xl p-4 mb-6">
+            <p className="text-xs font-semibold text-yellow-800 mb-1 flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5" /> Verifikasi Laporan
             </p>
-            {activeOrder.bukti_pembayaran ? (
-              <>
-                <p className="text-[11px] text-amber-700 mb-3">
-                  User sudah upload bukti pembayaran. Periksa file di tab Dokumen, lalu klik tombol di bawah jika sudah sesuai — user bisa download hasil analisis serta kuitansi setelah itu.
-                </p>
-                <button
-                  onClick={handleSelesaikanOrder}
-                  disabled={saving}
-                  className="flex items-center gap-1.5 px-3.5 py-2 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition"
-                >
-                  {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />} Verifikasi & Selesaikan Order
-                </button>
-              </>
-            ) : (
-              <p className="text-[11px] text-amber-700">Bukti pembayaran belum diupload user.</p>
-            )}
+            <p className="text-[11px] text-yellow-700 mb-3">
+              Periksa laporan & rincian biaya dari laboran di tab Dokumen. Kalau sudah sesuai, ACC untuk lanjut ke tahap invoice. Kalau masih ada yang perlu diperbaiki, kembalikan ke laboran.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={handleAcc}
+                disabled={saving}
+                className="flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition"
+              >
+                {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ShieldCheck className="w-3.5 h-3.5" />}
+                Selesai Diverifikasi
+              </button>
+              <button
+                onClick={handleKembalikan}
+                disabled={saving}
+                className="flex items-center gap-1.5 px-4 py-2 border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 text-xs font-medium rounded-lg transition"
+              >
+                <RotateCcw className="w-3.5 h-3.5" /> Kembalikan ke Laboran
+              </button>
+            </div>
           </div>
         )}
-
-        {/* Hint box: status yang bukan wewenang admin saat ini */}
-        {!ADMIN_ACTIONABLE_STATUS.includes(activeOrder.status_pengujian) && activeOrder.status_pengujian !== 'Menunggu Verifikasi Pembayaran' && (
-          <div className="border border-gray-200 bg-gray-50 rounded-xl p-4 text-center mb-5">
+        {activeOrder.status_pengujian !== 'Menunggu Diverifikasi' && (
+          <div className="border border-gray-200 bg-gray-50 rounded-xl p-4 text-center mb-6">
             <p className="text-xs text-gray-500">
-              Order ini sedang ditangani oleh {statusOwnerHint(activeOrder.status_pengujian)}. Status hanya bisa diperbarui oleh pihak yang berwenang pada tahap ini.
+              Order ini sedang ditangani oleh {statusOwnerHint(activeOrder.status_pengujian)}. Sebagai ketua lab, Anda hanya bisa memverifikasi saat status "Menunggu Diverifikasi", namun tetap bisa mengedit data order di tab Rincian Order.
             </p>
           </div>
         )}
 
         {/* Tab Bar */}
-        <div className="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+        <div className="bg-white rounded-xl border border-gray-200 mb-6 overflow-hidden">
           <div className="flex border-b border-gray-200">
             {DETAIL_TABS.map((t) => {
               const Icon = t.icon;
@@ -664,7 +514,7 @@ export default function AffiliateOrder({ affiliateId }) {
         {/* Tab: Rincian Order — Data Pemohon (editable) lalu Layanan (editable) */}
         {activeTab === 'ringkasan' && (
           <div className="flex flex-col gap-4">
-            <div className="border border-gray-200 rounded-xl p-5">
+            <div className="bg-white rounded-xl border border-gray-200 p-5">
               <div className="flex items-center justify-between mb-4">
                 <p className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-2">
                   <User className="w-3.5 h-3.5" /> Data Pemohon
@@ -728,7 +578,7 @@ export default function AffiliateOrder({ affiliateId }) {
 
             {editMode ? (
               Object.entries(FIELD_CONFIG).map(([jenis, cfg]) => (
-                <div key={jenis} className="border border-gray-200 rounded-xl p-5">
+                <div key={jenis} className="bg-white rounded-xl border border-gray-200 p-5">
                   <ItemSectionEditable
                     jenis={jenis}
                     config={cfg}
@@ -743,13 +593,13 @@ export default function AffiliateOrder({ affiliateId }) {
               <>
                 {Object.entries(FIELD_CONFIG).map(([jenis, cfg]) => (
                   activeOrder[jenis]?.length > 0 && (
-                    <div key={jenis} className="border border-gray-200 rounded-xl p-5">
+                    <div key={jenis} className="bg-white rounded-xl border border-gray-200 p-5">
                       <ItemSectionReadOnly config={cfg} items={activeOrder[jenis]} />
                     </div>
                   )
                 ))}
                 {itemCount === 0 && (
-                  <div className="border border-gray-200 rounded-xl p-5">
+                  <div className="bg-white rounded-xl border border-gray-200 p-5">
                     <p className="text-sm text-gray-400 italic">Tidak ada layanan pada order ini.</p>
                   </div>
                 )}
@@ -758,142 +608,86 @@ export default function AffiliateOrder({ affiliateId }) {
           </div>
         )}
 
-        {/* Tab: Invoice — input/koreksi saat window edit aktif, atau lihat rincian yang sudah ada */}
-        {activeTab === 'invoice' && (
+        {/* Tab: Dokumen — grid link dokumen, Rincian Invoice di bagian paling bawah */}
+        {activeTab === 'dokumen' && (
           <div className="flex flex-col gap-4">
-            {isInvoiceEditableWindow && invoiceEditing && invoiceRows ? (
-              <div className="border border-gray-200 rounded-xl p-5">
-                <div className="border border-cyan-200 bg-cyan-50 rounded-xl p-4 mb-4">
-                  <p className="text-xs font-semibold text-cyan-800 mb-1 flex items-center gap-1.5">
-                    <Receipt className="w-3.5 h-3.5" /> {isCorrectingInvoice ? 'Koreksi Rincian Invoice' : 'Input Rincian Invoice'}
-                  </p>
-                  <p className="text-[11px] text-cyan-700">
-                    Baris sudah terisi otomatis dari data order — lengkapi tanggal, deskripsi, keterangan, jumlah, satuan, dan harga satuan tiap baris sesuai kebutuhan. Tambahkan baris baru bila ada biaya tambahan.
-                  </p>
-                </div>
+            <div className="bg-white rounded-xl border border-gray-200 p-5">
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-4 flex items-center gap-2">
+                <FileText className="w-3.5 h-3.5" /> Dokumen Terkait
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FileLink label="Laporan (laboran)" href={activeOrder.laporan} />
+                <FileLink label="Rincian Biaya (laboran)" href={activeOrder.rincian_biaya} />
 
-                <InvoiceTable
-                  rows={invoiceRows}
-                  editable
-                  onUpdateRow={updateInvoiceRow}
-                  onAddRow={addInvoiceRow}
-                  onRemoveRow={removeInvoiceRow}
-                />
+                {activeOrder.rincian_harga_invoice?.length > 0 ? (
+                  <button
+                    onClick={handleDownloadInvoice}
+                    disabled={downloadingInvoice}
+                    className="flex items-center justify-between gap-3 px-4 py-3 border border-gray-200 rounded-lg bg-white hover:bg-gray-50 transition disabled:opacity-60"
+                  >
+                    <span className="flex items-center gap-2 text-xs text-gray-600 min-w-0">
+                      <FileText className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      <span className="truncate">Invoice</span>
+                    </span>
+                    <span className="flex items-center gap-1.5 text-xs font-medium text-red-700">
+                      {downloadingInvoice ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+                      {downloadingInvoice ? 'Membuat PDF...' : 'Unduh PDF'}
+                    </span>
+                  </button>
+                ) : (
+                  <FileLink label="Invoice" href={null} />
+                )}
 
-                <div className="flex items-center justify-end gap-2 mt-4">
+                {/* ── Kuitansi — hanya tersedia setelah status "Selesai" (sinkron dengan endpoint BE) ── */}
+                {activeOrder.status_pengujian === 'Selesai' ? (
                   <button
-                    onClick={isCorrectingInvoice ? cancelEditInvoice : closeDetail}
-                    className="flex items-center gap-1.5 px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 transition"
+                    onClick={handleDownloadKuitansi}
+                    disabled={downloadingKwitansi}
+                    className="flex items-center justify-between gap-3 px-4 py-3 border border-gray-200 rounded-lg bg-white hover:bg-gray-50 transition disabled:opacity-60"
                   >
-                    <X className="w-4 h-4" /> Batal
+                    <span className="flex items-center gap-2 text-xs text-gray-600 min-w-0">
+                      <FileCheck className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      <span className="truncate">Kuitansi</span>
+                    </span>
+                    <span className="flex items-center gap-1.5 text-xs font-medium text-red-700">
+                      {downloadingKwitansi ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+                      {downloadingKwitansi ? 'Membuat PDF...' : 'Unduh PDF'}
+                    </span>
                   </button>
-                  <button
-                    onClick={handleSimpanInvoice}
-                    disabled={saving}
-                    className="flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition"
-                  >
-                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                    {isCorrectingInvoice ? 'Simpan Perubahan Invoice' : 'Konfirmasi & Kirim Invoice'}
-                  </button>
-                </div>
+                ) : (
+                  <div className="flex items-center justify-between gap-3 px-4 py-3 border border-gray-200 rounded-lg bg-white">
+                    <span className="flex items-center gap-2 text-xs text-gray-600 min-w-0">
+                      <FileCheck className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      <span className="truncate">Kuitansi</span>
+                    </span>
+                    <span className="text-[11px] text-gray-400 flex-shrink-0 px-2.5 py-1.5">Tersedia setelah Selesai</span>
+                  </div>
+                )}
+
+                <FileLink label="Bukti Pembayaran (user)" href={activeOrder.bukti_pembayaran} />
+                <FileLink label="Hasil Analisis (laboran)" href={activeOrder.hasil_analisis} />
               </div>
-            ) : activeOrder.rincian_harga_invoice?.length > 0 ? (
-              <div className="border border-gray-200 rounded-xl p-5">
-                <div className="flex items-center justify-between mb-3">
-                  <p className="text-xs font-semibold text-gray-700 flex items-center gap-2">
-                    <Receipt className="w-3.5 h-3.5 text-gray-400" /> Rincian Invoice
-                  </p>
-                  {isInvoiceEditableWindow && (
-                    <button
-                      onClick={startEditInvoice}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-                    >
-                      <Pencil className="w-3.5 h-3.5" /> Edit Invoice
-                    </button>
-                  )}
-                </div>
-                <InvoiceTable rows={activeOrder.rincian_harga_invoice} editable={false} />
-              </div>
-            ) : (
-              <div className="border border-gray-200 rounded-xl p-5 text-center">
-                <Receipt className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                <p className="text-sm text-gray-400 italic">
-                  Belum ada rincian invoice untuk order ini. Invoice bisa diinput setelah status "Selesai Diverifikasi".
+            </div>
+
+            {/* ── Rincian Invoice — di bagian paling bawah tab Dokumen ── */}
+            {activeOrder.rincian_harga_invoice?.length > 0 && (
+              <div className="bg-white rounded-xl border border-gray-200 p-5">
+                <p className="text-xs font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                  <Receipt className="w-3.5 h-3.5 text-gray-400" /> Rincian Invoice
                 </p>
+                <InvoiceTable rows={activeOrder.rincian_harga_invoice} />
               </div>
             )}
           </div>
         )}
 
-        {/* Tab: Dokumen */}
-        {activeTab === 'dokumen' && (
-          <div className="border border-gray-200 rounded-xl p-5">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-4 flex items-center gap-2">
-              <FileText className="w-3.5 h-3.5" /> Dokumen Terkait
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <FileLink label="Laporan (laboran)" href={activeOrder.laporan} />
-              <FileLink label="Rincian Biaya (laboran)" href={activeOrder.rincian_biaya} />
-
-              {activeOrder.rincian_harga_invoice?.length > 0 ? (
-                <button
-                  onClick={handleDownloadInvoice}
-                  disabled={downloadingInvoice}
-                  className="flex items-center justify-between gap-3 px-4 py-3 border border-gray-200 rounded-lg bg-white hover:bg-gray-50 transition disabled:opacity-60"
-                >
-                  <span className="flex items-center gap-2 text-xs text-gray-600 min-w-0">
-                    <FileText className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                    <span className="truncate">Invoice</span>
-                  </span>
-                  <span className="flex items-center gap-1.5 text-xs font-medium text-red-700">
-                    {downloadingInvoice ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-                    {downloadingInvoice ? 'Membuat PDF...' : 'Unduh PDF'}
-                  </span>
-                </button>
-              ) : (
-                <FileLink label="Invoice" href={null} />
-              )}
-
-              <FileLink label="Bukti Pembayaran (user)" href={activeOrder.bukti_pembayaran} />
-              <FileLink label="Hasil Analisis (laboran)" href={activeOrder.hasil_analisis} />
-
-              {/* ── Kwitansi — hanya tersedia setelah status "Selesai" (sinkron dengan endpoint BE) ── */}
-              {activeOrder.status_pengujian === 'Selesai' ? (
-                <button
-                  onClick={handleDownloadKwitansi}
-                  disabled={downloadingKwitansi}
-                  className="flex items-center justify-between gap-3 px-4 py-3 border border-gray-200 rounded-lg bg-white hover:bg-gray-50 transition disabled:opacity-60"
-                >
-                  <span className="flex items-center gap-2 text-xs text-gray-600 min-w-0">
-                    <FileText className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                    <span className="truncate">Kwitansi</span>
-                  </span>
-                  <span className="flex items-center gap-1.5 text-xs font-medium text-red-700">
-                    {downloadingKwitansi ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-                    {downloadingKwitansi ? 'Membuat PDF...' : 'Unduh PDF'}
-                  </span>
-                </button>
-              ) : (
-                <div className="flex items-center justify-between gap-3 px-4 py-3 border border-gray-200 rounded-lg bg-white">
-                  <span className="flex items-center gap-2 text-xs text-gray-600 min-w-0">
-                    <FileText className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                    <span className="truncate">Kwitansi</span>
-                  </span>
-                  <span className="text-[11px] text-gray-400 flex-shrink-0 px-2.5 py-1.5">Tersedia setelah Selesai</span>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Template invoice tersembunyi, dipakai html2canvas untuk generate PDF */}
         {activeOrder.rincian_harga_invoice?.length > 0 && (
           <div style={{ position: 'fixed', top: 0, left: '-99999px' }}>
             <InvoiceTemplate order={activeOrder} printId="invoice-print-area" />
           </div>
         )}
 
-        {/* Template kwitansi tersembunyi, dipakai html2canvas untuk generate PDF */}
+        {/* Template kuitansi tersembunyi, dipakai html2canvas untuk generate PDF */}
         {kwitansiData && (
           <div style={{ position: 'fixed', top: 0, left: '-99999px' }}>
             <KwitansiTemplate data={kwitansiData} printId="kwitansi-print-area" />
@@ -903,128 +697,143 @@ export default function AffiliateOrder({ affiliateId }) {
     );
   }
 
-  // ══════════════════════════════ LIST: daftar order (satu card putih, sama seperti AffiliateUserManagement) ══════════════════════════════
+  // ══════════════════════════════ LIST: daftar order ══════════════════════════════
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5">
-      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-        <div>
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-2">
-            <ClipboardList className="w-3.5 h-3.5" /> Daftar Order
-          </p>
-          <p className="text-[11px] text-gray-400 mt-1">Kelola order, verifikasi, upload dokumen, & input invoice</p>
+    <div className="p-6 max-w-5xl mx-auto">
+      {/* ── Judul Halaman ── */}
+      <div className="flex items-center justify-between gap-3 mb-1 flex-wrap">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center">
+            <ClipboardList className="w-5 h-5 text-gray-500" />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900">Daftar Order</h1>
         </div>
-        <div className="flex items-center gap-2.5">
-          <button
-            onClick={handleDownloadExcel}
-            disabled={downloadingExcel}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-green-700 border border-green-200 bg-green-50 hover:bg-green-100 disabled:opacity-50 rounded-lg transition"
-          >
-            {downloadingExcel ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileSpreadsheet className="w-3.5 h-3.5" />}
-            {downloadingExcel ? 'Membuat Excel...' : 'Download Excel'}
-          </button>
-          <span className="text-[11px] px-2.5 py-1 rounded-full bg-gray-100 text-gray-500 font-medium">
-            Mode Admin — kelola invoice, data, dan status order
-          </span>
-        </div>
+        <button
+          onClick={handleDownloadExcel}
+          disabled={downloadingExcel}
+          className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-green-700 border border-green-200 bg-green-50 hover:bg-green-100 disabled:opacity-50 rounded-lg transition"
+        >
+          {downloadingExcel ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileSpreadsheet className="w-3.5 h-3.5" />}
+          {downloadingExcel ? 'Membuat Excel...' : 'Download Excel'}
+        </button>
       </div>
+      <p className="text-sm text-gray-500 mb-6 ml-12">
+        Kelola order, verifikasi, upload dokumen, & input invoice
+      </p>
 
       {/* Filter Bar */}
-      <div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-4">
-        <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Cari no. invoice atau nama pemohon..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-400 transition"
-          />
+      <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-3">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Cari no. invoice atau nama pemohon..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-400 transition"
+            />
+          </div>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-3 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-400 transition sm:w-56"
+          >
+            <option value="">Semua Status</option>
+            {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+          <select
+            value={monthFilter}
+            onChange={(e) => setMonthFilter(e.target.value)}
+            className="px-3 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-400 transition sm:w-40"
+          >
+            <option value="">Semua Bulan</option>
+            {MONTH_NAMES.map((m, idx) => <option key={m} value={String(idx)}>{m}</option>)}
+          </select>
+          <select
+            value={yearFilter}
+            onChange={(e) => setYearFilter(e.target.value)}
+            className="px-3 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-400 transition sm:w-32"
+          >
+            <option value="">Semua Tahun</option>
+            {uniqueYears.map((y) => <option key={y} value={y}>{y}</option>)}
+          </select>
         </div>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-400 transition sm:w-56"
-        >
-          <option value="">Semua Status</option>
-          {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
-        </select>
-        <select
-          value={monthFilter}
-          onChange={(e) => setMonthFilter(e.target.value)}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-400 transition sm:w-40"
-        >
-          <option value="">Semua Bulan</option>
-          {MONTH_NAMES.map((m, idx) => <option key={m} value={String(idx)}>{m}</option>)}
-        </select>
-        <select
-          value={yearFilter}
-          onChange={(e) => setYearFilter(e.target.value)}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-400 transition sm:w-32"
-        >
-          <option value="">Semua Tahun</option>
-          {uniqueYears.map((y) => <option key={y} value={y}>{y}</option>)}
-        </select>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[820px]">
-          <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              {['No', 'No. Invoice', 'Pemohon', 'Instansi', 'Status', 'Total', ''].map((h, i) => (
-                <th
-                  key={h}
-                  className={`px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap ${i === 6 ? 'text-right' : 'text-left'}`}
-                >
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {loading ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <tr key={i} className="animate-pulse">
-                  {Array.from({ length: 7 }).map((__, j) => (
-                    <td key={j} className="px-4 py-3"><div className="h-3 w-full bg-gray-200 rounded" /></td>
-                  ))}
-                </tr>
-              ))
-            ) : filtered.length > 0 ? filtered.map((v, i) => {
-              const needsAction = ADMIN_ACTIONABLE_STATUS.includes(v.status_pengujian);
-              return (
-                <tr key={v._id} className="hover:bg-gray-50 transition">
-                  <td className="px-4 py-3"><span className="text-xs text-gray-400">{i + 1}</span></td>
-                  <td className="px-4 py-3 whitespace-nowrap"><span className="text-sm font-medium text-gray-900">{v.no_invoice}</span></td>
-                  <td className="px-4 py-3"><span className="text-sm text-gray-700">{v.nama_lengkap}</span></td>
-                  <td className="px-4 py-3"><span className="text-xs text-gray-500">{v.nama_institusi}</span></td>
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${STATUS_CLASS[v.status_pengujian] || 'bg-gray-100 text-gray-600'}`}>
-                      {v.status_pengujian}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap"><span className="text-sm font-semibold text-gray-900">Rp {convertRupiah(v.total_keseluruhan)}</span></td>
-                  <td className="px-4 py-3 text-right">
-                    <button
-                      onClick={() => openDetail(v)}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white rounded-lg transition ${needsAction ? 'bg-red-700 hover:bg-red-800' : 'bg-gray-600 hover:bg-gray-700'}`}
-                    >
-                      {needsAction ? <CreditCard className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                      {actionLabel(v)}
-                    </button>
-                  </td>
-                </tr>
-              );
-            }) : (
-              <tr>
-                <td colSpan={7} className="px-6 py-16 text-center">
-                  <ClipboardList className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                  <p className="text-sm text-gray-400">Belum ada order untuk lab affiliate ini</p>
-                </td>
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[820px] border-collapse">
+            <thead>
+              <tr className="bg-gray-50 border-b border-gray-200">
+                {['No', 'No. Invoice', 'Pemohon', 'Instansi', 'Status', 'Total', 'Aksi'].map((h, i) => (
+                  <th
+                    key={h}
+                    className={`px-4 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap ${i === 6 ? 'text-right' : 'text-left'}`}
+                  >
+                    {h}
+                  </th>
+                ))}
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {loading ? (
+                Array.from({ length: 4 }).map((_, i) => (
+                  <tr key={i}>
+                    <td className="px-4 py-4"><div className="h-3 w-4 bg-gray-100 rounded animate-pulse" /></td>
+                    <td className="px-4 py-4"><div className="h-3 w-24 bg-gray-100 rounded animate-pulse" /></td>
+                    <td className="px-4 py-4"><div className="h-3 w-32 bg-gray-100 rounded animate-pulse" /></td>
+                    <td className="px-4 py-4"><div className="h-3 w-28 bg-gray-100 rounded animate-pulse" /></td>
+                    <td className="px-4 py-4"><div className="h-5 w-32 bg-gray-100 rounded-full animate-pulse" /></td>
+                    <td className="px-4 py-4"><div className="h-3 w-20 bg-gray-100 rounded animate-pulse" /></td>
+                    <td className="px-4 py-4 text-right"><div className="h-7 w-24 bg-gray-100 rounded-lg animate-pulse ml-auto" /></td>
+                  </tr>
+                ))
+              ) : filtered.length > 0 ? filtered.map((v, i) => {
+                const needsAction = KETUA_LAB_ACTIONABLE_STATUS.includes(v.status_pengujian);
+                return (
+                  <tr key={v._id} className="hover:bg-gray-50/80 transition">
+                    <td className="px-4 py-4 text-xs text-gray-400 align-middle">{i + 1}</td>
+                    <td className="px-4 py-4 whitespace-nowrap align-middle">
+                      <span className="text-sm font-medium text-gray-900">{v.no_invoice}</span>
+                    </td>
+                    <td className="px-4 py-4 align-middle">
+                      <span className="text-sm text-gray-700">{v.nama_lengkap}</span>
+                    </td>
+                    <td className="px-4 py-4 align-middle">
+                      <span className="text-xs text-gray-500">{v.nama_institusi}</span>
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap align-middle">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ${STATUS_CLASS[v.status_pengujian] || 'bg-gray-100 text-gray-600'}`}>
+                        {v.status_pengujian}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap align-middle">
+                      <span className="text-sm font-semibold text-gray-900">Rp {convertRupiah(v.total_keseluruhan)}</span>
+                    </td>
+                    <td className="px-4 py-4 align-middle text-right">
+                      <button
+                        onClick={() => openDetail(v)}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white rounded-lg transition shadow-sm ${needsAction ? 'bg-red-700 hover:bg-red-800' : 'bg-gray-600 hover:bg-gray-700'}`}
+                      >
+                        {needsAction ? <ShieldCheck className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                        {actionLabel(v)}
+                      </button>
+                    </td>
+                  </tr>
+                );
+              }) : (
+                <tr>
+                  <td colSpan={7} className="px-6 py-16 text-center">
+                    <ClipboardList className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+                    <p className="text-sm text-gray-400">Belum ada order untuk lab affiliate ini</p>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
@@ -1036,8 +845,9 @@ function statusOwnerHint(status) {
     case 'Order Dikonfirmasi': return 'laboran (bersiap memproses)';
     case 'Order Ditolak': return 'laboran (order ditolak)';
     case 'Order Diproses': return 'laboran (sedang memproses sampel)';
-    case 'Menunggu Diverifikasi': return 'ketua lab (menunggu verifikasi)';
+    case 'Selesai Diverifikasi': return 'admin (input invoice)';
     case 'Menunggu Pembayaran': return 'user (menunggu pembayaran)';
+    case 'Menunggu Verifikasi Pembayaran': return 'admin (verifikasi pembayaran)';
     case 'Selesai': return 'tidak ada — order sudah selesai';
     default: return 'pihak terkait';
   }
@@ -1196,10 +1006,8 @@ function ItemSectionEditable({ jenis, config, items, onUpdate, onAdd, onRemove }
   );
 }
 
-function InvoiceTable({ rows, editable, onUpdateRow, onAddRow, onRemoveRow }) {
+function InvoiceTable({ rows }) {
   const total = rows.reduce((acc, r) => acc + (Number(r.total) || 0), 0);
-  const colCount = editable ? 9 : 8;
-
   return (
     <div className="border border-gray-200 rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
@@ -1214,134 +1022,30 @@ function InvoiceTable({ rows, editable, onUpdateRow, onAddRow, onRemoveRow }) {
               <th className="px-2 py-2.5 text-left font-semibold text-gray-500 uppercase tracking-wide w-16">Satuan</th>
               <th className="px-2 py-2.5 text-right font-semibold text-gray-500 uppercase tracking-wide w-28">Harga Satuan</th>
               <th className="px-3 py-2.5 text-right font-semibold text-gray-500 uppercase tracking-wide w-28">Total</th>
-              {editable && <th className="px-2 py-2.5 w-9" />}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
             {rows.map((r, idx) => (
               <tr key={r.id || r._id || idx}>
                 <td className="px-3 py-2 text-gray-400 align-top">{idx + 1}</td>
-                <td className="px-2 py-2 align-top">
-                  {editable ? (
-                    <input
-                      type="date"
-                      value={r.tanggal ? r.tanggal.slice(0, 10) : ''}
-                      onChange={(e) => onUpdateRow(idx, 'tanggal', e.target.value)}
-                      className="w-full px-2 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
-                    />
-                  ) : (
-                    <span className="text-gray-700 whitespace-nowrap">{formatDate(r.tanggal)}</span>
-                  )}
-                </td>
-                <td className="px-2 py-2 align-top">
-                  {editable ? (
-                    <input
-                      type="text"
-                      value={r.deskripsi}
-                      onChange={(e) => onUpdateRow(idx, 'deskripsi', e.target.value)}
-                      className="w-full min-w-[140px] px-2 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
-                    />
-                  ) : (
-                    <span className="text-gray-800 font-medium">{r.deskripsi || '—'}</span>
-                  )}
-                </td>
-                <td className="px-2 py-2 align-top">
-                  {editable ? (
-                    <input
-                      type="text"
-                      value={r.keterangan}
-                      onChange={(e) => onUpdateRow(idx, 'keterangan', e.target.value)}
-                      className="w-full min-w-[120px] px-2 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
-                    />
-                  ) : (
-                    <span className="text-gray-600">{r.keterangan || '—'}</span>
-                  )}
-                </td>
-                <td className="px-2 py-2 align-top text-right">
-                  {editable ? (
-                    <input
-                      type="number"
-                      value={r.jumlah}
-                      onChange={(e) => onUpdateRow(idx, 'jumlah', e.target.value)}
-                      className="w-16 px-2 py-1.5 border border-gray-300 rounded-lg text-xs bg-white text-right focus:outline-none focus:ring-2 focus:ring-red-500"
-                    />
-                  ) : (
-                    <span className="text-gray-700">{r.jumlah}</span>
-                  )}
-                </td>
-                <td className="px-2 py-2 align-top">
-                  {editable ? (
-                    <input
-                      type="text"
-                      value={r.satuan}
-                      onChange={(e) => onUpdateRow(idx, 'satuan', e.target.value)}
-                      className="w-16 px-2 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
-                    />
-                  ) : (
-                    <span className="text-gray-700">{r.satuan || '—'}</span>
-                  )}
-                </td>
-                <td className="px-2 py-2 align-top text-right">
-                  {editable ? (
-                    <input
-                      type="number"
-                      value={r.harga_satuan}
-                      onChange={(e) => onUpdateRow(idx, 'harga_satuan', e.target.value)}
-                      className="w-24 px-2 py-1.5 border border-gray-300 rounded-lg text-xs bg-white text-right focus:outline-none focus:ring-2 focus:ring-red-500"
-                    />
-                  ) : (
-                    <span className="text-gray-700">Rp {convertRupiah(r.harga_satuan)}</span>
-                  )}
-                </td>
-                <td className="px-3 py-2 align-top text-right font-semibold text-gray-800 whitespace-nowrap">
-                  Rp {convertRupiah(r.total)}
-                </td>
-                {editable && (
-                  <td className="px-2 py-2 align-top">
-                    <button
-                      type="button"
-                      onClick={() => onRemoveRow(idx)}
-                      className="flex items-center justify-center w-7 h-7 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
-                      title="Hapus baris"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </td>
-                )}
+                <td className="px-2 py-2 align-top"><span className="text-gray-700 whitespace-nowrap">{formatDate(r.tanggal)}</span></td>
+                <td className="px-2 py-2 align-top"><span className="text-gray-800 font-medium">{r.deskripsi || '—'}</span></td>
+                <td className="px-2 py-2 align-top"><span className="text-gray-600">{r.keterangan || '—'}</span></td>
+                <td className="px-2 py-2 align-top text-right"><span className="text-gray-700">{r.jumlah}</span></td>
+                <td className="px-2 py-2 align-top"><span className="text-gray-700">{r.satuan || '—'}</span></td>
+                <td className="px-2 py-2 align-top text-right"><span className="text-gray-700">Rp {convertRupiah(r.harga_satuan)}</span></td>
+                <td className="px-3 py-2 align-top text-right font-semibold text-gray-800 whitespace-nowrap">Rp {convertRupiah(r.total)}</td>
               </tr>
             ))}
-            {rows.length === 0 && (
-              <tr>
-                <td colSpan={colCount} className="px-4 py-8 text-center text-gray-400 italic">
-                  Belum ada baris invoice.
-                </td>
-              </tr>
-            )}
           </tbody>
           <tfoot>
             <tr className="border-t border-gray-200 bg-gray-50">
-              <td colSpan={7} className="px-3 py-2.5 text-right text-xs font-semibold text-gray-500 uppercase">
-                Total Keseluruhan
-              </td>
-              <td className="px-3 py-2.5 text-right text-sm font-bold text-gray-900 whitespace-nowrap">
-                Rp {convertRupiah(total)}
-              </td>
-              {editable && <td />}
+              <td colSpan={7} className="px-3 py-2.5 text-right text-xs font-semibold text-gray-500 uppercase">Total Keseluruhan</td>
+              <td className="px-3 py-2.5 text-right text-sm font-bold text-gray-900 whitespace-nowrap">Rp {convertRupiah(total)}</td>
             </tr>
           </tfoot>
         </table>
       </div>
-      {editable && (
-        <div className="px-3 py-2.5 border-t border-gray-100 bg-white">
-          <button
-            type="button"
-            onClick={onAddRow}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-          >
-            <Plus className="w-3.5 h-3.5" /> Tambah Baris
-          </button>
-        </div>
-      )}
     </div>
   );
 }

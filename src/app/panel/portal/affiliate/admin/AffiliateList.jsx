@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { Search, FileText, Plus, X, Pencil } from 'lucide-react';
+import { Search, FileText, Plus, X, Pencil, Trash2 } from 'lucide-react';
 
 const EMPTY_FORM = { nama_laboratorium: '', kode_laboratorium: '', no_whatsapp: '', email: '', alamat: '' };
 
@@ -18,6 +18,11 @@ export default function AffiliateList({ setActivePage, setSelectedAffiliate }) {
   const [editForm, setEditForm] = useState(EMPTY_FORM);
   const [editId, setEditId] = useState(null);
   const [editSaving, setEditSaving] = useState(false);
+
+  const [showDelete, setShowDelete] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteName, setDeleteName] = useState('');
+  const [deleting, setDeleting] = useState(false);
 
   const fetchList = useCallback(async () => {
     try {
@@ -80,6 +85,28 @@ export default function AffiliateList({ setActivePage, setSelectedAffiliate }) {
     }
   };
 
+  const openDelete = (v) => {
+    setDeleteId(v._id);
+    setDeleteName(v.nama_laboratorium);
+    setShowDelete(true);
+  };
+
+  const handleDelete = async () => {
+    if (!deleteId || deleting) return;
+    try {
+      setDeleting(true);
+      await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/lab_affiliate/${deleteId}`, { withCredentials: true });
+      setShowDelete(false);
+      setDeleteId(null);
+      setDeleteName('');
+      fetchList();
+    } catch (err) {
+      alert(err.response?.data?.message || err.message);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   return (
     <div className="p-6">
       <div className="min-w-6xl max-w-[90rem] mx-auto">
@@ -128,7 +155,7 @@ export default function AffiliateList({ setActivePage, setSelectedAffiliate }) {
                     { label: 'Kode', w: 'w-24' },
                     { label: 'No. WhatsApp', w: 'w-40' },
                     { label: 'Email', w: 'w-56' },
-                    { label: 'Aksi', w: 'w-24' },
+                    { label: 'Aksi', w: 'w-32' },
                   ].map((h) => (
                     <th key={h.label} className={`px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap ${h.w}`}>
                       {h.label}
@@ -145,7 +172,7 @@ export default function AffiliateList({ setActivePage, setSelectedAffiliate }) {
                       <td className="px-4 py-3"><div className="h-3 w-14 bg-gray-200 rounded" /></td>
                       <td className="px-4 py-3"><div className="h-3 w-28 bg-gray-200 rounded" /></td>
                       <td className="px-4 py-3"><div className="h-3 w-36 bg-gray-200 rounded" /></td>
-                      <td className="px-4 py-3"><div className="w-16 h-8 bg-gray-200 rounded-lg" /></td>
+                      <td className="px-4 py-3"><div className="w-20 h-8 bg-gray-200 rounded-lg" /></td>
                     </tr>
                   ))
                 ) : data.length > 0 ? data.map((v, i) => (
@@ -174,6 +201,13 @@ export default function AffiliateList({ setActivePage, setSelectedAffiliate }) {
                           className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer"
                         >
                           <FileText className="w-4 h-4" />
+                        </span>
+                        <span
+                          onClick={() => openDelete(v)}
+                          title="Hapus Lab Affiliate"
+                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-red-600 text-white hover:bg-red-700 transition cursor-pointer"
+                        >
+                          <Trash2 className="w-4 h-4" />
                         </span>
                       </div>
                     </td>
@@ -339,6 +373,48 @@ export default function AffiliateList({ setActivePage, setSelectedAffiliate }) {
                 {editSaving ? 'Menyimpan...' : 'Simpan Perubahan'}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── Modal Delete ── */}
+      {showDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4 relative">
+            <button
+              onClick={() => setShowDelete(false)}
+              className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-lg transition text-gray-400"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <Trash2 className="w-6 h-6 text-red-600" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">Hapus Lab Affiliate</h2>
+                <p className="text-sm text-gray-500">Konfirmasi penghapusan</p>
+              </div>
+            </div>
+            <p className="text-sm text-gray-700 mb-6">
+              Apakah Anda yakin ingin menghapus lab affiliate <span className="font-semibold">{deleteName}</span>? 
+              Data akan dihapus secara permanen.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDelete(false)}
+                className="flex-1 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-medium rounded-lg transition"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-40 text-white text-sm font-medium rounded-lg transition"
+              >
+                {deleting ? 'Menghapus...' : 'Hapus'}
+              </button>
+            </div>
           </div>
         </div>
       )}

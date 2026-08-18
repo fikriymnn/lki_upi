@@ -12,6 +12,9 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Role yang berbasis lab affiliate (ketua_lab/laboran) — wajib punya id_affiliate
+  const AFFILIATE_ROLES = ['laboran', 'ketua_lab'];
+
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!username || !password) {
@@ -23,7 +26,6 @@ const LoginPage = () => {
     setErrorMessage('');
 
     try {
-      // ✅ Ganti fetch → axios, samakan env variable
       const data = await axios.post(
         `${process.env.NEXT_PUBLIC_URL}/api/login`,
         { email: username, password: password },
@@ -37,6 +39,20 @@ const LoginPage = () => {
         }
 
         const userRole = data.data.data?.role;
+        const idAffiliate = data.data.data?.id_affiliate;
+
+        // ── Role affiliate (laboran/ketua_lab) redirect langsung ke
+        // halaman [id] khusus lab mereka, bukan ke portal umum ──
+        if (AFFILIATE_ROLES.includes(userRole)) {
+          if (!idAffiliate) {
+            setErrorMessage('Akun ini belum terhubung ke lab affiliate manapun. Hubungi admin.');
+            setIsLoading(false);
+            return;
+          }
+          window.location.href = `/panel/portal/affiliate/${userRole}/${idAffiliate}`;
+          return;
+        }
+
         const roleRedirectMap = {
           admin: '/panel/portal',
           operator: '/panel/portal/analisis/operator',
@@ -48,7 +64,7 @@ const LoginPage = () => {
           window.location.href = roleRedirectMap[userRole];
           return;
         } else {
-          setErrorMessage('Akses terbatas untuk Admin, Operator, PJ, dan Super Admin.');
+          setErrorMessage('Akses terbatas untuk Admin, Operator, PJ, Super Admin, Ketua Lab, dan Laboran.');
           setIsLoading(false);
         }
       } else {

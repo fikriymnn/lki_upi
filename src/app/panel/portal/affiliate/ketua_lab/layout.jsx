@@ -19,7 +19,7 @@ export default function Layout({ children }) {
                 )
 
                 // ✅ Cek role dari data, bukan dari success string
-                if (!data.data.success || data.data.data?.role !== 'admin') {
+                if (!data.data.success || data.data.data?.role !== 'ketua_lab') {
                     router.replace("/panel")
                 }
             } catch (err) {
