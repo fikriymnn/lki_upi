@@ -14,11 +14,6 @@ const SERVICE_OPTIONS = [
   { key: 'pembelian_bahan', label: 'Pembelian Bahan', icon: Package, target: 'pembelian_bahan' },
 ];
 
-// ── Master "Sewa Alat" — BELUM ada model/endpoint master alat.
-// Sementara masih dummy; begitu model MasterAlat & controllernya siap, ganti pola fetch-nya
-// persis seperti fetchMasterAnalisis() di bawah. ──
-const DUMMY_MASTER_ALAT = ['Rotary Evaporator', 'Neraca Digital', 'Neraca Analitik', 'Hotplate Magnetic Stirrer', 'Buchner Vacuum'];
-
 // ── Dummy user session — nanti ganti axios.get(`/api/user/${token}`) seperti Order_analisis.jsx ──
 const DUMMY_USER = {
   nama_lengkap: 'Fauzan Ramadhan',
@@ -550,7 +545,7 @@ export default function AffiliateOrderPage() {
       {showModal && (
         <ItemModal
           itemKey={modalKey} item={modalItem} setItem={setModalItem}
-          masterAnalisis={masterAnalisis} loadingMaster={loadingMaster} masterAlat={DUMMY_MASTER_ALAT}
+          masterAnalisis={masterAnalisis} loadingMaster={loadingMaster}
           onClose={() => setShowModal(false)} onSave={saveItem}
         />
       )}
@@ -686,7 +681,7 @@ function ReviewItemSection({ title, icon: Icon, items, itemKey }) {
 }
 
 // ── Modal form tambah/edit ──
-function ItemModal({ itemKey, item, setItem, masterAnalisis, loadingMaster, masterAlat, onClose, onSave }) {
+function ItemModal({ itemKey, item, setItem, masterAnalisis, loadingMaster, onClose, onSave }) {
   const set = (key, value) => setItem((f) => ({ ...f, [key]: value }));
   const toggleChecklist = (key, value) => setItem((f) => {
     const arr = f[key] || [];
@@ -751,13 +746,7 @@ function ItemModal({ itemKey, item, setItem, masterAnalisis, loadingMaster, mast
 
           {itemKey === 'sewa_alat' && (
             <>
-              <div>
-                <label className="text-xs font-medium text-gray-500">Nama Alat <span className="text-red-500">*</span></label>
-                <select value={item.nama_alat} onChange={(e) => set('nama_alat', e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
-                  <option value="">Pilih alat...</option>
-                  {masterAlat.map((a) => <option key={a} value={a}>{a}</option>)}
-                </select>
-              </div>
+              <TextField label="Nama Alat" required value={item.nama_alat} placeholder="Contoh: Rotary Evaporator" onChange={(v) => set('nama_alat', v)} />
               <div>
                 <label className="text-xs font-medium text-gray-500">Jenis Sewa <span className="text-red-500">*</span></label>
                 <select value={item.jenis_sewa} onChange={(e) => set('jenis_sewa', e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
@@ -801,7 +790,6 @@ function ItemModal({ itemKey, item, setItem, masterAnalisis, loadingMaster, mast
                   <input type="date" value={item.tanggal_selesai} onChange={(e) => set('tanggal_selesai', e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
                 </div>
               </div>
-              {/* Jumlah — sebelumnya field ini ada di schema (emptyItem) tapi belum punya input di modal, ditambahkan supaya bisa diisi & divalidasi */}
               <TextField label="Jumlah (sesuai jenis sewa)" required type="number" value={item.jumlah} placeholder="Contoh: 2" onChange={(v) => set('jumlah', v)} />
             </>
           )}
