@@ -136,7 +136,7 @@ export default function NavbarCustom() {
 
   const layananItems = [
     { label: "Analisis", href: "/analisis" },
-    { label: "Lab Affiliate", href: "/affiliate" },
+    // { label: "Lab Affiliate", href: "/affiliate" },
     { label: "Pelatihan", href: "/pelatihan" },
     { label: "Sertifikasi", href: "/sertifikasi" },
   ];
