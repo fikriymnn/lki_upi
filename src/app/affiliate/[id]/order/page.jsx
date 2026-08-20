@@ -14,18 +14,6 @@ const SERVICE_OPTIONS = [
   { key: 'pembelian_bahan', label: 'Pembelian Bahan', icon: Package, target: 'pembelian_bahan' },
 ];
 
-// ── Dummy user session — nanti ganti axios.get(`/api/user/${token}`) seperti Order_analisis.jsx ──
-const DUMMY_USER = {
-  nama_lengkap: 'Fauzan Ramadhan',
-  email: 'fauzan@mail.com',
-  no_telp: '081234567890',
-  no_whatsapp: '081234567890',
-  jenis_institusi: 'Perguruan Tinggi',
-  nama_institusi: 'Universitas Pendidikan Indonesia',
-  program_studi: 'Pendidikan Kimia',
-  fakultas: 'FPMIPA',
-};
-
 const emptyItem = (key) => {
   if (key === 'analisis') return { jenis_layanan: [], nama_sample: '', pelarut: '', jumlah_sample: '', metode_parameter: '', foto_sample: '', jurnal_pendukung: '', keterangan: '' };
   if (key === 'sewa_alat') return { nama_alat: '', jenis_sewa: '', tanggal_mulai: '', tanggal_selesai: '', jumlah: '', keterangan: '' };
@@ -119,16 +107,28 @@ export default function AffiliateOrderPage() {
   const [submitting, setSubmitting] = useState(false);
   const [wizardSteps, setWizardSteps] = useState([]);
 
-  // ── Ambil data user session — dummy statis dulu, nanti ganti axios.get(`/api/user/${token}`) ──
+  // ── Ambil data user session yang sedang login, sama pola dengan Order_analisis.jsx:
+  // ambil access_token dari localStorage, lalu GET /api/user/{token} ──
   useEffect(() => {
     async function getUser() {
       try {
-        // const token = localStorage.getItem('access_token');
-        // const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user/${token}`, { withCredentials: true });
-        // const u = res.data.data;
-        const u = DUMMY_USER; // TODO: ganti dengan fetch di atas
-        setUser(u);
-        setForm((f) => ({ ...f, ...u }));
+        const token = localStorage.getItem('access_token');
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/user/${token}`, { withCredentials: true });
+        if (res.data.success == true) {
+          const u = res.data.data;
+          setUser(u);
+          setForm((f) => ({
+            ...f,
+            nama_lengkap: u.nama_lengkap || '',
+            email: u.email || '',
+            no_telp: u.no_telp || '',
+            no_whatsapp: u.no_whatsapp || '',
+            jenis_institusi: u.jenis_institusi || '',
+            nama_institusi: u.nama_institusi || '',
+            program_studi: u.program_studi || '',
+            fakultas: u.fakultas || '',
+          }));
+        }
       } catch (err) { console.log(err.message); }
     }
     getUser();
