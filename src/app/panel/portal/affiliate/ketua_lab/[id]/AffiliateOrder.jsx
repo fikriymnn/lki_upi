@@ -7,7 +7,7 @@ import * as XLSX from 'xlsx';
 import {
   Search, ClipboardList, ArrowLeft, FlaskConical, DoorOpen, Package, Wrench,
   FileText, FileCheck, Download, Eye, Receipt, ShieldCheck, RotateCcw, User, Loader2,
-  Pencil, Save, X, Plus, Trash2, ChevronDown, FileSpreadsheet
+  Pencil, Save, X, Plus, Trash2, ChevronDown, FileSpreadsheet, UploadCloud
 } from 'lucide-react';
 import InvoiceTemplate from '../../../../../../components/affiliate/InvoiceTemplate';
 import KwitansiTemplate from '../../../../../../components/affiliate/KwitansiTemplate';
@@ -55,6 +55,48 @@ const MASTER_JENIS_LAYANAN_ANALISIS = [
   'TPC (Total Plate Count)',
   'Uji Fitokimia (Flavonoid)',
 ];
+
+// ───────────────────────── Kategori file (samakan dgn backend, konsisten di semua role) ─────────────────────────
+const FILE_CATEGORY = {
+  laporan: 'laporan',
+  rincian_biaya: 'rincianbiaya',
+  foto_sample: 'fotosample',
+  jurnal_pendukung: 'jurnalpendukung',
+  hasil_analisis: 'hasilanalisis',
+  bukti_pembayaran: 'buktipembayaran',
+};
+
+const FILE_BASE_URL = process.env.NEXT_PUBLIC_FILE_URL;
+
+// Kalau value sudah full URL (data lama) dipakai apa adanya,
+// kalau cuma nama file dibangun jadi {FILE_URL}/file/{category}/{filename}
+const buildFileUrl = (category, value) => {
+  if (!value) return null;
+  if (/^https?:\/\//i.test(value)) return value;
+  return `${FILE_BASE_URL}/file/${category}/${value}`;
+};
+
+// Upload satu file ke API file server → mengembalikan URL siap-pakai untuk href
+const uploadFileToServer = async (file, category, onProgress) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const res = await axios.post(
+    `${FILE_BASE_URL}/api/file?category=${category}`,
+    formData,
+    {
+      withCredentials: true,
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 10 * 60 * 1000,
+      onUploadProgress: (progressEvent) => {
+        if (!onProgress) return;
+        const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        onProgress(percent);
+      },
+    }
+  );
+  const raw = res.data?.data?.filename ?? res.data?.filename ?? res.data?.downloadURL ?? res.data?.data;
+  return buildFileUrl(category, raw);
+};
 
 const convertRupiah = (angka = 0) => {
   const parts = angka?.toString().split('').reverse().join('').match(/\d{1,3}/g);
@@ -266,8 +308,6 @@ export default function AffiliateOrder({ affiliateId }) {
         sewa_alat: editDraft.sewa_alat,
         pembelian_bahan: editDraft.pembelian_bahan,
       };
-      // TODO: kalau ada foto_sample/jurnal_pendukung baru (object URL lokal dari input file),
-      // upload dulu file-nya (multipart/form-data), lalu ganti value-nya jadi URL hasil upload backend.
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_URL}/api/order_affiliate/${editDraft._id}/data`,
         payload,
@@ -305,6 +345,9 @@ export default function AffiliateOrder({ affiliateId }) {
     ...d,
     [jenis]: d[jenis].filter((_, i) => i !== idx),
   }));
+
+  // Dipakai ItemSectionEditable untuk upload foto_sample / jurnal_pendukung — upload sungguhan ke file server
+  const uploadItemFile = (key, file, onProgress) => uploadFileToServer(file, FILE_CATEGORY[key], onProgress);
 
   // ─────────────────────────── Download Invoice PDF (view-only, ketua_lab tidak boleh edit invoice) ───────────────────────────
   const handleDownloadInvoice = async () => {
@@ -586,6 +629,7 @@ export default function AffiliateOrder({ affiliateId }) {
                     onUpdate={updateEditItem}
                     onAdd={addEditItem}
                     onRemove={removeEditItem}
+                    onUploadFile={uploadItemFile}
                   />
                 </div>
               ))
@@ -616,8 +660,10 @@ export default function AffiliateOrder({ affiliateId }) {
                 <FileText className="w-3.5 h-3.5" /> Dokumen Terkait
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <FileLink label="Laporan (laboran)" href={activeOrder.laporan} />
-                <FileLink label="Rincian Biaya (laboran)" href={activeOrder.rincian_biaya} />
+                {/* ✅ Semua field file di sini dilewatkan lewat buildFileUrl supaya aman
+                    baik value-nya sudah full URL maupun cuma filename */}
+                <FileLink label="Laporan (laboran)" href={buildFileUrl(FILE_CATEGORY.laporan, activeOrder.laporan)} />
+                <FileLink label="Rincian Biaya (laboran)" href={buildFileUrl(FILE_CATEGORY.rincian_biaya, activeOrder.rincian_biaya)} />
 
                 {activeOrder.rincian_harga_invoice?.length > 0 ? (
                   <button
@@ -664,8 +710,8 @@ export default function AffiliateOrder({ affiliateId }) {
                   </div>
                 )}
 
-                <FileLink label="Bukti Pembayaran (user)" href={activeOrder.bukti_pembayaran} />
-                <FileLink label="Hasil Analisis (laboran)" href={activeOrder.hasil_analisis} />
+                <FileLink label="Bukti Pembayaran (user)" href={buildFileUrl(FILE_CATEGORY.bukti_pembayaran, activeOrder.bukti_pembayaran)} />
+                <FileLink label="Hasil Analisis (laboran)" href={buildFileUrl(FILE_CATEGORY.hasil_analisis, activeOrder.hasil_analisis)} />
               </div>
             </div>
 
@@ -861,6 +907,9 @@ function formatFieldValue(field, item) {
   return raw;
 }
 
+// ✅ Modifikasi: bangun URL file lewat buildFileUrl (bukan pakai r[ff.key] mentah),
+// supaya link tetap benar baik untuk foto_sample/jurnal_pendukung yang berasal dari
+// form order awal (biasanya cuma filename) maupun yang sudah diedit (sudah full URL).
 function ItemSectionReadOnly({ config, items }) {
   const { title, icon: Icon, cls, fields, fileFields } = config;
   return (
@@ -873,7 +922,9 @@ function ItemSectionReadOnly({ config, items }) {
       </p>
       <div className="flex flex-col gap-3">
         {items.map((r, idx) => {
-          const availableFiles = (fileFields || []).filter((ff) => r[ff.key]);
+          const availableFiles = (fileFields || [])
+            .filter((ff) => r[ff.key])
+            .map((ff) => ({ ...ff, url: buildFileUrl(FILE_CATEGORY[ff.key], r[ff.key]) }));
           return (
             <div key={idx} className="border border-gray-200 rounded-xl bg-gray-50 p-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-3">
@@ -889,7 +940,7 @@ function ItemSectionReadOnly({ config, items }) {
                 <div className="flex flex-wrap gap-2.5 mt-5 pt-4 border-t border-gray-200">
                   {availableFiles.map((ff) => (
                     <a key={ff.key}
-                      href={r[ff.key]}
+                      href={ff.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium text-red-700 bg-white hover:text-red-800 hover:bg-red-50 border border-red-100 rounded-lg transition"
@@ -907,8 +958,31 @@ function ItemSectionReadOnly({ config, items }) {
   );
 }
 
-function ItemSectionEditable({ jenis, config, items, onUpdate, onAdd, onRemove }) {
+function ItemSectionEditable({ jenis, config, items, onUpdate, onAdd, onRemove, onUploadFile }) {
   const { title, icon: Icon, cls, fields, fileFields } = config;
+  // key: `${idx}-${fieldKey}` -> progress (0-100). Ada di map = sedang upload.
+  const [uploadingMap, setUploadingMap] = useState({});
+
+  const handleFileChange = async (idx, ff, file) => {
+    if (!file) return;
+    const mapKey = `${idx}-${ff.key}`;
+    setUploadingMap((m) => ({ ...m, [mapKey]: 0 }));
+    try {
+      const url = await onUploadFile(ff.key, file, (percent) => {
+        setUploadingMap((m) => ({ ...m, [mapKey]: percent }));
+      });
+      onUpdate(jenis, idx, ff.key, url);
+    } catch (err) {
+      alert(err.response?.data?.message || err.message || 'Gagal upload file');
+    } finally {
+      setUploadingMap((m) => {
+        const next = { ...m };
+        delete next[mapKey];
+        return next;
+      });
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-3.5">
@@ -980,23 +1054,42 @@ function ItemSectionEditable({ jenis, config, items, onUpdate, onAdd, onRemove }
               ))}
             </div>
 
+            {/* ✅ Foto Sample / Jurnal Pendukung — upload sungguhan ke file server + progress bar */}
             {fileFields && fileFields.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5 pr-8 mt-6 pt-5 border-t border-gray-200">
-                {fileFields.map((ff) => (
-                  <div key={ff.key} className="min-w-0">
-                    <p className="text-[11px] text-gray-400 mb-2">{ff.label}</p>
-                    <input
-                      type="file"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        // TODO: upload file ke server (multipart/form-data), simpan URL hasil upload backend
-                        onUpdate(jenis, idx, ff.key, URL.createObjectURL(file));
-                      }}
-                      className="w-full text-[11px] text-gray-500 file:mr-2.5 file:py-1.5 file:px-2.5 file:rounded-lg file:border file:border-gray-300 file:text-[11px] file:font-medium file:bg-white file:text-gray-600 hover:file:bg-gray-50 file:cursor-pointer cursor-pointer"
-                    />
-                  </div>
-                ))}
+                {fileFields.map((ff) => {
+                  const mapKey = `${idx}-${ff.key}`;
+                  const isUploading = mapKey in uploadingMap;
+                  return (
+                    <div key={ff.key} className="min-w-0">
+                      <p className="text-[11px] text-gray-400 mb-2">{ff.label}</p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <input
+                          type="file"
+                          id={`file-${jenis}-${idx}-${ff.key}`}
+                          className="hidden"
+                          onChange={(e) => handleFileChange(idx, ff, e.target.files?.[0])}
+                        />
+                        <label
+                          htmlFor={`file-${jenis}-${idx}-${ff.key}`}
+                          className="cursor-pointer flex items-center gap-1.5 px-2.5 py-1.5 border border-gray-300 rounded-lg text-[11px] font-medium bg-white text-gray-600 hover:bg-gray-50 transition"
+                        >
+                          <UploadCloud className="w-3 h-3" /> {item[ff.key] ? 'Ganti File' : 'Pilih File'}
+                        </label>
+                        {isUploading && <span className="text-[11px] text-gray-500">{uploadingMap[mapKey]}%</span>}
+                        {item[ff.key] && !isUploading && (
+                          <a href={item[ff.key]}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[11px] text-red-700 underline truncate max-w-[140px]"
+                          >
+                            Lihat file saat ini
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

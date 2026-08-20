@@ -68,11 +68,16 @@ const formatDate = (d) => {
 };
 
 // ── Kategori file untuk endpoint upload — sesuaikan dengan konvensi backend kamu ──
+// ✅ Ditambahkan hasil_analisis & bukti_pembayaran supaya bisa dibangun URL-nya juga
+// lewat buildFileUrl (dua field ini diisi laboran/user, bukan lewat form ini,
+// jadi kemungkinan besar cuma tersimpan sebagai filename di DB).
 const FILE_CATEGORY = {
   laporan: 'laporan',
   rincian_biaya: 'rincianbiaya',
   foto_sample: 'fotosample',
   jurnal_pendukung: 'jurnalpendukung',
+  hasil_analisis: 'hasilanalisis',     // sesuaikan dgn nama kategori di BE kalau beda
+  bukti_pembayaran: 'buktipembayaran', // sesuaikan dgn nama kategori di BE kalau beda
 };
 
 const FILE_BASE_URL = process.env.NEXT_PUBLIC_FILE_URL;
@@ -775,8 +780,11 @@ export default function AffiliateOrder({ affiliateId }) {
                 <FileText className="w-3.5 h-3.5" /> Dokumen Terkait
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <FileLink label="Laporan (laboran)" href={activeOrder.laporan} />
-                <FileLink label="Rincian Biaya (laboran)" href={activeOrder.rincian_biaya} />
+                {/* ✅ Semua field file di sini dilewatkan lewat buildFileUrl supaya aman
+                    baik value-nya sudah full URL (hasil upload lewat FE ini)
+                    maupun cuma filename (hasil upload dari form order awal / komponen lain) */}
+                <FileLink label="Laporan (laboran)" href={buildFileUrl(FILE_CATEGORY.laporan, activeOrder.laporan)} />
+                <FileLink label="Rincian Biaya (laboran)" href={buildFileUrl(FILE_CATEGORY.rincian_biaya, activeOrder.rincian_biaya)} />
 
                 {activeOrder.rincian_harga_invoice?.length > 0 ? (
                   <button
@@ -823,8 +831,8 @@ export default function AffiliateOrder({ affiliateId }) {
                   </div>
                 )}
 
-                <FileLink label="Bukti Pembayaran (user)" href={activeOrder.bukti_pembayaran} />
-                <FileLink label="Hasil Analisis (laboran)" href={activeOrder.hasil_analisis} />
+                <FileLink label="Bukti Pembayaran (user)" href={buildFileUrl(FILE_CATEGORY.bukti_pembayaran, activeOrder.bukti_pembayaran)} />
+                <FileLink label="Hasil Analisis (laboran)" href={buildFileUrl(FILE_CATEGORY.hasil_analisis, activeOrder.hasil_analisis)} />
               </div>
             </div>
 
@@ -1018,6 +1026,10 @@ function formatFieldValue(field, item) {
   return raw;
 }
 
+// ✅ Modifikasi: bangun URL file lewat buildFileUrl (bukan pakai r[ff.key] mentah),
+// supaya link tetap benar baik untuk foto_sample/jurnal_pendukung yang berasal dari
+// form order awal (biasanya cuma filename) maupun yang sudah diedit lewat FE ini
+// (sudah full URL, dan buildFileUrl akan pakai apa adanya).
 function ItemSectionReadOnly({ config, items }) {
   const { title, icon: Icon, cls, fields, fileFields } = config;
   return (
@@ -1030,7 +1042,9 @@ function ItemSectionReadOnly({ config, items }) {
       </p>
       <div className="flex flex-col gap-3">
         {items.map((r, idx) => {
-          const availableFiles = (fileFields || []).filter((ff) => r[ff.key]);
+          const availableFiles = (fileFields || [])
+            .filter((ff) => r[ff.key])
+            .map((ff) => ({ ...ff, url: buildFileUrl(FILE_CATEGORY[ff.key], r[ff.key]) }));
           return (
             <div key={idx} className="border border-gray-200 rounded-xl bg-gray-50 p-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-3">
@@ -1046,7 +1060,7 @@ function ItemSectionReadOnly({ config, items }) {
                 <div className="flex flex-wrap gap-2.5 mt-5 pt-4 border-t border-gray-200">
                   {availableFiles.map((ff) => (
                     <a key={ff.key}
-                      href={r[ff.key]}
+                      href={ff.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium text-red-700 bg-white hover:text-red-800 hover:bg-red-50 border border-red-100 rounded-lg transition"
@@ -1183,8 +1197,7 @@ function ItemSectionEditable({ jenis, config, items, onUpdate, onAdd, onRemove, 
                         </label>
                         {isUploading && <span className="text-[11px] text-gray-500">{uploadingMap[mapKey]}%</span>}
                         {item[ff.key] && !isUploading && (
-                          
-                          <a  href={item[ff.key]}
+                          <a href={item[ff.key]}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-[11px] text-red-700 underline truncate max-w-[140px]"
