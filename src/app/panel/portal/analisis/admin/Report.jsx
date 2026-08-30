@@ -29,6 +29,9 @@ const MONTHS = [
   "Juli", "Agustus", "September", "Oktober", "November", "Desember",
 ];
 
+// NEW: pilihan filter status (hanya 2 sesuai request client)
+const STATUS_OPTIONS = ["Menunggu Pembayaran", "Selesai"];
+
 const ROWS_PER_PAGE = 20;
 
 // ── Skeleton ─────────────────────────────────────────────────────────────────
@@ -89,6 +92,7 @@ export default function Report() {
   const [year, setYear] = useState("");
   const [month, setMonth] = useState("");
   const [jenis_pengujian, setJenisPengujian] = useState("");
+  const [status, setStatus] = useState(""); // NEW: filter status
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(0);
   const [showFilterModal, setShowFilterModal] = useState(false);
@@ -119,9 +123,16 @@ export default function Report() {
           ...(year && { year }),
           ...(jenis_pengujian && { jenis_pengujian }),
         });
-        invoiceParams.append("status", "Selesai");
-        invoiceParams.append("status", "Menunggu Konfirmasi Pembayaran");
-        invoiceParams.append("status", "Menunggu Pembayaran");
+
+        // NEW: kalau user pilih status tertentu, filter hanya status itu.
+        // Kalau tidak, tetap default menampilkan gabungan 3 status seperti semula.
+        if (status) {
+          invoiceParams.append("status", status);
+        } else {
+          invoiceParams.append("status", "Selesai");
+          invoiceParams.append("status", "Menunggu Konfirmasi Pembayaran");
+          invoiceParams.append("status", "Menunggu Pembayaran");
+        }
 
         const [resOrder, resInvoice] = await Promise.all([
           axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order?${params}`, { withCredentials: true }),
@@ -140,7 +151,7 @@ export default function Report() {
       }
     }
     fetchData();
-  }, [year, month, jenis_pengujian]);
+  }, [year, month, jenis_pengujian, status]); // NEW: status ditambah ke dependency
 
   // ── Filter + paginate ───────────────────────────────────────────────────────
   const filtered = order.filter(a => {
@@ -209,12 +220,13 @@ export default function Report() {
   };
 
   // ── Active filter count ─────────────────────────────────────────────────────
-  const activeFilters = [year, month, jenis_pengujian].filter(Boolean).length;
+  const activeFilters = [year, month, jenis_pengujian, status].filter(Boolean).length; // NEW: status ikut dihitung
 
   const resetFilters = () => {
     setYear("");
     setMonth("");
     setJenisPengujian("");
+    setStatus(""); // NEW
   };
 
   // ── Render ──────────────────────────────────────────────────────────────────
@@ -327,6 +339,15 @@ export default function Report() {
                     <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">
                       {jenis_pengujian}
                       <button onClick={() => setJenisPengujian("")} className="hover:bg-blue-200 rounded-full p-0.5">
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  )}
+                  {/* NEW: chip filter status */}
+                  {status && (
+                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">
+                      Status: {status}
+                      <button onClick={() => setStatus("")} className="hover:bg-blue-200 rounded-full p-0.5">
                         <X className="w-3 h-3" />
                       </button>
                     </span>
@@ -522,6 +543,21 @@ export default function Report() {
                   <option value="">Semua Jenis</option>
                   {KODE_PENGUJIAN.map((k, i) => (
                     <option key={i} value={k.jenis_pengujian}>{k.jenis_pengujian}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* NEW: Status */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Status</label>
+                <select
+                  value={status}
+                  onChange={e => setStatus(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                >
+                  <option value="">Semua Status</option>
+                  {STATUS_OPTIONS.map((s, i) => (
+                    <option key={i} value={s}>{s}</option>
                   ))}
                 </select>
               </div>
