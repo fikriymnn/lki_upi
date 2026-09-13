@@ -1,7 +1,5 @@
 "use client";
 
-import Image from 'next/image';
-
 const convertRupiah = (angka = 0) => {
   const parts = angka?.toString().split('').reverse().join('').match(/\d{1,3}/g);
   return parts?.join('.').split('').reverse().join('') ?? '0';
@@ -25,8 +23,20 @@ const formatTanggalPendek = (d) => {
   }
 };
 
+// ── Header institusi utama (Laboratorium Riset Kimia UPI) — tampil tetap di semua invoice
+// terlepas dari lab affiliate mana yang diorder; hanya baris "INVOICE PELAYANAN ANALISIS ..."
+// di bawahnya yang dinamis mengikuti lab.nama_laboratorium ──
+const LAB_UTAMA_NAMA = 'LABORATORIUM RISET KIMIA';
+const LAB_UTAMA_ALAMAT = 'Jalan Dr. Setiabudhi No. 229 Bandung';
+
 // ── Template ini dirender tersembunyi di DOM (lihat penggunaan di AffiliateOrder.jsx),
 // lalu di-capture jadi PDF via html2canvas + jsPDF. Tidak ada file yang disimpan di server.
+//
+// ⚠️ PENTING: sengaja pakai <img> biasa, BUKAN next/image. Komponen ini dirender di luar
+// viewport (position: fixed; left: -9999px) supaya bisa di-capture html2canvas tanpa
+// terlihat user. next/image lazy-load gambar berdasarkan visibility (IntersectionObserver),
+// jadi kalau elemen tidak pernah masuk viewport, gambar logo TIDAK PERNAH dimuat sama
+// sekali. <img> biasa memuat langsung tanpa syarat visibility.
 export default function InvoiceTemplate({ order, printId }) {
   const lab = order.id_affiliate || {};
   const rows = order.rincian_harga_invoice || [];
@@ -45,27 +55,33 @@ export default function InvoiceTemplate({ order, printId }) {
         fontSize: '13px',
       }}
     >
-      {/* Header dengan Logo */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', borderBottom: '2px solid #000', paddingBottom: '12px', marginBottom: '16px' }}>
-        <div style={{ width: '60px', height: '60px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Image
-            src="/images/logo/image.png"
-            alt="Logo Laboratorium"
-            width={56}
-            height={56}
-            style={{ objectFit: 'contain' }}
+      {/* Kop Surat: logo di kiri, judul institusi + alamat center, ditutup garis
+          ganda (tebal+tipis) khas letterhead resmi. Spacer di kanan (lebar sama
+          dengan logo) dipakai supaya blok judul benar-benar center terhadap
+          lebar halaman, bukan cuma center di sisa ruang setelah logo. */}
+      <div style={{ marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <img
+            src="/logo/image.png"
+            alt="Logo Laboratorium Riset Kimia UPI"
+            crossOrigin="anonymous"
+            style={{ height: '64px', width: '170px', objectFit: 'contain', flexShrink: 0 }}
           />
+          <div style={{ flex: 1, textAlign: 'center' }}>
+            <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+              {LAB_UTAMA_NAMA}
+            </h1>
+            <p style={{ margin: '2px 0 0', fontSize: '13px' }}>{LAB_UTAMA_ALAMAT}</p>
+          </div>
+          <div style={{ width: '170px', flexShrink: 0 }} />
         </div>
-        <div style={{ flex: 1, textAlign: 'center' }}>
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', letterSpacing: '0.5px' }}>
-            {(lab.nama_laboratorium || 'LABORATORIUM').toUpperCase()}
-          </h1>
-          <p style={{ margin: '2px 0 0', fontSize: '12px' }}>{lab.alamat || '-'}</p>
-        </div>
+        {/* Garis kop surat ganda: tebal lalu tipis, jarak rapat */}
+        <div style={{ borderBottom: '3px solid #000', marginTop: '10px' }} />
+        <div style={{ borderBottom: '1px solid #000', marginTop: '2px' }} />
       </div>
 
-      {/* Judul invoice */}
-      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+      {/* Judul invoice — nama lab affiliate & no. invoice tetap dinamis mengikuti order */}
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
         <p style={{ margin: 0, fontWeight: 'bold', fontSize: '13px' }}>
           INVOICE PELAYANAN ANALISIS {(lab.nama_laboratorium || '').toUpperCase()}
         </p>
@@ -101,7 +117,7 @@ export default function InvoiceTemplate({ order, printId }) {
       {/* Tabel rincian */}
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
         <thead>
-          <tr style={{ background: '#f3f4f6' }}>
+          <tr style={{ background: '#d1d5db' }}>
             {['No', 'Tanggal', 'Deskripsi', 'Keterangan', 'Jumlah', 'Satuan', 'Harga Satuan', 'Total'].map((h) => (
               <th key={h} style={{ border: '1px solid #333', padding: '5px 6px', textAlign: h === 'Jumlah' || h === 'Harga Satuan' || h === 'Total' ? 'right' : 'left' }}>
                 {h}
@@ -139,9 +155,29 @@ export default function InvoiceTemplate({ order, printId }) {
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '32px', fontSize: '13px' }}>
         <div style={{ textAlign: 'center', width: '220px' }}>
           <p style={{ margin: 0 }}>Bandung, {tahun}</p>
-          <p style={{ margin: '2px 0 0' }}>Penerima Kas</p>
-          <div style={{ height: '56px' }} />
-          <p style={{ margin: 0, borderTop: '1px solid #333', paddingTop: '4px' }}>( ................................. )</p>
+          <p style={{ margin: '2px 0 0' }}></p>
+
+          {/* TTD + Nama menggunakan image */}
+          <div
+            style={{
+              height: '56px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <img
+              src="/logo/ttd/image.png"
+              alt="Tanda tangan dan nama Penerima Kas"
+              crossOrigin="anonymous"
+              style={{
+                width: '190px',
+                height: '56px',
+                objectFit: 'contain',
+                display: 'block',
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>

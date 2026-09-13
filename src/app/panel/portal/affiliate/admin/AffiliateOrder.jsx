@@ -50,10 +50,8 @@ const MONTH_NAMES = [
 // ───────────────────────── Kategori file (samakan dgn backend, konsisten di semua role) ─────────────────────────
 const FILE_CATEGORY = {
   laporan: 'laporan',
-  rincian_biaya: 'rincianbiaya',
   foto_sample: 'fotosample',
   jurnal_pendukung: 'jurnalpendukung',
-  hasil_analisis: 'hasilanalisis',
   bukti_pembayaran: 'buktipembayaran',
 };
 
@@ -439,16 +437,8 @@ export default function AffiliateOrder({ affiliateId }) {
     if (saving) return;
     try {
       setSaving(true);
+      // ✅ Data pemohon tidak lagi bisa diedit admin — kirim data layanan saja
       const payload = {
-        nama_lengkap: editDraft.nama_lengkap,
-        email: editDraft.email,
-        no_telp: editDraft.no_telp,
-        no_whatsapp: editDraft.no_whatsapp,
-        jenis_institusi: editDraft.jenis_institusi,
-        nama_institusi: editDraft.nama_institusi,
-        program_studi: editDraft.program_studi,
-        fakultas: editDraft.fakultas,
-        nama_pembimbing: editDraft.nama_pembimbing,
         layanan_analisis: editDraft.layanan_analisis,
         sewa_lab: editDraft.sewa_lab,
         sewa_alat: editDraft.sewa_alat,
@@ -707,23 +697,39 @@ export default function AffiliateOrder({ affiliateId }) {
         {/* Tab: Rincian Order — Data Pemohon (editable) lalu Layanan (editable) */}
         {activeTab === 'ringkasan' && (
           <div className="flex flex-col gap-4">
+            {/* ✅ Data Pemohon sekarang read-only total — tidak ada tombol edit sama sekali */}
             <div className="border border-gray-200 rounded-xl p-5">
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-2">
-                  <User className="w-3.5 h-3.5" /> Data Pemohon
-                </p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-2 mb-4">
+                <User className="w-3.5 h-3.5" /> Data Pemohon
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {APPLICANT_FIELDS
+                  .filter((f) => !f.conditional || activeOrder.jenis_institusi === f.conditional)
+                  .map((f) => (
+                    <div key={f.key} className="min-w-0">
+                      <p className="text-xs text-gray-400 mb-1">{f.label}</p>
+                      <p className="text-sm font-medium mt-0.5 break-words">{activeOrder[f.key] || '—'}</p>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* Tombol edit sekarang khusus untuk rincian layanan saja */}
+            {itemCount > 0 && (
+              <div className="flex items-center justify-end">
                 {!editMode ? (
                   <button
                     onClick={startEdit}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition"
                   >
-                    <Pencil className="w-3.5 h-3.5" /> Edit Data
+                    <Pencil className="w-3.5 h-3.5" /> Edit Layanan
                   </button>
                 ) : (
                   <div className="flex items-center gap-2">
                     <button
                       onClick={cancelEdit}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition"
                     >
                       <X className="w-3.5 h-3.5" /> Batal
                     </button>
@@ -732,42 +738,12 @@ export default function AffiliateOrder({ affiliateId }) {
                       disabled={saving}
                       className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition"
                     >
-                      {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />} Simpan Data
+                      {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />} Simpan Layanan
                     </button>
                   </div>
                 )}
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {APPLICANT_FIELDS
-                  .filter((f) => !f.conditional || (editMode ? editDraft : activeOrder).jenis_institusi === f.conditional)
-                  .map((f) => (
-                    <div key={f.key} className="min-w-0">
-                      <p className="text-xs text-gray-400 mb-1">{f.label}</p>
-                      {editMode ? (
-                        f.isSelect ? (
-                          <select
-                            value={editDraft[f.key] || ''}
-                            onChange={(e) => updateEditField(f.key, e.target.value)}
-                            className={inputCls}
-                          >
-                            {f.options.map((o) => <option key={o} value={o}>{o}</option>)}
-                          </select>
-                        ) : (
-                          <input
-                            type="text"
-                            value={editDraft[f.key] || ''}
-                            onChange={(e) => updateEditField(f.key, e.target.value)}
-                            className={inputCls}
-                          />
-                        )
-                      ) : (
-                        <p className="text-sm font-medium mt-0.5 break-words">{activeOrder[f.key] || '—'}</p>
-                      )}
-                    </div>
-                  ))}
-              </div>
-            </div>
+            )}
 
             {editMode ? (
               Object.entries(FIELD_CONFIG).map(([jenis, cfg]) => (
@@ -877,9 +853,11 @@ export default function AffiliateOrder({ affiliateId }) {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {/* ✅ Semua field file di sini dilewatkan lewat buildFileUrl supaya aman
-                  baik value-nya sudah full URL maupun cuma filename */}
+                  baik value-nya sudah full URL maupun cuma filename.
+                  Rincian Biaya & Hasil Analisis sudah tidak lagi ditampilkan di sini —
+                  rincian harga sekarang dikelola lewat tab Invoice, dan hasil analisis
+                  sudah tidak ada di alur laboran. */}
               <FileLink label="Laporan (laboran)" href={buildFileUrl(FILE_CATEGORY.laporan, activeOrder.laporan)} />
-              <FileLink label="Rincian Biaya (laboran)" href={buildFileUrl(FILE_CATEGORY.rincian_biaya, activeOrder.rincian_biaya)} />
 
               {activeOrder.rincian_harga_invoice?.length > 0 ? (
                 <button
@@ -901,7 +879,6 @@ export default function AffiliateOrder({ affiliateId }) {
               )}
 
               <FileLink label="Bukti Pembayaran (user)" href={buildFileUrl(FILE_CATEGORY.bukti_pembayaran, activeOrder.bukti_pembayaran)} />
-              <FileLink label="Hasil Analisis (laboran)" href={buildFileUrl(FILE_CATEGORY.hasil_analisis, activeOrder.hasil_analisis)} />
 
               {/* ── Kwitansi — hanya tersedia setelah status "Selesai" (sinkron dengan endpoint BE) ── */}
               {activeOrder.status_pengujian === 'Selesai' ? (
@@ -1104,7 +1081,7 @@ function ItemSectionReadOnly({ config, items }) {
   const { title, icon: Icon, cls, fields, fileFields } = config;
   return (
     <div>
-      <p className="text-xs font-semibold text-gray-700 mb-3.5 flex items-center gap-2">
+      <p className="text-sm font-semibold text-gray-700 mb-3.5 flex items-center gap-2">
         <span className={`w-6 h-6 rounded-md flex items-center justify-center ${cls}`}>
           <Icon className="w-3.5 h-3.5" />
         </span>
@@ -1120,8 +1097,8 @@ function ItemSectionReadOnly({ config, items }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-3">
                 {fields.map((f) => (
                   <div key={f.key} className="min-w-0">
-                    <p className="text-[11px] text-gray-400 mb-1">{f.label}</p>
-                    <p className="text-xs font-medium text-gray-700 break-words">{formatFieldValue(f, r)}</p>
+                    <p className="text-xs text-gray-400 mb-1">{f.label}</p>
+                    <p className="text-sm font-medium text-gray-700 break-words">{formatFieldValue(f, r)}</p>
                   </div>
                 ))}
               </div>
@@ -1133,7 +1110,7 @@ function ItemSectionReadOnly({ config, items }) {
                       href={ff.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium text-red-700 bg-white hover:text-red-800 hover:bg-red-50 border border-red-100 rounded-lg transition"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-700 bg-white hover:text-red-800 hover:bg-red-50 border border-red-100 rounded-lg transition"
                     >
                       <Download className="w-3 h-3" /> {ff.label}
                     </a>

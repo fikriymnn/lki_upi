@@ -1,66 +1,474 @@
 "use client";
 
 const convertRupiah = (angka = 0) => {
-  const parts = angka?.toString().split('').reverse().join('').match(/\d{1,3}/g);
-  return parts?.join('.').split('').reverse().join('') ?? '0';
+  const number = Number(angka) || 0;
+
+  return new Intl.NumberFormat("id-ID", {
+    maximumFractionDigits: 0,
+  }).format(number);
 };
 
-// ── Template ini dirender tersembunyi di DOM (lihat penggunaan di AffiliateOrder.jsx),
-// lalu di-capture jadi PDF via html2canvas + jsPDF. Data sudah dihitung on-the-fly oleh
-// BE (get_kwitansi_order_affiliate), tidak ada file yang disimpan di server.
+// ─────────────────────────────────────────────────────────────
+// KWITANSI TEMPLATE
+//
+// Paper:
+// A5 Landscape
+// 210 × 148 mm
+//
+// Design canvas:
+// 1120 × 790 px
+//
+// Background watermark:
+// /logo/image.png
+//
+// Signature:
+// /logo/kuitansi/image.png
+// ─────────────────────────────────────────────────────────────
 export default function KwitansiTemplate({ data, printId }) {
   return (
     <div
       id={printId}
       style={{
-        width: '700px',
-        padding: '40px',
-        background: '#fff',
-        color: '#111',
-        fontFamily: 'Arial, Helvetica, sans-serif',
-        fontSize: '14px',
-        border: '2px solid #000',
+        width: "1120px",
+        height: "790px",
+        boxSizing: "border-box",
+        backgroundColor: "#ffffff",
+        color: "#111111",
+        fontFamily: '"Times New Roman", Times, serif',
+        fontSize: "16px",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <div style={{ textAlign: 'center', borderBottom: '2px solid #000', paddingBottom: '14px', marginBottom: '20px' }}>
-        <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', letterSpacing: '2px' }}>KWITANSI</h1>
-        <p style={{ margin: '4px 0 0', fontSize: '12px' }}>{data.nama_laboratorium}</p>
-        <p style={{ margin: '2px 0 0', fontSize: '12px' }}>No. {data.no_kwitansi}</p>
-      </div>
+      {/* =====================================================
+          WATERMARK BACKGROUND
+          
+          Image diulang / repeat sampai memenuhi seluruh
+          halaman kuitansi.
+      ====================================================== */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 0,
+          backgroundImage: "url('/logo/image.png')",
+          backgroundRepeat: "repeat",
+          backgroundSize: "125px auto",
+          backgroundPosition: "0 0",
+          opacity: 0.16,
+          pointerEvents: "none",
+        }}
+      />
 
-      <table style={{ width: '100%', fontSize: '13px' }}>
-        <tbody>
-          <tr>
-            <td style={{ width: '160px', padding: '6px 0', verticalAlign: 'top' }}>Telah terima dari</td>
-            <td style={{ width: '10px', verticalAlign: 'top' }}>:</td>
-            <td style={{ padding: '6px 0', fontWeight: 'bold' }}>{data.telah_terima}</td>
-          </tr>
-          <tr>
-            <td style={{ padding: '6px 0', verticalAlign: 'top' }}>Uang sejumlah</td>
-            <td style={{ verticalAlign: 'top' }}>:</td>
-            <td style={{ padding: '6px 0', fontStyle: 'italic' }}>{data.uang_sejumlah_terbilang}</td>
-          </tr>
-          <tr>
-            <td style={{ padding: '6px 0', verticalAlign: 'top' }}>Untuk pembayaran</td>
-            <td style={{ verticalAlign: 'top' }}>:</td>
-            <td style={{ padding: '6px 0' }}>{data.untuk_pembayaran}</td>
-          </tr>
-        </tbody>
-      </table>
+      {/* =====================================================
+          CONTENT
+      ====================================================== */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          width: "100%",
+          height: "100%",
+          boxSizing: "border-box",
+          padding: "28px 38px",
+        }}
+      >
+        {/* =================================================
+            MAIN CONTENT
+        ================================================== */}
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "100%",
+            boxSizing: "border-box",
+          }}
+        >
+          {/* =================================================
+              LEFT VERTICAL BOX
+          ================================================== */}
+          <div
+            style={{
+              width: "145px",
+              minWidth: "145px",
+              height: "585px",
+              border: "2px solid #222",
+              boxSizing: "border-box",
+            }}
+          />
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', marginBottom: '20px' }}>
-        <div style={{ border: '1.5px solid #000', borderRadius: '6px', padding: '8px 20px' }}>
-          <span style={{ fontSize: '11px', color: '#555', marginRight: '10px' }}>Rp</span>
-          <span style={{ fontSize: '16px', fontWeight: 'bold' }}>{convertRupiah(data.uang_sejumlah_angka)}</span>
-        </div>
-      </div>
+          {/* =================================================
+              RIGHT CONTENT
+          ================================================== */}
+          <div
+            style={{
+              flex: 1,
+              paddingLeft: "18px",
+              boxSizing: "border-box",
+              position: "relative",
+              height: "100%",
+            }}
+          >
+            {/* ===============================================
+                HEADER
+            ================================================ */}
+            <div
+              style={{
+                position: "relative",
+                height: "78px",
+                boxSizing: "border-box",
+              }}
+            >
+              {/* NOMOR */}
+              <div
+                style={{
+                  position: "absolute",
+                  left: "0",
+                  top: "14px",
+                  fontSize: "16px",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <span>No.</span>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '32px', fontSize: '13px' }}>
-        <div style={{ textAlign: 'center', width: '220px' }}>
-          <p style={{ margin: 0 }}>{data.kota}, {data.tanggal}</p>
-          <p style={{ margin: '2px 0 0' }}>Penerima Kas</p>
-          <div style={{ height: '56px' }} />
-          <p style={{ margin: 0, borderTop: '1px solid #333', paddingTop: '4px' }}>( ................................. )</p>
+                <span
+                  style={{
+                    marginLeft: "14px",
+                    borderBottom: "1px solid #333",
+                    paddingBottom: "3px",
+                    display: "inline-block",
+                    minWidth: "220px",
+                  }}
+                >
+                  {data.no_kwitansi}
+                </span>
+              </div>
+
+              {/* TITLE */}
+              <div
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  paddingTop: "4px",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "29px",
+                    fontWeight: "bold",
+                    letterSpacing: "2px",
+                    lineHeight: "1",
+                  }}
+                >
+                  KWITANSI
+                </div>
+              </div>
+            </div>
+
+            {/* ===============================================
+                TRANSACTION INFORMATION
+            ================================================ */}
+            <div
+              style={{
+                width: "100%",
+                marginTop: "5px",
+              }}
+            >
+              {/* TELAH TERIMA */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-end",
+                  minHeight: "45px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "185px",
+                    flexShrink: 0,
+                    fontSize: "17px",
+                  }}
+                >
+                  Telah terima
+                </div>
+
+                <div
+                  style={{
+                    width: "18px",
+                    flexShrink: 0,
+                    fontSize: "17px",
+                  }}
+                >
+                  :
+                </div>
+
+                <div
+                  style={{
+                    flex: 1,
+                    borderBottom: "1px solid #444",
+                    minHeight: "27px",
+                    padding: "0 10px 5px",
+                    fontSize: "17px",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  {data.telah_terima}
+                </div>
+              </div>
+
+              {/* UANG SEJUMLAH */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-end",
+                  minHeight: "45px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "185px",
+                    flexShrink: 0,
+                    fontSize: "17px",
+                  }}
+                >
+                  Uang sejumlah
+                </div>
+
+                <div
+                  style={{
+                    width: "18px",
+                    flexShrink: 0,
+                    fontSize: "17px",
+                  }}
+                >
+                  :
+                </div>
+
+                <div
+                  style={{
+                    flex: 1,
+                    borderBottom: "1px solid #444",
+                    minHeight: "27px",
+                    padding: "0 10px 5px",
+                    fontSize: "17px",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  {data.uang_sejumlah_terbilang}
+                </div>
+              </div>
+
+              {/* UNTUK PEMBAYARAN */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-end",
+                  minHeight: "45px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "185px",
+                    flexShrink: 0,
+                    fontSize: "17px",
+                  }}
+                >
+                  Untuk pembayaran
+                </div>
+
+                <div
+                  style={{
+                    width: "18px",
+                    flexShrink: 0,
+                    fontSize: "17px",
+                  }}
+                >
+                  :
+                </div>
+
+                <div
+                  style={{
+                    flex: 1,
+                    borderBottom: "1px solid #444",
+                    minHeight: "27px",
+                    padding: "0 10px 5px",
+                    fontSize: "17px",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  {data.untuk_pembayaran}
+                </div>
+              </div>
+            </div>
+
+            {/* ===============================================
+                EXTRA LINES
+            ================================================ */}
+            <div
+              style={{
+                marginTop: "10px",
+                width: "100%",
+              }}
+            >
+              <div
+                style={{
+                  height: "27px",
+                  borderBottom: "1px solid #444",
+                  boxSizing: "border-box",
+                }}
+              />
+
+              <div
+                style={{
+                  height: "27px",
+                  borderBottom: "1px solid #444",
+                  boxSizing: "border-box",
+                }}
+              />
+
+              <div
+                style={{
+                  height: "27px",
+                  borderBottom: "1px solid #444",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+
+            {/* =================================================
+                FOOTER
+
+                Footer sengaja ditempatkan di area tengah
+                antara:
+                
+                1. Garis terakhir bagian pembayaran
+                2. Batas bawah kuitansi
+
+                Tidak menggunakan bottom: 0 sehingga tidak
+                terlalu menempel ke bagian bawah.
+            ================================================== */}
+            <div
+              style={{
+                position: "absolute",
+
+                // Posisi horizontal
+                left: "18px",
+                right: "0",
+
+                // Posisi vertikal
+                //
+                // Nilai ini membuat footer berada di area
+                // tengah kosong antara data pembayaran
+                // dan batas bawah.
+                top: "390px",
+
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+
+                boxSizing: "border-box",
+              }}
+            >
+              {/* =============================================
+                  NOMINAL
+              ============================================== */}
+              <div
+                style={{
+                  width: "470px",
+                  height: "54px",
+                  border: "1.5px solid #333",
+                  boxSizing: "border-box",
+                  display: "flex",
+                  alignItems: "center",
+                  fontSize: "21px",
+                }}
+              >
+                {/* RP */}
+                <div
+                  style={{
+                    width: "95px",
+                    paddingLeft: "18px",
+                    fontWeight: "bold",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  Rp.
+                </div>
+
+                {/* NOMINAL */}
+                <div
+                  style={{
+                    flex: 1,
+                    fontWeight: "bold",
+                    letterSpacing: "1px",
+                    paddingLeft: "20px",
+                  }}
+                >
+                  {convertRupiah(data.uang_sejumlah_angka)}
+                </div>
+              </div>
+
+              {/* =============================================
+                  DATE + SIGNATURE
+              ============================================== */}
+              <div
+                style={{
+                  width: "300px",
+                  textAlign: "center",
+                  fontSize: "16px",
+                  marginRight: "20px",
+                  marginTop: "-5px",
+                }}
+              >
+                {/* DATE */}
+                <div
+                  style={{
+                    whiteSpace: "nowrap",
+                    marginBottom: "5px",
+                  }}
+                >
+                  {data.kota}, {data.tanggal}
+                </div>
+
+                {/* DATE UNDERLINE */}
+                <div
+                  style={{
+                    width: "250px",
+                    margin: "0 auto",
+                    borderBottom: "1px solid #333",
+                  }}
+                />
+
+                {/* =========================================
+                    SIGNATURE IMAGE
+
+                    TTD + nama sudah terdapat di dalam
+                    gambar /logo/kuitansi/image.png
+                ========================================== */}
+                <div
+                  style={{
+                    height: "92px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    overflow: "hidden",
+                  }}
+                >
+                  <img
+                    src="/logo/ttd/image.png"
+                    alt="Tanda tangan"
+                    style={{
+                      width: "250px",
+                      maxWidth: "250px",
+                      maxHeight: "90px",
+                      objectFit: "contain",
+                      display: "block",
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

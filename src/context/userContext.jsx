@@ -1,17 +1,17 @@
-'use client'
-import {createContext,useContext,useState} from 'react'
+// 'use client'
+// import {createContext,useContext,useState} from 'react'
 
-export const UserContext = createContext()
+// export const UserContext = createContext()
 
 
-export function UserProvider({children}){
-    const [user,setUser] = useState({login:true,id:"laskdk",name:"asdasd"});
+// export function UserProvider({children}){
+//     const [user,setUser] = useState({login:true,id:"laskdk",name:"asdasd"});
 
-    return(
-        <UserContext.Provider value={{user,setUser}}>
-            {children}
-        </UserContext.Provider>
-    )
+//     return(
+//         <UserContext.Provider value={{user,setUser}}>
+//             {children}
+//         </UserContext.Provider>
+//     )
 
-}
+// }
 

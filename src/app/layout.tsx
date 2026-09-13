@@ -3,7 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import NavbarCustom from "@/components/Navbar";
 import FooterCustom from "@/components/FooterCustom";
-import { UserProvider } from "@/context/userContext";
+
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -59,12 +59,12 @@ export default function RootLayout({
         <link rel="icon" href="/logo.svg" sizes="any" />
       </head>
       <body className={jakarta.className}>
-        <UserProvider>
+
           <NavbarCustom />
           <div>{children}</div>
 
           <FooterCustom />
-        </UserProvider>
+ 
       </body>
     </html>
   );

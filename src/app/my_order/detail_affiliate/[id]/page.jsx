@@ -32,10 +32,8 @@ const DATA_EDITABLE_STATUS = ["Menunggu Order Dikonfirmasi", "Order Dikonfirmasi
 // ───────────────────────── Kategori file (samakan dgn backend, konsisten di semua role) ─────────────────────────
 const FILE_CATEGORY = {
     laporan: "laporan",
-    rincian_biaya: "rincianbiaya",
     foto_sample: "fotosample",
     jurnal_pendukung: "jurnalpendukung",
-    hasil_analisis: "hasilanalisis",
     bukti_pembayaran: "buktipembayaran",
 };
 
@@ -580,7 +578,6 @@ export default function DetailAffiliate({ params }) {
         "Selesai",
     ].includes(order.status_pengujian);
 
-    const hasilAnalisisAvailable = order.status_pengujian === "Selesai" && order.hasil_analisis;
 
     // Data order (data pemesan + rincian layanan) hanya boleh diedit selama status masih di window awal
     const isDataEditableWindow = DATA_EDITABLE_STATUS.includes(order.status_pengujian);
@@ -1005,37 +1002,6 @@ export default function DetailAffiliate({ params }) {
                                                 </>
                                             )}
                                         </button>
-                                    ) : (
-                                        <span className="text-xs text-red-500 px-3 py-1.5 bg-red-50 rounded-lg whitespace-nowrap">
-                                            Belum tersedia
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Hasil Analisis */}
-                        <div className={`border border-gray-200 rounded-xl overflow-hidden ${!hasilAnalisisAvailable ? "opacity-50" : ""}`}>
-                            <div className="flex items-center gap-3 px-4 py-3">
-                                <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <FlaskConical className="w-4 h-4 text-green-600" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-semibold text-gray-800">Hasil Analisis</p>
-                                    <p className="text-xs text-gray-400 truncate max-w-[140px] sm:max-w-none">
-                                        {hasilAnalisisAvailable ? "Klik unduh untuk membuka" : "Tersedia setelah order selesai"}
-                                    </p>
-                                </div>
-                                <div className="flex-shrink-0 ml-auto">
-                                    {hasilAnalisisAvailable ? (
-
-                                        <a href={buildFileUrl(FILE_CATEGORY.hasil_analisis, order.hasil_analisis)}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-xs font-medium hover:bg-green-100 transition whitespace-nowrap"
-                                        >
-                                            <Download className="w-3.5 h-3.5" /> Unduh
-                                        </a>
                                     ) : (
                                         <span className="text-xs text-red-500 px-3 py-1.5 bg-red-50 rounded-lg whitespace-nowrap">
                                             Belum tersedia

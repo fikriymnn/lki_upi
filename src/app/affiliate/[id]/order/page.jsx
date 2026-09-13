@@ -4,7 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import {
   Check, Plus, Pencil, Trash2, X, ChevronRight, ChevronLeft,
-  FlaskConical, Wrench, DoorOpen, Package, User, Send, Loader2
+  FlaskConical, Wrench, DoorOpen, Package, User, Send, Loader2, Download   // ⬅️ tambahkan Download
 } from 'lucide-react';
 
 // ── Checklist layanan — "Sewa Alat" TIDAK dicentang terpisah, otomatis ikut "Analisis" ──
@@ -19,6 +19,25 @@ const emptyItem = (key) => {
   if (key === 'sewa_alat') return { nama_alat: '', jenis_sewa: '', tanggal_mulai: '', tanggal_selesai: '', jumlah: '', keterangan: '' };
   if (key === 'sewa_lab') return { jenis_sewa: '', tanggal_mulai: '', tanggal_selesai: '', jumlah: '', keterangan: '' };
   return { jenis_bahan: '', jumlah: '', satuan: '', nomor_produk: '', keterangan: '' }; // pembelian_bahan
+};
+
+const FILE_URL = process.env.NEXT_PUBLIC_FILE_URL;
+
+// Kalau value sudah full URL (data lama) dipakai apa adanya,
+// kalau cuma nama file dibangun jadi {FILE_URL}/file/{category}/{filename}
+const buildFileUrl = (category, value) => {
+  if (!value) return null;
+  if (/^https?:\/\//i.test(value)) return value;
+  return `${FILE_URL}/file/${category}/${value}`;
+};
+
+// Field file per jenis item — categorynya harus sama persis dengan category saat upload
+// (lihat pemanggilan uploadFile(e, 'foto_sample', 'fotosample') dan (..., 'jurnal_pendukung', 'jurnalpendukung') di ItemModal)
+const ITEM_FILE_FIELDS = {
+  analisis: [
+    { key: 'foto_sample', label: 'Foto Sample', category: 'fotosample' },
+    { key: 'jurnal_pendukung', label: 'Jurnal Pendukung', category: 'jurnalpendukung' },
+  ],
 };
 
 const iClass = "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition bg-white placeholder:text-gray-400";
@@ -618,8 +637,6 @@ const getItemDetailRows = (itemKey, item) => {
     { label: 'Pelarut', value: item.pelarut },
     { label: 'Jumlah Sampel', value: item.jumlah_sample },
     { label: 'Metode / Parameter', value: item.metode_parameter },
-    { label: 'Foto Sampel', value: item.foto_sample },
-    { label: 'Jurnal Pendukung', value: item.jurnal_pendukung },
     { label: 'Keterangan', value: item.keterangan },
   ];
   if (itemKey === 'sewa_alat') return [
@@ -662,6 +679,12 @@ function ReviewItemSection({ title, icon: Icon, items, itemKey }) {
       <div className="flex flex-col gap-3">
         {items.map((item, idx) => {
           const rows = getItemDetailRows(itemKey, item).filter((r) => r.value && r.value.toString().trim() !== '');
+
+          // File-file terkait item ini (mis. Foto Sample & Jurnal Pendukung untuk 'analisis') — dirender sebagai tombol download
+          const fileLinks = (ITEM_FILE_FIELDS[itemKey] || [])
+            .filter((ff) => item[ff.key])
+            .map((ff) => ({ ...ff, url: buildFileUrl(ff.category, item[ff.key]) }));
+
           return (
             <div key={idx} className="border border-gray-100 rounded-lg p-3">
               <p className="text-xs font-semibold text-gray-500 mb-2">Item {idx + 1}</p>
@@ -672,11 +695,29 @@ function ReviewItemSection({ title, icon: Icon, items, itemKey }) {
                   <p className="text-gray-400 italic">Tidak ada detail tambahan</p>
                 )}
               </div>
+
+              {/* ✅ Tombol download Foto Sample / Jurnal Pendukung */}
+              {fileLinks.length > 0 && (
+                <div className="flex flex-wrap gap-2.5 mt-3 pt-3 border-t border-gray-100">
+                  {fileLinks.map((ff) => (
+
+                    <a key={ff.key}
+                      href={ff.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium text-red-700 bg-white hover:text-red-800 hover:bg-red-50 border border-red-100 rounded-lg transition"
+                    >
+                      <Download className="w-3 h-3" /> {ff.label}
+                    </a>
+                  ))}
+                </div>
+              )
+              }
             </div>
           );
         })}
       </div>
-    </div>
+    </div >
   );
 }
 

@@ -7,7 +7,8 @@ import * as XLSX from 'xlsx';
 import {
   Search, ClipboardList, ArrowLeft, FlaskConical, DoorOpen, Package, Wrench,
   FileText, FileCheck, Download, Eye, Receipt, CheckCircle2, XCircle, PlayCircle,
-  UploadCloud, User, Loader2, Pencil, Save, X, Plus, Trash2, ChevronDown, FileSpreadsheet
+  UploadCloud, User, Loader2, Pencil, Save, X, Plus, Trash2, ChevronDown, FileSpreadsheet,
+  Check,
 } from 'lucide-react';
 import InvoiceTemplate from '../../../../../../components/affiliate/InvoiceTemplate';
 import KwitansiTemplate from '../../../../../../components/affiliate/KwitansiTemplate';
@@ -37,8 +38,11 @@ const STATUS_CLASS = {
   'Selesai': 'bg-green-50 text-green-700 ring-1 ring-green-200',
 };
 
-// ── Laboran bisa bertindak saat order di 3 tahap ini: konfirmasi → mulai proses → upload laporan ──
+// ── Laboran bisa bertindak saat order di 3 tahap ini: konfirmasi → upload laporan → kirim verifikasi ──
 const LABORAN_ACTIONABLE_STATUS = ['Menunggu Order Dikonfirmasi', 'Order Dikonfirmasi', 'Order Diproses'];
+
+// ── Laboran boleh isi/koreksi rincian harga sejak order dikonfirmasi sampai selesai diproses ──
+const LABORAN_INVOICE_EDITABLE_STATUS = ['Order Dikonfirmasi', 'Order Diproses'];
 
 const MONTH_NAMES = [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -67,17 +71,80 @@ const formatDate = (d) => {
   catch { return d; }
 };
 
+let rowSeq = 0;
+const newRowId = () => `row_${Date.now()}_${rowSeq++}`;
+
+// Bangun baris rincian harga awal dari data layanan order — jumlah/satuan otomatis, harga_satuan diisi laboran
+const buildInvoiceRows = (order) => {
+  const rows = [];
+
+  (order.layanan_analisis || []).forEach((item) => {
+    const jenisList = item.jenis_layanan?.length ? item.jenis_layanan : ['Layanan Analisis'];
+    jenisList.forEach((jenis) => {
+      rows.push({
+        id: newRowId(),
+        tanggal: order.date,
+        deskripsi: jenis,
+        keterangan: item.nama_sample || '',
+        jumlah: Number(item.jumlah_sample) || 1,
+        satuan: 'sampel',
+        harga_satuan: 0,
+        total: 0,
+      });
+    });
+  });
+
+  (order.sewa_lab || []).forEach((item) => {
+    rows.push({
+      id: newRowId(),
+      tanggal: item.tanggal_mulai || order.date,
+      deskripsi: `Sewa Lab (${item.jenis_sewa || '-'})`,
+      keterangan: item.keterangan || '',
+      jumlah: Number(item.jumlah) || 1,
+      satuan: item.jenis_sewa === 'Harian' ? 'hari' : 'OH',
+      harga_satuan: 0,
+      total: 0,
+    });
+  });
+
+  (order.sewa_alat || []).forEach((item) => {
+    rows.push({
+      id: newRowId(),
+      tanggal: item.tanggal_mulai || order.date,
+      deskripsi: item.nama_alat || 'Sewa Alat',
+      keterangan: item.keterangan || '',
+      jumlah: Number(item.jumlah) || 1,
+      satuan: (item.jenis_sewa || '').toLowerCase() || 'unit',
+      harga_satuan: 0,
+      total: 0,
+    });
+  });
+
+  (order.pembelian_bahan || []).forEach((item) => {
+    rows.push({
+      id: newRowId(),
+      tanggal: order.date,
+      deskripsi: item.jenis_bahan || 'Bahan',
+      keterangan: item.keterangan || '',
+      jumlah: 1,
+      satuan: item.satuan || '-',
+      harga_satuan: 0,
+      total: 0,
+    });
+  });
+
+  return rows;
+};
+
 // ── Kategori file untuk endpoint upload — sesuaikan dengan konvensi backend kamu ──
 // ✅ Ditambahkan hasil_analisis & bukti_pembayaran supaya bisa dibangun URL-nya juga
 // lewat buildFileUrl (dua field ini diisi laboran/user, bukan lewat form ini,
 // jadi kemungkinan besar cuma tersimpan sebagai filename di DB).
 const FILE_CATEGORY = {
   laporan: 'laporan',
-  rincian_biaya: 'rincianbiaya',
   foto_sample: 'fotosample',
   jurnal_pendukung: 'jurnalpendukung',
-  hasil_analisis: 'hasilanalisis',     // sesuaikan dgn nama kategori di BE kalau beda
-  bukti_pembayaran: 'buktipembayaran', // sesuaikan dgn nama kategori di BE kalau beda
+  bukti_pembayaran: 'buktipembayaran', // read-only, supaya laboran bisa cek status pembayaran user
 };
 
 const FILE_BASE_URL = process.env.NEXT_PUBLIC_FILE_URL;
@@ -175,6 +242,7 @@ const APPLICANT_FIELDS = [
 
 const DETAIL_TABS = [
   { key: 'ringkasan', label: 'Rincian Order', icon: User },
+  { key: 'invoice', label: 'Rincian Harga', icon: Receipt },
   { key: 'dokumen', label: 'Dokumen', icon: FileText },
 ];
 
@@ -204,13 +272,17 @@ export default function AffiliateOrder({ affiliateId }) {
   const [kwitansiData, setKwitansiData] = useState(null);
   const [downloadingExcel, setDownloadingExcel] = useState(false);
 
-  // ── Form upload laporan & rincian biaya (khusus tahap "Order Diproses") — sekarang file asli ──
-  const [formLaporan, setFormLaporan] = useState({ laporan: '', rincian_biaya: '' });
+  // ── Form upload laporan (sejak status "Order Dikonfirmasi") ──
+  const [formLaporan, setFormLaporan] = useState({ laporan: '' });
   const [savingLaporan, setSavingLaporan] = useState(false);
   const [uploadState, setUploadState] = useState({
     laporan: { uploading: false, progress: 0 },
-    rincian_biaya: { uploading: false, progress: 0 },
   });
+
+  // ── Rincian Harga Invoice — diisi laboran, nanti bisa dikoreksi ketua lab/admin ──
+  const [invoiceRows, setInvoiceRows] = useState(null);
+  const [invoiceEditing, setInvoiceEditing] = useState(false);
+  const [savingInvoice, setSavingInvoice] = useState(false);
 
   const fetchList = useCallback(async () => {
     if (!affiliateId) return;
@@ -249,13 +321,22 @@ export default function AffiliateOrder({ affiliateId }) {
     setEditDraft(null);
     // Tampilkan data list dulu (langsung terasa responsif), lalu refresh dengan data lengkap
     setActiveOrder(order);
-    setFormLaporan({ laporan: order.laporan || '', rincian_biaya: order.rincian_biaya || '' });
+    setFormLaporan({ laporan: order.laporan || '' });
     setDetailLoading(true);
     try {
       const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order_affiliate/${order._id}`, { withCredentials: true });
       const full = res.data.success ? res.data.data : order;
       setActiveOrder(full);
-      setFormLaporan({ laporan: full.laporan || '', rincian_biaya: full.rincian_biaya || '' });
+      setFormLaporan({ laporan: full.laporan || '' });
+
+      if (LABORAN_INVOICE_EDITABLE_STATUS.includes(full.status_pengujian)) {
+        const rows = full.rincian_harga_invoice?.length ? full.rincian_harga_invoice : buildInvoiceRows(full);
+        setInvoiceRows(rows);
+        setInvoiceEditing(!full.rincian_harga_invoice?.length);
+      } else {
+        setInvoiceRows(full.rincian_harga_invoice?.length ? full.rincian_harga_invoice : null);
+        setInvoiceEditing(false);
+      }
     } catch (err) {
       // biarkan tetap pakai data dari list kalau fetch detail gagal
     } finally {
@@ -267,6 +348,8 @@ export default function AffiliateOrder({ affiliateId }) {
     setActiveOrder(null);
     setEditMode(false);
     setEditDraft(null);
+    setInvoiceRows(null);
+    setInvoiceEditing(false);
   };
 
   // ─────────────────────────── Aksi ubah status (konfirmasi/tolak/mulai proses) ───────────────────────────
@@ -314,14 +397,16 @@ export default function AffiliateOrder({ affiliateId }) {
     }
   };
 
-  // ─────────────────────────── Simpan Laporan & Rincian Biaya (URL hasil upload) ───────────────────────────
+  // ─────────────────────────── Simpan Laporan ───────────────────────────
+  // Upload laporan bisa dilakukan sejak status "Order Dikonfirmasi". Saat pertama kali tersimpan
+  // di tahap itu, status otomatis dipindah ke "Order Diproses" (menandai laboran mulai bekerja).
   const handleSaveLaporan = async () => {
-    if (savingLaporan) return;
+    if (savingLaporan || !formLaporan.laporan?.trim()) return;
     try {
       setSavingLaporan(true);
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_URL}/api/order_affiliate/${activeOrder._id}/laporan`,
-        formLaporan,
+        { laporan: formLaporan.laporan },
         { withCredentials: true }
       );
       if (res.data.success) {
@@ -334,6 +419,78 @@ export default function AffiliateOrder({ affiliateId }) {
     } finally {
       setSavingLaporan(false);
     }
+  };
+
+  // ─────────────────────────── Rincian Harga Invoice (diisi laboran) ───────────────────────────
+  const updateInvoiceRow = (idx, key, value) => {
+    setInvoiceRows((rows) => rows.map((r, i) => {
+      if (i !== idx) return r;
+      const next = { ...r, [key]: value };
+      if (key === 'jumlah' || key === 'harga_satuan') {
+        const jumlah = key === 'jumlah' ? Number(value) || 0 : Number(next.jumlah) || 0;
+        const harga = key === 'harga_satuan' ? Number(value) || 0 : Number(next.harga_satuan) || 0;
+        next.total = jumlah * harga;
+      }
+      return next;
+    }));
+  };
+
+  const addInvoiceRow = () => {
+    setInvoiceRows((rows) => [...rows, { id: newRowId(), tanggal: activeOrder.date, deskripsi: '', keterangan: '', jumlah: 1, satuan: '', harga_satuan: 0, total: 0 }]);
+  };
+
+  const removeInvoiceRow = (idx) => {
+    setInvoiceRows((rows) => rows.filter((_, i) => i !== idx));
+  };
+
+  const startEditInvoice = () => {
+    setInvoiceRows(activeOrder.rincian_harga_invoice?.length ? activeOrder.rincian_harga_invoice : buildInvoiceRows(activeOrder));
+    setInvoiceEditing(true);
+  };
+
+  const cancelEditInvoice = () => {
+    setInvoiceEditing(false);
+    setInvoiceRows(activeOrder.rincian_harga_invoice?.length ? activeOrder.rincian_harga_invoice : null);
+  };
+
+  // Endpoint sama dengan yang dipakai admin (PUT .../invoice) supaya saat admin membuka order ini
+  // nanti, rincian harga yang sudah diisi laboran otomatis muncul dan bisa dikoreksi.
+  const handleSimpanRincianHarga = async () => {
+    if (savingInvoice) return;
+    try {
+      setSavingInvoice(true);
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_URL}/api/order_affiliate/${activeOrder._id}/invoice`,
+        { rincian_harga_invoice: invoiceRows },
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        const updated = { ...res.data.data, id_affiliate: activeOrder.id_affiliate };
+        setData((prev) => prev.map((v) => (v._id === updated._id ? updated : v)));
+        setActiveOrder(updated);
+        setInvoiceRows(updated.rincian_harga_invoice);
+        setInvoiceEditing(false);
+      } else {
+        alert(res.data.message || 'Gagal menyimpan rincian harga');
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || err.message);
+    } finally {
+      setSavingInvoice(false);
+    }
+  };
+
+  // ─────────────────────────── Kirim ke Ketua Lab (Order Diproses → Menunggu Diverifikasi) ───────────────────────────
+  const handleKirimVerifikasi = () => {
+    if (!activeOrder.laporan) {
+      alert('Upload laporan terlebih dahulu sebelum mengirim ke ketua lab.');
+      return;
+    }
+    if (!activeOrder.rincian_harga_invoice?.length) {
+      alert('Isi rincian harga terlebih dahulu sebelum mengirim ke ketua lab.');
+      return;
+    }
+    changeStatus('Menunggu Diverifikasi');
   };
 
   // ─────────────────────────── Edit data order (data pemohon + rincian layanan) ───────────────────────────
@@ -351,16 +508,8 @@ export default function AffiliateOrder({ affiliateId }) {
     if (saving) return;
     try {
       setSaving(true);
+      // ✅ Data pemohon tidak lagi bisa diedit laboran — kirim data layanan saja
       const payload = {
-        nama_lengkap: editDraft.nama_lengkap,
-        email: editDraft.email,
-        no_telp: editDraft.no_telp,
-        no_whatsapp: editDraft.no_whatsapp,
-        jenis_institusi: editDraft.jenis_institusi,
-        nama_institusi: editDraft.nama_institusi,
-        program_studi: editDraft.program_studi,
-        fakultas: editDraft.fakultas,
-        nama_pembimbing: editDraft.nama_pembimbing,
         layanan_analisis: editDraft.layanan_analisis,
         sewa_lab: editDraft.sewa_lab,
         sewa_alat: editDraft.sewa_alat,
@@ -586,34 +735,15 @@ export default function AffiliateOrder({ affiliateId }) {
           </div>
         )}
 
-        {/* ── Panel aksi: Mulai Proses — saat "Order Dikonfirmasi" ── */}
-        {activeOrder.status_pengujian === 'Order Dikonfirmasi' && (
-          <div className="border border-indigo-200 bg-indigo-50 rounded-xl p-4 mb-6">
-            <p className="text-xs font-semibold text-indigo-800 mb-1 flex items-center gap-1.5">
-              <PlayCircle className="w-3.5 h-3.5" /> Mulai Proses Sample
-            </p>
-            <p className="text-[11px] text-indigo-700 mb-3">
-              Order sudah dikonfirmasi. Mulai proses sample untuk lanjut ke tahap upload laporan & rincian biaya.
-            </p>
-            <button
-              onClick={handleMulaiProses}
-              disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition"
-            >
-              {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <PlayCircle className="w-3.5 h-3.5" />}
-              Mulai Proses Sample
-            </button>
-          </div>
-        )}
-
-        {/* ── Panel aksi: Upload Laporan & Rincian Biaya — saat "Order Diproses" (upload file langsung) ── */}
-        {activeOrder.status_pengujian === 'Order Diproses' && (
+        {/* ── Panel aksi: Upload Laporan & Rincian Harga — sejak "Order Dikonfirmasi" sampai "Order Diproses" ── */}
+        {(activeOrder.status_pengujian === 'Order Dikonfirmasi' || activeOrder.status_pengujian === 'Order Diproses') && (
           <div className="border border-yellow-200 bg-yellow-50 rounded-xl p-4 mb-6">
             <p className="text-xs font-semibold text-yellow-800 mb-1 flex items-center gap-1.5">
-              <UploadCloud className="w-3.5 h-3.5" /> Upload Laporan & Rincian Biaya
+              <UploadCloud className="w-3.5 h-3.5" /> Upload Laporan & Rincian Harga
             </p>
             <p className="text-[11px] text-yellow-700 mb-3">
-              Upload file laporan & rincian biaya. Setelah keduanya terisi, order otomatis lanjut ke tahap &quot;Menunggu Diverifikasi&quot; oleh ketua lab.
+              Upload file laporan di bawah ini, lalu lengkapi rincian harga satuan di tab &quot;Rincian Harga&quot;.
+              Setelah laporan & rincian harga terisi, kirim order ke ketua lab untuk diverifikasi.
             </p>
             <div className="flex flex-col gap-3">
               <FileUploadField
@@ -623,26 +753,27 @@ export default function AffiliateOrder({ affiliateId }) {
                 uploadState={uploadState.laporan}
                 onSelect={(file) => handleFileSelect('laporan', file)}
               />
-              <FileUploadField
-                label="Rincian Biaya"
-                fieldKey="rincian_biaya"
-                value={formLaporan.rincian_biaya}
-                uploadState={uploadState.rincian_biaya}
-                onSelect={(file) => handleFileSelect('rincian_biaya', file)}
-              />
-              <button
-                onClick={handleSaveLaporan}
-                disabled={
-                  savingLaporan ||
-                  uploadState.laporan.uploading ||
-                  uploadState.rincian_biaya.uploading ||
-                  (!formLaporan.laporan?.trim() && !formLaporan.rincian_biaya?.trim())
-                }
-                className="self-start flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition"
-              >
-                {savingLaporan ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <UploadCloud className="w-3.5 h-3.5" />}
-                Simpan
-              </button>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  onClick={handleSaveLaporan}
+                  disabled={savingLaporan || uploadState.laporan.uploading || !formLaporan.laporan?.trim()}
+                  className="flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition"
+                >
+                  {savingLaporan ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <UploadCloud className="w-3.5 h-3.5" />}
+                  Simpan Laporan
+                </button>
+
+                {activeOrder.status_pengujian === 'Order Diproses' && (
+                  <button
+                    onClick={handleKirimVerifikasi}
+                    disabled={saving}
+                    className="flex items-center gap-1.5 px-4 py-2 border border-yellow-400 text-yellow-800 hover:bg-yellow-100 disabled:opacity-50 text-xs font-medium rounded-lg transition"
+                  >
+                    {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+                    Kirim ke Ketua Lab
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -677,23 +808,39 @@ export default function AffiliateOrder({ affiliateId }) {
         {/* Tab: Rincian Order — Data Pemohon (editable) lalu Layanan (editable) */}
         {activeTab === 'ringkasan' && (
           <div className="flex flex-col gap-4">
+            {/* ✅ Data Pemohon sekarang read-only total — tidak ada tombol edit sama sekali */}
             <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-2">
-                  <User className="w-3.5 h-3.5" /> Data Pemohon
-                </p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-2 mb-4">
+                <User className="w-3.5 h-3.5" /> Data Pemohon
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {APPLICANT_FIELDS
+                  .filter((f) => !f.conditional || activeOrder.jenis_institusi === f.conditional)
+                  .map((f) => (
+                    <div key={f.key} className="min-w-0">
+                      <p className="text-xs text-gray-400 mb-1">{f.label}</p>
+                      <p className="text-sm font-medium mt-0.5 break-words">{activeOrder[f.key] || '—'}</p>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* Tombol edit sekarang khusus untuk rincian layanan saja */}
+            {itemCount > 0 && (
+              <div className="flex items-center justify-end">
                 {!editMode ? (
                   <button
                     onClick={startEdit}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition"
                   >
-                    <Pencil className="w-3.5 h-3.5" /> Edit Data
+                    <Pencil className="w-3.5 h-3.5" /> Edit Layanan
                   </button>
                 ) : (
                   <div className="flex items-center gap-2">
                     <button
                       onClick={cancelEdit}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition"
                     >
                       <X className="w-3.5 h-3.5" /> Batal
                     </button>
@@ -702,42 +849,12 @@ export default function AffiliateOrder({ affiliateId }) {
                       disabled={saving}
                       className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition"
                     >
-                      {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />} Simpan Data
+                      {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />} Simpan Layanan
                     </button>
                   </div>
                 )}
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {APPLICANT_FIELDS
-                  .filter((f) => !f.conditional || (editMode ? editDraft : activeOrder).jenis_institusi === f.conditional)
-                  .map((f) => (
-                    <div key={f.key} className="min-w-0">
-                      <p className="text-xs text-gray-400 mb-1">{f.label}</p>
-                      {editMode ? (
-                        f.isSelect ? (
-                          <select
-                            value={editDraft[f.key] || ''}
-                            onChange={(e) => updateEditField(f.key, e.target.value)}
-                            className={inputCls}
-                          >
-                            {f.options.map((o) => <option key={o} value={o}>{o}</option>)}
-                          </select>
-                        ) : (
-                          <input
-                            type="text"
-                            value={editDraft[f.key] || ''}
-                            onChange={(e) => updateEditField(f.key, e.target.value)}
-                            className={inputCls}
-                          />
-                        )
-                      ) : (
-                        <p className="text-sm font-medium mt-0.5 break-words">{activeOrder[f.key] || '—'}</p>
-                      )}
-                    </div>
-                  ))}
-              </div>
-            </div>
+            )}
 
             {editMode ? (
               Object.entries(FIELD_CONFIG).map(([jenis, cfg]) => (
@@ -772,6 +889,75 @@ export default function AffiliateOrder({ affiliateId }) {
           </div>
         )}
 
+        {/* Tab: Rincian Harga — diisi laboran sejak "Order Dikonfirmasi", dikoreksi ketua lab/admin setelahnya */}
+        {activeTab === 'invoice' && (
+          <div className="flex flex-col gap-4">
+            {LABORAN_INVOICE_EDITABLE_STATUS.includes(activeOrder.status_pengujian) && invoiceEditing && invoiceRows ? (
+              <div className="bg-white rounded-xl border border-gray-200 p-5">
+                <div className="border border-cyan-200 bg-cyan-50 rounded-xl p-4 mb-4">
+                  <p className="text-xs font-semibold text-cyan-800 mb-1 flex items-center gap-1.5">
+                    <Receipt className="w-3.5 h-3.5" /> {activeOrder.rincian_harga_invoice?.length ? 'Koreksi Rincian Harga' : 'Input Rincian Harga'}
+                  </p>
+                  <p className="text-[11px] text-cyan-700">
+                    Baris sudah terisi otomatis dari data layanan — lengkapi harga satuan tiap baris. Tambahkan baris baru bila ada biaya tambahan.
+                  </p>
+                </div>
+
+                <InvoiceTable
+                  rows={invoiceRows}
+                  editable
+                  onUpdateRow={updateInvoiceRow}
+                  onAddRow={addInvoiceRow}
+                  onRemoveRow={removeInvoiceRow}
+                />
+
+                <div className="flex items-center justify-end gap-2 mt-4">
+                  {activeOrder.rincian_harga_invoice?.length > 0 && (
+                    <button
+                      onClick={cancelEditInvoice}
+                      className="flex items-center gap-1.5 px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 transition"
+                    >
+                      <X className="w-4 h-4" /> Batal
+                    </button>
+                  )}
+                  <button
+                    onClick={handleSimpanRincianHarga}
+                    disabled={savingInvoice}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition"
+                  >
+                    {savingInvoice ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                    Simpan Rincian Harga
+                  </button>
+                </div>
+              </div>
+            ) : activeOrder.rincian_harga_invoice?.length > 0 ? (
+              <div className="bg-white rounded-xl border border-gray-200 p-5">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-xs font-semibold text-gray-700 flex items-center gap-2">
+                    <Receipt className="w-3.5 h-3.5 text-gray-400" /> Rincian Harga
+                  </p>
+                  {LABORAN_INVOICE_EDITABLE_STATUS.includes(activeOrder.status_pengujian) && (
+                    <button
+                      onClick={startEditInvoice}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                    >
+                      <Pencil className="w-3.5 h-3.5" /> Edit Rincian Harga
+                    </button>
+                  )}
+                </div>
+                <InvoiceTable rows={activeOrder.rincian_harga_invoice} editable={false} />
+              </div>
+            ) : (
+              <div className="bg-white rounded-xl border border-gray-200 p-5 text-center">
+                <Receipt className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                <p className="text-sm text-gray-400 italic">
+                  Belum ada rincian harga. Isi rincian harga setelah order dikonfirmasi.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Tab: Dokumen — grid link dokumen, Rincian Invoice di bagian paling bawah */}
         {activeTab === 'dokumen' && (
           <div className="flex flex-col gap-4">
@@ -784,7 +970,6 @@ export default function AffiliateOrder({ affiliateId }) {
                     baik value-nya sudah full URL (hasil upload lewat FE ini)
                     maupun cuma filename (hasil upload dari form order awal / komponen lain) */}
                 <FileLink label="Laporan (laboran)" href={buildFileUrl(FILE_CATEGORY.laporan, activeOrder.laporan)} />
-                <FileLink label="Rincian Biaya (laboran)" href={buildFileUrl(FILE_CATEGORY.rincian_biaya, activeOrder.rincian_biaya)} />
 
                 {activeOrder.rincian_harga_invoice?.length > 0 ? (
                   <button
@@ -832,7 +1017,6 @@ export default function AffiliateOrder({ affiliateId }) {
                 )}
 
                 <FileLink label="Bukti Pembayaran (user)" href={buildFileUrl(FILE_CATEGORY.bukti_pembayaran, activeOrder.bukti_pembayaran)} />
-                <FileLink label="Hasil Analisis (laboran)" href={buildFileUrl(FILE_CATEGORY.hasil_analisis, activeOrder.hasil_analisis)} />
               </div>
             </div>
 
@@ -1034,7 +1218,7 @@ function ItemSectionReadOnly({ config, items }) {
   const { title, icon: Icon, cls, fields, fileFields } = config;
   return (
     <div>
-      <p className="text-xs font-semibold text-gray-700 mb-3.5 flex items-center gap-2">
+      <p className="text-sm font-semibold text-gray-700 mb-3.5 flex items-center gap-2">
         <span className={`w-6 h-6 rounded-md flex items-center justify-center ${cls}`}>
           <Icon className="w-3.5 h-3.5" />
         </span>
@@ -1050,8 +1234,8 @@ function ItemSectionReadOnly({ config, items }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-3">
                 {fields.map((f) => (
                   <div key={f.key} className="min-w-0">
-                    <p className="text-[11px] text-gray-400 mb-1">{f.label}</p>
-                    <p className="text-xs font-medium text-gray-700 break-words">{formatFieldValue(f, r)}</p>
+                    <p className="text-xs text-gray-400 mb-1">{f.label}</p>
+                    <p className="text-sm font-medium text-gray-700 break-words">{formatFieldValue(f, r)}</p>
                   </div>
                 ))}
               </div>
@@ -1063,7 +1247,7 @@ function ItemSectionReadOnly({ config, items }) {
                       href={ff.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium text-red-700 bg-white hover:text-red-800 hover:bg-red-50 border border-red-100 rounded-lg transition"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-700 bg-white hover:text-red-800 hover:bg-red-50 border border-red-100 rounded-lg transition"
                     >
                       <Download className="w-3 h-3" /> {ff.label}
                     </a>
@@ -1258,6 +1442,156 @@ function InvoiceTable({ rows }) {
           </tfoot>
         </table>
       </div>
+    </div>
+  );
+}
+
+function InvoiceTable({ rows, editable, onUpdateRow, onAddRow, onRemoveRow }) {
+  const total = rows.reduce((acc, r) => acc + (Number(r.total) || 0), 0);
+  const colCount = editable ? 9 : 8;
+
+  return (
+    <div className="border border-gray-200 rounded-xl overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[760px] border-collapse text-xs">
+          <thead>
+            <tr className="bg-gray-50 border-b border-gray-200">
+              <th className="px-3 py-2.5 text-left font-semibold text-gray-500 uppercase tracking-wide w-8">No</th>
+              <th className="px-2 py-2.5 text-left font-semibold text-gray-500 uppercase tracking-wide w-28">Tanggal</th>
+              <th className="px-2 py-2.5 text-left font-semibold text-gray-500 uppercase tracking-wide">Deskripsi</th>
+              <th className="px-2 py-2.5 text-left font-semibold text-gray-500 uppercase tracking-wide">Keterangan</th>
+              <th className="px-2 py-2.5 text-right font-semibold text-gray-500 uppercase tracking-wide w-16">Jumlah</th>
+              <th className="px-2 py-2.5 text-left font-semibold text-gray-500 uppercase tracking-wide w-16">Satuan</th>
+              <th className="px-2 py-2.5 text-right font-semibold text-gray-500 uppercase tracking-wide w-28">Harga Satuan</th>
+              <th className="px-3 py-2.5 text-right font-semibold text-gray-500 uppercase tracking-wide w-28">Total</th>
+              {editable && <th className="px-2 py-2.5 w-9" />}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {rows.map((r, idx) => (
+              <tr key={r.id || r._id || idx}>
+                <td className="px-3 py-2 text-gray-400 align-top">{idx + 1}</td>
+                <td className="px-2 py-2 align-top">
+                  {editable ? (
+                    <input
+                      type="date"
+                      value={r.tanggal ? r.tanggal.slice(0, 10) : ''}
+                      onChange={(e) => onUpdateRow(idx, 'tanggal', e.target.value)}
+                      className="w-full px-2 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
+                  ) : (
+                    <span className="text-gray-700 whitespace-nowrap">{formatDate(r.tanggal)}</span>
+                  )}
+                </td>
+                <td className="px-2 py-2 align-top">
+                  {editable ? (
+                    <input
+                      type="text"
+                      value={r.deskripsi}
+                      onChange={(e) => onUpdateRow(idx, 'deskripsi', e.target.value)}
+                      className="w-full min-w-[140px] px-2 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
+                  ) : (
+                    <span className="text-gray-800 font-medium">{r.deskripsi || '—'}</span>
+                  )}
+                </td>
+                <td className="px-2 py-2 align-top">
+                  {editable ? (
+                    <input
+                      type="text"
+                      value={r.keterangan}
+                      onChange={(e) => onUpdateRow(idx, 'keterangan', e.target.value)}
+                      className="w-full min-w-[120px] px-2 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
+                  ) : (
+                    <span className="text-gray-600">{r.keterangan || '—'}</span>
+                  )}
+                </td>
+                <td className="px-2 py-2 align-top text-right">
+                  {editable ? (
+                    <input
+                      type="number"
+                      value={r.jumlah}
+                      onChange={(e) => onUpdateRow(idx, 'jumlah', e.target.value)}
+                      className="w-16 px-2 py-1.5 border border-gray-300 rounded-lg text-xs bg-white text-right focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
+                  ) : (
+                    <span className="text-gray-700">{r.jumlah}</span>
+                  )}
+                </td>
+                <td className="px-2 py-2 align-top">
+                  {editable ? (
+                    <input
+                      type="text"
+                      value={r.satuan}
+                      onChange={(e) => onUpdateRow(idx, 'satuan', e.target.value)}
+                      className="w-16 px-2 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
+                  ) : (
+                    <span className="text-gray-700">{r.satuan || '—'}</span>
+                  )}
+                </td>
+                <td className="px-2 py-2 align-top text-right">
+                  {editable ? (
+                    <input
+                      type="number"
+                      value={r.harga_satuan}
+                      onChange={(e) => onUpdateRow(idx, 'harga_satuan', e.target.value)}
+                      className="w-24 px-2 py-1.5 border border-gray-300 rounded-lg text-xs bg-white text-right focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
+                  ) : (
+                    <span className="text-gray-700">Rp {convertRupiah(r.harga_satuan)}</span>
+                  )}
+                </td>
+                <td className="px-3 py-2 align-top text-right font-semibold text-gray-800 whitespace-nowrap">
+                  Rp {convertRupiah(r.total)}
+                </td>
+                {editable && (
+                  <td className="px-2 py-2 align-top">
+                    <button
+                      type="button"
+                      onClick={() => onRemoveRow(idx)}
+                      className="flex items-center justify-center w-7 h-7 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+                      title="Hapus baris"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </td>
+                )}
+              </tr>
+            ))}
+            {rows.length === 0 && (
+              <tr>
+                <td colSpan={colCount} className="px-4 py-8 text-center text-gray-400 italic">
+                  Belum ada baris rincian harga.
+                </td>
+              </tr>
+            )}
+          </tbody>
+          <tfoot>
+            <tr className="border-t border-gray-200 bg-gray-50">
+              <td colSpan={7} className="px-3 py-2.5 text-right text-xs font-semibold text-gray-500 uppercase">
+                Total Keseluruhan
+              </td>
+              <td className="px-3 py-2.5 text-right text-sm font-bold text-gray-900 whitespace-nowrap">
+                Rp {convertRupiah(total)}
+              </td>
+              {editable && <td />}
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      {editable && (
+        <div className="px-3 py-2.5 border-t border-gray-100 bg-white">
+          <button
+            type="button"
+            onClick={onAddRow}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+          >
+            <Plus className="w-3.5 h-3.5" /> Tambah Baris
+          </button>
+        </div>
+      )}
     </div>
   );
 }
