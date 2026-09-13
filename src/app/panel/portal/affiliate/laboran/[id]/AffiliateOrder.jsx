@@ -1402,49 +1402,7 @@ function ItemSectionEditable({ jenis, config, items, onUpdate, onAdd, onRemove, 
   );
 }
 
-function InvoiceTable({ rows }) {
-  const total = rows.reduce((acc, r) => acc + (Number(r.total) || 0), 0);
-  return (
-    <div className="border border-gray-200 rounded-xl overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[760px] border-collapse text-xs">
-          <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="px-3 py-2.5 text-left font-semibold text-gray-500 uppercase tracking-wide w-8">No</th>
-              <th className="px-2 py-2.5 text-left font-semibold text-gray-500 uppercase tracking-wide w-28">Tanggal</th>
-              <th className="px-2 py-2.5 text-left font-semibold text-gray-500 uppercase tracking-wide">Deskripsi</th>
-              <th className="px-2 py-2.5 text-left font-semibold text-gray-500 uppercase tracking-wide">Keterangan</th>
-              <th className="px-2 py-2.5 text-right font-semibold text-gray-500 uppercase tracking-wide w-16">Jumlah</th>
-              <th className="px-2 py-2.5 text-left font-semibold text-gray-500 uppercase tracking-wide w-16">Satuan</th>
-              <th className="px-2 py-2.5 text-right font-semibold text-gray-500 uppercase tracking-wide w-28">Harga Satuan</th>
-              <th className="px-3 py-2.5 text-right font-semibold text-gray-500 uppercase tracking-wide w-28">Total</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {rows.map((r, idx) => (
-              <tr key={r.id || r._id || idx}>
-                <td className="px-3 py-2 text-gray-400 align-top">{idx + 1}</td>
-                <td className="px-2 py-2 align-top"><span className="text-gray-700 whitespace-nowrap">{formatDate(r.tanggal)}</span></td>
-                <td className="px-2 py-2 align-top"><span className="text-gray-800 font-medium">{r.deskripsi || '—'}</span></td>
-                <td className="px-2 py-2 align-top"><span className="text-gray-600">{r.keterangan || '—'}</span></td>
-                <td className="px-2 py-2 align-top text-right"><span className="text-gray-700">{r.jumlah}</span></td>
-                <td className="px-2 py-2 align-top"><span className="text-gray-700">{r.satuan || '—'}</span></td>
-                <td className="px-2 py-2 align-top text-right"><span className="text-gray-700">Rp {convertRupiah(r.harga_satuan)}</span></td>
-                <td className="px-3 py-2 align-top text-right font-semibold text-gray-800 whitespace-nowrap">Rp {convertRupiah(r.total)}</td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr className="border-t border-gray-200 bg-gray-50">
-              <td colSpan={7} className="px-3 py-2.5 text-right text-xs font-semibold text-gray-500 uppercase">Total Keseluruhan</td>
-              <td className="px-3 py-2.5 text-right text-sm font-bold text-gray-900 whitespace-nowrap">Rp {convertRupiah(total)}</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-    </div>
-  );
-}
+
 
 function InvoiceTable({ rows, editable, onUpdateRow, onAddRow, onRemoveRow }) {
   const total = rows.reduce((acc, r) => acc + (Number(r.total) || 0), 0);
