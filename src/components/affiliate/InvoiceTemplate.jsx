@@ -23,11 +23,23 @@ const formatTanggalPendek = (d) => {
   }
 };
 
-// ── Header institusi utama (Laboratorium Riset Kimia UPI) — tampil tetap di semua invoice
+// ── Teks kop surat institusi utama (Laboratorium Kimia Instrumen UPI) — tampil tetap di semua invoice
 // terlepas dari lab affiliate mana yang diorder; hanya baris "INVOICE PELAYANAN ANALISIS ..."
 // di bawahnya yang dinamis mengikuti lab.nama_laboratorium ──
-const LAB_UTAMA_NAMA = 'LABORATORIUM RISET KIMIA';
-const LAB_UTAMA_ALAMAT = 'Jalan Dr. Setiabudhi No. 229 Bandung';
+const LAB_UTAMA_NAMA = 'LABORATORIUM KIMIA INSTRUMEN';
+const LAB_UTAMA_INSTANSI = 'UNIVERSITAS PENDIDIKAN INDONESIA';
+const LAB_UTAMA_ALAMAT = 'Gedung JICA (FPMIPA-A) Lt. 5. Jl. Setiabudhi No.229 Bandung – 40154.';
+
+// Font kop surat & watermark — dipasang langsung di tiap elemen supaya tidak tertimpa CSS global
+const FONT_TIMES = "'Times New Roman', Times, 'Liberation Serif', serif";
+
+// Teks watermark di latar belakang invoice
+const WATERMARK_TEXT = 'BUKAN BUKTI PEMBAYARAN';
+
+// Tinggi minimum invoice = tinggi kertas A4 pada lebar 900px (900 x 297/210 ≈ 1273px).
+// Dibuat sedikit di bawah 1273 supaya hasil capture tidak melebihi 1 halaman PDF.
+// Dengan ini watermark (top: 50%) berada tepat di tengah-tengah kertas, bukan di tengah isi.
+const A4_MIN_HEIGHT = '1270px';
 
 // ── Template ini dirender tersembunyi di DOM (lihat penggunaan di AffiliateOrder.jsx),
 // lalu di-capture jadi PDF via html2canvas + jsPDF. Tidak ada file yang disimpan di server.
@@ -47,7 +59,11 @@ export default function InvoiceTemplate({ order, printId }) {
     <div
       id={printId}
       style={{
+        position: 'relative',
+        zIndex: 0,
+        boxSizing: 'border-box',
         width: '900px',
+        minHeight: A4_MIN_HEIGHT,
         padding: '32px',
         background: '#fff',
         color: '#111',
@@ -55,25 +71,50 @@ export default function InvoiceTemplate({ order, printId }) {
         fontSize: '13px',
       }}
     >
-      {/* Kop Surat: logo di kiri, judul institusi + alamat center, ditutup garis
-          ganda (tebal+tipis) khas letterhead resmi. Spacer di kanan (lebar sama
-          dengan logo) dipakai supaya blok judul benar-benar center terhadap
-          lebar halaman, bukan cuma center di sisa ruang setelah logo. */}
+      {/* Watermark latar belakang — dipusatkan secara vertikal terhadap seluruh kertas (root punya minHeight A4)
+          dan z-index -1 di dalam stacking context root, jadi tampil di belakang semua teks & tabel. */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: 0,
+          right: 0,
+          transform: 'translateY(-50%)',
+          zIndex: -1,
+          textAlign: 'center',
+          fontFamily: FONT_TIMES,
+          fontSize: '48px',
+          fontWeight: 'bold',
+          letterSpacing: '1px',
+          color: 'rgba(0, 0, 0, 0.12)',
+          whiteSpace: 'nowrap',
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}
+      >
+        {WATERMARK_TEXT}
+      </div>
+
+      {/* Kop Surat: logo di kiri, teks institusi rata kiri di sebelahnya (3 baris, Times New Roman),
+          ditutup garis ganda (tebal+tipis) khas letterhead resmi. */}
       <div style={{ marginBottom: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <img
             src="/logo/image.png"
-            alt="Logo Laboratorium Riset Kimia UPI"
+            alt="Logo Laboratorium Kimia Instrumen UPI"
             crossOrigin="anonymous"
             style={{ height: '64px', width: '170px', objectFit: 'contain', flexShrink: 0 }}
           />
-          <div style={{ flex: 1, textAlign: 'center' }}>
-            <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+          <div style={{ flex: 1, textAlign: 'left', fontFamily: FONT_TIMES }}>
+            <h1 style={{ margin: 0, fontFamily: FONT_TIMES, fontSize: '22px', fontWeight: 'bold', lineHeight: 1.15 }}>
               {LAB_UTAMA_NAMA}
             </h1>
-            <p style={{ margin: '2px 0 0', fontSize: '13px' }}>{LAB_UTAMA_ALAMAT}</p>
+            <h1 style={{ margin: 0, fontFamily: FONT_TIMES, fontSize: '22px', fontWeight: 'bold', lineHeight: 1.15 }}>
+              {LAB_UTAMA_INSTANSI}
+            </h1>
+            <p style={{ margin: '3px 0 0', fontFamily: FONT_TIMES, fontSize: '13px' }}>{LAB_UTAMA_ALAMAT}</p>
           </div>
-          <div style={{ width: '170px', flexShrink: 0 }} />
         </div>
         {/* Garis kop surat ganda: tebal lalu tipis, jarak rapat */}
         <div style={{ borderBottom: '3px solid #000', marginTop: '10px' }} />

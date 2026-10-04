@@ -44,6 +44,13 @@ const LABORAN_ACTIONABLE_STATUS = ['Menunggu Order Dikonfirmasi', 'Order Dikonfi
 // ── Laboran boleh isi/koreksi rincian harga sejak order dikonfirmasi sampai selesai diproses ──
 const LABORAN_INVOICE_EDITABLE_STATUS = ['Order Dikonfirmasi', 'Order Diproses'];
 
+// Order yang isinya HANYA pembelian bahan — tidak perlu upload laporan
+const isBahanOnly = (order) =>
+  (order?.pembelian_bahan?.length || 0) > 0 &&
+  !(order?.layanan_analisis?.length || 0) &&
+  !(order?.sewa_lab?.length || 0) &&
+  !(order?.sewa_alat?.length || 0);
+
 const MONTH_NAMES = [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
   'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
@@ -86,7 +93,7 @@ const buildInvoiceRows = (order) => {
         tanggal: order.date,
         deskripsi: jenis,
         keterangan: item.nama_sample || '',
-        jumlah: Number(item.jumlah_sample) || 1,
+         jumlah: Number(item.jumlah) || 1,
         satuan: 'sampel',
         harga_satuan: 0,
         total: 0,
@@ -222,6 +229,7 @@ const FIELD_CONFIG = {
     title: 'Pembelian Bahan', icon: Package, cls: 'text-amber-700 bg-amber-50',
     fields: [
       { key: 'jenis_bahan', label: 'Jenis Bahan' },
+      { key: 'jumlah', label: 'Jumlah', isNumber: true },
       { key: 'satuan', label: 'Satuan' },
       { key: 'keterangan', label: 'Keterangan' },
     ],
@@ -301,6 +309,23 @@ export default function AffiliateOrder({ affiliateId }) {
   }, [affiliateId]);
 
   useEffect(() => { fetchList(); }, [fetchList]);
+
+      // ── Siapkan form Rincian Harga otomatis begitu order masuk tahap yang boleh diisi laboran
+  // (Order Dikonfirmasi / Order Diproses), tanpa perlu refresh atau buka ulang halaman detail ──
+  useEffect(() => {
+    if (!activeOrder) return;
+    if (!LABORAN_INVOICE_EDITABLE_STATUS.includes(activeOrder.status_pengujian)) return;
+    if (invoiceRows) return; // sudah disiapkan (mis. oleh openDetail), jangan ditimpa
+
+    if (activeOrder.rincian_harga_invoice?.length) {
+      setInvoiceRows(activeOrder.rincian_harga_invoice);
+      setInvoiceEditing(false);
+    } else {
+      setInvoiceRows(buildInvoiceRows(activeOrder));
+      setInvoiceEditing(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeOrder?._id, activeOrder?.status_pengujian]);
 
   // ── Opsi tahun diambil dari data yang sudah ter-fetch, terbaru di atas ──
   const uniqueYears = [...new Set(data.map((v) => v.year).filter(Boolean))].sort((a, b) => b.localeCompare(a));
@@ -482,7 +507,7 @@ export default function AffiliateOrder({ affiliateId }) {
 
   // ─────────────────────────── Kirim ke Ketua Lab (Order Diproses → Menunggu Diverifikasi) ───────────────────────────
   const handleKirimVerifikasi = () => {
-    if (!activeOrder.laporan) {
+    if (!isBahanOnly(activeOrder) && !activeOrder.laporan) {
       alert('Upload laporan terlebih dahulu sebelum mengirim ke ketua lab.');
       return;
     }
@@ -736,7 +761,7 @@ export default function AffiliateOrder({ affiliateId }) {
         )}
 
         {/* ── Panel aksi: Upload Laporan & Rincian Harga — sejak "Order Dikonfirmasi" sampai "Order Diproses" ── */}
-        {(activeOrder.status_pengujian === 'Order Dikonfirmasi' || activeOrder.status_pengujian === 'Order Diproses') && (
+        {!isBahanOnly(activeOrder) && (activeOrder.status_pengujian === 'Order Dikonfirmasi' || activeOrder.status_pengujian === 'Order Diproses') && (
           <div className="border border-yellow-200 bg-yellow-50 rounded-xl p-4 mb-6">
             <p className="text-xs font-semibold text-yellow-800 mb-1 flex items-center gap-1.5">
               <UploadCloud className="w-3.5 h-3.5" /> Upload Laporan & Rincian Harga
@@ -775,6 +800,30 @@ export default function AffiliateOrder({ affiliateId }) {
                 )}
               </div>
             </div>
+          </div>
+        )}
+
+                {/* ── Panel khusus order pembelian bahan: tanpa laporan, cukup rincian harga ── */}
+        {isBahanOnly(activeOrder) && (activeOrder.status_pengujian === 'Order Dikonfirmasi' || activeOrder.status_pengujian === 'Order Diproses') && (
+          <div className="border border-yellow-200 bg-yellow-50 rounded-xl p-4 mb-6">
+            <p className="text-xs font-semibold text-yellow-800 mb-1 flex items-center gap-1.5">
+              <Receipt className="w-3.5 h-3.5" /> Rincian Harga — Pembelian Bahan
+            </p>
+            <p className="text-[11px] text-yellow-700 mb-3">
+              Order ini hanya berisi pembelian bahan, jadi tidak perlu upload laporan. Lengkapi harga satuan di tab
+              &quot;Rincian Harga&quot; dan simpan, lalu kirim ke ketua lab untuk diverifikasi.
+            </p>
+            {!activeOrder.rincian_harga_invoice?.length && (
+              <p className="text-[11px] text-yellow-800 font-medium mb-3">Rincian harga belum disimpan.</p>
+            )}
+            <button
+              onClick={handleKirimVerifikasi}
+              disabled={saving || !activeOrder.rincian_harga_invoice?.length}
+              className="flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition"
+            >
+              {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+              Kirim ke Ketua Lab
+            </button>
           </div>
         )}
 
@@ -969,7 +1018,9 @@ export default function AffiliateOrder({ affiliateId }) {
                 {/* ✅ Semua field file di sini dilewatkan lewat buildFileUrl supaya aman
                     baik value-nya sudah full URL (hasil upload lewat FE ini)
                     maupun cuma filename (hasil upload dari form order awal / komponen lain) */}
-                <FileLink label="Laporan (laboran)" href={buildFileUrl(FILE_CATEGORY.laporan, activeOrder.laporan)} />
+                                {!isBahanOnly(activeOrder) && (
+                  <FileLink label="Laporan (laboran)" href={buildFileUrl(FILE_CATEGORY.laporan, activeOrder.laporan)} />
+                )}
 
                 {activeOrder.rincian_harga_invoice?.length > 0 ? (
                   <button
@@ -1339,6 +1390,14 @@ function ItemSectionEditable({ jenis, config, items, onUpdate, onAdd, onRemove, 
                       placeholder="Pisahkan dengan koma"
                       className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
                     />
+                  ) : f.isNumber ? (
+                    <input
+                      type="number"
+                      min="0"
+                      value={item[f.key] ?? ''}
+                      onChange={(e) => onUpdate(jenis, idx, f.key, e.target.value === '' ? '' : Number(e.target.value))}
+                      className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
                   ) : f.isDate ? (
                     <input
                       type="date"
@@ -1358,6 +1417,7 @@ function ItemSectionEditable({ jenis, config, items, onUpdate, onAdd, onRemove, 
               ))}
             </div>
 
+            {/* ✅ Foto Sample / Jurnal Pendukung — upload sungguhan ke file server + progress bar */}
             {fileFields && fileFields.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5 pr-8 mt-6 pt-5 border-t border-gray-200">
                 {fileFields.map((ff) => {

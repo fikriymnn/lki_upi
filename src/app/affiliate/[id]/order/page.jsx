@@ -18,7 +18,7 @@ const emptyItem = (key) => {
   if (key === 'analisis') return { jenis_layanan: [], nama_sample: '', pelarut: '', jumlah_sample: '', metode_parameter: '', foto_sample: '', jurnal_pendukung: '', keterangan: '' };
   if (key === 'sewa_alat') return { nama_alat: '', jenis_sewa: '', tanggal_mulai: '', tanggal_selesai: '', jumlah: '', keterangan: '' };
   if (key === 'sewa_lab') return { jenis_sewa: '', tanggal_mulai: '', tanggal_selesai: '', jumlah: '', keterangan: '' };
-  return { jenis_bahan: '', jumlah: '', satuan: '', nomor_produk: '', keterangan: '' }; // pembelian_bahan
+  return { jenis_bahan: '', jumlah: '', satuan: '', keterangan: '' }; // pembelian_bahan
 };
 
 const FILE_URL = process.env.NEXT_PUBLIC_FILE_URL;
@@ -60,7 +60,7 @@ const informasiValid = (form) => REQUIRED_INFORMASI_FIELDS.every((f) => isFilled
 
 const getInformasiMissing = (form) => REQUIRED_INFORMASI_FIELDS.filter((f) => !isFilled(form[f.key])).map((f) => f.label);
 
-// Field wajib per jenis item (sisanya opsional: keterangan, pelarut, metode_parameter, foto_sample, jurnal_pendukung, nomor_produk)
+// Field wajib per jenis item (sisanya opsional: keterangan, pelarut, metode_parameter, foto_sample, jurnal_pendukung)
 const ITEM_REQUIRED_FIELDS = {
   analisis: [
     { key: 'jenis_layanan', label: 'Jenis Layanan', isArray: true },
@@ -310,7 +310,6 @@ export default function AffiliateOrderPage() {
           jenis_bahan: item.jenis_bahan,
           jumlah: Number(item.jumlah) || 0,
           satuan: item.satuan,
-          nomor_produk: item.nomor_produk,
           keterangan: item.keterangan,
         })),
         syarat_ketentuan: form.syarat_ketentuan,
@@ -658,7 +657,6 @@ const getItemDetailRows = (itemKey, item) => {
     { label: 'Jenis Bahan', value: item.jenis_bahan },
     { label: 'Jumlah', value: item.jumlah },
     { label: 'Satuan', value: item.satuan },
-    { label: 'Nomor Produk', value: item.nomor_produk },
     { label: 'Keterangan', value: item.keterangan },
   ];
   return [];
@@ -842,7 +840,6 @@ function ItemModal({ itemKey, item, setItem, masterAnalisis, loadingMaster, onCl
                 <TextField label="Jumlah" required type="number" value={item.jumlah} placeholder="Contoh: 2" onChange={(v) => set('jumlah', v)} />
                 <TextField label="Satuan" required value={item.satuan} placeholder="Contoh: Liter / Kg" onChange={(v) => set('satuan', v)} />
               </div>
-              <TextField label="Nomor Produk" value={item.nomor_produk} placeholder="Nomor katalog/produk (opsional)" onChange={(v) => set('nomor_produk', v)} />
             </>
           )}
 

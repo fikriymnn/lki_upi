@@ -263,6 +263,7 @@ const FIELD_CONFIG = {
         title: 'Pembelian Bahan', icon: PackageCheck, cls: 'text-amber-700 bg-amber-50',
         fields: [
             { key: 'jenis_bahan', label: 'Jenis Bahan' },
+            { key: 'jumlah', label: 'Jumlah', isNumber: true },
             { key: 'satuan', label: 'Satuan' },
             { key: 'keterangan', label: 'Keterangan' },
         ],
@@ -712,7 +713,7 @@ export default function DetailAffiliate({ params }) {
                                         onClick={startEdit}
                                         className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
                                     >
-                                        <Pencil className="w-3.5 h-3.5" /> Edit Data
+                                        {/* <Pencil className="w-3.5 h-3.5" /> Edit Data */}
                                     </button>
                                 ) : (
                                     <div className="flex items-center gap-2">
@@ -1198,6 +1199,14 @@ function ItemSectionEditable({ jenis, config, items, onUpdate, onAdd, onRemove, 
                                             value={(item[f.key] || []).join(', ')}
                                             onChange={(e) => onUpdate(jenis, idx, f.key, e.target.value.split(',').map((s) => s.trim()).filter(Boolean))}
                                             placeholder="Pisahkan dengan koma"
+                                            className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                                        />
+                                    ) : f.isNumber ? (
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            value={item[f.key] ?? ''}
+                                            onChange={(e) => onUpdate(jenis, idx, f.key, e.target.value === '' ? '' : Number(e.target.value))}
                                             className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
                                         />
                                     ) : f.isDate ? (

@@ -40,6 +40,12 @@ const STATUS_CLASS = {
 // ── Ketua Lab hanya bisa bertindak (verifikasi status) saat order "Menunggu Diverifikasi" ──
 const KETUA_LAB_ACTIONABLE_STATUS = ['Menunggu Diverifikasi'];
 
+const isBahanOnly = (order) =>
+  (order?.pembelian_bahan?.length || 0) > 0 &&
+  !(order?.layanan_analisis?.length || 0) &&
+  !(order?.sewa_lab?.length || 0) &&
+  !(order?.sewa_alat?.length || 0);
+
 const MONTH_NAMES = [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
   'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
@@ -148,6 +154,7 @@ const FIELD_CONFIG = {
     title: 'Pembelian Bahan', icon: Package, cls: 'text-amber-700 bg-amber-50',
     fields: [
       { key: 'jenis_bahan', label: 'Jenis Bahan' },
+      { key: 'jumlah', label: 'Jumlah', isNumber: true },
       { key: 'satuan', label: 'Satuan' },
       { key: 'keterangan', label: 'Keterangan' },
     ],
@@ -442,6 +449,7 @@ export default function AffiliateOrder({ affiliateId }) {
   const actionLabel = (order) =>
     KETUA_LAB_ACTIONABLE_STATUS.includes(order.status_pengujian) ? 'Verifikasi' : 'Detail';
 
+
   // ══════════════════════════════ DETAIL: halaman order terpilih ══════════════════════════════
   if (activeOrder) {
     const itemCount =
@@ -497,7 +505,9 @@ export default function AffiliateOrder({ affiliateId }) {
               <ShieldCheck className="w-3.5 h-3.5" /> Verifikasi Laporan
             </p>
             <p className="text-[11px] text-yellow-700 mb-3">
-              Periksa laporan & rincian biaya dari laboran di tab Dokumen. Kalau sudah sesuai, ACC untuk lanjut ke tahap invoice. Kalau masih ada yang perlu diperbaiki, kembalikan ke laboran.
+              {isBahanOnly(activeOrder)
+                ? 'Order pembelian bahan — tidak ada laporan. Periksa rincian harga di tab Dokumen. Kalau sudah sesuai, ACC untuk lanjut ke tahap invoice. Kalau masih ada yang perlu diperbaiki, kembalikan ke laboran.'
+                : 'Periksa laporan & rincian biaya dari laboran di tab Dokumen. Kalau sudah sesuai, ACC untuk lanjut ke tahap invoice. Kalau masih ada yang perlu diperbaiki, kembalikan ke laboran.'}
             </p>
             <div className="flex flex-wrap gap-2">
               <button
@@ -641,7 +651,9 @@ export default function AffiliateOrder({ affiliateId }) {
                     Rincian Biaya & Hasil Analisis sudah tidak lagi ditampilkan di sini —
                     rincian harga sekarang dikelola lewat tab Invoice (laboran/admin),
                     dan hasil analisis sudah tidak ada di alur laboran. */}
-                <FileLink label="Laporan (laboran)" href={buildFileUrl(FILE_CATEGORY.laporan, activeOrder.laporan)} />
+                {!isBahanOnly(activeOrder) && (
+                  <FileLink label="Laporan (laboran)" href={buildFileUrl(FILE_CATEGORY.laporan, activeOrder.laporan)} />
+                )}
 
                 {activeOrder.rincian_harga_invoice?.length > 0 ? (
                   <button
@@ -1010,6 +1022,14 @@ function ItemSectionEditable({ jenis, config, items, onUpdate, onAdd, onRemove, 
                       value={(item[f.key] || []).join(', ')}
                       onChange={(e) => onUpdate(jenis, idx, f.key, e.target.value.split(',').map((s) => s.trim()).filter(Boolean))}
                       placeholder="Pisahkan dengan koma"
+                      className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
+                  ) : f.isNumber ? (
+                    <input
+                      type="number"
+                      min="0"
+                      value={item[f.key] ?? ''}
+                      onChange={(e) => onUpdate(jenis, idx, f.key, e.target.value === '' ? '' : Number(e.target.value))}
                       className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
                     />
                   ) : f.isDate ? (

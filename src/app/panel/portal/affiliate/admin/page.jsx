@@ -13,6 +13,20 @@ const ROLE_LABEL = {
   admin: 'Admin',
 };
 
+// Status order yang perlu muncul di notifikasi admin
+const NOTIF_STATUSES = [
+  'Menunggu Order Dikonfirmasi',
+  'Menunggu Diverifikasi',
+  'Menunggu Verifikasi Pembayaran',
+];
+
+// Warna badge per status (class ditulis utuh agar terdeteksi Tailwind)
+const STATUS_BADGE = {
+  'Menunggu Order Dikonfirmasi': 'bg-blue-50 text-blue-700',
+  'Menunggu Diverifikasi': 'bg-amber-50 text-amber-700',
+  'Menunggu Verifikasi Pembayaran': 'bg-green-50 text-green-700',
+};
+
 export default function AffiliateAdminPage() {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -26,9 +40,15 @@ export default function AffiliateAdminPage() {
   const [newOrders, setNewOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
 
-  useEffect(()=>{
-    console.log("hai")
-  },[])
+  // Menyimpan order yang sudah "dilihat" (key: id + status) supaya titik biru
+  // tidak muncul lagi setiap polling kalau tidak ada order/perubahan status baru
+  const seenOrdersRef = useRef(new Set());
+  const showNotificationRef = useRef(false);
+  const isFirstLoadRef = useRef(true);
+
+  useEffect(() => {
+    showNotificationRef.current = showNotification;
+  }, [showNotification]);
 
   // ── Fetch user data ──────────────────────────────────────────────────
   useEffect(() => {
@@ -51,7 +71,7 @@ export default function AffiliateAdminPage() {
     fetchUser();
   }, []);
 
-  // ── Fetch new orders for admin ──────────────────────────────────────
+  // ── Fetch order yang butuh tindakan admin ───────────────────────────
   useEffect(() => {
     const fetchNewOrders = async () => {
       try {
@@ -61,31 +81,59 @@ export default function AffiliateAdminPage() {
         // Cek role user terlebih dahulu
         if (userData?.role !== 'admin' && userData?.role !== 'superadmin') return;
 
-        setLoadingOrders(true);
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order_affiliate`, {
-          params: {
-            status: 'Menunggu Order Dikonfirmasi',
-            limit: 10,
-            page: 1
-          },
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${token}` },
+        // Skeleton hanya tampil saat load pertama, bukan tiap polling
+        if (isFirstLoadRef.current) setLoadingOrders(true);
+
+        // Ambil tiap status secara paralel
+        const results = await Promise.allSettled(
+          NOTIF_STATUSES.map((status) =>
+            axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order_affiliate`, {
+              params: { status, limit: 10, page: 1 },
+              withCredentials: true,
+              headers: { Authorization: `Bearer ${token}` },
+            })
+          )
+        );
+
+        const merged = [];
+        results.forEach((result, idx) => {
+          if (result.status === 'fulfilled' && result.value.data?.success) {
+            const list = result.value.data.data || [];
+            list.forEach((order) => {
+              merged.push({ ...order, notif_status: NOTIF_STATUSES[idx] });
+            });
+          } else if (result.status === 'rejected') {
+            console.error(`Gagal mengambil order "${NOTIF_STATUSES[idx]}":`, result.reason);
+          }
         });
 
-        if (res.data.success && res.data.data.length > 0) {
-          setNewOrders(res.data.data);
-          setHasNewOrder(true);
+        // Urutkan dari yang terbaru
+        merged.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setNewOrders(merged);
+
+        // Titik biru hanya jika ada order/status yang belum pernah dilihat
+        const hasUnseen = merged.some(
+          (o) => !seenOrdersRef.current.has(`${o._id}-${o.notif_status}`)
+        );
+
+        if (showNotificationRef.current) {
+          // Dropdown sedang terbuka → langsung tandai sudah dilihat
+          merged.forEach((o) => seenOrdersRef.current.add(`${o._id}-${o.notif_status}`));
+          setHasNewOrder(false);
+        } else {
+          setHasNewOrder(hasUnseen);
         }
       } catch (err) {
         console.error('Gagal mengambil data order baru:', err);
       } finally {
+        isFirstLoadRef.current = false;
         setLoadingOrders(false);
       }
     };
 
     if (userData?.role === 'admin' || userData?.role === 'superadmin') {
       fetchNewOrders();
-      
+
       // Polling setiap 30 detik untuk cek order baru
       const interval = setInterval(fetchNewOrders, 30000);
       return () => clearInterval(interval);
@@ -116,8 +164,11 @@ export default function AffiliateAdminPage() {
   };
 
   const handleNotificationClick = () => {
-    setShowNotification(!showNotification);
-    if (!showNotification) {
+    const willOpen = !showNotification;
+    setShowNotification(willOpen);
+    if (willOpen) {
+      // Tandai semua order saat ini sebagai sudah dilihat
+      newOrders.forEach((o) => seenOrdersRef.current.add(`${o._id}-${o.notif_status}`));
       setHasNewOrder(false);
     }
   };
@@ -165,12 +216,12 @@ export default function AffiliateAdminPage() {
                       <div className="absolute right-0 mt-2 w-96 max-h-[500px] overflow-y-auto bg-white rounded-lg shadow-xl border border-gray-200 z-20">
                         <div className="p-4 border-b border-gray-200">
                           <div className="flex items-center justify-between">
-                            <h3 className="text-sm font-semibold text-gray-900">Order Baru</h3>
+                            <h3 className="text-sm font-semibold text-gray-900">Notifikasi Order</h3>
                             <span className="text-xs text-gray-500">{newOrders.length} order</span>
                           </div>
-                          <p className="text-xs text-gray-500 mt-1">Order menunggu konfirmasi</p>
+                          <p className="text-xs text-gray-500 mt-1">Order yang membutuhkan perhatian admin</p>
                         </div>
-                        
+
                         {loadingOrders ? (
                           <div className="p-4">
                             {[1, 2, 3].map((i) => (
@@ -184,7 +235,7 @@ export default function AffiliateAdminPage() {
                           <div className="divide-y divide-gray-100">
                             {newOrders.map((order) => (
                               <button
-                                key={order._id}
+                                key={`${order._id}-${order.notif_status}`}
                                 onClick={() => handleOrderClick(order)}
                                 className="w-full p-4 text-left hover:bg-gray-50 transition"
                               >
@@ -201,8 +252,12 @@ export default function AffiliateAdminPage() {
                                   </span>
                                 </div>
                                 <div className="mt-2">
-                                  <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[10px] font-medium">
-                                    Menunggu Order Dikonfirmasi
+                                  <span
+                                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                                      STATUS_BADGE[order.notif_status] || 'bg-gray-100 text-gray-700'
+                                    }`}
+                                  >
+                                    {order.notif_status}
                                   </span>
                                 </div>
                               </button>
@@ -211,7 +266,7 @@ export default function AffiliateAdminPage() {
                         ) : (
                           <div className="p-8 text-center">
                             <Bell className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                            <p className="text-sm text-gray-400">Tidak ada order baru</p>
+                            <p className="text-sm text-gray-400">Tidak ada notifikasi order</p>
                           </div>
                         )}
                       </div>

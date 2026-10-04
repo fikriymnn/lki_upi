@@ -42,6 +42,13 @@ const ADMIN_ACTIONABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Verifikasi Pe
 // ── Status yang invoice-nya masih boleh diinput/dikoreksi (harus sinkron dengan BE) ──
 const INVOICE_EDITABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Pembayaran'];
 
+// Order yang isinya HANYA pembelian bahan — tidak ada laporan
+const isBahanOnly = (order) =>
+  (order?.pembelian_bahan?.length || 0) > 0 &&
+  !(order?.layanan_analisis?.length || 0) &&
+  !(order?.sewa_lab?.length || 0) &&
+  !(order?.sewa_alat?.length || 0);
+
 const MONTH_NAMES = [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
   'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
@@ -163,7 +170,7 @@ const buildInvoiceRows = (order) => {
       tanggal: order.date,
       deskripsi: item.jenis_bahan || 'Bahan',
       keterangan: item.keterangan || '',
-      jumlah: 1,
+      jumlah: Number(item.jumlah) || 1,
       satuan: item.satuan || '-',
       harga_satuan: 0,
       total: 0,
@@ -214,6 +221,7 @@ const FIELD_CONFIG = {
     title: 'Pembelian Bahan', icon: Package, cls: 'text-amber-700 bg-amber-50',
     fields: [
       { key: 'jenis_bahan', label: 'Jenis Bahan' },
+      { key: 'jumlah', label: 'Jumlah', isNumber: true },
       { key: 'satuan', label: 'Satuan' },
       { key: 'keterangan', label: 'Keterangan' },
     ],
@@ -394,8 +402,43 @@ export default function AffiliateOrder({ affiliateId }) {
     }
   };
 
+  // ── Aksi admin: terbitkan invoice dari rincian harga yang sudah diisi laboran & diverifikasi ketua lab.
+  // Memakai endpoint yang sama dengan simpan invoice — BE otomatis memindahkan status ke "Menunggu Pembayaran",
+  // jadi admin tidak perlu masuk mode edit kalau memang tidak ada yang perlu dikoreksi. ──
+  const handleTerbitkanInvoice = async () => {
+    if (saving || !activeOrder?.rincian_harga_invoice?.length) return;
+
+    const totalInvoice = activeOrder.rincian_harga_invoice.reduce((acc, r) => acc + (Number(r.total) || 0), 0);
+    const pesan = totalInvoice > 0
+      ? 'Terbitkan invoice ke customer? Status order akan menjadi "Menunggu Pembayaran" dan customer bisa mengunduh invoice.'
+      : 'Total invoice masih Rp 0 (harga satuan belum diisi). Tetap terbitkan invoice ke customer?';
+    if (!window.confirm(pesan)) return;
+
+    try {
+      setSaving(true);
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_URL}/api/order_affiliate/${activeOrder._id}/invoice`,
+        { rincian_harga_invoice: activeOrder.rincian_harga_invoice },
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        const updated = { ...res.data.data, id_affiliate: activeOrder.id_affiliate };
+        setData((prev) => prev.map((v) => (v._id === updated._id ? updated : v)));
+        setActiveOrder(updated);
+        setInvoiceRows(updated.rincian_harga_invoice);
+        setInvoiceEditing(false);
+      } else {
+        alert(res.data.message || 'Gagal menerbitkan invoice');
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   // ── Aksi admin: transisi status "Menunggu Verifikasi Pembayaran" → "Selesai" (satu-satunya
-  // perubahan status yang boleh dilakukan admin di halaman ini — tidak ada dropdown bebas lagi) ──
+  // perubahan status lain yang boleh dilakukan admin di halaman ini — tidak ada dropdown bebas lagi) ──
   const handleSelesaikanOrder = async () => {
     if (saving) return;
     if (!window.confirm('Yakin ingin menandai order ini sebagai "Selesai"? User akan bisa mengunduh hasil analisis serta kuitansi setelah ini.')) return;
@@ -642,7 +685,52 @@ export default function AffiliateOrder({ affiliateId }) {
           </div>
         </div>
 
-        {/* Hint box: verifikasi pembayaran — satu-satunya aksi ubah status admin di halaman ini */}
+        {/* Panel aksi admin: terbitkan invoice — muncul saat "Selesai Diverifikasi" */}
+        {activeOrder.status_pengujian === 'Selesai Diverifikasi' && (
+          <div className="border border-cyan-200 bg-cyan-50 rounded-xl p-4 mb-5">
+            <p className="text-xs font-semibold text-cyan-800 mb-1.5 flex items-center gap-1.5">
+              <Receipt className="w-3.5 h-3.5" /> Terbitkan Invoice
+            </p>
+            {activeOrder.rincian_harga_invoice?.length > 0 ? (
+              <>
+                <p className="text-[11px] text-cyan-700 mb-3">
+                  Rincian harga sudah diisi laboran dan diverifikasi ketua lab. Periksa di tab Invoice — kalau ada yang perlu dikoreksi, klik Edit Invoice. Kalau sudah sesuai, terbitkan invoice agar customer bisa mengunduhnya dan melakukan pembayaran.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={handleTerbitkanInvoice}
+                    disabled={saving}
+                    className="flex items-center gap-1.5 px-3.5 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition"
+                  >
+                    {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                    Terbitkan Invoice ke Customer
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('invoice')}
+                    disabled={saving}
+                    className="flex items-center gap-1.5 px-3.5 py-2 border border-cyan-300 text-cyan-800 hover:bg-cyan-100 disabled:opacity-50 text-xs font-medium rounded-lg transition"
+                  >
+                    <Pencil className="w-3.5 h-3.5" /> Periksa / Edit Invoice
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-[11px] text-cyan-700 mb-3">
+                  Rincian invoice belum ada. Isi rincian invoice terlebih dahulu di tab Invoice, lalu simpan untuk menerbitkannya ke customer.
+                </p>
+                <button
+                  onClick={() => setActiveTab('invoice')}
+                  className="flex items-center gap-1.5 px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded-lg transition"
+                >
+                  <Receipt className="w-3.5 h-3.5" /> Buka Tab Invoice
+                </button>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Hint box: verifikasi pembayaran — aksi ubah status admin saat "Menunggu Verifikasi Pembayaran" */}
         {activeOrder.status_pengujian === 'Menunggu Verifikasi Pembayaran' && (
           <div className="border border-amber-200 bg-amber-50 rounded-xl p-4 mb-5">
             <p className="text-xs font-semibold text-amber-800 mb-1.5 flex items-center gap-1.5">
@@ -671,7 +759,7 @@ export default function AffiliateOrder({ affiliateId }) {
         {!ADMIN_ACTIONABLE_STATUS.includes(activeOrder.status_pengujian) && activeOrder.status_pengujian !== 'Menunggu Verifikasi Pembayaran' && (
           <div className="border border-gray-200 bg-gray-50 rounded-xl p-4 text-center mb-5">
             <p className="text-xs text-gray-500">
-              Order ini sedang ditangani oleh {statusOwnerHint(activeOrder.status_pengujian)}. Status hanya bisa diperbarui oleh pihak yang berwenang pada tahap ini.
+              Order ini sedang ditangani oleh {statusOwnerHint(activeOrder.status_pengujian)}.
             </p>
           </div>
         )}
@@ -856,8 +944,10 @@ export default function AffiliateOrder({ affiliateId }) {
                   baik value-nya sudah full URL maupun cuma filename.
                   Rincian Biaya & Hasil Analisis sudah tidak lagi ditampilkan di sini —
                   rincian harga sekarang dikelola lewat tab Invoice, dan hasil analisis
-                  sudah tidak ada di alur laboran. */}
-              <FileLink label="Laporan (laboran)" href={buildFileUrl(FILE_CATEGORY.laporan, activeOrder.laporan)} />
+                  sudah tidak ada di alur laboran. Order pembelian bahan tidak punya laporan. */}
+              {!isBahanOnly(activeOrder) && (
+                <FileLink label="Laporan (laboran)" href={buildFileUrl(FILE_CATEGORY.laporan, activeOrder.laporan)} />
+              )}
 
               {activeOrder.rincian_harga_invoice?.length > 0 ? (
                 <button
@@ -934,7 +1024,6 @@ export default function AffiliateOrder({ affiliateId }) {
           <p className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-2">
             <ClipboardList className="w-3.5 h-3.5" /> Daftar Order
           </p>
-          <p className="text-[11px] text-gray-400 mt-1">Kelola order, verifikasi, upload dokumen, & input invoice</p>
         </div>
         <div className="flex items-center gap-2.5">
           <button
@@ -945,9 +1034,9 @@ export default function AffiliateOrder({ affiliateId }) {
             {downloadingExcel ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileSpreadsheet className="w-3.5 h-3.5" />}
             {downloadingExcel ? 'Membuat Excel...' : 'Download Excel'}
           </button>
-          <span className="text-[11px] px-2.5 py-1 rounded-full bg-gray-100 text-gray-500 font-medium">
+          {/* <span className="text-[11px] px-2.5 py-1 rounded-full bg-gray-100 text-gray-500 font-medium">
             Mode Admin — kelola invoice, data, dan status order
-          </span>
+          </span> */}
         </div>
       </div>
 
@@ -1200,6 +1289,14 @@ function ItemSectionEditable({ jenis, config, items, onUpdate, onAdd, onRemove, 
                       value={(item[f.key] || []).join(', ')}
                       onChange={(e) => onUpdate(jenis, idx, f.key, e.target.value.split(',').map((s) => s.trim()).filter(Boolean))}
                       placeholder="Pisahkan dengan koma"
+                      className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
+                  ) : f.isNumber ? (
+                    <input
+                      type="number"
+                      min="0"
+                      value={item[f.key] ?? ''}
+                      onChange={(e) => onUpdate(jenis, idx, f.key, e.target.value === '' ? '' : Number(e.target.value))}
                       className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
                     />
                   ) : f.isDate ? (
