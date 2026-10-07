@@ -30,6 +30,12 @@ const LAB_UTAMA_NAMA = 'LABORATORIUM KIMIA INSTRUMEN';
 const LAB_UTAMA_INSTANSI = 'UNIVERSITAS PENDIDIKAN INDONESIA';
 const LAB_UTAMA_ALAMAT = 'Gedung JICA (FPMIPA-A) Lt. 5. Jl. Setiabudhi No.229 Bandung – 40154.';
 
+// ── BARU: Keterangan & info rekening pembayaran yang tampil di bawah tabel rincian ──
+const KETERANGAN_INVOICE = 'Harga tidak termasuk pajak';
+const REKENING_BANK = 'BNI';
+const REKENING_ATAS_NAMA = 'Heli Siti Halimatul M.';
+const REKENING_NOMOR = '133-476-8759';
+
 // Font kop surat & watermark — dipasang langsung di tiap elemen supaya tidak tertimpa CSS global
 const FONT_TIMES = "'Times New Roman', Times, 'Liberation Serif', serif";
 
@@ -191,6 +197,18 @@ export default function InvoiceTemplate({ order, printId }) {
           </tr>
         </tfoot>
       </table>
+
+      {/* ── BARU: Keterangan & info rekening pembayaran (di bawah tabel, rata kiri) ── */}
+      <div style={{ marginTop: '16px', fontSize: '13px', textAlign: 'left' }}>
+        <p style={{ margin: 0 }}>Keterangan:</p>
+        <p style={{ margin: '2px 0 0', fontWeight: 'bold' }}>{KETERANGAN_INVOICE}</p>
+
+        <p style={{ margin: '16px 0 0' }}>Biaya dapat di kirim ke:</p>
+        <p style={{ margin: '2px 0 0', fontWeight: 'bold' }}>
+          {REKENING_BANK} atas nama {REKENING_ATAS_NAMA}
+        </p>
+        <p style={{ margin: '2px 0 0', fontWeight: 'bold' }}>No.rek. {REKENING_NOMOR}</p>
+      </div>
 
       {/* Footer tanda tangan */}
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '32px', fontSize: '13px' }}>

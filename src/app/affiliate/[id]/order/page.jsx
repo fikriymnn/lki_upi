@@ -4,15 +4,19 @@ import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import {
   Check, Plus, Pencil, Trash2, X, ChevronRight, ChevronLeft,
-  FlaskConical, Wrench, DoorOpen, Package, User, Send, Loader2, Download   // ⬅️ tambahkan Download
+  FlaskConical, Wrench, DoorOpen, Package, User, Send, Loader2, Download
 } from 'lucide-react';
 
-// ── Checklist layanan — "Sewa Alat" TIDAK dicentang terpisah, otomatis ikut "Analisis" ──
+// ── Checklist layanan — masing-masing layanan berdiri sendiri ──
 const SERVICE_OPTIONS = [
   { key: 'analisis', label: 'Analisis', icon: FlaskConical, target: 'layanan_analisis' },
+  { key: 'sewa_alat', label: 'Sewa Alat', icon: Wrench, target: 'sewa_alat' },
   { key: 'sewa_lab', label: 'Sewa Lab', icon: DoorOpen, target: 'sewa_lab' },
   { key: 'pembelian_bahan', label: 'Pembelian Bahan', icon: Package, target: 'pembelian_bahan' },
 ];
+
+// Ambil opsi layanan berdasarkan key (tidak bergantung urutan array)
+const getServiceOption = (key) => SERVICE_OPTIONS.find((s) => s.key === key);
 
 const emptyItem = (key) => {
   if (key === 'analisis') return { jenis_layanan: [], nama_sample: '', pelarut: '', jumlah_sample: '', metode_parameter: '', foto_sample: '', jurnal_pendukung: '', keterangan: '' };
@@ -93,6 +97,9 @@ const validateItem = (itemKey, item) => {
   if (missing.length === 0) return null;
   return `Mohon lengkapi field wajib: ${missing.map((m) => m.label).join(', ')}`;
 };
+
+// key layanan -> nama array di state form
+const targetOf = (key) => key === 'analisis' ? 'layanan_analisis' : key;
 
 export default function AffiliateOrderPage() {
   const { id } = useParams(); // id = id_affiliate (lab tujuan order)
@@ -191,21 +198,14 @@ export default function AffiliateOrderPage() {
     return next;
   });
 
-  // ── Bangun wizardSteps: kalau 'analisis' dicentang, step-nya otomatis membawa section Sewa Alat juga ──
+  // ── Bangun wizardSteps: setiap layanan yang dicentang punya step sendiri ──
   const buildWizardSteps = () => {
     const steps = [{ key: 'informasi', label: 'Informasi', icon: User }];
 
-    if (selected.has('analisis')) {
-      steps.push({
-        key: 'analisis_alat', label: 'Analisis & Sewa Alat', icon: FlaskConical,
-        services: [
-          { key: 'analisis', label: 'Analisis', icon: FlaskConical, target: 'layanan_analisis' },
-          { key: 'sewa_alat', label: 'Sewa Alat', icon: Wrench, target: 'sewa_alat' },
-        ],
-      });
-    }
-    if (selected.has('sewa_lab')) steps.push({ key: 'sewa_lab', label: 'Sewa Lab', icon: DoorOpen, services: [SERVICE_OPTIONS[1]] });
-    if (selected.has('pembelian_bahan')) steps.push({ key: 'pembelian_bahan', label: 'Pembelian Bahan', icon: Package, services: [SERVICE_OPTIONS[2]] });
+    if (selected.has('analisis')) steps.push({ key: 'analisis', label: 'Analisis', icon: FlaskConical, services: [getServiceOption('analisis')] });
+    if (selected.has('sewa_alat')) steps.push({ key: 'sewa_alat', label: 'Sewa Alat', icon: Wrench, services: [getServiceOption('sewa_alat')] });
+    if (selected.has('sewa_lab')) steps.push({ key: 'sewa_lab', label: 'Sewa Lab', icon: DoorOpen, services: [getServiceOption('sewa_lab')] });
+    if (selected.has('pembelian_bahan')) steps.push({ key: 'pembelian_bahan', label: 'Pembelian Bahan', icon: Package, services: [getServiceOption('pembelian_bahan')] });
 
     steps.push({ key: 'review', label: 'Review', icon: Check });
     return steps;
@@ -213,6 +213,17 @@ export default function AffiliateOrderPage() {
 
   const startWizard = () => {
     if (selected.size === 0) return;
+
+    // Kosongkan item dari layanan yang tidak dipilih
+    // (mis. user sempat menambah item lalu kembali ke checklist dan membatalkan pilihan)
+    setForm((f) => {
+      const next = { ...f };
+      SERVICE_OPTIONS.forEach((s) => {
+        if (!selected.has(s.key)) next[s.target] = [];
+      });
+      return next;
+    });
+
     setWizardSteps(buildWizardSteps());
     setStepIdx(0);
     setPhase('wizard');
@@ -223,8 +234,6 @@ export default function AffiliateOrderPage() {
   const openAddItem = (key) => { setModalKey(key); setModalItem(emptyItem(key)); setEditIdx(null); setShowModal(true); };
   const openEditItem = (key, item, idx) => { setModalKey(key); setModalItem({ ...item }); setEditIdx(idx); setShowModal(true); };
   const deleteItem = (target, idx) => setForm((f) => ({ ...f, [target]: f[target].filter((_, i) => i !== idx) }));
-
-  const targetOf = (key) => key === 'analisis' ? 'layanan_analisis' : key;
 
   // ── Validasi field wajib sebelum item disimpan ──
   const saveItem = () => {
@@ -245,8 +254,7 @@ export default function AffiliateOrderPage() {
   const canGoNext = () => {
     if (currentStep.key === 'informasi') return informasiValid(form);
     if (currentStep.key === 'review') return false;
-    // Analisis wajib punya minimal 1 item; Sewa Alat di step yang sama sifatnya opsional
-    if (currentStep.key === 'analisis_alat') return form.layanan_analisis.length > 0;
+    // Step layanan (analisis, sewa_alat, sewa_lab, pembelian_bahan): minimal 1 item
     return currentStep.services.some((s) => form[s.target].length > 0);
   };
 
@@ -423,41 +431,8 @@ export default function AffiliateOrderPage() {
         </div>
       )}
 
-      {/* ── Step: Analisis & Sewa Alat (1 halaman, 2 seksi) ── */}
-      {currentStep.key === 'analisis_alat' && (
-        <div className="flex flex-col gap-8">
-          {currentStep.services.map((s) => (
-            <div key={s.key}>
-              <p className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                <s.icon className="w-4 h-4 text-gray-400" /> {s.label}
-                {s.key === 'analisis' ? (
-                  <span className="text-red-500">*</span>
-                ) : (
-                  <span className="text-xs font-normal text-gray-400">(opsional)</span>
-                )}
-              </p>
-              <button
-                onClick={() => openAddItem(s.key)}
-                className="flex items-center gap-2 px-4 py-2.5 border-2 border-dashed border-red-300 text-red-700 rounded-xl text-sm font-medium hover:bg-red-50 transition w-full justify-center mb-4"
-              >
-                <Plus className="w-4 h-4" /> Tambah {s.label}
-              </button>
-              <div className="flex flex-col gap-3">
-                {form[s.target].length === 0 ? (
-                  <p className="text-sm text-gray-400 text-center py-4">Belum ada item ditambahkan</p>
-                ) : form[s.target].map((item, idx) => (
-                  <ItemCard key={idx} itemKey={s.key} item={item}
-                    onEdit={() => openEditItem(s.key, item, idx)}
-                    onDelete={() => deleteItem(s.target, idx)} />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* ── Step: Sewa Lab / Pembelian Bahan ── */}
-      {['sewa_lab', 'pembelian_bahan'].includes(currentStep.key) && (
+      {/* ── Step layanan: Analisis / Sewa Alat / Sewa Lab / Pembelian Bahan (masing-masing 1 step) ── */}
+      {['analisis', 'sewa_alat', 'sewa_lab', 'pembelian_bahan'].includes(currentStep.key) && (
         <div>
           <button
             onClick={() => openAddItem(currentStep.key)}
@@ -466,18 +441,18 @@ export default function AffiliateOrderPage() {
             <Plus className="w-4 h-4" /> Tambah {currentStep.label}
           </button>
           <div className="flex flex-col gap-3">
-            {form[currentStep.key].length === 0 ? (
+            {form[targetOf(currentStep.key)].length === 0 ? (
               <p className="text-sm text-gray-400 text-center py-6">Belum ada item ditambahkan</p>
-            ) : form[currentStep.key].map((item, idx) => (
+            ) : form[targetOf(currentStep.key)].map((item, idx) => (
               <ItemCard key={idx} itemKey={currentStep.key} item={item}
                 onEdit={() => openEditItem(currentStep.key, item, idx)}
-                onDelete={() => deleteItem(currentStep.key, idx)} />
+                onDelete={() => deleteItem(targetOf(currentStep.key), idx)} />
             ))}
           </div>
         </div>
       )}
 
-      {/* ── Step: Review — sekarang menampilkan detail lengkap tiap item + data pemesan lengkap ── */}
+      {/* ── Step: Review — menampilkan detail lengkap tiap item + data pemesan lengkap ── */}
       {currentStep.key === 'review' && (
         <div className="flex flex-col gap-5">
 
@@ -542,9 +517,12 @@ export default function AffiliateOrderPage() {
       {/* ── Navigasi — "Kembali" tetap tampil di step Review, "Lanjut" disembunyikan di sana ── */}
       <div className="flex items-center justify-between mt-8 pt-5 border-t border-gray-100">
         <button
-          onClick={() => setStepIdx((i) => Math.max(0, i - 1))}
-          disabled={stepIdx === 0}
-          className="flex items-center gap-1.5 px-4 py-2 border border-gray-300 rounded-lg text-sm disabled:opacity-40 hover:bg-gray-50 transition"
+          onClick={() => {
+            // Dari step pertama (Informasi) kembali ke checklist agar user bisa mengubah pilihan layanan
+            if (stepIdx === 0) { setPhase('checklist'); return; }
+            setStepIdx((i) => Math.max(0, i - 1));
+          }}
+          className="flex items-center gap-1.5 px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 transition"
         >
           <ChevronLeft className="w-4 h-4" /> Kembali
         </button>
@@ -694,11 +672,10 @@ function ReviewItemSection({ title, icon: Icon, items, itemKey }) {
                 )}
               </div>
 
-              {/* ✅ Tombol download Foto Sample / Jurnal Pendukung */}
+              {/* Tombol download Foto Sample / Jurnal Pendukung */}
               {fileLinks.length > 0 && (
                 <div className="flex flex-wrap gap-2.5 mt-3 pt-3 border-t border-gray-100">
                   {fileLinks.map((ff) => (
-
                     <a key={ff.key}
                       href={ff.url}
                       target="_blank"
@@ -709,13 +686,12 @@ function ReviewItemSection({ title, icon: Icon, items, itemKey }) {
                     </a>
                   ))}
                 </div>
-              )
-              }
+              )}
             </div>
           );
         })}
       </div>
-    </div >
+    </div>
   );
 }
 

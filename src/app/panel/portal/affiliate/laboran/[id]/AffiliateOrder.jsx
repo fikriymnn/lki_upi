@@ -51,6 +51,13 @@ const isBahanOnly = (order) =>
   !(order?.sewa_lab?.length || 0) &&
   !(order?.sewa_alat?.length || 0);
 
+// ⬅️ BARU: Order yang TIDAK perlu upload laporan — berisi sewa alat dan/atau pembelian bahan saja
+// (tanpa layanan analisis & tanpa sewa lab). Harus sama dengan is_tanpa_laporan di backend.
+const isTanpaLaporan = (order) =>
+  ((order?.sewa_alat?.length || 0) > 0 || (order?.pembelian_bahan?.length || 0) > 0) &&
+  !(order?.layanan_analisis?.length || 0) &&
+  !(order?.sewa_lab?.length || 0);
+
 const MONTH_NAMES = [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
   'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
@@ -506,8 +513,9 @@ export default function AffiliateOrder({ affiliateId }) {
   };
 
   // ─────────────────────────── Kirim ke Ketua Lab (Order Diproses → Menunggu Diverifikasi) ───────────────────────────
+  // Order sewa alat / pembelian bahan saja boleh langsung kirim dari "Order Dikonfirmasi" tanpa laporan
   const handleKirimVerifikasi = () => {
-    if (!isBahanOnly(activeOrder) && !activeOrder.laporan) {
+    if (!isTanpaLaporan(activeOrder) && !activeOrder.laporan) {
       alert('Upload laporan terlebih dahulu sebelum mengirim ke ketua lab.');
       return;
     }
@@ -761,7 +769,8 @@ export default function AffiliateOrder({ affiliateId }) {
         )}
 
         {/* ── Panel aksi: Upload Laporan & Rincian Harga — sejak "Order Dikonfirmasi" sampai "Order Diproses" ── */}
-        {!isBahanOnly(activeOrder) && (activeOrder.status_pengujian === 'Order Dikonfirmasi' || activeOrder.status_pengujian === 'Order Diproses') && (
+        {/* Tidak tampil untuk order sewa alat / pembelian bahan saja (lihat panel khusus di bawah) */}
+        {!isTanpaLaporan(activeOrder) && (activeOrder.status_pengujian === 'Order Dikonfirmasi' || activeOrder.status_pengujian === 'Order Diproses') && (
           <div className="border border-yellow-200 bg-yellow-50 rounded-xl p-4 mb-6">
             <p className="text-xs font-semibold text-yellow-800 mb-1 flex items-center gap-1.5">
               <UploadCloud className="w-3.5 h-3.5" /> Upload Laporan & Rincian Harga
@@ -803,14 +812,14 @@ export default function AffiliateOrder({ affiliateId }) {
           </div>
         )}
 
-                {/* ── Panel khusus order pembelian bahan: tanpa laporan, cukup rincian harga ── */}
-        {isBahanOnly(activeOrder) && (activeOrder.status_pengujian === 'Order Dikonfirmasi' || activeOrder.status_pengujian === 'Order Diproses') && (
+        {/* ── Panel khusus order sewa alat / pembelian bahan: tanpa laporan, cukup rincian harga ── */}
+        {isTanpaLaporan(activeOrder) && (activeOrder.status_pengujian === 'Order Dikonfirmasi' || activeOrder.status_pengujian === 'Order Diproses') && (
           <div className="border border-yellow-200 bg-yellow-50 rounded-xl p-4 mb-6">
             <p className="text-xs font-semibold text-yellow-800 mb-1 flex items-center gap-1.5">
-              <Receipt className="w-3.5 h-3.5" /> Rincian Harga — Pembelian Bahan
+              <Receipt className="w-3.5 h-3.5" /> Rincian Harga — Sewa Alat / Pembelian Bahan
             </p>
             <p className="text-[11px] text-yellow-700 mb-3">
-              Order ini hanya berisi pembelian bahan, jadi tidak perlu upload laporan. Lengkapi harga satuan di tab
+              Order ini hanya berisi sewa alat dan/atau pembelian bahan, jadi tidak perlu upload laporan. Lengkapi harga satuan di tab
               &quot;Rincian Harga&quot; dan simpan, lalu kirim ke ketua lab untuk diverifikasi.
             </p>
             {!activeOrder.rincian_harga_invoice?.length && (
@@ -1018,7 +1027,8 @@ export default function AffiliateOrder({ affiliateId }) {
                 {/* ✅ Semua field file di sini dilewatkan lewat buildFileUrl supaya aman
                     baik value-nya sudah full URL (hasil upload lewat FE ini)
                     maupun cuma filename (hasil upload dari form order awal / komponen lain) */}
-                                {!isBahanOnly(activeOrder) && (
+                {/* Order sewa alat / pembelian bahan saja tidak punya laporan, jadi kartunya disembunyikan */}
+                {!isTanpaLaporan(activeOrder) && (
                   <FileLink label="Laporan (laboran)" href={buildFileUrl(FILE_CATEGORY.laporan, activeOrder.laporan)} />
                 )}
 
