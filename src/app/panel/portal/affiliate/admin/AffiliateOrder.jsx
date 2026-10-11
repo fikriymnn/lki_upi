@@ -23,6 +23,7 @@ const STATUS_OPTIONS = [
   'Menunggu Pembayaran',
   'Menunggu Verifikasi Pembayaran',
   'Selesai',
+  'Order Dibatalkan'
 ];
 
 const STATUS_CLASS = {
@@ -35,12 +36,15 @@ const STATUS_CLASS = {
   'Menunggu Pembayaran': 'bg-orange-50 text-orange-700 ring-1 ring-orange-200',
   'Menunggu Verifikasi Pembayaran': 'bg-amber-50 text-amber-700 ring-1 ring-amber-200',
   'Selesai': 'bg-green-50 text-green-700 ring-1 ring-green-200',
+  'Order Dibatalkan': 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
 };
 
 const ADMIN_ACTIONABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Verifikasi Pembayaran'];
 
 // ── Status yang invoice-nya masih boleh diinput/dikoreksi (harus sinkron dengan BE) ──
 const INVOICE_EDITABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Pembayaran'];
+
+const NON_CANCELLABLE_STATUS = ['Order Ditolak', 'Order Dibatalkan', 'Selesai'];
 
 // Order yang isinya HANYA pembelian bahan — tidak ada laporan
 const isBahanOnly = (order) =>
@@ -125,13 +129,15 @@ const buildInvoiceRows = (order) => {
   (order.layanan_analisis || []).forEach((item) => {
     const jenisList = item.jenis_layanan?.length ? item.jenis_layanan : ['Layanan Analisis'];
     jenisList.forEach((jenis) => {
+      const qty = Number(item.jumlah_alat) || 1;
+      const durasi = Number(item.jumlah) || 1;
       rows.push({
         id: newRowId(),
-        tanggal: order.date,
-        deskripsi: jenis,
-        keterangan: item.nama_sample || '',
-        jumlah: Number(item.jumlah_sample) || 1,
-        satuan: 'sampel',
+        tanggal: item.tanggal_mulai || order.date,
+        deskripsi: item.nama_alat || 'Sewa Alat',
+        keterangan: `${qty} unit × ${durasi} ${(item.jenis_sewa || '').toLowerCase()}${item.keterangan ? ' — ' + item.keterangan : ''}`,
+        jumlah: qty * durasi,
+        satuan: (item.jenis_sewa || '').toLowerCase() || 'unit',
         harga_satuan: 0,
         total: 0,
       });
@@ -210,6 +216,7 @@ const FIELD_CONFIG = {
     title: 'Sewa Alat', icon: Wrench, cls: 'text-blue-700 bg-blue-50',
     fields: [
       { key: 'nama_alat', label: 'Nama Alat' },
+      { key: 'jumlah_alat', label: 'Jumlah Alat (Qty)', isNumber: true },
       { key: 'jenis_sewa', label: 'Jenis Sewa' },
       { key: 'tanggal_mulai', label: 'Tanggal Mulai', isDate: true },
       { key: 'tanggal_selesai', label: 'Tanggal Selesai', isDate: true },
@@ -465,6 +472,34 @@ export default function AffiliateOrder({ affiliateId }) {
     }
   };
 
+  const handleBatalkanOrder = async () => {
+    if (saving) return;
+    if (!window.confirm('Yakin ingin membatalkan order ini? Order yang dibatalkan tidak bisa diproses lagi.')) return;
+    try {
+      setSaving(true);
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_URL}/api/order_affiliate/${activeOrder._id}/status`,
+        { status_pengujian: 'Order Dibatalkan' },
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        const updated = { ...res.data.data, id_affiliate: activeOrder.id_affiliate };
+        setData((prev) => prev.map((v) => (v._id === updated._id ? updated : v)));
+        setActiveOrder(updated);
+        setInvoiceRows(null);
+        setInvoiceEditing(false);
+        setEditMode(false);
+        setEditDraft(null);
+      } else {
+        alert(res.data.message || 'Gagal membatalkan order');
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   // ─────────────────────────── Edit data order ───────────────────────────
   const startEdit = () => {
     setEditDraft(JSON.parse(JSON.stringify(activeOrder)));
@@ -684,6 +719,19 @@ export default function AffiliateOrder({ affiliateId }) {
             <p className="text-xs text-gray-400 mt-2">{formatDate(activeOrder.date)}</p>
           </div>
         </div>
+
+        {!NON_CANCELLABLE_STATUS.includes(activeOrder.status_pengujian) && (
+          <div className="flex justify-end mb-5">
+            <button
+              onClick={handleBatalkanOrder}
+              disabled={saving}
+              className="flex items-center gap-1.5 px-3.5 py-2 border border-rose-300 text-rose-700 hover:bg-rose-50 disabled:opacity-50 text-xs font-medium rounded-lg transition"
+            >
+              {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <X className="w-3.5 h-3.5" />}
+              Batalkan Order
+            </button>
+          </div>
+        )}
 
         {/* Panel aksi admin: terbitkan invoice — muncul saat "Selesai Diverifikasi" */}
         {activeOrder.status_pengujian === 'Selesai Diverifikasi' && (
@@ -1151,6 +1199,7 @@ function statusOwnerHint(status) {
     case 'Menunggu Diverifikasi': return 'ketua lab (menunggu verifikasi)';
     case 'Menunggu Pembayaran': return 'user (menunggu pembayaran)';
     case 'Selesai': return 'tidak ada — order sudah selesai';
+    case 'Order Dibatalkan': return 'tidak ada — order sudah dibatalkan admin';
     default: return 'pihak terkait';
   }
 }

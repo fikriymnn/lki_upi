@@ -24,6 +24,7 @@ const STATUS_OPTIONS = [
   'Menunggu Pembayaran',
   'Menunggu Verifikasi Pembayaran',
   'Selesai',
+  'Order Dibatalkan'
 ];
 
 const STATUS_CLASS = {
@@ -36,6 +37,7 @@ const STATUS_CLASS = {
   'Menunggu Pembayaran': 'bg-orange-50 text-orange-700 ring-1 ring-orange-200',
   'Menunggu Verifikasi Pembayaran': 'bg-amber-50 text-amber-700 ring-1 ring-amber-200',
   'Selesai': 'bg-green-50 text-green-700 ring-1 ring-green-200',
+  'Order Dibatalkan': 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
 };
 
 // ── Laboran bisa bertindak saat order di 3 tahap ini: konfirmasi → upload laporan → kirim verifikasi ──
@@ -100,7 +102,7 @@ const buildInvoiceRows = (order) => {
         tanggal: order.date,
         deskripsi: jenis,
         keterangan: item.nama_sample || '',
-         jumlah: Number(item.jumlah) || 1,
+        jumlah: Number(item.jumlah_sample) || 1,
         satuan: 'sampel',
         harga_satuan: 0,
         total: 0,
@@ -122,12 +124,14 @@ const buildInvoiceRows = (order) => {
   });
 
   (order.sewa_alat || []).forEach((item) => {
+    const qty = Number(item.jumlah_alat) || 1;
+    const durasi = Number(item.jumlah) || 1;
     rows.push({
       id: newRowId(),
       tanggal: item.tanggal_mulai || order.date,
       deskripsi: item.nama_alat || 'Sewa Alat',
-      keterangan: item.keterangan || '',
-      jumlah: Number(item.jumlah) || 1,
+      keterangan: `${qty} unit × ${durasi} ${(item.jenis_sewa || '').toLowerCase()}${item.keterangan ? ' — ' + item.keterangan : ''}`,
+      jumlah: qty * durasi,
       satuan: (item.jenis_sewa || '').toLowerCase() || 'unit',
       harga_satuan: 0,
       total: 0,
@@ -140,7 +144,7 @@ const buildInvoiceRows = (order) => {
       tanggal: order.date,
       deskripsi: item.jenis_bahan || 'Bahan',
       keterangan: item.keterangan || '',
-      jumlah: 1,
+      jumlah: Number(item.jumlah) || 1,
       satuan: item.satuan || '-',
       harga_satuan: 0,
       total: 0,
@@ -225,6 +229,7 @@ const FIELD_CONFIG = {
     title: 'Sewa Alat', icon: Wrench, cls: 'text-blue-700 bg-blue-50',
     fields: [
       { key: 'nama_alat', label: 'Nama Alat' },
+      { key: 'jumlah_alat', label: 'Jumlah Alat (Qty)', isNumber: true },
       { key: 'jenis_sewa', label: 'Jenis Sewa' },
       { key: 'tanggal_mulai', label: 'Tanggal Mulai', isDate: true },
       { key: 'tanggal_selesai', label: 'Tanggal Selesai', isDate: true },
@@ -317,7 +322,7 @@ export default function AffiliateOrder({ affiliateId }) {
 
   useEffect(() => { fetchList(); }, [fetchList]);
 
-      // ── Siapkan form Rincian Harga otomatis begitu order masuk tahap yang boleh diisi laboran
+  // ── Siapkan form Rincian Harga otomatis begitu order masuk tahap yang boleh diisi laboran
   // (Order Dikonfirmasi / Order Diproses), tanpa perlu refresh atau buka ulang halaman detail ──
   useEffect(() => {
     if (!activeOrder) return;
@@ -515,10 +520,6 @@ export default function AffiliateOrder({ affiliateId }) {
   // ─────────────────────────── Kirim ke Ketua Lab (Order Diproses → Menunggu Diverifikasi) ───────────────────────────
   // Order sewa alat / pembelian bahan saja boleh langsung kirim dari "Order Dikonfirmasi" tanpa laporan
   const handleKirimVerifikasi = () => {
-    if (!isTanpaLaporan(activeOrder) && !activeOrder.laporan) {
-      alert('Upload laporan terlebih dahulu sebelum mengirim ke ketua lab.');
-      return;
-    }
     if (!activeOrder.rincian_harga_invoice?.length) {
       alert('Isi rincian harga terlebih dahulu sebelum mengirim ke ketua lab.');
       return;
@@ -773,15 +774,15 @@ export default function AffiliateOrder({ affiliateId }) {
         {!isTanpaLaporan(activeOrder) && (activeOrder.status_pengujian === 'Order Dikonfirmasi' || activeOrder.status_pengujian === 'Order Diproses') && (
           <div className="border border-yellow-200 bg-yellow-50 rounded-xl p-4 mb-6">
             <p className="text-xs font-semibold text-yellow-800 mb-1 flex items-center gap-1.5">
-              <UploadCloud className="w-3.5 h-3.5" /> Upload Laporan & Rincian Harga
+              <UploadCloud className="w-3.5 h-3.5" /> Upload Laporan (Opsional) & Rincian Harga
             </p>
             <p className="text-[11px] text-yellow-700 mb-3">
-              Upload file laporan di bawah ini, lalu lengkapi rincian harga satuan di tab &quot;Rincian Harga&quot;.
-              Setelah laporan & rincian harga terisi, kirim order ke ketua lab untuk diverifikasi.
+              Upload file laporan bersifat opsional. Lengkapi rincian harga satuan di tab &quot;Rincian Harga&quot;.
+              Setelah rincian harga tersimpan, kirim order ke ketua lab untuk diverifikasi.
             </p>
             <div className="flex flex-col gap-3">
               <FileUploadField
-                label="Laporan"
+                label="Laporan (Opsional)"
                 fieldKey="laporan"
                 value={formLaporan.laporan}
                 uploadState={uploadState.laporan}
@@ -797,10 +798,10 @@ export default function AffiliateOrder({ affiliateId }) {
                   Simpan Laporan
                 </button>
 
-                {activeOrder.status_pengujian === 'Order Diproses' && (
+                {(activeOrder.status_pengujian === 'Order Dikonfirmasi' || activeOrder.status_pengujian === 'Order Diproses') && (
                   <button
                     onClick={handleKirimVerifikasi}
-                    disabled={saving}
+                    disabled={saving || !activeOrder.rincian_harga_invoice?.length}
                     className="flex items-center gap-1.5 px-4 py-2 border border-yellow-400 text-yellow-800 hover:bg-yellow-100 disabled:opacity-50 text-xs font-medium rounded-lg transition"
                   >
                     {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
@@ -1259,6 +1260,7 @@ function statusOwnerHint(status) {
     case 'Menunggu Pembayaran': return 'user (menunggu pembayaran)';
     case 'Menunggu Verifikasi Pembayaran': return 'admin (verifikasi pembayaran)';
     case 'Selesai': return 'tidak ada — order sudah selesai';
+    case 'Order Dibatalkan': return 'tidak ada — order sudah dibatalkan admin'
     default: return 'pihak terkait';
   }
 }

@@ -73,6 +73,13 @@ function StatusInfoPanel({ status, noInvoice, namaLab, catatan, onGoToDokumen })
                 ? `Mohon maaf, order ini ditolak oleh laboran. Catatan: ${catatan}`
                 : "Mohon maaf, order ini ditolak oleh laboran. Silakan hubungi laboratorium mitra untuk informasi lebih lanjut.",
         },
+        "Order Dibatalkan": {
+            cls: "border-rose-200 bg-rose-50",
+            iconCls: "text-rose-600 bg-rose-100",
+            icon: AlertTriangle,
+            title: "Order Dibatalkan",
+            desc: "Order ini dibatalkan oleh admin. Silakan hubungi laboratorium mitra untuk informasi lebih lanjut.",
+        },
         "Order Diproses": {
             cls: "border-indigo-200 bg-indigo-50",
             iconCls: "text-indigo-600 bg-indigo-100",
@@ -179,6 +186,7 @@ const statusBadge = (status) => {
         "Order Diproses": "bg-blue-100 text-blue-800",
         "Menunggu Diverifikasi": "bg-purple-100 text-purple-800",
         "Selesai Diverifikasi": "bg-purple-100 text-purple-800",
+        "Order Dibatalkan": "bg-rose-100 text-rose-800"
     };
     return map[status] || "bg-gray-100 text-gray-700";
 };
@@ -252,6 +260,7 @@ const FIELD_CONFIG = {
         title: 'Sewa Alat', icon: Boxes, cls: 'text-blue-700 bg-blue-50',
         fields: [
             { key: 'nama_alat', label: 'Nama Alat' },
+            { key: 'jumlah_alat', label: 'Jumlah Alat (Qty)', isNumber: true },
             { key: 'jenis_sewa', label: 'Jenis Sewa' },
             { key: 'tanggal_mulai', label: 'Tanggal Mulai', isDate: true },
             { key: 'tanggal_selesai', label: 'Tanggal Selesai', isDate: true },
@@ -878,8 +887,9 @@ export default function DetailAffiliate({ params }) {
                                                 {item.nama_alat && <p><span className="text-gray-400">Nama Alat:</span> {item.nama_alat}</p>}
                                                 {item.jenis_bahan && <p><span className="text-gray-400">Jenis Bahan:</span> {item.jenis_bahan}</p>}
                                                 {item.satuan && <p><span className="text-gray-400">Satuan:</span> {item.satuan}</p>}
+                                                {item.jumlah_alat !== undefined && item.kategori === "Sewa Alat" && <p><span className="text-gray-400">Jumlah Alat:</span> {item.jumlah_alat} unit</p>}
                                                 {item.jenis_sewa && <p><span className="text-gray-400">Jenis Sewa:</span> {item.jenis_sewa}</p>}
-                                                {item.jumlah !== undefined && <p><span className="text-gray-400">Jumlah:</span> {item.jumlah}</p>}
+                                                {item.jumlah !== undefined && <p><span className="text-gray-400">{item.kategori === "Sewa Alat" ? "Durasi" : "Jumlah"}:</span> {item.jumlah}</p>}
                                                 {(item.tanggal_mulai || item.tanggal_selesai) && (
                                                     <p className="flex items-center gap-1">
                                                         <CalendarDays className="w-3 h-3 text-gray-400" />

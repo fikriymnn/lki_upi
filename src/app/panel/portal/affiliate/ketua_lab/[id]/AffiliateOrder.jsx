@@ -23,6 +23,7 @@ const STATUS_OPTIONS = [
   'Menunggu Pembayaran',
   'Menunggu Verifikasi Pembayaran',
   'Selesai',
+  'Order Dibatalkan'
 ];
 
 const STATUS_CLASS = {
@@ -35,6 +36,7 @@ const STATUS_CLASS = {
   'Menunggu Pembayaran': 'bg-orange-50 text-orange-700 ring-1 ring-orange-200',
   'Menunggu Verifikasi Pembayaran': 'bg-amber-50 text-amber-700 ring-1 ring-amber-200',
   'Selesai': 'bg-green-50 text-green-700 ring-1 ring-green-200',
+  'Order Dibatalkan': 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
 };
 
 // ── Ketua Lab hanya bisa bertindak (verifikasi status) saat order "Menunggu Diverifikasi" ──
@@ -143,6 +145,7 @@ const FIELD_CONFIG = {
     title: 'Sewa Alat', icon: Wrench, cls: 'text-blue-700 bg-blue-50',
     fields: [
       { key: 'nama_alat', label: 'Nama Alat' },
+      { key: 'jumlah_alat', label: 'Jumlah Alat (Qty)', isNumber: true },
       { key: 'jenis_sewa', label: 'Jenis Sewa' },
       { key: 'tanggal_mulai', label: 'Tanggal Mulai', isDate: true },
       { key: 'tanggal_selesai', label: 'Tanggal Selesai', isDate: true },
@@ -884,6 +887,7 @@ function statusOwnerHint(status) {
     case 'Menunggu Pembayaran': return 'user (menunggu pembayaran)';
     case 'Menunggu Verifikasi Pembayaran': return 'admin (verifikasi pembayaran)';
     case 'Selesai': return 'tidak ada — order sudah selesai';
+    case 'Order Dibatalkan': return 'tidak ada — order sudah dibatalkan admin'
     default: return 'pihak terkait';
   }
 }

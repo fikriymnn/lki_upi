@@ -20,7 +20,7 @@ const getServiceOption = (key) => SERVICE_OPTIONS.find((s) => s.key === key);
 
 const emptyItem = (key) => {
   if (key === 'analisis') return { jenis_layanan: [], nama_sample: '', pelarut: '', jumlah_sample: '', metode_parameter: '', foto_sample: '', jurnal_pendukung: '', keterangan: '' };
-  if (key === 'sewa_alat') return { nama_alat: '', jenis_sewa: '', tanggal_mulai: '', tanggal_selesai: '', jumlah: '', keterangan: '' };
+  if (key === 'sewa_alat') return { nama_alat: '', jumlah_alat: '', jenis_sewa: '', tanggal_mulai: '', tanggal_selesai: '', jumlah: '', keterangan: '' };
   if (key === 'sewa_lab') return { jenis_sewa: '', tanggal_mulai: '', tanggal_selesai: '', jumlah: '', keterangan: '' };
   return { jenis_bahan: '', jumlah: '', satuan: '', keterangan: '' }; // pembelian_bahan
 };
@@ -77,6 +77,7 @@ const ITEM_REQUIRED_FIELDS = {
     { key: 'tanggal_mulai', label: 'Tanggal Mulai' },
     { key: 'tanggal_selesai', label: 'Tanggal Selesai' },
     { key: 'jumlah', label: 'Jumlah' },
+    { key: 'jumlah_alat', label: 'Jumlah Alat' },
   ],
   sewa_lab: [
     { key: 'jenis_sewa', label: 'Jenis Sewa' },
@@ -305,6 +306,7 @@ export default function AffiliateOrderPage() {
           tanggal_mulai: item.tanggal_mulai,
           tanggal_selesai: item.tanggal_selesai,
           jumlah: Number(item.jumlah) || 0,
+          jumlah_alat: Number(item.jumlah_alat) || 1,
           keterangan: item.keterangan,
         })),
         sewa_lab: form.sewa_lab.map((item) => ({
@@ -576,7 +578,7 @@ function ItemCard({ itemKey, item, onEdit, onDelete }) {
   };
   const subtitle = () => {
     if (itemKey === 'analisis') return `${item.nama_sample || '-'} · ${item.jumlah_sample || 0} sampel`;
-    if (itemKey === 'sewa_alat') return `${item.jenis_sewa || '-'} · ${item.tanggal_mulai || '-'} s/d ${item.tanggal_selesai || '-'} · ${item.jumlah || 0}`;
+    if (itemKey === 'sewa_alat') return `${item.jumlah_alat || 1} unit · ${item.jumlah || 0} ${item.jenis_sewa || ''} · ${item.tanggal_mulai || '-'} s/d ${item.tanggal_selesai || '-'}`;
     if (itemKey === 'sewa_lab') return `${item.tanggal_mulai || '-'} s/d ${item.tanggal_selesai || '-'}`;
     if (itemKey === 'pembelian_bahan') return `${item.jumlah || 0} ${item.satuan || ''}`;
     return '';
@@ -618,6 +620,7 @@ const getItemDetailRows = (itemKey, item) => {
   ];
   if (itemKey === 'sewa_alat') return [
     { label: 'Nama Alat', value: item.nama_alat },
+    { label: 'Jumlah Alat', value: item.jumlah_alat },
     { label: 'Jenis Sewa', value: item.jenis_sewa },
     { label: 'Tanggal Mulai', value: item.tanggal_mulai },
     { label: 'Tanggal Selesai', value: item.tanggal_selesai },
@@ -762,12 +765,15 @@ function ItemModal({ itemKey, item, setItem, masterAnalisis, loadingMaster, onCl
           {itemKey === 'sewa_alat' && (
             <>
               <TextField label="Nama Alat" required value={item.nama_alat} placeholder="Contoh: Rotary Evaporator" onChange={(v) => set('nama_alat', v)} />
+              <TextField label="Jumlah Alat (unit)" required type="number" value={item.jumlah_alat} placeholder="Contoh: 2" onChange={(v) => set('jumlah_alat', v)} />
               <div>
                 <label className="text-xs font-medium text-gray-500">Jenis Sewa <span className="text-red-500">*</span></label>
                 <select value={item.jenis_sewa} onChange={(e) => set('jenis_sewa', e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
                   <option value="">Pilih...</option>
+                  <option value="Menit">Menit</option>
                   <option value="Jam">Jam</option>
                   <option value="Hari">Hari</option>
+                  <option value="Minggu">Minggu</option>
                   <option value="Bulan">Bulan</option>
                 </select>
               </div>
@@ -781,7 +787,7 @@ function ItemModal({ itemKey, item, setItem, masterAnalisis, loadingMaster, onCl
                   <input type="date" value={item.tanggal_selesai} onChange={(e) => set('tanggal_selesai', e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
                 </div>
               </div>
-              <TextField label="Jumlah (sesuai jenis sewa)" required type="number" value={item.jumlah} placeholder="Contoh: 3" onChange={(v) => set('jumlah', v)} />
+              <TextField label="Durasi (sesuai jenis sewa)" required type="number" value={item.jumlah} placeholder="Contoh: 3" onChange={(v) => set('jumlah', v)} />
             </>
           )}
 

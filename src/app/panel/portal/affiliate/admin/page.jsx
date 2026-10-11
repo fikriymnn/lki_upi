@@ -16,7 +16,7 @@ const ROLE_LABEL = {
 // Status order yang perlu muncul di notifikasi admin
 const NOTIF_STATUSES = [
   'Menunggu Order Dikonfirmasi',
-  'Menunggu Diverifikasi',
+  'Selesai Diverifikasi',
   'Menunggu Verifikasi Pembayaran',
 ];
 
