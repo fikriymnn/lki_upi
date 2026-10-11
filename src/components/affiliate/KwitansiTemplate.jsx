@@ -45,17 +45,19 @@ export default function KwitansiTemplate({ data, printId }) {
           
           Image diulang / repeat sampai memenuhi seluruh
           halaman kuitansi.
+          Ukuran tile = lebar kertas / 9 sehingga pas
+          memenuhi seluruh lebar tanpa terpotong.
       ====================================================== */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           zIndex: 0,
-          backgroundImage: "url('/logo/image.png')",
+          backgroundImage: "url('/logo/kuitansi/image.png')",
           backgroundRepeat: "repeat",
-          backgroundSize: "125px auto",
+          backgroundSize: "calc(100% / 9) auto",
           backgroundPosition: "0 0",
-          opacity: 0.16,
+          opacity: 0.4,
           pointerEvents: "none",
         }}
       />
@@ -86,12 +88,13 @@ export default function KwitansiTemplate({ data, printId }) {
         >
           {/* =================================================
               LEFT VERTICAL BOX
+              (tinggi disesuaikan agar sejajar garis merah)
           ================================================== */}
           <div
             style={{
               width: "145px",
               minWidth: "145px",
-              height: "585px",
+              height: "510px",
               border: "2px solid #222",
               boxSizing: "border-box",
             }}

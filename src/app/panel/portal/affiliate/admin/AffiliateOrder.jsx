@@ -12,7 +12,7 @@ import {
 import InvoiceTemplate from '../../../../../components/affiliate/InvoiceTemplate';
 import KwitansiTemplate from '../../../../../components/affiliate/KwitansiTemplate';
 
-// ── Status flow (harus sama persis dengan enum status_pengujian di backend) ──
+// ── Status flow (harus sama persis dengan status_pengujian di backend) ──
 const STATUS_OPTIONS = [
   'Menunggu Order Dikonfirmasi',
   'Order Dikonfirmasi',
@@ -23,7 +23,7 @@ const STATUS_OPTIONS = [
   'Menunggu Pembayaran',
   'Menunggu Verifikasi Pembayaran',
   'Selesai',
-  'Order Dibatalkan'
+  'Order Dibatalkan',
 ];
 
 const STATUS_CLASS = {
@@ -44,6 +44,7 @@ const ADMIN_ACTIONABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Verifikasi Pe
 // ── Status yang invoice-nya masih boleh diinput/dikoreksi (harus sinkron dengan BE) ──
 const INVOICE_EDITABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Pembayaran'];
 
+// ── Status final: order tidak bisa dibatalkan lagi (sinkron dengan BE) ──
 const NON_CANCELLABLE_STATUS = ['Order Ditolak', 'Order Dibatalkan', 'Selesai'];
 
 // Order yang isinya HANYA pembelian bahan — tidak ada laporan
@@ -129,15 +130,13 @@ const buildInvoiceRows = (order) => {
   (order.layanan_analisis || []).forEach((item) => {
     const jenisList = item.jenis_layanan?.length ? item.jenis_layanan : ['Layanan Analisis'];
     jenisList.forEach((jenis) => {
-      const qty = Number(item.jumlah_alat) || 1;
-      const durasi = Number(item.jumlah) || 1;
       rows.push({
         id: newRowId(),
-        tanggal: item.tanggal_mulai || order.date,
-        deskripsi: item.nama_alat || 'Sewa Alat',
-        keterangan: `${qty} unit × ${durasi} ${(item.jenis_sewa || '').toLowerCase()}${item.keterangan ? ' — ' + item.keterangan : ''}`,
-        jumlah: qty * durasi,
-        satuan: (item.jenis_sewa || '').toLowerCase() || 'unit',
+        tanggal: order.date,
+        deskripsi: jenis,
+        keterangan: item.nama_sample || '',
+        jumlah: Number(item.jumlah_sample) || 1,
+        satuan: 'sampel',
         harga_satuan: 0,
         total: 0,
       });
@@ -158,12 +157,14 @@ const buildInvoiceRows = (order) => {
   });
 
   (order.sewa_alat || []).forEach((item) => {
+    const qty = Number(item.jumlah_alat) || 1;
+    const durasi = Number(item.jumlah) || 1;
     rows.push({
       id: newRowId(),
       tanggal: item.tanggal_mulai || order.date,
       deskripsi: item.nama_alat || 'Sewa Alat',
-      keterangan: item.keterangan || '',
-      jumlah: Number(item.jumlah) || 1,
+      keterangan: `${qty} unit × ${durasi} ${(item.jenis_sewa || '').toLowerCase()}${item.keterangan ? ' — ' + item.keterangan : ''}`,
+      jumlah: qty * durasi,
       satuan: (item.jenis_sewa || '').toLowerCase() || 'unit',
       harga_satuan: 0,
       total: 0,
@@ -217,10 +218,10 @@ const FIELD_CONFIG = {
     fields: [
       { key: 'nama_alat', label: 'Nama Alat' },
       { key: 'jumlah_alat', label: 'Jumlah Alat (Qty)', isNumber: true },
-      { key: 'jenis_sewa', label: 'Jenis Sewa' },
+      { key: 'jenis_sewa', label: 'Jenis Sewa (Menit/Jam/Hari/Minggu/Bulan)' },
       { key: 'tanggal_mulai', label: 'Tanggal Mulai', isDate: true },
       { key: 'tanggal_selesai', label: 'Tanggal Selesai', isDate: true },
-      { key: 'jumlah', label: 'Jumlah' },
+      { key: 'jumlah', label: 'Durasi' },
       { key: 'keterangan', label: 'Keterangan' },
     ],
   },
@@ -253,8 +254,9 @@ const DETAIL_TABS = [
   { key: 'dokumen', label: 'Dokumen', icon: FileText },
 ];
 
-const inputCls = "w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent";
-
+// affiliateId OPSIONAL:
+// - ada  → hanya order milik lab tersebut (dipakai di halaman detail Lab Affiliate)
+// - kosong → semua order dari semua lab (dipakai di menu "Semua Order")
 export default function AffiliateOrder({ affiliateId }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -265,13 +267,19 @@ export default function AffiliateOrder({ affiliateId }) {
   const [yearFilter, setYearFilter] = useState('');
   const [monthFilter, setMonthFilter] = useState(''); // disimpan 0-indexed (string), sama seperti field `month` di DB
 
+  // ── Filter laboratorium (hanya aktif di mode "semua lab") ──
+  const [labFilter, setLabFilter] = useState('');
+  const showLab = !affiliateId;
+
+  const [labs, setLabs] = useState([]); // daftar lab affiliate terdaftar (untuk dropdown filter)
+
   // ── activeOrder != null → tampilkan halaman detail inline (bukan modal) ──
   const [activeOrder, setActiveOrder] = useState(null);
   const [activeTab, setActiveTab] = useState('ringkasan');
   const [detailLoading, setDetailLoading] = useState(false);
 
   const [invoiceRows, setInvoiceRows] = useState(null);
-  const [invoiceEditing, setInvoiceEditing] = useState(false); // ← toggle tampilan form edit vs tabel read-only invoice
+  const [invoiceEditing, setInvoiceEditing] = useState(false);
 
   const [editMode, setEditMode] = useState(false);
   const [editDraft, setEditDraft] = useState(null);
@@ -283,11 +291,10 @@ export default function AffiliateOrder({ affiliateId }) {
   const [downloadingExcel, setDownloadingExcel] = useState(false);
 
   const fetchList = useCallback(async () => {
-    if (!affiliateId) return;
     try {
       setLoading(true);
       const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order_affiliate`, {
-        params: { id_affiliate: affiliateId },
+        params: { ...(affiliateId ? { id_affiliate: affiliateId } : {}), limit: 1000, page: 1 },
         withCredentials: true,
       });
       if (res.data.success) setData(res.data.data);
@@ -300,7 +307,24 @@ export default function AffiliateOrder({ affiliateId }) {
 
   useEffect(() => { fetchList(); }, [fetchList]);
 
-  // ── Opsi tahun diambil dari data yang sudah ter-fetch, terbaru di atas ──
+  // Daftar lab untuk dropdown filter — hanya dibutuhkan di mode "semua lab"
+  useEffect(() => {
+    if (!showLab) return;
+    const fetchLabs = async () => {
+      try {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/lab_affiliate`, {
+          params: { limit: 100, page: 1 },
+          withCredentials: true,
+        });
+        if (res.data.success) setLabs(res.data.data);
+      } catch (err) {
+        console.error('Gagal mengambil daftar lab:', err);
+      }
+    };
+    fetchLabs();
+  }, [showLab]);
+
+  // ── Opsi tahun diambil dari data yang sudah ter-fetch ──
   const uniqueYears = [...new Set(data.map((v) => v.year).filter(Boolean))].sort((a, b) => b.localeCompare(a));
 
   const filtered = data
@@ -310,7 +334,8 @@ export default function AffiliateOrder({ affiliateId }) {
     )
     .filter((v) => (statusFilter ? v.status_pengujian === statusFilter : true))
     .filter((v) => (yearFilter ? v.year === yearFilter : true))
-    .filter((v) => (monthFilter !== '' ? v.month === monthFilter : true));
+    .filter((v) => (monthFilter !== '' ? v.month === monthFilter : true))
+    .filter((v) => (labFilter ? (v.id_affiliate?._id || v.id_affiliate) === labFilter : true));
 
   // ─────────────────────────── Buka / tutup halaman detail ───────────────────────────
   const openDetail = async (order) => {
@@ -410,8 +435,7 @@ export default function AffiliateOrder({ affiliateId }) {
   };
 
   // ── Aksi admin: terbitkan invoice dari rincian harga yang sudah diisi laboran & diverifikasi ketua lab.
-  // Memakai endpoint yang sama dengan simpan invoice — BE otomatis memindahkan status ke "Menunggu Pembayaran",
-  // jadi admin tidak perlu masuk mode edit kalau memang tidak ada yang perlu dikoreksi. ──
+  // BE otomatis memindahkan status ke "Menunggu Pembayaran". ──
   const handleTerbitkanInvoice = async () => {
     if (saving || !activeOrder?.rincian_harga_invoice?.length) return;
 
@@ -444,8 +468,7 @@ export default function AffiliateOrder({ affiliateId }) {
     }
   };
 
-  // ── Aksi admin: transisi status "Menunggu Verifikasi Pembayaran" → "Selesai" (satu-satunya
-  // perubahan status lain yang boleh dilakukan admin di halaman ini — tidak ada dropdown bebas lagi) ──
+  // ── Aksi admin: "Menunggu Verifikasi Pembayaran" → "Selesai" ──
   const handleSelesaikanOrder = async () => {
     if (saving) return;
     if (!window.confirm('Yakin ingin menandai order ini sebagai "Selesai"? User akan bisa mengunduh hasil analisis serta kuitansi setelah ini.')) return;
@@ -472,6 +495,7 @@ export default function AffiliateOrder({ affiliateId }) {
     }
   };
 
+  // ── Aksi admin: batalkan order kapan saja (kecuali status final) ──
   const handleBatalkanOrder = async () => {
     if (saving) return;
     if (!window.confirm('Yakin ingin membatalkan order ini? Order yang dibatalkan tidak bisa diproses lagi.')) return;
@@ -515,7 +539,7 @@ export default function AffiliateOrder({ affiliateId }) {
     if (saving) return;
     try {
       setSaving(true);
-      // ✅ Data pemohon tidak lagi bisa diedit admin — kirim data layanan saja
+      // Data pemohon tidak bisa diedit admin — kirim data layanan saja
       const payload = {
         layanan_analisis: editDraft.layanan_analisis,
         sewa_lab: editDraft.sewa_lab,
@@ -533,6 +557,8 @@ export default function AffiliateOrder({ affiliateId }) {
         setActiveOrder(updated);
         setEditMode(false);
         setEditDraft(null);
+      } else {
+        alert(res.data.message || 'Gagal menyimpan data');
       }
     } catch (err) {
       alert(err.response?.data?.message || err.message);
@@ -540,8 +566,6 @@ export default function AffiliateOrder({ affiliateId }) {
       setSaving(false);
     }
   };
-
-  const updateEditField = (key, value) => setEditDraft((d) => ({ ...d, [key]: value }));
 
   const updateEditItem = (jenis, idx, key, value) => setEditDraft((d) => ({
     ...d,
@@ -558,7 +582,7 @@ export default function AffiliateOrder({ affiliateId }) {
     [jenis]: d[jenis].filter((_, i) => i !== idx),
   }));
 
-  // Dipakai ItemSectionEditable untuk upload foto_sample / jurnal_pendukung — upload sungguhan ke file server
+  // Dipakai ItemSectionEditable untuk upload foto_sample / jurnal_pendukung
   const uploadItemFile = (key, file, onProgress) => uploadFileToServer(file, FILE_CATEGORY[key], onProgress);
 
   // ─────────────────────────── Download Invoice PDF (generate di FE) ───────────────────────────
@@ -604,7 +628,8 @@ export default function AffiliateOrder({ affiliateId }) {
 
       const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
+const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: [210, 105] });
+pdf.addImage(imgData, "PNG", 0, 0, 210, 105);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
@@ -619,12 +644,12 @@ export default function AffiliateOrder({ affiliateId }) {
 
   // ─────────────────────────── Download Laporan Excel (list order, ikut filter aktif) ───────────────────────────
   const handleDownloadExcel = async () => {
-    if (downloadingExcel || !affiliateId) return;
+    if (downloadingExcel) return;
     try {
       setDownloadingExcel(true);
       const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/order_affiliate_export`, {
         params: {
-          id_affiliate: affiliateId,
+          ...((affiliateId || labFilter) ? { id_affiliate: affiliateId || labFilter } : {}),
           search,
           status: statusFilter,
           year: yearFilter,
@@ -636,8 +661,8 @@ export default function AffiliateOrder({ affiliateId }) {
         alert(res.data.message || 'Gagal mengambil data laporan');
         return;
       }
-      const rows = res.data.data.map((r) => ({
-        'No': r.no,
+      const rows = res.data.data.map((r, i) => ({
+        'No': i + 1,
         'No. Invoice': r.no_invoice,
         'Tanggal': r.tanggal,
         'Nama Pemohon': r.nama_pemohon,
@@ -703,6 +728,9 @@ export default function AffiliateOrder({ affiliateId }) {
             <p className="text-xs text-gray-500 mb-1 flex items-center gap-1"><Building2 className="w-3 h-3" /> Pemohon</p>
             <p className="text-sm font-semibold text-gray-900 truncate">{activeOrder.nama_lengkap || '—'}</p>
             <p className="text-xs text-gray-400 mt-1 truncate">{activeOrder.nama_institusi || '—'}</p>
+            {showLab && (
+              <p className="text-[11px] text-red-700 mt-1 truncate">{activeOrder.id_affiliate?.nama_laboratorium || ''}</p>
+            )}
           </div>
           <div className="border border-gray-200 rounded-xl p-4">
             <p className="text-xs text-gray-500 mb-1">Total Keseluruhan</p>
@@ -710,7 +738,7 @@ export default function AffiliateOrder({ affiliateId }) {
             <p className="text-xs text-gray-400 mt-1">{itemCount} item layanan</p>
           </div>
 
-          {/* ── Status Order — tampilan baca-saja, tidak ada lagi dropdown ubah manual ── */}
+          {/* ── Status Order — tampilan baca-saja ── */}
           <div className="border border-gray-200 rounded-xl p-4">
             <p className="text-xs text-gray-500 mb-1.5">Status Order</p>
             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${STATUS_CLASS[activeOrder.status_pengujian] || 'bg-gray-100 text-gray-600'}`}>
@@ -720,6 +748,7 @@ export default function AffiliateOrder({ affiliateId }) {
           </div>
         </div>
 
+        {/* Tombol batalkan order — admin bisa kapan saja kecuali status final */}
         {!NON_CANCELLABLE_STATUS.includes(activeOrder.status_pengujian) && (
           <div className="flex justify-end mb-5">
             <button
@@ -778,7 +807,7 @@ export default function AffiliateOrder({ affiliateId }) {
           </div>
         )}
 
-        {/* Hint box: verifikasi pembayaran — aksi ubah status admin saat "Menunggu Verifikasi Pembayaran" */}
+        {/* Hint box: verifikasi pembayaran */}
         {activeOrder.status_pengujian === 'Menunggu Verifikasi Pembayaran' && (
           <div className="border border-amber-200 bg-amber-50 rounded-xl p-4 mb-5">
             <p className="text-xs font-semibold text-amber-800 mb-1.5 flex items-center gap-1.5">
@@ -830,10 +859,9 @@ export default function AffiliateOrder({ affiliateId }) {
           </div>
         </div>
 
-        {/* Tab: Rincian Order — Data Pemohon (editable) lalu Layanan (editable) */}
+        {/* Tab: Rincian Order */}
         {activeTab === 'ringkasan' && (
           <div className="flex flex-col gap-4">
-            {/* ✅ Data Pemohon sekarang read-only total — tidak ada tombol edit sama sekali */}
             <div className="border border-gray-200 rounded-xl p-5">
               <p className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-2 mb-4">
                 <User className="w-3.5 h-3.5" /> Data Pemohon
@@ -851,8 +879,8 @@ export default function AffiliateOrder({ affiliateId }) {
               </div>
             </div>
 
-            {/* Tombol edit sekarang khusus untuk rincian layanan saja */}
-            {itemCount > 0 && (
+            {/* Tombol edit khusus untuk rincian layanan (disembunyikan untuk order batal/ditolak) */}
+            {itemCount > 0 && !['Order Dibatalkan', 'Order Ditolak'].includes(activeOrder.status_pengujian) && (
               <div className="flex items-center justify-end">
                 {!editMode ? (
                   <button
@@ -914,7 +942,7 @@ export default function AffiliateOrder({ affiliateId }) {
           </div>
         )}
 
-        {/* Tab: Invoice — input/koreksi saat window edit aktif, atau lihat rincian yang sudah ada */}
+        {/* Tab: Invoice */}
         {activeTab === 'invoice' && (
           <div className="flex flex-col gap-4">
             {isInvoiceEditableWindow && invoiceEditing && invoiceRows ? (
@@ -988,11 +1016,6 @@ export default function AffiliateOrder({ affiliateId }) {
               <FileText className="w-3.5 h-3.5" /> Dokumen Terkait
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {/* ✅ Semua field file di sini dilewatkan lewat buildFileUrl supaya aman
-                  baik value-nya sudah full URL maupun cuma filename.
-                  Rincian Biaya & Hasil Analisis sudah tidak lagi ditampilkan di sini —
-                  rincian harga sekarang dikelola lewat tab Invoice, dan hasil analisis
-                  sudah tidak ada di alur laboran. Order pembelian bahan tidak punya laporan. */}
               {!isBahanOnly(activeOrder) && (
                 <FileLink label="Laporan (laboran)" href={buildFileUrl(FILE_CATEGORY.laporan, activeOrder.laporan)} />
               )}
@@ -1018,7 +1041,7 @@ export default function AffiliateOrder({ affiliateId }) {
 
               <FileLink label="Bukti Pembayaran (user)" href={buildFileUrl(FILE_CATEGORY.bukti_pembayaran, activeOrder.bukti_pembayaran)} />
 
-              {/* ── Kwitansi — hanya tersedia setelah status "Selesai" (sinkron dengan endpoint BE) ── */}
+              {/* ── Kwitansi — hanya tersedia setelah status "Selesai" ── */}
               {activeOrder.status_pengujian === 'Selesai' ? (
                 <button
                   onClick={handleDownloadKwitansi}
@@ -1064,13 +1087,17 @@ export default function AffiliateOrder({ affiliateId }) {
     );
   }
 
-  // ══════════════════════════════ LIST: daftar order (satu card putih, sama seperti AffiliateUserManagement) ══════════════════════════════
+  // ══════════════════════════════ LIST: daftar order ══════════════════════════════
+  const headers = showLab
+    ? ['No', 'No. Invoice', 'Laboratorium', 'Pemohon', 'Instansi', 'Status', 'Total', '']
+    : ['No', 'No. Invoice', 'Pemohon', 'Instansi', 'Status', 'Total', ''];
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5">
       <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
         <div>
           <p className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-2">
-            <ClipboardList className="w-3.5 h-3.5" /> Daftar Order
+            <ClipboardList className="w-3.5 h-3.5" /> {showLab ? 'Semua Order Lab Affiliate' : 'Daftar Order'}
           </p>
         </div>
         <div className="flex items-center gap-2.5">
@@ -1082,9 +1109,6 @@ export default function AffiliateOrder({ affiliateId }) {
             {downloadingExcel ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileSpreadsheet className="w-3.5 h-3.5" />}
             {downloadingExcel ? 'Membuat Excel...' : 'Download Excel'}
           </button>
-          {/* <span className="text-[11px] px-2.5 py-1 rounded-full bg-gray-100 text-gray-500 font-medium">
-            Mode Admin — kelola invoice, data, dan status order
-          </span> */}
         </div>
       </div>
 
@@ -1100,6 +1124,16 @@ export default function AffiliateOrder({ affiliateId }) {
             className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-400 transition"
           />
         </div>
+        {showLab && (
+          <select
+            value={labFilter}
+            onChange={(e) => setLabFilter(e.target.value)}
+            className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-400 transition sm:w-56"
+          >
+            <option value="">Semua Laboratorium</option>
+            {labs.map((l) => <option key={l._id} value={l._id}>{l.nama_laboratorium}</option>)}
+          </select>
+        )}
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
@@ -1131,10 +1165,10 @@ export default function AffiliateOrder({ affiliateId }) {
         <table className="w-full min-w-[820px]">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
-              {['No', 'No. Invoice', 'Pemohon', 'Instansi', 'Status', 'Total', ''].map((h, i) => (
+              {headers.map((h, i) => (
                 <th
-                  key={h}
-                  className={`px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap ${i === 6 ? 'text-right' : 'text-left'}`}
+                  key={`${h}-${i}`}
+                  className={`px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap ${i === headers.length - 1 ? 'text-right' : 'text-left'}`}
                 >
                   {h}
                 </th>
@@ -1145,7 +1179,7 @@ export default function AffiliateOrder({ affiliateId }) {
             {loading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <tr key={i} className="animate-pulse">
-                  {Array.from({ length: 7 }).map((__, j) => (
+                  {Array.from({ length: headers.length }).map((__, j) => (
                     <td key={j} className="px-4 py-3"><div className="h-3 w-full bg-gray-200 rounded" /></td>
                   ))}
                 </tr>
@@ -1156,6 +1190,13 @@ export default function AffiliateOrder({ affiliateId }) {
                 <tr key={v._id} className="hover:bg-gray-50 transition">
                   <td className="px-4 py-3"><span className="text-xs text-gray-400">{i + 1}</span></td>
                   <td className="px-4 py-3 whitespace-nowrap"><span className="text-sm font-medium text-gray-900">{v.no_invoice}</span></td>
+                  {showLab && (
+                    <td className="px-4 py-3">
+                      <span className="text-xs font-medium text-red-700 bg-red-50 px-2 py-0.5 rounded">
+                        {v.id_affiliate?.nama_laboratorium || '—'}
+                      </span>
+                    </td>
+                  )}
                   <td className="px-4 py-3"><span className="text-sm text-gray-700">{v.nama_lengkap}</span></td>
                   <td className="px-4 py-3"><span className="text-xs text-gray-500">{v.nama_institusi}</span></td>
                   <td className="px-4 py-3 whitespace-nowrap">
@@ -1177,9 +1218,11 @@ export default function AffiliateOrder({ affiliateId }) {
               );
             }) : (
               <tr>
-                <td colSpan={7} className="px-6 py-16 text-center">
+                <td colSpan={headers.length} className="px-6 py-16 text-center">
                   <ClipboardList className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                  <p className="text-sm text-gray-400">Belum ada order untuk lab affiliate ini</p>
+                  <p className="text-sm text-gray-400">
+                    {showLab ? 'Belum ada order' : 'Belum ada order untuk lab affiliate ini'}
+                  </p>
                 </td>
               </tr>
             )}
@@ -1212,9 +1255,6 @@ function formatFieldValue(field, item) {
   return raw;
 }
 
-// ✅ Modifikasi: bangun URL file lewat buildFileUrl (bukan pakai r[ff.key] mentah),
-// supaya link tetap benar baik untuk foto_sample/jurnal_pendukung yang berasal dari
-// form order awal (biasanya cuma filename) maupun yang sudah diedit (sudah full URL).
 function ItemSectionReadOnly({ config, items }) {
   const { title, icon: Icon, cls, fields, fileFields } = config;
   return (
@@ -1367,7 +1407,7 @@ function ItemSectionEditable({ jenis, config, items, onUpdate, onAdd, onRemove, 
               ))}
             </div>
 
-            {/* ✅ Foto Sample / Jurnal Pendukung — upload sungguhan ke file server + progress bar */}
+            {/* Foto Sample / Jurnal Pendukung — upload ke file server + progress */}
             {fileFields && fileFields.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5 pr-8 mt-6 pt-5 border-t border-gray-200">
                 {fileFields.map((ff) => {

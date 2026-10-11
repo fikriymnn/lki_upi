@@ -114,7 +114,7 @@ function StatusInfoPanel({ status, noInvoice, namaLab, catatan, onGoToDokumen })
             iconCls: "text-amber-600 bg-amber-100",
             icon: Clock,
             title: "Menunggu Verifikasi Pembayaran",
-            desc: "Bukti pembayaran Anda sudah dikirim dan sedang diverifikasi oleh admin. Proses ini biasanya memakan waktu 1x24 jam kerja.",
+            desc: "Bukti pembayaran Anda sudah dikirim dan sedang diverifikasi oleh admin.",
         },
         "Selesai": {
             cls: "border-green-200 bg-green-50",
@@ -449,7 +449,8 @@ export default function DetailAffiliate({ params }) {
             });
             const imgData = canvas.toDataURL("image/png");
 
-            const pdf = new jsPDF("p", "mm", "a4");
+            const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: [210, 105] });
+            pdf.addImage(imgData, "PNG", 0, 0, 210, 105);
             const pageWidth = pdf.internal.pageSize.getWidth();
             const pageHeight = pdf.internal.pageSize.getHeight();
             const imgWidth = pageWidth;

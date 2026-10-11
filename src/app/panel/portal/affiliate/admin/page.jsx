@@ -6,6 +6,7 @@ import axios from 'axios';
 import Sidebar from '../../../../../components/affiliate/SidebarAffiliateAdmin'; // ← sesuaikan path ke Sidebar yg kamu kasih
 import AffiliateList from './AffiliateList';
 import AffiliateDetail from './AffiliateDetail';
+import AffiliateOrders from './AffiliateOrders';
 
 const ROLE_LABEL = {
   ketua_lab: 'Ketua Lab',
@@ -23,15 +24,15 @@ const NOTIF_STATUSES = [
 // Warna badge per status (class ditulis utuh agar terdeteksi Tailwind)
 const STATUS_BADGE = {
   'Menunggu Order Dikonfirmasi': 'bg-blue-50 text-blue-700',
-  'Menunggu Diverifikasi': 'bg-amber-50 text-amber-700',
+  'Selesai Diverifikasi': 'bg-cyan-50 text-cyan-700',
   'Menunggu Verifikasi Pembayaran': 'bg-green-50 text-green-700',
 };
 
 export default function AffiliateAdminPage() {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activePage, setActivePage] = useState('/panel/portal/affiliate/admin');
-  const [page, setPage] = useState('list'); // list | detail
+  const [menu, setMenu] = useState('lab'); // lab | orders
+  const [page, setPage] = useState('list'); // list | detail (khusus menu "lab")
   const [selectedAffiliate, setSelectedAffiliate] = useState(null);
   const [userData, setUserData] = useState(null);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
@@ -140,6 +141,15 @@ export default function AffiliateAdminPage() {
     }
   }, [userData?.role]);
 
+  // ── Navigasi sidebar: pindah antar menu tanpa ganti route ──
+  const handleNavigate = (id) => {
+    setMenu(id);
+    if (id === 'lab') {
+      setPage('list');
+      setSelectedAffiliate(null);
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('access_token');
     router.push('/panel');
@@ -173,11 +183,10 @@ export default function AffiliateAdminPage() {
     }
   };
 
+  // Klik notifikasi → langsung buka menu "Semua Order"
   const handleOrderClick = (order) => {
-    // Navigasi ke detail order atau halaman order
     setShowNotification(false);
-    // Implementasikan navigasi ke detail order di sini
-    console.log('Order clicked:', order);
+    setMenu('orders');
   };
 
   return (
@@ -185,8 +194,9 @@ export default function AffiliateAdminPage() {
       <Sidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
-        activePage={activePage}
-        setActivePage={setActivePage}
+        activePage={menu}
+        setActivePage={setMenu}
+        onNavigate={handleNavigate}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="bg-[#b91c1c] border-b border-red-700 px-6 py-4">
@@ -325,14 +335,17 @@ export default function AffiliateAdminPage() {
             </div>
           </div>
         </header>
+
         <main className="flex-1 overflow-y-auto">
-          {page === 'list' && (
+          {menu === 'orders' && <AffiliateOrders />}
+
+          {menu === 'lab' && page === 'list' && (
             <AffiliateList
               setActivePage={setPage}
               setSelectedAffiliate={setSelectedAffiliate}
             />
           )}
-          {page === 'detail' && selectedAffiliate && (
+          {menu === 'lab' && page === 'detail' && selectedAffiliate && (
             <AffiliateDetail
               affiliate={selectedAffiliate}
               setActivePage={setPage}
