@@ -33,8 +33,8 @@ const FilterSelect = ({ icon: Icon, label, value, onChange, children }) => (
 
 export default function History_order() {
   const [invoice, setInvoice] = useState([]);
-  const [year, setYear] = useState(0);
-  const [month, setMonth] = useState(0);
+  const [year, setYear] = useState("");   // DIUBAH: sebelumnya 0
+  const [month, setMonth] = useState(""); // DIUBAH: sebelumnya 0
   const [page, setPage] = useState(0);
   const [length, setLength] = useState(0);
   const [yearOption, setYearOption] = useState([]);
@@ -58,7 +58,8 @@ export default function History_order() {
         );
         if (dataUser.data.success) {
           const data = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&success=true&id_user=${
+            // DIUBAH: "&success=true" dihapus
+            `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Selesai&id_user=${
               dataUser.data.data._id
             }&skip=${page * 15}&limit=15${year ? `&year=${year}` : ""}${
               month ? `&month=${month}` : ""
