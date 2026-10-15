@@ -12,6 +12,17 @@ const monthOption = [
   "Juli", "Agustus", "September", "Oktober", "November", "Desember",
 ];
 
+// ⬅️ BARU: status order utama yang ditampilkan di halaman ini (sama dengan yang sebelumnya di-hardcode di URL)
+const UTAMA_STATUS_OPTIONS = [
+  "Menunggu Verifikasi",
+  "menunggu form dikonfirmasi",
+  "Sample Diterima Admin",
+  "Form Dikonfirmasi",
+  "Sample Dikerjakan Operator",
+  "Menunggu Pembayaran",
+  "Menunggu Konfirmasi Pembayaran",
+];
+
 // Harus sama persis dengan STATUS_OPTIONS di order_affiliate_controller.js (BE)
 const AFFILIATE_STATUS_OPTIONS = [
   "Menunggu Order Dikonfirmasi",
@@ -88,15 +99,18 @@ export default function My_order() {
   // Sumber order aktif: "utama" (lab sendiri) atau "affiliate" (lab mitra)
   const [activeSource, setActiveSource] = useState("utama");
 
-  // ---- state untuk order lab utama (existing, tidak diubah) ----
+  // ---- state untuk order lab utama (existing) ----
   const [invoice, setInvoice] = useState([]);
-  const [year, setYear] = useState(0);
-  const [month, setMonth] = useState(0);
+  const [statusUtama, setStatusUtama] = useState(""); // ⬅️ BARU
+  const [year, setYear] = useState("");
+  const [month, setMonth] = useState("");
   const [yearOption, setYearOption] = useState([]);
 
-  // ---- state untuk order lab affiliate (baru) ----
+  // ---- state untuk order lab affiliate ----
   const [orderAffiliate, setOrderAffiliate] = useState([]);
   const [statusAffiliate, setStatusAffiliate] = useState("");
+  const [yearAffiliate, setYearAffiliate] = useState("");
+  const [monthAffiliate, setMonthAffiliate] = useState(""); // index 0-11, string
   const [lengthAffiliate, setLengthAffiliate] = useState(0);
 
   // ---- state bersama ----
@@ -117,12 +131,22 @@ export default function My_order() {
     });
   };
 
+  // Setiap filter berubah, kembali ke halaman 1 agar tidak nyangkut di halaman kosong
+  const handleStatusUtamaChange = (e) => { setStatusUtama(e.target.value); setPage(0); }; // ⬅️ BARU
+  const handleYearChange = (e) => { setYear(e.target.value); setPage(0); };
+  const handleMonthChange = (e) => { setMonth(e.target.value); setPage(0); };
+  const handleStatusAffiliateChange = (e) => { setStatusAffiliate(e.target.value); setPage(0); };
+  const handleYearAffiliateChange = (e) => { setYearAffiliate(e.target.value); setPage(0); };
+  const handleMonthAffiliateChange = (e) => { setMonthAffiliate(e.target.value); setPage(0); };
+
   // Reset ke halaman 1 setiap kali pindah tab, biar tidak nyangkut di page kosong
   useEffect(() => {
     setPage(0);
   }, [activeSource]);
 
   useEffect(() => {
+    let ignore = false; // abaikan respons dari request lama kalau filter sudah berganti
+
     let arr = [];
     const yearMax = new Date().getFullYear() - 2023;
     for (let i = 0; i < yearMax; i++) {
@@ -140,11 +164,15 @@ export default function My_order() {
     }
 
     async function getInvoiceUtama(id_user) {
+      // ⬅️ DIUBAH: status dibangun dari filter. "Semua Status" = semua status di UTAMA_STATUS_OPTIONS
+      const statusList = statusUtama ? [statusUtama] : UTAMA_STATUS_OPTIONS;
+      const statusQuery = statusList.map((s) => `status=${encodeURIComponent(s)}`).join("&");
+
       const data = await axios.get(
-        `${process.env.NEXT_PUBLIC_URL}/api/invoice?status=Menunggu Verifikasi&status=menunggu form dikonfirmasi&status=Sample Diterima Admin&status=Form Dikonfirmasi&status=Sample Dikerjakan Operator&status=Menunggu Pembayaran&status=Menunggu Konfirmasi Pembayaran&id_user=${id_user}&skip=${page * 15}&limit=15${year ? `&year=${year}` : ""}${month ? `&month=${month}` : ""}`,
+        `${process.env.NEXT_PUBLIC_URL}/api/invoice?${statusQuery}&id_user=${id_user}&skip=${page * 15}&limit=15${year ? `&year=${year}` : ""}${month !== "" ? `&month=${month}` : ""}`,
         { withCredentials: true }
       );
-      if (data.data.success) {
+      if (!ignore && data.data.success) {
         setInvoice(data.data.data);
         setLength(data.data.length_total);
       }
@@ -152,10 +180,20 @@ export default function My_order() {
 
     async function getOrderAffiliate(id_user) {
       const data = await axios.get(
-        `${process.env.NEXT_PUBLIC_URL}/api/order_affiliate?id_user=${id_user}&page=${page + 1}&limit=15${statusAffiliate ? `&status=${statusAffiliate}` : ""}`,
-        { withCredentials: true }
+        `${process.env.NEXT_PUBLIC_URL}/api/order_affiliate`,
+        {
+          params: {
+            id_user,
+            page: page + 1,
+            limit: 15,
+            ...(statusAffiliate && { status: statusAffiliate }),
+            ...(yearAffiliate && { year: yearAffiliate }),
+            ...(monthAffiliate !== "" && { month: Number(monthAffiliate) + 1 }), // BE expect bulan 1-12
+          },
+          withCredentials: true,
+        }
       );
-      if (data.data.success) {
+      if (!ignore && data.data.success) {
         setOrderAffiliate(data.data.data);
         setLengthAffiliate(data.data.pagination?.total_data || 0);
       }
@@ -175,11 +213,13 @@ export default function My_order() {
       } catch (err) {
         console.log(err.message);
       } finally {
-        setLoading(false);
+        if (!ignore) setLoading(false);
       }
     }
     loadData();
-  }, [year, month, page, activeSource, statusAffiliate]);
+
+    return () => { ignore = true; };
+  }, [statusUtama, year, month, page, activeSource, statusAffiliate, yearAffiliate, monthAffiliate]); // ⬅️ DIUBAH: tambah statusUtama
 
   const currentLength = activeSource === "utama" ? length : lengthAffiliate;
 
@@ -228,15 +268,23 @@ export default function My_order() {
             </div>
 
             {activeSource === "utama" ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md">
-                <FilterSelect icon={Calendar} label="Tahun" value={year} onChange={(e) => setYear(e.target.value)}>
+              // ⬅️ DIUBAH: tambah filter Status di tab Lab Utama
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl">
+                <FilterSelect icon={Tag} label="Status" value={statusUtama} onChange={handleStatusUtamaChange}>
+                  <option value="">Semua Status</option>
+                  {UTAMA_STATUS_OPTIONS.map((v, i) => (
+                    <option key={i} value={v}>{v}</option>
+                  ))}
+                </FilterSelect>
+
+                <FilterSelect icon={Calendar} label="Tahun" value={year} onChange={handleYearChange}>
                   <option value="">Semua Tahun</option>
                   {yearOption.map((v, i) => (
                     <option key={i} value={v}>{v}</option>
                   ))}
                 </FilterSelect>
 
-                <FilterSelect icon={Calendar} label="Bulan" value={month} onChange={(e) => setMonth(e.target.value)}>
+                <FilterSelect icon={Calendar} label="Bulan" value={month} onChange={handleMonthChange}>
                   <option value="">Semua Bulan</option>
                   {monthOption.map((v, i) => (
                     <option key={i} value={i}>{v}</option>
@@ -244,18 +292,32 @@ export default function My_order() {
                 </FilterSelect>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md">
-                <FilterSelect icon={Tag} label="Status" value={statusAffiliate} onChange={(e) => setStatusAffiliate(e.target.value)}>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl">
+                <FilterSelect icon={Tag} label="Status" value={statusAffiliate} onChange={handleStatusAffiliateChange}>
                   <option value="">Semua Status</option>
                   {AFFILIATE_STATUS_OPTIONS.map((v, i) => (
                     <option key={i} value={v}>{v}</option>
+                  ))}
+                </FilterSelect>
+
+                <FilterSelect icon={Calendar} label="Tahun" value={yearAffiliate} onChange={handleYearAffiliateChange}>
+                  <option value="">Semua Tahun</option>
+                  {yearOption.map((v, i) => (
+                    <option key={i} value={v}>{v}</option>
+                  ))}
+                </FilterSelect>
+
+                <FilterSelect icon={Calendar} label="Bulan" value={monthAffiliate} onChange={handleMonthAffiliateChange}>
+                  <option value="">Semua Bulan</option>
+                  {monthOption.map((v, i) => (
+                    <option key={i} value={i}>{v}</option>
                   ))}
                 </FilterSelect>
               </div>
             )}
           </div>
 
-          {/* ── Table Lab Utama (existing, tidak diubah) ── */}
+          {/* ── Table Lab Utama ── */}
           {activeSource === "utama" && (
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
               <div className="overflow-x-auto">
@@ -311,7 +373,7 @@ export default function My_order() {
                             </span>
                           </td>
                           <td className="px-4 py-3">
-                            {value.total_harga !== 0 ? (
+                            {value.total_harga ? (
                               <span className="text-xs font-medium text-gray-800">Rp {convertRupiah(value.total_harga)}</span>
                             ) : (
                               <span className="text-gray-400 text-xs">—</span>
@@ -350,7 +412,7 @@ export default function My_order() {
             </div>
           )}
 
-          {/* ── Table Lab Affiliate (baru) ── */}
+          {/* ── Table Lab Affiliate ── */}
           {activeSource === "affiliate" && (
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
               <div className="overflow-x-auto">
@@ -429,7 +491,7 @@ export default function My_order() {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={8} className="px-6 py-16 text-center">
+                        <td colSpan={7} className="px-6 py-16 text-center">
                           <Building2 className="w-10 h-10 text-gray-300 mx-auto mb-3" />
                           <p className="text-sm text-gray-400">Tidak ada order ke lab affiliate</p>
                         </td>
