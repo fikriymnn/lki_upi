@@ -21,7 +21,6 @@ const UTAMA_STATUS_OPTIONS = [
   "Sample Dikerjakan Operator",
   "Menunggu Pembayaran",
   "Menunggu Konfirmasi Pembayaran",
-  "Selesai",
 ];
 
 // Harus sama persis dengan STATUS_OPTIONS di order_affiliate_controller.js (BE)
