@@ -13,18 +13,20 @@ import InvoiceTemplate from '../../../../../../components/affiliate/InvoiceTempl
 import KwitansiTemplate from '../../../../../../components/affiliate/KwitansiTemplate';
 
 // ── Status flow (harus sama persis dengan enum status_pengujian di backend) ──
+// Status yang disembunyikan dari ketua lab (lihat HIDDEN_STATUS) tidak ditampilkan di dropdown filter
 const STATUS_OPTIONS = [
   'Menunggu Order Dikonfirmasi',
   'Order Dikonfirmasi',
-  'Order Ditolak',
   'Order Diproses',
   'Menunggu Diverifikasi',
   'Selesai Diverifikasi',
   'Menunggu Pembayaran',
   'Menunggu Verifikasi Pembayaran',
   'Selesai',
-  'Order Dibatalkan'
 ];
+
+// ── Order dengan status ini tidak ditampilkan di halaman ketua lab ──
+const HIDDEN_STATUS = ['Order Dibatalkan', 'Order Ditolak', 'Pencairan Dana Diterima'];
 
 const STATUS_CLASS = {
   'Menunggu Order Dikonfirmasi': 'bg-gray-100 text-gray-600 ring-1 ring-gray-200',
@@ -229,6 +231,7 @@ export default function AffiliateOrder({ affiliateId }) {
   const uniqueYears = [...new Set(data.map((v) => v.year).filter(Boolean))].sort((a, b) => b.localeCompare(a));
 
   const filtered = data
+    .filter((v) => !HIDDEN_STATUS.includes(v.status_pengujian))
     .filter((v) =>
       (v.no_invoice || '').toLowerCase().includes(search.toLowerCase()) ||
       (v.nama_lengkap || '').toLowerCase().includes(search.toLowerCase())

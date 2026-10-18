@@ -23,6 +23,7 @@ const STATUS_OPTIONS = [
   'Menunggu Pembayaran',
   'Menunggu Verifikasi Pembayaran',
   'Selesai',
+  'Pencairan Dana Diterima',
   'Order Dibatalkan',
 ];
 
@@ -36,16 +37,21 @@ const STATUS_CLASS = {
   'Menunggu Pembayaran': 'bg-orange-50 text-orange-700 ring-1 ring-orange-200',
   'Menunggu Verifikasi Pembayaran': 'bg-amber-50 text-amber-700 ring-1 ring-amber-200',
   'Selesai': 'bg-green-50 text-green-700 ring-1 ring-green-200',
+  'Pencairan Dana Diterima': 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
   'Order Dibatalkan': 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
 };
 
-const ADMIN_ACTIONABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Verifikasi Pembayaran'];
+// 'Selesai' ditambahkan: admin masih perlu menandai pencairan dana
+const ADMIN_ACTIONABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Verifikasi Pembayaran', 'Selesai'];
 
 // ── Status yang invoice-nya masih boleh diinput/dikoreksi (harus sinkron dengan BE) ──
 const INVOICE_EDITABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Pembayaran'];
 
 // ── Status final: order tidak bisa dibatalkan lagi (sinkron dengan BE) ──
-const NON_CANCELLABLE_STATUS = ['Order Ditolak', 'Order Dibatalkan', 'Selesai'];
+const NON_CANCELLABLE_STATUS = ['Order Ditolak', 'Order Dibatalkan', 'Selesai', 'Pencairan Dana Diterima'];
+
+// Status kwitansi sudah bisa diunduh
+const KWITANSI_STATUS = ['Selesai', 'Pencairan Dana Diterima'];
 
 // Order yang isinya HANYA pembelian bahan — tidak ada laporan
 const isBahanOnly = (order) =>
@@ -495,6 +501,31 @@ export default function AffiliateOrder({ affiliateId }) {
     }
   };
 
+  // ── Aksi admin: "Selesai" → "Pencairan Dana Diterima" (order hilang dari laboran & ketua lab) ──
+  const handlePencairanSelesai = async () => {
+    if (saving) return;
+    if (!window.confirm('Tandai pencairan dana untuk order ini sudah selesai? Order akan disembunyikan dari halaman laboran dan ketua lab.')) return;
+    try {
+      setSaving(true);
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_URL}/api/order_affiliate/${activeOrder._id}/status`,
+        { status_pengujian: 'Pencairan Dana Diterima' },
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        const updated = { ...res.data.data, id_affiliate: activeOrder.id_affiliate };
+        setData((prev) => prev.map((v) => (v._id === updated._id ? updated : v)));
+        setActiveOrder(updated);
+      } else {
+        alert(res.data.message || 'Gagal memperbarui status');
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   // ── Aksi admin: batalkan order kapan saja (kecuali status final) ──
   const handleBatalkanOrder = async () => {
     if (saving) return;
@@ -628,8 +659,8 @@ export default function AffiliateOrder({ affiliateId }) {
 
       const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
       const imgData = canvas.toDataURL('image/png');
-const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: [210, 105] });
-pdf.addImage(imgData, "PNG", 0, 0, 210, 105);
+      const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: [210, 105] });
+      pdf.addImage(imgData, "PNG", 0, 0, 210, 105);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
@@ -689,6 +720,7 @@ pdf.addImage(imgData, "PNG", 0, 0, 210, 105);
   const actionLabel = (order) => {
     if (order.status_pengujian === 'Selesai Diverifikasi') return 'Input Invoice';
     if (order.status_pengujian === 'Menunggu Verifikasi Pembayaran') return 'Verifikasi Bayar';
+    if (order.status_pengujian === 'Selesai') return 'Pencairan Dana';
     return 'Detail';
   };
 
@@ -829,6 +861,25 @@ pdf.addImage(imgData, "PNG", 0, 0, 210, 105);
             ) : (
               <p className="text-[11px] text-amber-700">Bukti pembayaran belum diupload user.</p>
             )}
+          </div>
+        )}
+
+        {/* Hint box: pencairan dana */}
+        {activeOrder.status_pengujian === 'Selesai' && (
+          <div className="border border-emerald-200 bg-emerald-50 rounded-xl p-4 mb-5">
+            <p className="text-xs font-semibold text-emerald-800 mb-1.5 flex items-center gap-1.5">
+              <CreditCard className="w-3.5 h-3.5" /> Pencairan Dana
+            </p>
+            <p className="text-[11px] text-emerald-700 mb-3">
+              Klik tombol di bawah setelah dana sudah dicairkan ke laboratorium. Order akan hilang dari halaman laboran dan ketua lab.
+            </p>
+            <button
+              onClick={handlePencairanSelesai}
+              disabled={saving}
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition"
+            >
+              {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />} Tandai Pencairan Dana Diterima
+            </button>
           </div>
         )}
 
@@ -1041,8 +1092,8 @@ pdf.addImage(imgData, "PNG", 0, 0, 210, 105);
 
               <FileLink label="Bukti Pembayaran (user)" href={buildFileUrl(FILE_CATEGORY.bukti_pembayaran, activeOrder.bukti_pembayaran)} />
 
-              {/* ── Kwitansi — hanya tersedia setelah status "Selesai" ── */}
-              {activeOrder.status_pengujian === 'Selesai' ? (
+              {/* ── Kwitansi — hanya tersedia setelah status "Selesai" / "Pencairan Dana Diterima" ── */}
+              {KWITANSI_STATUS.includes(activeOrder.status_pengujian) ? (
                 <button
                   onClick={handleDownloadKwitansi}
                   disabled={downloadingKwitansi}
@@ -1242,6 +1293,7 @@ function statusOwnerHint(status) {
     case 'Menunggu Diverifikasi': return 'ketua lab (menunggu verifikasi)';
     case 'Menunggu Pembayaran': return 'user (menunggu pembayaran)';
     case 'Selesai': return 'tidak ada — order sudah selesai';
+    case 'Pencairan Dana Diterima': return 'tidak ada — dana sudah dicairkan';
     case 'Order Dibatalkan': return 'tidak ada — order sudah dibatalkan admin';
     default: return 'pihak terkait';
   }

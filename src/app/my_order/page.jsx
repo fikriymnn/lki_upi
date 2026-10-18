@@ -23,17 +23,18 @@ const UTAMA_STATUS_OPTIONS = [
   "Menunggu Konfirmasi Pembayaran",
 ];
 
-// Harus sama persis dengan STATUS_OPTIONS di order_affiliate_controller.js (BE)
+// Status order affiliate yang ditampilkan di My Order.
+// "Selesai" & "Pencairan Dana Diterima" sengaja tidak ada: order itu sudah masuk Riwayat Order.
 const AFFILIATE_STATUS_OPTIONS = [
   "Menunggu Order Dikonfirmasi",
   "Order Dikonfirmasi",
   "Order Ditolak",
+  "Order Dibatalkan",
   "Order Diproses",
   "Menunggu Diverifikasi",
   "Selesai Diverifikasi",
   "Menunggu Pembayaran",
   "Menunggu Verifikasi Pembayaran",
-  "Selesai",
 ];
 
 const getStatusStyle = (status) => {
@@ -55,6 +56,7 @@ const getStatusStyleAffiliate = (status) => {
   switch (status) {
     case "Selesai": return "bg-green-100 text-green-700";
     case "Order Ditolak": return "bg-red-100 text-red-700";
+    case "Order Dibatalkan": return "bg-rose-100 text-rose-700";
     case "Menunggu Pembayaran":
     case "Menunggu Verifikasi Pembayaran": return "bg-amber-100 text-amber-700";
     case "Menunggu Order Dikonfirmasi": return "bg-gray-100 text-gray-600";
@@ -186,7 +188,8 @@ export default function My_order() {
             id_user,
             page: page + 1,
             limit: 15,
-            ...(statusAffiliate && { status: statusAffiliate }),
+            // "Semua Status" = semua status aktif; Selesai & Pencairan Dana Diterima sudah masuk riwayat
+            status: statusAffiliate || AFFILIATE_STATUS_OPTIONS.join(","),
             ...(yearAffiliate && { year: yearAffiliate }),
             ...(monthAffiliate !== "" && { month: Number(monthAffiliate) + 1 }), // BE expect bulan 1-12
           },
