@@ -208,6 +208,12 @@ const formatRupiah = (angka) => {
     return `Rp ${angka.toLocaleString("id-ID")}`;
 };
 
+// Order sewa alat / pembelian bahan saja tidak punya laporan (sama dengan isTanpaLaporan di halaman laboran & BE)
+const isTanpaLaporan = (order) =>
+    ((order?.sewa_alat?.length || 0) > 0 || (order?.pembelian_bahan?.length || 0) > 0) &&
+    !(order?.layanan_analisis?.length || 0) &&
+    !(order?.sewa_lab?.length || 0);
+
 // ── Field data pemesan yang bisa diedit user (mengikuti field yang sudah ditampilkan di tab Ringkasan) ──
 const APPLICANT_EDIT_FIELDS = [
     { key: "nama_lengkap", label: "Nama Lengkap" },
@@ -589,6 +595,10 @@ export default function DetailAffiliate({ params }) {
     // Kuitansi tersedia setelah order "Selesai" (termasuk setelah pencairan dana diterima)
     const kuitansiAvailable = ["Selesai", "Pencairan Dana Diterima"].includes(order.status_pengujian);
 
+    // Laporan dari laboran: aktif hanya saat order Selesai / Pencairan Dana Diterima DAN file laporannya ada
+    const laporanUrl = buildFileUrl(FILE_CATEGORY.laporan, order.laporan);
+    const laporanAvailable = kuitansiAvailable && !!laporanUrl;
+
     // Di riwayat, order sudah selesai sehingga upload bukti pembayaran tidak lagi tersedia
     const buktiPembayaranEditable = [
         "Menunggu Pembayaran",
@@ -949,6 +959,42 @@ export default function DetailAffiliate({ params }) {
                         <FileText className="w-3.5 h-3.5" /> Dokumen Terkait
                     </p>
                     <div className="flex flex-col gap-3">
+
+                        {/* ✅ Laporan hasil analisis (file dari laboran) — aktif setelah order Selesai / Pencairan Dana Diterima */}
+                        {!isTanpaLaporan(order) && (
+                            <div className={`border border-gray-200 rounded-xl overflow-hidden ${!laporanAvailable ? "opacity-50" : ""}`}>
+                                <div className="flex items-center gap-3 px-4 py-3">
+                                    <div className="w-9 h-9 bg-teal-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <FlaskConical className="w-4 h-4 text-teal-600" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-semibold text-gray-800">Laporan Hasil Analisis</p>
+                                        <p className="text-xs text-gray-400 truncate max-w-[140px] sm:max-w-none">
+                                            {laporanAvailable
+                                                ? "File laporan dari laboran"
+                                                : kuitansiAvailable
+                                                    ? "Laporan belum diunggah laboran"
+                                                    : "Tersedia setelah order selesai"}
+                                        </p>
+                                    </div>
+                                    <div className="flex-shrink-0 ml-auto">
+                                        {laporanAvailable ? (
+                                            <a href={laporanUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-50 text-teal-700 rounded-lg text-xs font-medium hover:bg-teal-100 transition whitespace-nowrap"
+                                            >
+                                                <Download className="w-3.5 h-3.5" /> Unduh
+                                            </a>
+                                        ) : (
+                                            <span className="text-xs text-gray-400 px-3 py-1.5 bg-gray-100 rounded-lg whitespace-nowrap">
+                                                Belum tersedia
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Invoice */}
                         <div className={`border border-gray-200 rounded-xl overflow-hidden ${!invoiceAvailable ? "opacity-50" : ""}`}>
