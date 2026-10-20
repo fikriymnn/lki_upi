@@ -41,8 +41,19 @@ const STATUS_CLASS = {
   'Order Dibatalkan': 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
 };
 
-// 'Selesai' ditambahkan: admin masih perlu menandai pencairan dana
-const ADMIN_ACTIONABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Verifikasi Pembayaran', 'Selesai'];
+// ⬅️ BARU: hanya lab dengan kode ini yang punya tahap lanjutan "Pencairan Dana Diterima" (sinkron dengan BE)
+const KODE_LAB_PENCAIRAN = 'LKIP';
+
+// ⬅️ BARU: apakah order ini milik lab yang punya tahap pencairan dana
+const isLabPencairan = (order) =>
+  (order?.id_affiliate?.kode_laboratorium || '').toUpperCase() === KODE_LAB_PENCAIRAN;
+
+// ⬅️ DIUBAH: status yang butuh aksi admin.
+// 'Selesai' hanya butuh aksi (pencairan dana) kalau order milik lab LKIP.
+const ADMIN_ACTIONABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Verifikasi Pembayaran'];
+const isAdminActionable = (order) =>
+  ADMIN_ACTIONABLE_STATUS.includes(order?.status_pengujian) ||
+  (order?.status_pengujian === 'Selesai' && isLabPencairan(order));
 
 // ── Status yang invoice-nya masih boleh diinput/dikoreksi (harus sinkron dengan BE) ──
 const INVOICE_EDITABLE_STATUS = ['Selesai Diverifikasi', 'Menunggu Pembayaran'];
@@ -501,9 +512,13 @@ export default function AffiliateOrder({ affiliateId }) {
     }
   };
 
-  // ── Aksi admin: "Selesai" → "Pencairan Dana Diterima" (order hilang dari laboran & ketua lab) ──
+  // ── Aksi admin: "Selesai" → "Pencairan Dana Diterima" (khusus lab LKIP; order hilang dari laboran & ketua lab) ──
   const handlePencairanSelesai = async () => {
     if (saving) return;
+    if (!isLabPencairan(activeOrder)) {
+      alert(`Pencairan dana hanya berlaku untuk laboratorium ${KODE_LAB_PENCAIRAN}`);
+      return;
+    }
     if (!window.confirm('Tandai pencairan dana untuk order ini sudah selesai? Order akan disembunyikan dari halaman laboran dan ketua lab.')) return;
     try {
       setSaving(true);
@@ -720,7 +735,8 @@ export default function AffiliateOrder({ affiliateId }) {
   const actionLabel = (order) => {
     if (order.status_pengujian === 'Selesai Diverifikasi') return 'Input Invoice';
     if (order.status_pengujian === 'Menunggu Verifikasi Pembayaran') return 'Verifikasi Bayar';
-    if (order.status_pengujian === 'Selesai') return 'Pencairan Dana';
+    // ⬅️ DIUBAH: "Pencairan Dana" hanya untuk lab LKIP
+    if (order.status_pengujian === 'Selesai' && isLabPencairan(order)) return 'Pencairan Dana';
     return 'Detail';
   };
 
@@ -734,6 +750,7 @@ export default function AffiliateOrder({ affiliateId }) {
 
     const isInvoiceEditableWindow = INVOICE_EDITABLE_STATUS.includes(activeOrder.status_pengujian);
     const isCorrectingInvoice = !!activeOrder.rincian_harga_invoice?.length;
+    const canPencairan = isLabPencairan(activeOrder); // ⬅️ BARU
 
     return (
       <div className="bg-white rounded-xl border border-gray-200 p-5">
@@ -864,8 +881,8 @@ export default function AffiliateOrder({ affiliateId }) {
           </div>
         )}
 
-        {/* Hint box: pencairan dana */}
-        {activeOrder.status_pengujian === 'Selesai' && (
+        {/* Hint box: pencairan dana — ⬅️ DIUBAH: hanya untuk lab LKIP */}
+        {activeOrder.status_pengujian === 'Selesai' && canPencairan && (
           <div className="border border-emerald-200 bg-emerald-50 rounded-xl p-4 mb-5">
             <p className="text-xs font-semibold text-emerald-800 mb-1.5 flex items-center gap-1.5">
               <CreditCard className="w-3.5 h-3.5" /> Pencairan Dana
@@ -884,7 +901,7 @@ export default function AffiliateOrder({ affiliateId }) {
         )}
 
         {/* Hint box: status yang bukan wewenang admin saat ini */}
-        {!ADMIN_ACTIONABLE_STATUS.includes(activeOrder.status_pengujian) && activeOrder.status_pengujian !== 'Menunggu Verifikasi Pembayaran' && (
+        {!isAdminActionable(activeOrder) && (
           <div className="border border-gray-200 bg-gray-50 rounded-xl p-4 text-center mb-5">
             <p className="text-xs text-gray-500">
               Order ini sedang ditangani oleh {statusOwnerHint(activeOrder.status_pengujian)}.
@@ -1236,7 +1253,7 @@ export default function AffiliateOrder({ affiliateId }) {
                 </tr>
               ))
             ) : filtered.length > 0 ? filtered.map((v, i) => {
-              const needsAction = ADMIN_ACTIONABLE_STATUS.includes(v.status_pengujian);
+              const needsAction = isAdminActionable(v); // ⬅️ DIUBAH
               return (
                 <tr key={v._id} className="hover:bg-gray-50 transition">
                   <td className="px-4 py-3"><span className="text-xs text-gray-400">{i + 1}</span></td>
